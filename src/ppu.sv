@@ -1,8 +1,10 @@
+import ariane_pkg::*;
+
 module ppu(i8,i16,i32,u32o,op);
 	input logic signed[7:0] i8;
 	input logic signed[15:0] i16;
 	input logic signed[31:0] i32;
-	input logic[2:0] op;
+	input logic[3:0] op;
 	output logic signed[31:0] u32o;
 	logic signed[7:0] f_p8o,fx16_p8o;
 	logic signed[15:0] f_p16o,f_p161o,p8_fx16o;
@@ -21,14 +23,24 @@ module ppu(i8,i16,i32,u32o,op);
 	
 	always_comb begin
         case(op)
-          3'b000    : u32o = f_p16o; 		
-          3'b001    : u32o = f_p161o; 		
-          3'b010    : u32o = p8_fx16o; 		
-          3'b011    : u32o = p8_fo; 		
-          3'b100    : u32o = p16_fo; 		
-          3'b101    : u32o = p161_fo; 	
-          3'b110    : u32o = f_p8o; 		
-          3'b111    : u32o = fx16_p8o; 		
+			FCVTSP8[3:0]: u32o = f_p8o;
+			FCVTSP160[3:0]: u32o = f_p16o;
+			FCVTSP161[3:0]: u32o = f_p161o;
+			FCVTP8S[3:0]: u32o = p8_fo;
+			FCVTP160S[3:0]: u32o = p16_fo;
+			FCVTP161S[3:0]: u32o = p161_fo;
+			FXCVTHP8[3:0]: u32o = fx16_p8o;
+			FXCVTWP160[3:0]: u32o = 0;
+			FXCVTLP161[3:0]: u32o = 0;
+			FXCVTP8H[3:0]: u32o = p8_fx16o;
+			FXCVTP160W[3:0]: u32o = 0;
+			FXCVTP161L[3:0]: u32o = 0;
+			FCVTP8P160[3:0]: u32o = 0;
+			FCVTP160P8[3:0]: u32o = 0;
+			FCVTP8P161[3:0]: u32o = 0;
+			FCVTP161P8[3:0]: u32o = 0;
+			FCVTP160P161[3:0]: u32o = 0;
+			FCVTP161P160[3:0]: u32o = 0; 		
           default  : u32o = 0; 		
         endcase
 	end
