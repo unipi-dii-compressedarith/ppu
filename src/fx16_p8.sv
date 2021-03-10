@@ -1,5 +1,5 @@
 module fx16_p8(fx16,p8);
-	input logic[31:0] fx16;
+	input logic[15:0] fx16;
 	output logic[7:0] p8;
 	logic [7:0] fx_int_log_w,pos_regime_w;
 	ger8 myger8(.f_exp(fx_int_log_w),.regbits(pos_regime_w));
