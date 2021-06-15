@@ -25,6 +25,7 @@ module fp32_p8(fp32,p8);
 		pos_mant = fp_hi_mant >> reg_length;
 		
 		pos_content = pos_regime | pos_mant;
+		pos_content = (fp_exp == 8'hff)? pos_content | 8'h80 : pos_content;
 		if(fp_sign == 0) begin
 			p8 = pos_content;
 		end

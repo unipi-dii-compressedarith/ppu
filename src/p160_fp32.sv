@@ -19,7 +19,7 @@ module p160_fp32(p16,fp32);
 		reg_bits_w = posit_body;
 		k_value = k_value_w;
 		reg_length = reg_length_w;
-		fp_exp = k_value+8'h7f;
+		fp_exp = {k_value[6],k_value}+8'h7f;
 		fp_mant = posit_body << (reg_length + 5'b0010);
 		fp32[31] = pos_sign;
 		fp32[30:23] = fp_exp;

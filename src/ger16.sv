@@ -8,8 +8,9 @@ module ger16(f_exp,regbits);
 		logic [15:0] abs_f_exp;
 		logic [3:0] low_exp;
 		logic signed[15:0] reg_placeholder,shifted_reg,built_reg;
-		reg_placeholder = 16'h8000;
-		abs_f_exp = (f_exp[15])?f_exp:-f_exp;
+		abs_f_exp = (f_exp[15])?-f_exp:+f_exp;
+		reg_placeholder = (abs_f_exp >= 127)?16'h0000:16'h8000;
+		
 		// take the least 3 sign bits from abs exp
 		low_exp = abs_f_exp[3:0];
 		// shift right to build regime

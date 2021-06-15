@@ -2,10 +2,11 @@ module fp32_p160(fp32,p16);
 	input logic[31:0] fp32;
 	output logic[15:0] p16;
 	logic [15:0] fp_norm_exp_w,pos_regime_w;
+	logic signed [7:0] fp_exp;
 	ger16 myger16(.f_exp(fp_norm_exp_w),.regbits(pos_regime_w));
 	always_comb begin
 		logic fp_sign;
-		logic signed [7:0] fp_exp,fp_norm_exp;
+		logic signed [7:0] fp_norm_exp;
 		logic [15:0] fp_hi_mant,pos_mant;
 		logic [3:0] reg_length;
 		logic [15:0] pos_regime;
@@ -25,6 +26,8 @@ module fp32_p160(fp32,p16);
 		pos_mant = fp_hi_mant >> reg_length;
 		
 		pos_content = pos_regime | pos_mant;
+		pos_content = (fp_exp == 8'hff)? pos_content | 16'h8000 : pos_content;
+		
 		if(fp_sign == 0) begin
 			p16 = pos_content;
 		end

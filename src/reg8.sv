@@ -13,12 +13,12 @@ module reg8(regbits,k_val,reg_length);
 		leading_count = 7'b0;
 
 		if(regbits[6] == 0) begin
-			leading_count = 3'h6 - highest1_index;
+			leading_count = (highest1_index == 3'b111)? 7:3'h6 - highest1_index;
 			k_val = -leading_count;
 			reg_length = leading_count;
 		end	
 		else begin
-			leading_count = 3'h6 - highest0_index;
+			leading_count = (highest0_index == 3'b111) ? 7:3'h6 - highest0_index;
 			k_val = leading_count - 1;
 			reg_length = leading_count;
 		end
