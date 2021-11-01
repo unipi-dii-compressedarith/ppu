@@ -1,12 +1,17 @@
+// synopsys translate_off
+`include "reg8.sv"
+// synopsys translate_on
+
 module p8_fp32(p8,fp32);
 	input logic signed[7:0] p8;
 	output logic[31:0] fp32;
 
-	logic [6:0] reg_bits_w,k_value_w;
-	logic [2:0] reg_length_w;
+	logic [6:0] reg_bits_w;
+	wire [6:0] k_value_w;
+	wire [2:0] reg_length_w;
 	reg8 myreg8(.regbits (reg_bits_w),.k_val(k_value_w),.reg_length(reg_length_w));
 	
-	always_comb begin
+	always @(*) begin: _
 		logic pos_sign;
 		logic signed[7:0] abs_posit,fp_exp,fp_mant;
 		logic signed[6:0] posit_body,k_value;
@@ -24,4 +29,29 @@ module p8_fp32(p8,fp32);
 		fp32[22:15] = fp_mant;
 		fp32[14:0] = 15'h0;
 	end
+endmodule
+
+
+
+/// p8_fp32 test bench
+module p8_fp32_tb();
+
+	logic signed[7:0] p8;
+	wire[31:0] fp32;
+
+	p8_fp32 p8_fp32_inst(.*);
+
+	initial begin
+		$dumpfile("p8_fp32_tb.vcd");
+	    $dumpvars(0, p8_fp32_tb);
+
+	    #10 	p8 = 8'b0000_0000;
+	    #10 	p8 = 8'b1000_0001;
+		#10 	p8 = 8'b0000_0010;
+		#10 	p8 = 8'b0000_0011;
+		#10 	p8 = 8'b0000_0100;
+		#10 	p8 = 8'b0000_0000;
+		$finish;
+	end
+
 endmodule

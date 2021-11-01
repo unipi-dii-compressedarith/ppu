@@ -1,3 +1,7 @@
+// synopsys translate_off
+`include "ger8.sv"
+// synopsys translate_on
+
 module encode8(p8,r,k,f,s);
 	output logic signed[7:0] p8;
 	input logic[2:0] r;
@@ -9,7 +13,7 @@ module encode8(p8,r,k,f,s);
 	wire [7:0] pos_regime;
 	logic signed[7:0] pos_content;
 	ger8 myger8(.f_exp(k),.regbits(pos_regime));
-	always_comb begin
+	always @(*) begin
 
 
 

@@ -1,0 +1,11 @@
+.DS_Store
+
+# iverilog outputs
+*.out
+*.vvp
+
+# generated waveforms
+*.vcd
+
+# quartus workspace
+quartus

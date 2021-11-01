@@ -3,7 +3,7 @@ module ger16(f_exp,regbits);
 	input logic signed[15:0] f_exp;
 	// Generate regime bitstring starting from float exponent
 
-	always_comb begin
+	always @(*) begin: _
 		// take exp absolute value
 		logic [15:0] abs_f_exp;
 		logic [3:0] low_exp;

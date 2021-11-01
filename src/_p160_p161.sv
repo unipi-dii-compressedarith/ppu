@@ -1,14 +1,20 @@
+// synopsys translate_off
+`include "reg16.sv"
+`include "ger16.sv"
+// synopsys translate_on
+
 module p160_p161(p160,p161);
 	output logic signed[15:0] p161;
 	input logic[15:0] p160;
-    logic [14:0] reg_bits_w,reg_bits_wo;
-	logic signed [6:0] k_value_w;
-    logic signed[7:0] full_exp;
-	logic [3:0] reg_length_w;
+    logic [14:0] reg_bits_w;
+    wire [15:0] reg_bits_wo;
+	wire signed [6:0] k_value_w;
+    logic signed [15:0] full_exp;
+	wire [3:0] reg_length_w;
 	reg16 myreg16(.regbits (reg_bits_w),.k_val(k_value_w),.reg_length(reg_length_w));
     ger16 myger16(.f_exp(full_exp),.regbits(reg_bits_wo));
     
-	always_comb begin
+	always @(*) begin:_
 		logic pos_sign;
 		logic signed[15:0] abs_posit,fp_exp,fp_mant;
 		logic signed[15:0] posit_body,pos_mant,pos_content;	
@@ -30,4 +36,30 @@ module p160_p161(p160,p161);
 		else begin
 			p161 = ~pos_content + 1;
 		end	end
+endmodule
+
+
+
+
+/// p160_p161 test bench
+module p160_p161_tb();
+	
+	logic[15:0] p160;
+	wire signed[15:0] p161;
+	
+	p160_p161 p160_p161_inst(.p160(p160), .p161(p161));
+
+	initial begin
+		$dumpfile("p160_p161_tb.vcd");
+	    $dumpvars(0, p160_p161_tb);
+
+	    #1 		p160 = 16'b0_00001_1_000000000;
+	    #10 	p160 = 16'b0_00001_0_000000001;
+		#10 	p160 = 16'b0_00001_0_000000011;
+		#10 	p160 = 16'b0_00001_0_000000000;
+		#10 	p160 = 16'b1_00001_0_000000000;
+		#10 	p160 = 16'b0_11110_0_000000000;
+		$finish;
+	end
+
 endmodule

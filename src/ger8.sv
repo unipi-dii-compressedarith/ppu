@@ -3,7 +3,7 @@ module ger8(f_exp,regbits);
 	input logic signed[7:0] f_exp;
 	// Generate regime bitstring starting from float exponent
     logic [7:0] abs_f_exp;
-	always_comb begin
+	always @(*) begin: _
 		// take exp absolute value
 		
 		logic [2:0] low_exp;
@@ -25,5 +25,29 @@ module ger8(f_exp,regbits);
 		end
 		// reset sign
 		regbits = built_reg & 8'h7f;
+	end
+endmodule
+
+
+
+
+/// ger8 test bench
+module ger8_tb();
+	logic signed[7:0] f_exp;
+	wire [7:0] regbits;
+	
+	ger8 ger8_inst(.*);
+
+	initial begin
+		$dumpfile("ger8_tb.vcd");
+	    $dumpvars(0, ger8_tb);
+
+	    #10 	f_exp = 10;
+	    #10 	f_exp = 1;
+		#10 	f_exp = 3;
+		#10 	f_exp = 53;
+		#10 	f_exp = 11;
+		#10 	f_exp = 7;
+		$finish;
 	end
 endmodule

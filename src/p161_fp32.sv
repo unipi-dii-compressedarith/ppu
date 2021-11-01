@@ -1,13 +1,17 @@
+// synopsys translate_off
+`include "reg16.sv"
+// synopsys translate_on
+
 module p161_fp32(p16,fp32);
 	input logic signed[15:0] p16;
 	output logic[31:0] fp32;
 
 	logic [14:0] reg_bits_w;
-	logic signed [6:0] k_value_w;
-	logic [3:0] reg_length_w;
+	wire signed [6:0] k_value_w;
+	wire [3:0] reg_length_w;
 	reg16 myreg16(.regbits (reg_bits_w),.k_val(k_value_w),.reg_length(reg_length_w));
 	
-	always_comb begin
+	always @(*) begin: _
 		logic pos_sign;
 		logic signed[15:0] abs_posit,fp_exp,fp_mant;
 		logic signed[15:0] posit_body;
@@ -28,4 +32,29 @@ module p161_fp32(p16,fp32);
 		fp32[22:15] = fp_mant;
 		fp32[14:0] = 15'h0;
 	end
+endmodule
+
+
+
+/// p161_fp32 test bench
+module p161_fp32_tb();
+
+ 	logic signed[15:0] p16;
+	wire [31:0] fp32;
+
+	p161_fp32 p161_fp32_inst(.*);
+
+	initial begin
+		$dumpfile("p161_fp32_tb.vcd");
+	    $dumpvars(0, p161_fp32_tb);
+
+	    #10 	p16 = 16'b0000_0000_0000_0000;
+	    #10 	p16 = 16'b0000_0000_0000_0000;
+		#10 	p16 = 16'b0000_0000_0000_0000;
+		#10 	p16 = 16'b0000_0000_0000_0000;
+		#10 	p16 = 16'b0000_0000_0000_0000;
+		#10 	p16 = 16'b0000_0000_0000_0000;
+		$finish;
+	end
+
 endmodule

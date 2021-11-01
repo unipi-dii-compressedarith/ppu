@@ -1,3 +1,8 @@
+// synopsys translate_off
+`include "decode8.sv"
+`include "encode8.sv"
+// synopsys translate_on
+
 module mul8(p8x,p8y,p8c); // Only positive numbers
 	input logic signed[7:0] p8x,p8y;
 	output logic signed[7:0] p8c;
@@ -11,13 +16,14 @@ module mul8(p8x,p8y,p8c); // Only positive numbers
     logic [3:0] Fc;
     logic [7:0] fxe,fye;
     logic [15:0] fce;
-	logic signed[7:0] kc,kc_handle,alpha,alpha1;
-	logic[7:0] fc_handle;
+	logic signed[7:0] kc, alpha,alpha1;
+    wire signed[7:0] kc_handle;
+	wire [7:0] fc_handle;
     
 	decode8 d8x(.p8(p8x),.s(sx),.f(fx),.k(kx),.r(rx));
 	decode8 d8y(.p8(p8y),.s(sy),.f(fy),.k(ky),.r(ry));
 	encode8 e8c(.p8(p8c),.s(sc),.f(fc_handle),.k(kc_handle),.r(rc));
-	always_comb begin
+	always @(*) begin
 		kc = kx + ky;
         sc = sx ^ sy;
         Fx = 6-rx; 
@@ -30,4 +36,36 @@ module mul8(p8x,p8y,p8c); // Only positive numbers
         fc_handle = fce[7:0] >> alpha;
         kc_handle = kc + alpha;
 	end
+endmodule
+
+
+
+
+/// mul8 test bench
+module mul8_tb();
+
+    logic signed[7:0] p8x,p8y;
+    wire signed [7:0] p8c;
+
+    mul8 mul8_inst(.*);
+
+    initial begin
+        $dumpfile("mul8_tb.vcd");
+        $dumpvars(0, mul8_tb);
+
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        #10     p8x = 16'b0000_0000_0000_0000;
+                p8y = 16'b0000_0000_0000_0000;
+        $finish;
+    end
+
 endmodule
