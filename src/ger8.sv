@@ -31,23 +31,23 @@ endmodule
 
 
 
-/// ger8 test bench
-module ger8_tb();
-	logic signed[7:0] f_exp;
-	wire [7:0] regbits;
+// /// ger8 test bench
+// module ger8_tb();
+// 	logic signed[7:0] f_exp;
+// 	wire [7:0] regbits;
 	
-	ger8 ger8_inst(.*);
+// 	ger8 ger8_inst(.*);
 
-	initial begin
-		$dumpfile("ger8_tb.vcd");
-	    $dumpvars(0, ger8_tb);
+// 	initial begin
+// 		$dumpfile("ger8_tb.vcd");
+// 	    $dumpvars(0, ger8_tb);
 
-	    #10 	f_exp = 10;
-	    #10 	f_exp = 1;
-		#10 	f_exp = 3;
-		#10 	f_exp = 53;
-		#10 	f_exp = 11;
-		#10 	f_exp = 7;
-		$finish;
-	end
-endmodule
+// 	    #10 	f_exp = 10;
+// 	    #10 	f_exp = 1;
+// 		#10 	f_exp = 3;
+// 		#10 	f_exp = 53;
+// 		#10 	f_exp = 11;
+// 		#10 	f_exp = 7;
+// 		$finish;
+// 	end
+// endmodule

@@ -17,12 +17,12 @@ module mul8(p8x,p8y,p8c); // Only positive numbers
     logic [7:0] fxe,fye;
     logic [15:0] fce;
 	logic signed[7:0] kc, alpha,alpha1;
-    wire signed[7:0] kc_handle;
-	wire [7:0] fc_handle;
+    logic signed[7:0] kc_handle;
+	logic [7:0] fc_handle;
     
 	decode8 d8x(.p8(p8x),.s(sx),.f(fx),.k(kx),.r(rx));
 	decode8 d8y(.p8(p8y),.s(sy),.f(fy),.k(ky),.r(ry));
-	encode8 e8c(.p8(p8c),.s(sc),.f(fc_handle),.k(kc_handle),.r(rc));
+	encode8 e8c(.p8(p8c),.s(sc),.f(fc_handle),.k(kc_handle),.r(/* rc ?*/));
 	always @(*) begin
 		kc = kx + ky;
         sc = sx ^ sy;

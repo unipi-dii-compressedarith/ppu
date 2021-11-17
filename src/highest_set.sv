@@ -23,32 +23,32 @@ endmodule
 
 
 
-/// highest_set test bench
-module highest_set_tb();
-	parameter SIZE = 8;
-	parameter VAL = 1;
-	parameter OUTW = $clog2(SIZE);
+// /// highest_set test bench
+// module highest_set_tb();
+// 	parameter SIZE = 8;
+// 	parameter VAL = 1;
+// 	parameter OUTW = $clog2(SIZE);
 
-	reg [SIZE-1:0] bits;
-	wire [OUTW-1:0] index;
+// 	reg [SIZE-1:0] bits;
+// 	wire [OUTW-1:0] index;
 
-	highest_set #(
-		.SIZE(SIZE),
-		.VAL(VAL),
-		.OUTW(OUTW)
-	)
-	highest_set_inst(.*);
+// 	highest_set #(
+// 		.SIZE(SIZE),
+// 		.VAL(VAL),
+// 		.OUTW(OUTW)
+// 	)
+// 	highest_set_inst(.*);
 
-	initial begin
-		$dumpfile("highest_set_tb.vcd");
-	    $dumpvars(0, highest_set_tb);
+// 	initial begin
+// 		$dumpfile("highest_set_tb.vcd");
+// 	    $dumpvars(0, highest_set_tb);
 
-	    #10 	bits = 10;
-	    #10 	bits = 1;
-		#10 	bits = 3;
-		#10 	bits = 53;
-		#10 	bits = 11;
-		#10 	bits = 7;
-		$finish;
-	end
-endmodule
+// 	    #10 	bits = 10;
+// 	    #10 	bits = 1;
+// 		#10 	bits = 3;
+// 		#10 	bits = 53;
+// 		#10 	bits = 11;
+// 		#10 	bits = 7;
+// 		$finish;
+// 	end
+// endmodule

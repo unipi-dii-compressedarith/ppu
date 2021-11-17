@@ -5,7 +5,7 @@
 *.vvp
 
 # generated waveforms
-*.vcd
+# *.vcd  
 
 # quartus workspace
 quartus
