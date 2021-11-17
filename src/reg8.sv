@@ -12,8 +12,7 @@ module reg8(
 	wire [2:0] highest0_index,highest1_index;
 	highest_set #(7,1) high_1(.bits (regbits),.index (highest1_index));
 	highest_set #(7,0) high_0(.bits (regbits),.index (highest0_index));
-
-	always @(*) begin: _ 
+	always @(*) begin
 		
 		logic signed [6:0] leading_count;
 				
@@ -31,8 +30,6 @@ module reg8(
 		end
 	end
 endmodule
-
-
 
 
 
