@@ -30,11 +30,6 @@ module p8e0_mul(
         output reg [7:0]    z
     );
 
-    parameter ZERO = 'h0;
-    parameter P8_NAR = 8'h80;
-    //parameter UNDEFINED = 'hz; // generic, no length specified.
-
-
     /*=============== functions ==================*/
     function [7:0] c2(input [7:0] a);
         c2 = ~a + 1'b1;
@@ -72,9 +67,9 @@ module p8e0_mul(
 
             if (reg_length == 8) reg_length = 7;
 
-            tmp = (bits << reg_length) & 8'h7f;
+            tmp = ((bits << reg_length) & 8'h7f) | 8'h80;
 
-            separate_bits = {k, tmp | 8'h80};
+            separate_bits = {k, tmp};
         end
     endfunction
 
@@ -138,14 +133,14 @@ module p8e0_mul(
     reg sign_a, sign_b, sign_z;
 
 `ifndef PROBE_SIGNALS
-    reg [7:0] ui_a, ui_b;
-    reg [7:0] k_a,    k_b;
-    reg [7:0] frac_a, frac_b;
+    reg [7:0]  ui_a, ui_b;
+    reg [7:0]  k_a,    k_b;
+    reg [7:0]  frac_a, frac_b;
 
-    reg [7:0] k_c;
+    reg [7:0]  k_c;
     reg [15:0] frac16;
 
-    reg rcarry;
+    reg        rcarry;
 `endif
 
 
@@ -155,19 +150,18 @@ module p8e0_mul(
     reg [7:0] reg_len;              // 8 bits
     // end calc_ui regs
 
-
     reg [7:0] frac;
-    reg bit_n_plus_one, bits_more;
+    reg       bits_more;
     
     reg [7:0] u_z;
 
     always @(*) begin
 
-        if (a == ZERO || b == ZERO || a == P8_NAR || b == P8_NAR) begin
-            if (a == ZERO || b == ZERO) begin
-                z = ZERO;
-            end else if (a == P8_NAR  || b == P8_NAR) begin
-                z = P8_NAR;
+        if (a == 0 || b == 0 || a == 8'h80 || b == 8'h80) begin
+            if (a == 0 || b == 0) begin
+                z = 0;
+            end else if (a == 8'h80  || b == 8'h80) begin
+                z = 8'h80;
             end
             ui_a = 0;
             ui_b = 0;
@@ -233,8 +227,8 @@ module p8e0_mul(
         end
     end
 
-    assign is_zero = z == ZERO   ? 1 : 0;
-    assign is_nar  = z == P8_NAR ? 1 : 0;
+    assign is_zero = z == 0   ? 1 : 0;
+    assign is_nar  = z == 8'h80 ? 1 : 0;
 
 endmodule
 

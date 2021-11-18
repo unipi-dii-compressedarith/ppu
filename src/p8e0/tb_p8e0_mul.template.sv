@@ -67,6 +67,8 @@ module tb_p8e0_mul;
         diff_rcarry,
         diff_frac_a, diff_frac_b,
         diff_frac16;
+
+    integer test_no;
         
 // `endif
 
@@ -93,11 +95,7 @@ module tb_p8e0_mul;
     initial begin
                 
 
-
-/*{add stuff here}*/
-
-
-
+    /*{add stuff here}*/
 
 
     end
