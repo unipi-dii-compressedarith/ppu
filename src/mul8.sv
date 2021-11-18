@@ -1,7 +1,6 @@
-// synopsys translate_off
-`include "decode8.sv"
-`include "encode8.sv"
-// synopsys translate_on
+/*
+~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top mul8 -vqm mul8.vqm" mul8.sv decode8.sv encode8.sv reg8.sv ger8.sv highest_set.sv > yosys.out
+*/
 
 module mul8(p8x,p8y,p8c); // Only positive numbers
 	input logic signed[7:0] p8x,p8y;
@@ -42,6 +41,7 @@ endmodule
 
 
 /// mul8 test bench
+// synopsys translate_off
 module mul8_tb();
 
     logic signed[7:0] p8x,p8y;
@@ -372,3 +372,4 @@ module mul8_tb();
     end
 
 endmodule
+// synopsys translate_on

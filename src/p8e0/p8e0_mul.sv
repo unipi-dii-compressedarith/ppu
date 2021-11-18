@@ -8,11 +8,12 @@
  *  Wed Nov 17 18:55:24 CET 2021
  *     - todo: fix inferred latches 
  *
+ *
+ *  iverilog -D PROBE_SIGNALS p8e0_mul.sv
  *  ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" p8e0_mul.sv > yosys.out
  *  iverilog -D POST_IMPL -o verif_post -s p8e0_mul p8e0_mul.sv  $(yosys-config --datdir/intel/max10/cells_sim.v) && vvp -N verif_post
  */
 
-`define PROBE_SIGNALS
 
 module p8e0_mul(
         input      [7:0]    a,

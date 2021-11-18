@@ -1,7 +1,3 @@
-// synopsys translate_off
-`include "ger8.sv"
-// synopsys translate_on
-
 module encode8(p8,r,k,f,s);
 	output logic signed[7:0] p8;
 	input logic[2:0] r;

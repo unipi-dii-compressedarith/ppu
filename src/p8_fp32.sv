@@ -1,7 +1,3 @@
-// synopsys translate_off
-`include "reg8.sv"
-// synopsys translate_on
-
 module p8_fp32(p8,fp32);
 	input logic signed[7:0] p8;
 	output logic[31:0] fp32;
@@ -34,6 +30,7 @@ endmodule
 
 
 /// p8_fp32 test bench
+// synopsys translate_off
 module p8_fp32_tb();
 
 	logic signed[7:0] p8;
@@ -55,3 +52,4 @@ module p8_fp32_tb();
 	end
 
 endmodule
+// synopsys translate_on

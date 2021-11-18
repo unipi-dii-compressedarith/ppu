@@ -1,8 +1,3 @@
-// synopsys translate_off
-`include "reg16.sv"
-`include "ger16.sv"
-// synopsys translate_on
-
 module p160_p161(p160,p161);
 	output logic signed[15:0] p161;
 	input logic[15:0] p160;
@@ -42,6 +37,7 @@ endmodule
 
 
 /// p160_p161 test bench
+// synopsys translate_off
 module p160_p161_tb();
 	
 	logic[15:0] p160;
@@ -63,3 +59,4 @@ module p160_p161_tb();
 	end
 
 endmodule
+// synopsys translate_on

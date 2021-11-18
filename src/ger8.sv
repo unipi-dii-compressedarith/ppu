@@ -32,6 +32,7 @@ endmodule
 
 
 // /// ger8 test bench
+// synopsys translate_off
 // module ger8_tb();
 // 	logic signed[7:0] f_exp;
 // 	wire [7:0] regbits;
@@ -51,3 +52,4 @@ endmodule
 // 		$finish;
 // 	end
 // endmodule
+// synopsys translate_on

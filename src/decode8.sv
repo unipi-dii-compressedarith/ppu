@@ -1,8 +1,3 @@
-// synopsys translate_off
-`include "reg8.sv"
-// synopsys translate_on
-
-
 module decode8(p8,r,k,f,s);
 	input logic signed[7:0] p8;
 	output logic[2:0] r;
@@ -38,6 +33,7 @@ endmodule
 
 
 // /// decode8 test bench
+// synopsys translate_off
 // module decode8_tb();
 // 	reg signed [7:0] 	p8;
 // 	wire [2:0] r;
@@ -61,3 +57,4 @@ endmodule
 // 	end
 
 // endmodule
+// synopsys translate_on

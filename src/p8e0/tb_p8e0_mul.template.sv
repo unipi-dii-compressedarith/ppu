@@ -1,5 +1,5 @@
 
-// iverilog p8e0_mul.sv tb_p8e0_mul.sv && ./a.out
+// iverilog [-D PROBE_SIGNALS] p8e0_mul.sv tb_p8e0_mul.sv && ./a.out
 
 // synopsys translate_off                   // <- include guards for quartus (et al.) so that he ingores this
 module tb_p8e0_mul;
@@ -88,7 +88,13 @@ module tb_p8e0_mul;
     end
 
     initial begin
+`ifdef PROBE_SIGNALS
         $dumpfile("tb_p8e0_mul.vcd");
+        $display("probe defined");
+`else
+        $dumpfile("tb_p8e0_mul_noprobe.vcd");
+        $display("probe NOT defined");
+`endif
         $dumpvars(0, tb_p8e0_mul);
     end
 

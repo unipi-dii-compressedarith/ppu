@@ -24,6 +24,7 @@ endmodule
 
 
 // /// highest_set test bench
+// synopsys translate_off
 // module highest_set_tb();
 // 	parameter SIZE = 8;
 // 	parameter VAL = 1;
@@ -52,3 +53,4 @@ endmodule
 // 		$finish;
 // 	end
 // endmodule
+// synopsys translate_on

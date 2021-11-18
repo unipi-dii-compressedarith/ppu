@@ -1,7 +1,3 @@
-// synopsys translate_off
-`include "reg16.sv"
-// synopsys translate_on
-
 module p161_fp32(p16,fp32);
 	input logic signed[15:0] p16;
 	output logic[31:0] fp32;
@@ -37,6 +33,7 @@ endmodule
 
 
 /// p161_fp32 test bench
+// synopsys translate_off
 module p161_fp32_tb();
 
  	logic signed[15:0] p16;
@@ -58,3 +55,4 @@ module p161_fp32_tb();
 	end
 
 endmodule
+// synopsys translate_on
