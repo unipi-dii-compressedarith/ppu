@@ -1,7 +1,4 @@
-// synopsys translate_off
-`include "decode8.sv"
-`include "encode8.sv"
-// synopsys translate_on
+// iverilog -g2012 sum8.sv decode8.sv encode8.sv reg8.sv ger8.sv highest_set.sv && ./a.out
 
 module sum8(p8x,p8y,p8c); // Only positive numbers
 	input logic signed[7:0] p8x,p8y;
@@ -40,6 +37,7 @@ endmodule
 
 
 /// sum8 test bench
+// synopsys translate_off
 module sum8_tb();
 
     logic signed[7:0] p8x,p8y;
@@ -51,18 +49,24 @@ module sum8_tb();
         $dumpfile("sum8_tb.vcd");
         $dumpvars(0, sum8_tb);
 
-        #10     p8x = 8'b00000001;
-                p8y = 8'b00000001;
-        #10     p8x = 8'b00000001;
-                p8y = 8'b00000001;
-        #10     p8x = 8'b00000001;
-                p8y = 8'b00000001;
-        #10     p8x = 8'b00000001;
-                p8y = 8'b00000001;
-        #10     p8x = 8'b00000001;
+                p8x = 8'b00000001;
                 p8y = 8'b00000001;
         
+        #10     p8x = 8'b00000001;
+                p8y = 8'b00000010;
+        
+        #10     p8x = 8'b00000001;
+                p8y = 8'b00000011;
+        
+        #10     p8x = 8'b00000001;
+                p8y = 8'b00000100;
+        
+        #10     p8x = 8'b00000001;
+                p8y = 8'b00000101;
+        
+        #10;
         $finish;
     end
 
 endmodule
+// synopsys translate_on

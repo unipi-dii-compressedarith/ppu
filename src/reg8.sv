@@ -1,7 +1,3 @@
-// synopsys translate_off
-`include "highest_set.sv"
-// synopsys translate_on
-
 module reg8(
 	input logic[6:0] regbits,
 	output logic signed[6:0] k_val,
@@ -35,6 +31,7 @@ endmodule
 
 
 // /// reg8 test bench
+// synopsys translate_off
 // module reg8_tb();
 
 // 	reg [6:0] regbits;
@@ -57,3 +54,4 @@ endmodule
 // 	end
 
 // endmodule
+// synopsys translate_on

@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Thu Nov 18 19:25:06 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/sum8_tb.vcd"
+[dumpfile_mtime] "Thu Nov 18 19:24:32 2021"
+[dumpfile_size] 6133
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/sum8_tb.gtkw"
+[timestart] 0
+[size] 2560 1418
+[pos] -1 -1
+*-2.238798 14 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sum8_tb.
+[treeopen] sum8_tb.sum8_inst.
+[sst_width] 193
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 445
+@22
+sum8_tb.sum8_inst.alpha1[7:0]
+sum8_tb.sum8_inst.alpha[7:0]
+sum8_tb.sum8_inst.fc[7:0]
+sum8_tb.sum8_inst.fc_handle[8:0]
+sum8_tb.sum8_inst.fx1[7:0]
+sum8_tb.sum8_inst.fx[7:0]
+sum8_tb.sum8_inst.fy1[7:0]
+sum8_tb.sum8_inst.fy[7:0]
+sum8_tb.sum8_inst.kc[7:0]
+sum8_tb.sum8_inst.kc_handle[7:0]
+sum8_tb.sum8_inst.kx[7:0]
+sum8_tb.sum8_inst.ky[7:0]
+sum8_tb.sum8_inst.p8c[7:0]
+sum8_tb.sum8_inst.p8x[7:0]
+@23
+sum8_tb.sum8_inst.p8y[7:0]
+@28
+sum8_tb.sum8_inst.rx[2:0]
+sum8_tb.sum8_inst.ry[2:0]
+sum8_tb.sum8_inst.sc
+sum8_tb.sum8_inst.sx
+sum8_tb.sum8_inst.sy
+[pattern_trace] 1
+[pattern_trace] 0

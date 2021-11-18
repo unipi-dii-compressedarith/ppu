@@ -1,22 +1,5 @@
 // import ariane_pkg::*;
 
-// synopsys translate_off
-`include  "fx16_p8.sv"
-`include  "fp32_p8.sv"
-`include  "fp32_p160.sv"
-`include  "fp32_p161.sv"
-
-`include  "p8_fp32.sv"
-`include  "p8_fx16.sv"
-`include  "p160_fp32.sv"
-`include  "p161_fp32.sv"
-
-`include "_p8_p160.sv"
-`include "_p160_p8.sv"
-`include "_p161_p160.sv"
-`include "_p160_p161.sv"
-// synopsys translate_on
-
 // `define FCVTSP8
 // `define FCVTSP160
 // `define FCVTSP161

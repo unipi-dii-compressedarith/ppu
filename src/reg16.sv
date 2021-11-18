@@ -1,7 +1,3 @@
-// synopsys translate_off
-`include "highest_set.sv"
-// synopsys translate_on
-
 module reg16(regbits,k_val,reg_length);
 	input logic[14:0] regbits;
 	output logic signed[6:0] k_val;
@@ -71,6 +67,7 @@ endmodule
 
 
 /// reg16 test bench
+// synopsys translate_off
 module reg16_tb();
 
 	reg [14:0] regbits;
@@ -94,3 +91,4 @@ module reg16_tb();
 	end
 
 endmodule
+// synopsys translate_on
