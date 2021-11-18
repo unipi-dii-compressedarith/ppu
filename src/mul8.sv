@@ -1,4 +1,5 @@
 /*
+iverilog -g2012 mul8.sv decode8.sv encode8.sv reg8.sv ger8.sv highest_set.sv && ./a.out
 ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top mul8 -vqm mul8.vqm" mul8.sv decode8.sv encode8.sv reg8.sv ger8.sv highest_set.sv > yosys.out
 */
 
@@ -47,10 +48,15 @@ module mul8_tb();
     logic signed[7:0] p8x,p8y;
     wire signed [7:0] p8c;
 
-    reg [7:0] p8c_exp;
-    reg z_diff;
+    logic [7:0] p8c_exp;
+    logic z_diff;
 
-    always @(*) z_diff = p8c_exp === p8c ? 0 : 1'bx;
+    logic inputs_are_positive; // 1 if p8x and p8y are both positive
+
+    always @(*) begin
+        z_diff = p8c_exp === p8c ? 0 : 1'bx;
+        inputs_are_positive = ((p8x >> 7 == 0) && (p8y >> 7 == 0)) ? 1'b1 : 1'bx;
+    end
 
     mul8 mul8_inst(.*);
 
