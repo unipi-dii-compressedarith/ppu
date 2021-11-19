@@ -6,7 +6,7 @@ import p8e0_mul
 
 N = 8 # num bits
 
-NUM_RANDOM_TEST_CASES = 50
+NUM_RANDOM_TEST_CASES = 80
 TEST_ALL_COMBINATIONS = False
 
 # random.seed(3)

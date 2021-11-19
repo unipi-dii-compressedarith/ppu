@@ -7,7 +7,7 @@ P<8,0> multiplier waveforms
 
 
 steps to reproduce:
-(see [here](https://bitbucket.org/riscv-ppu/ppu/src/master/readme.md#cli-tools))
+(see [here](https://bitbucket.org/riscv-ppu/ppu/src/urbani/readme.md#cli-tools))
 
 ```sh    
 python tb_gen.py # generates testbench file `tb_p8e0_mul.sv`
@@ -16,13 +16,15 @@ iverilog p8e0_mul.sv tb_p8e0_mul.sv
 
 ./a.out
 
+
 gtkwave tb_p8e0_mul.vcd # opens generated waveform with gtkwave
-gtkwave tb_p8e0_mul.gtkw # opens pre-cooked waveform with gtkwave
+
+gtkwave tb_p8e0_mul.gtkw # opens pre-cooked waveform with gtkwave. only works if companion vcd file is present, i.e. `tb_p8e0_mul.vcd`
 ```
 
 
 
 run tests?
 ```sh
-pytest p8e0_mul.py
+pytest p8e0_mul.py -v
 ```

@@ -1,5 +1,5 @@
 
-// iverilog [-D PROBE_SIGNALS] p8e0_mul.sv tb_p8e0_mul.sv && ./a.out
+// iverilog -g2012 -DPROBE_SIGNALS p8e0_mul.sv tb_p8e0_mul.sv && ./a.out
 
 // synopsys translate_off                   // <- include guards for quartus (et al.) so that he ingores this
 module tb_p8e0_mul;
@@ -15,10 +15,10 @@ module tb_p8e0_mul;
         diff = reference === expected ? 0 : 1'bx;
     endfunction
 
-    reg  [7:0]  a, b;
+    logic  [7:0]  a, b;
     wire [7:0]  ui_a, ui_b;
     
-    reg  [100:0] a_ascii, b_ascii, z_ascii;
+    logic  [100:0] a_ascii, b_ascii, z_ascii;
 
     wire [7:0]  z;
     wire        is_zero;
@@ -49,20 +49,20 @@ module tb_p8e0_mul;
         .z      (z)
     );
 
-    reg [7:0] z_exp;
-    reg diff_z;
+    logic [7:0] z_exp;
+    logic diff_z;
 
 
 // `ifdef PROBE_SIGNALS
-    reg [7:0] ui_a_exp, ui_b_exp;
-    reg [7:0] k_a_exp, k_b_exp, k_c_exp;
+    logic [7:0] ui_a_exp, ui_b_exp;
+    logic [7:0] k_a_exp, k_b_exp, k_c_exp;
     
-    reg rcarry_exp;
+    logic rcarry_exp;
 
-    reg [7:0] frac_a_exp, frac_b_exp;
-    reg [15:0] frac16_exp;
+    logic [7:0] frac_a_exp, frac_b_exp;
+    logic [15:0] frac16_exp;
 
-    reg diff_ui_a, diff_ui_b,
+    logic diff_ui_a, diff_ui_b,
         diff_k_a, diff_k_b, diff_k_c,
         diff_rcarry,
         diff_frac_a, diff_frac_b,
@@ -72,7 +72,7 @@ module tb_p8e0_mul;
         
 // `endif
 
-    always @(*) begin
+    always_comb begin
         diff_z   = diff(z, z_exp);
 `ifdef PROBE_SIGNALS
         diff_ui_a = diff(ui_a, ui_a_exp);

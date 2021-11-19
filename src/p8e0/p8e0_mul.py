@@ -1,5 +1,16 @@
-# pytest p8e0_mul.py / python p8e0_mul.py
+# either:
+#   pytest p8e0_mul.py -v  
+# or
+#   python p8e0_mul.py -v
+
+from typing import Tuple
 import pytest 
+import unittest
+import random
+import softposit as sp
+
+# random.seed(12)
+N = 8 # num bits
 
 class Ans:
     def __init__(
@@ -24,7 +35,7 @@ class Ans:
 def sign_reg_ui(bits):
     return (bits & 0x40) != 0
 
-def separate_bits_tmp(bits):
+def _separate_bits_tmp(bits):
     k = 0
     tmp = bits << 2
     if sign_reg_ui(bits):
@@ -40,7 +51,7 @@ def separate_bits_tmp(bits):
     return (k, tmp & 0xff)
 
 def separate_bits(bits):
-    # k, tmp = separate_bits_tmp(bits)
+    # k, tmp = _separate_bits_tmp(bits)
     
     k, reg_len = calc_k(bits)
 
@@ -62,10 +73,8 @@ def calc_k(bits):
          3 if (~bits << 1 & 0xff) >> 3 == 1 else \
          4 if (~bits << 1 & 0xff) >> 2 == 1 else \
          5 if (~bits << 1 & 0xff) >> 1 == 1 else 6
-
-    first_reg_bit = (bits >> 6) & 0x1
     
-    reg_len = 1 + (k + 1 if first_reg_bit == 1 else -k)
+    reg_len = 1 + (k + 1 if sign_reg_ui(bits) == 1 else -k)
     if reg_len == 8: reg_len = 7
 
     return (k, reg_len)
@@ -75,7 +84,7 @@ def checked_shr(bits, rhs):
     # https://doc.rust-lang.org/std/primitive.u32.html#method.checked_shr
     return bits >> rhs 
 
-def calculate_regime(k):
+def calculate_regime(k) -> Tuple[int, bool, int]:
     if k < 0:
         length = -k & 0xffff_ffff
         return (checked_shr(0x40, length), False, length)
@@ -102,16 +111,16 @@ def calc_ui(k, frac16):
             u_z += (u_z & 1) | (bits_more & 0xff)
         return u_z
 
-def from_bits(bits, sign):
+def from_bits(bits: int, sign: bool) -> int:
     return c2(bits) if sign else bits
     
-def c2(a): 
+def c2(a: int) -> int: 
     return (~a + 1) & 0xff
 
 def is_nar(a):  return a == 0x80
 def is_zero(a): return a == 0
 
-def p8e0_mul(a, b, debug=False) -> Ans:
+def p8e0_mul(a: int, b: int) -> Ans:
 
     if is_nar(a) or is_nar(b):
         return Ans(z=0x80) # NaR
@@ -120,7 +129,7 @@ def p8e0_mul(a, b, debug=False) -> Ans:
 
     sign_a = a & 0x80
     sign_b = b & 0x80
-    sign_z = sign_a ^ sign_b
+    sign_z: bool = (sign_a ^ sign_b) != 0
 
     ui_a = a if sign_a == 0 else c2(a)
     ui_b = b if sign_b == 0 else c2(b)
@@ -162,23 +171,10 @@ def p8e0_mul(a, b, debug=False) -> Ans:
 
 
 
-import softposit as sp
-
-import random
-import string
-random.seed(12)
-gen_random_n_bit_num = lambda n: ''.join(random.choice('01') for _ in range(n))
-
-
-
-import unittest
-
-
 class TestSum(unittest.TestCase):
     def test_zeros(self):
-        a_u8 = "00000000"
-        b_u8 = "01011000"
-        a, b = int(a_u8, 2), int(b_u8, 2)
+        a = 0x00
+        b = random.randint(0, 2**N - 1)
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
         z_int = p8e0_mul(a, b).z
@@ -187,9 +183,8 @@ class TestSum(unittest.TestCase):
             sp.posit8(bits=z_int)
         )
     def test_nar(self):
-        a_u8 = "10000000"
-        b_u8 = "01011000"
-        a, b = int(a_u8, 2), int(b_u8, 2)
+        a = 0x80
+        b = random.randint(0, 2**N - 1)
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
         z_int = p8e0_mul(a, b).z
@@ -199,9 +194,8 @@ class TestSum(unittest.TestCase):
         )
 
     def test_zero_times_nar(self):
-        a_u8 = "00000000"
-        b_u8 = "10000000"
-        a, b = int(a_u8, 2), int(b_u8, 2)
+        a = 0
+        b = 0x80
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
         z_int = p8e0_mul(a, b).z
@@ -211,33 +205,7 @@ class TestSum(unittest.TestCase):
         )
 
     def test3(self):
-        a_u8 = "01111111"
-        b_u8 = "01111111"
-        a, b = int(a_u8, 2), int(b_u8, 2)
-        a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
-        
-        z_int = p8e0_mul(a, b).z
-        self.assertEqual(
-            a_p8 * b_p8,
-            sp.posit8(bits=z_int)
-        )
-
-    def test4(self):
-        a_u8 = "10111110"
-        b_u8 = "10111111"
-        a, b = int(a_u8, 2), int(b_u8, 2)
-        a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
-        
-        z_int = p8e0_mul(a, b).z
-        self.assertEqual(
-            a_p8 * b_p8,
-            sp.posit8(bits=z_int)
-        )
-
-    def test5(self):
-        a_u8 = "01111111"
-        b_u8 = "00011110"
-        a, b = int(a_u8, 2), int(b_u8, 2)
+        a = b = 0x7f
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
         z_int = p8e0_mul(a, b).z
@@ -248,21 +216,12 @@ class TestSum(unittest.TestCase):
 
     def test_mix(self):
         for _ in range(200):
-            # 1) generate random 8bits numbers (str)
-            a_u8 = gen_random_n_bit_num(8)
-            b_u8 = gen_random_n_bit_num(8)
-
-            # 2) turn them into int values (int)
-            a = int(a_u8, 2)
-            b = int(b_u8, 2)
+            # 1) generate random 8bits numbers
+            a = random.randint(0, 2**N - 1)
+            b = random.randint(0, 2**N - 1)
 
             # 3) compute posit multiplication with my procedure (returns int)
             z_int = p8e0_mul(a, b).z
-
-            # 4) convert to binary representation (str)
-            # c_u8 = print_bin(c)
-
-            # print(f"{a_u8} * {b_u8} = {c_u8}")
 
             a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
 
@@ -325,7 +284,6 @@ def test_tmp(test_input, expected):
 
 NUM_RANDOM_TEST_CASES = 10
 for _ in range(NUM_RANDOM_TEST_CASES):
-    N = 8
     list_a = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
     list_b = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
 

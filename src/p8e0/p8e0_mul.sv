@@ -9,7 +9,6 @@
  *     - todo: fix inferred latches 
  *
  *
- *  iverilog -D PROBE_SIGNALS p8e0_mul.sv
  *  ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" p8e0_mul.sv > yosys.out
  *  iverilog -D POST_IMPL -o verif_post -s p8e0_mul p8e0_mul.sv  $(yosys-config --datdir/intel/max10/cells_sim.v) && vvp -N verif_post
  */
@@ -19,16 +18,16 @@ module p8e0_mul(
         input      [7:0]    a,
         input      [7:0]    b,
 `ifdef PROBE_SIGNALS
-        output reg [7:0]    ui_a, ui_b,
-        output reg [7:0]    k_a,    k_b,
-        output reg [7:0]    frac_a, frac_b,
-        output reg [7:0]    k_c,
-        output reg [15:0]   frac16,
-        output reg          rcarry,
+        output logic [7:0]    ui_a,   ui_b,
+        output logic [7:0]    k_a,    k_b,
+        output logic [7:0]    frac_a, frac_b,
+        output logic [7:0]    k_c,
+        output logic [15:0]   frac16,
+        output logic          rcarry,
 `endif
-        output              is_zero,
-        output              is_nar,
-        output reg [7:0]    z
+        output /* wire */           is_zero,
+        output    wire     is_nar,
+        output logic [7:0]    z
     );
 
     /*=============== functions ==================*/
@@ -40,12 +39,12 @@ module p8e0_mul(
             input [7:0] bits
         );
         begin: _separate_bits
-            reg [7:0] k;
-            reg [7:0] tmp;
-            reg [7:0] reg_length;
-            
-            // {k, tmp} = separate_bits_tmp(bits);
-            tmp = 8'h01;
+            logic [7:0] k;
+            logic [7:0] tmp;
+            logic [7:0] reg_length;
+            logic first_regime_bit;
+
+            first_regime_bit = (bits & 8'h40) >> 6 == 1;
 
             casex (bits)
                 8'bx0000001: k = -6;
@@ -61,12 +60,13 @@ module p8e0_mul(
                 8'bx111110x: k =  4;
                 8'bx1111110: k =  5;
                 8'bx1111111: k =  6;
-                default:     k =  8'hxx;
+                default:     k =  8'hff; // never occurs
             endcase
-            reg_length = 1 + (bits[6] == 1'b1 ? k + 1 : -k);
-            ////              ^^^^^^-- first (i.e. leftmost) regime bit
+            
+            reg_length = 1 + 
+                         (first_regime_bit == 1'b1 ? k + 1 : c2(k));
 
-            if (reg_length == 8) reg_length = 7;
+            if (reg_length == 8) reg_length = 7;                            // <---- is this line unnecessary?
 
             tmp = ((bits << reg_length) & 8'h7f) | 8'h80;
 
@@ -74,16 +74,17 @@ module p8e0_mul(
         end
     endfunction
 
+    /*
     function [7:0] calc_ui(
             input [7:0] k,
             input [7:0] frac16
         );
         begin: _calc_ui
-            reg [7:0] regime;               // 8 bits
-            reg       reg_s;                // 1 bit
-            reg [7:0] reg_len;              // 8 bits
+            logic [7:0] regime;               // 8 bits
+            logic       reg_s;                // 1 bit
+            logic [7:0] reg_len;              // 8 bits
             
-            reg       bits_more;
+            logic       bits_more;
 
             {regime, reg_s, reg_len} = calculate_regime(k);
             
@@ -100,18 +101,19 @@ module p8e0_mul(
             end
         end
     endfunction
+    */
 
     function [(8+1+8)-1:0] calculate_regime(
             input [7:0] k
         );
         begin: _calculate_regime
-            reg [7:0] regime;
-            reg       reg_s; 
-            reg [7:0] length;
+            logic [7:0] regime;
+            logic       reg_s; 
+            logic [7:0] length;
 
             if (k & 8'h80) begin
             //  └── check if k is negative
-                length = -k;
+                length = c2(k);
                 regime = checked_shr(8'h40, length);
                 reg_s = 1'b0;
             end else begin
@@ -131,32 +133,34 @@ module p8e0_mul(
     endfunction
     /*============= endfunctions ================*/
 
-    reg sign_a, sign_b, sign_z;
+    logic sign_a, sign_b, sign_z;
 
 `ifndef PROBE_SIGNALS
-    reg [7:0]  ui_a, ui_b;
-    reg [7:0]  k_a,    k_b;
-    reg [7:0]  frac_a, frac_b;
+    logic [7:0]  ui_a, ui_b;
+    logic [7:0]  k_a,    k_b;
+    logic [7:0]  frac_a, frac_b;
 
-    reg [7:0]  k_c;
-    reg [15:0] frac16;
+    logic [7:0]  k_c;
+    logic [15:0] frac16;
 
-    reg        rcarry;
+    logic        rcarry;
 `endif
 
 
     // calc_ui regs
-    reg [7:0] regime;               // 8 bits
-    reg       reg_s;                // 1 bit
-    reg [7:0] reg_len;              // 8 bits
+    logic [7:0] regime;               // 8 bits
+    logic       reg_s;                // 1 bit
+    logic [7:0] reg_len;              // 8 bits
     // end calc_ui regs
 
-    reg [7:0] frac;
-    reg       bits_more;
+    logic [7:0] frac;
+    logic       bits_more;
     
-    reg [7:0] u_z;
+    logic [7:0] u_z;
 
-    always @(*) begin
+    always_comb begin
+
+      //////  z = 0; // always comb does not infer purely combinational logic? 
 
         if (a == 0 || b == 0 || a == 8'h80 || b == 8'h80) begin
             if (a == 0 || b == 0) begin
@@ -217,8 +221,7 @@ module p8e0_mul(
                 frac16 = (frac16 & 16'h3fff) >> reg_len;
                 u_z = regime + (frac16 >> 8);
                 if ((frac16 & 8'h80) != 0) begin
-                    bits_more = (frac16 & 8'h7f) != 0;
-                    u_z = u_z + ((u_z & 1'b1) | bits_more);
+                    u_z = u_z + ( (u_z & 1'b1) | ((frac16 & 8'h7f) != 0) );
                 end
             end
             

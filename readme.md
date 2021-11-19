@@ -19,18 +19,18 @@
 ```
 .
 ├── readme.md
-|
+│
 ├── quartus
 │   └── ...
 └── src
     ├── p16e0
-    │   ├── add.sv
+    │   ├── p16e0_add.sv
     │   ├── convert.sv
-    │   └── mul.sv
+    │   └── p16e0_mul.sv
     └── p8e0
-        ├── add.sv
+        ├── p8e0_add.sv
         ├── convert.sv
-        └── mul.sv
+        └── p8e0_mul.sv
 ```
 
 
