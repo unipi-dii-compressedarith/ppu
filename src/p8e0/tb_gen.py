@@ -31,8 +31,8 @@ if TEST_ALL_COMBINATIONS:
             list_b.append(j)
     print(f"{len(list_a)=}")
 else: # test NUM_RANDOM_TEST_CASES tests. 
-    list_a = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
-    list_b = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
+    list_a = random.sample(range(0, 2**N - 1), NUM_RANDOM_TEST_CASES)
+    list_b = random.sample(range(0, 2**N - 1), NUM_RANDOM_TEST_CASES)
 
 # print 8-bits hex or bin repr of `val`. _bin(3) = "0b00000011"
 _hex = lambda val: f"8'h{val:02x}"
