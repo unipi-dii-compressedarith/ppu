@@ -215,7 +215,7 @@ class TestSum(unittest.TestCase):
         )
 
     def test_mix(self):
-        for _ in range(200):
+        for _ in range(1000):
             # 1) generate random 8bits numbers
             a = random.randint(0, 2**N - 1)
             b = random.randint(0, 2**N - 1)

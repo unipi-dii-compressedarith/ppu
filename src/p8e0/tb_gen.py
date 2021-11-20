@@ -39,9 +39,9 @@ _hex = lambda val: f"8'h{val:02x}"
 _bin = lambda val: f"8'b{val:08b}"
 
 
-# add 0 and NaR inputs testcases first
-list_a = [0x00, 0x80] + list_a 
-list_b = [0x03, 0x90] + list_b
+# force add a few special testcases first
+list_a = [0b01111010, 0x00, 0x80] + list_a 
+list_b = [0b01011000, 0x03, 0x90] + list_b
 
 body = ""
 counter = 0

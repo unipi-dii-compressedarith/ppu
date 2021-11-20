@@ -1,3 +1,5 @@
+// ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top decode8 -vqm decode8.vqm" decode8.sv encode8.sv reg8.sv ger8.sv highest_set.sv > yosys.out
+
 module decode8(p8,r,k,f,s);
 	input logic signed[7:0] p8;
 	output logic[2:0] r;

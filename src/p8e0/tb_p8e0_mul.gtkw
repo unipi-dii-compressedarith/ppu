@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Nov 19 10:40:32 2021
+[*] Sat Nov 20 14:26:42 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_mul.vcd"
-[dumpfile_mtime] "Fri Nov 19 10:40:24 2021"
-[dumpfile_size] 52500
+[dumpfile_mtime] "Fri Nov 19 17:33:16 2021"
+[dumpfile_size] 54368
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_mul.gtkw"
 [timestart] 0
 [size] 2560 1418
-[pos] -1 -1
-*-6.312470 1675 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -172 -104
+*-6.329937 7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_p8e0_mul.
 [treeopen] tb_p8e0_mul.p8e0_mul_inst.
 [treeopen] tb_p8e0_mul.p8e0_mul_inst.calculate_regime.
@@ -17,7 +17,7 @@
 [sst_width] 193
 [signals_width] 249
 [sst_expanded] 1
-[sst_vpaned_height] 417
+[sst_vpaned_height] 1092
 @420
 tb_p8e0_mul.test_no
 @200
