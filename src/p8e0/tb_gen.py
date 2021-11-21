@@ -47,7 +47,6 @@ body = ""
 counter = 0
 for a, b in zip(list_a, list_b):
     ans_p8e0_mul = p8e0.mul(a, b)
-    ans_p8e0_add = p8e0.add(a, b)
 
     ui_a = ans_p8e0_mul.ui_a
     ui_b = ans_p8e0_mul.ui_b
@@ -60,7 +59,6 @@ for a, b in zip(list_a, list_b):
     frac16 = ans_p8e0_mul.frac16
     rcarry = ans_p8e0_mul.rcarry
 
-    # a
     counter += 1
     
     body += f"""    
@@ -93,3 +91,28 @@ ans = ans.replace('\t', ' '*4)
 output = "tb_p8e0_mul.sv"
 with open(output, "w") as f: 
     print(f'Wrote {output}; {f.write(ans)} characters')
+
+
+
+
+
+
+counter = 0
+body = ""
+for a, b in zip(list_a, list_b):
+    ans_p8e0_add = p8e0.add(a, b)
+    z = ans_p8e0_add.z
+
+    counter += 1
+    
+    body += f"""    
+                    test_no =   {counter};
+                    a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
+                    b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
+                    a_ascii =   \"{sp.posit8(bits=a)}\";
+                    b_ascii =   \"{sp.posit8(bits=b)}\";
+                    z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
+                    z_ascii    = \"{sp.posit8(bits=z)}\";
+        #10;
+    """
+print(body)
