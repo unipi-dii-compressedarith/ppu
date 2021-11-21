@@ -2,7 +2,7 @@ import softposit as sp
 import random
 import datetime
 
-import p8e0_mul
+import p8e0
 
 N = 8 # num bits
 
@@ -46,7 +46,8 @@ list_b = [0b01011000, 0x03, 0x90] + list_b
 body = ""
 counter = 0
 for a, b in zip(list_a, list_b):
-    ans_p8e0_mul = p8e0_mul.p8e0_mul(a, b)
+    ans_p8e0_mul = p8e0.mul(a, b)
+    ans_p8e0_add = p8e0.add(a, b)
 
     ui_a = ans_p8e0_mul.ui_a
     ui_b = ans_p8e0_mul.ui_b

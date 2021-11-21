@@ -1,7 +1,7 @@
 # either:
-#   pytest p8e0_mul.py -v  
+#   pytest mul.py -v  
 # or
-#   python p8e0_mul.py -v
+#   python mul.py -v
 
 from typing import Tuple
 import pytest 
@@ -84,6 +84,9 @@ def checked_shr(bits, rhs):
     # https://doc.rust-lang.org/std/primitive.u32.html#method.checked_shr
     return bits >> rhs 
 
+def checked_shl(bits, rhs):
+    return bits << rhs
+
 def calculate_regime(k) -> Tuple[int, bool, int]:
     if k < 0:
         length = -k & 0xffff_ffff
@@ -117,10 +120,13 @@ def from_bits(bits: int, sign: bool) -> int:
 def c2(a: int) -> int: 
     return (~a + 1) & 0xff
 
+def wrapping_neg(a): 
+    return c2(a) & 0x7f
+
 def is_nar(a):  return a == 0x80
 def is_zero(a): return a == 0
 
-def p8e0_mul(a: int, b: int) -> Ans:
+def mul(a: int, b: int) -> Ans:
 
     if is_nar(a) or is_nar(b):
         return Ans(z=0x80) # NaR
@@ -131,8 +137,8 @@ def p8e0_mul(a: int, b: int) -> Ans:
     sign_b = b & 0x80
     sign_z: bool = (sign_a ^ sign_b) != 0
 
-    ui_a = a if sign_a == 0 else c2(a)
-    ui_b = b if sign_b == 0 else c2(b)
+    ui_a = a if sign_a == 0 else wrapping_neg(a)
+    ui_b = b if sign_b == 0 else wrapping_neg(b)
 
     k_a, frac_a = separate_bits(ui_a)
     k_b, frac_b = separate_bits(ui_b)
@@ -169,6 +175,89 @@ def p8e0_mul(a: int, b: int) -> Ans:
 
 
 
+"""
+def add_mags(a, b):
+    sign = (a & 0x80) != 0
+    
+    ui_a = a if sign == 0 else wrapping_neg(a)
+    ui_b = b if sign == 0 else wrapping_neg(b)
+
+    if ui_a < ui_b:
+        ui_a, ui_b = ui_b, ui_a
+    
+    k_a, frac_a = separate_bits(ui_a)
+    frac16_a = ((frac_a & 0xff) << 7) & 0xffff
+
+    k_b, frac_b = separate_bits(ui_b)
+    shift_right = ((k_a & 0xffff) - (k_b & 0xffff)) & 0xffff
+    frac16_a += checked_shl( frac_b & 0xffff, (7 - shift_right) & 0xffff_ffff )
+
+    rcarry = (frac16_a & 0x8000) != 0
+    if rcarry:
+        k_a += 1
+        frac16_a >>= 1
+
+    u_z = calc_ui(k_a, frac16_a)
+    return from_bits(u_z, sign)
+
+
+def sub_mags(a, b):
+    sign = a & 0x80 != 0
+    if sign:
+        ui_a = wrapping_neg(a)
+        ui_b = b
+    else:
+        ui_a = a
+        ui_b = wrapping_neg(b)    
+    
+    if a == b:
+        return 0x00
+    
+    if ui_a < ui_b:
+        ui_a, ui_b = ui_b, ui_a
+        sign = not sign
+    
+    k_a, frac_a = separate_bits(ui_a)
+    frac16_a = ((frac_a & 0xff) << 7) & 0xffff
+
+    k_b, frac_b = separate_bits(ui_b)
+    shift_right = ((k_a & 0xffff) - (k_b & 0xffff)) & 0xffff
+    frac16_a = (frac16_a + checked_shl( frac_b & 0xffff, (7 - shift_right) & 0xffff_ffff )) & 0xffff
+    
+    frac16_b = ((frac_b & 0xff) << 7) & 0xffff
+
+    if shift_right >= 14:
+        return from_bits(ui_a, sign)
+    else:
+        frac16_b = frac16_b >> shift_right
+    frac16_a -= frac16_b
+
+    while (frac16_a >> 14) == 0:
+        k_a -= 1
+        frac16_a <<= 1
+    
+    ecarry = ( (0x4000 & frac16_a) >> 14) != 0
+    if not ecarry:
+        k_a -= 1
+        frac16_a <<= 1
+    
+    u_z = calc_ui(k_a, frac16_a)
+    return from_bits(u_z, sign)
+
+u8 = int
+
+def add(a: u8, b: u8) -> Ans:
+    if a == 0 or b == 0:
+        z = a | b
+    elif a == 0x80 or b == 0x80:
+        z = 0x80
+    else:
+        if (a ^ b) & 0x80 == 0: # same sign
+            z = add_mags(a, b)
+        else:                   # opposite sign
+            z = sub_mags(a, b)
+    return Ans(z)
+"""
 
 
 class TestSum(unittest.TestCase):
@@ -177,7 +266,7 @@ class TestSum(unittest.TestCase):
         b = random.randint(0, 2**N - 1)
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
-        z_int = p8e0_mul(a, b).z
+        z_int = mul(a, b).z
         self.assertEqual(
             a_p8 * b_p8,
             sp.posit8(bits=z_int)
@@ -187,7 +276,7 @@ class TestSum(unittest.TestCase):
         b = random.randint(0, 2**N - 1)
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
-        z_int = p8e0_mul(a, b).z
+        z_int = mul(a, b).z
         self.assertEqual(
             a_p8 * b_p8,
             sp.posit8(bits=z_int)
@@ -198,7 +287,7 @@ class TestSum(unittest.TestCase):
         b = 0x80
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
-        z_int = p8e0_mul(a, b).z
+        z_int = mul(a, b).z
         self.assertEqual(
             a_p8 * b_p8,
             sp.posit8(bits=z_int)
@@ -208,20 +297,20 @@ class TestSum(unittest.TestCase):
         a = b = 0x7f
         a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
         
-        z_int = p8e0_mul(a, b).z
+        z_int = mul(a, b).z
         self.assertEqual(
             a_p8 * b_p8,
             sp.posit8(bits=z_int)
         )
 
-    def test_mix(self):
+    def test_mix_mul(self):
         for _ in range(1000):
             # 1) generate random 8bits numbers
             a = random.randint(0, 2**N - 1)
             b = random.randint(0, 2**N - 1)
 
             # 3) compute posit multiplication with my procedure (returns int)
-            z_int = p8e0_mul(a, b).z
+            z_int = mul(a, b).z
 
             a_p8, b_p8 = sp.posit8(bits=a), sp.posit8(bits=b)
 
@@ -230,6 +319,7 @@ class TestSum(unittest.TestCase):
                 c_p8,
                 sp.posit8(bits=z_int)
             )
+
 
 
 if __name__ == '__main__':
@@ -279,12 +369,43 @@ test_tmp = [
     (0b01000000, 0b10000000)]
 @pytest.mark.parametrize("test_input,expected", test_tmp)
 def test_tmp(test_input, expected):
-        assert separate_bits(test_input)[1] == expected
+    assert separate_bits(test_input)[1] == expected
 
 
-NUM_RANDOM_TEST_CASES = 10
-for _ in range(NUM_RANDOM_TEST_CASES):
-    list_a = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
-    list_b = [random.randint(0, 2**N - 1) for _ in range(NUM_RANDOM_TEST_CASES)]
 
-    # to be finished
+test_mul = [
+    ((0x7a, 0x58), 0x7d),
+    ((0x42, 0x76), 0x77),
+    ((0x03, 0x29), 0x02),
+]
+@pytest.mark.parametrize("test_input,expected", test_mul)
+def test_mul(test_input, expected):
+    a, b = test_input
+    assert sp.posit8(bits=mul(a,b).z) == sp.posit8(bits=expected) #sp.posit8(bits=a) * sp.posit8(bits=b)
+
+
+"""
+test_add = [
+    ((0x74, 0x51), 0b01110111),
+    ((0x72, 0x71), 0b01111001),
+    ((0xac, 0x10), 0b10110100),
+    # ((0b01110001, 0b10001111), 0x00),
+    ((0x2,  0x4),  0b00000110),
+    ((0x7f, 0x1),  0x7f),
+    ((0xf1, 0x4c), 0b01000100),
+    ((0x00, 0x4c), 0x4c),
+]
+@pytest.mark.parametrize("test_input,expected", test_add)
+def test_add(test_input, expected):
+    a, b = test_input
+    assert sp.posit8(bits=add(a,b).z) == sp.posit8(bits=expected)
+"""
+
+
+
+# a = random.sample(range(0,5), 5)
+# b = random.sample(range(0,5), 5)
+# c = [i+j for i,j in zip(a,b)]
+
+# [((i,j),k) for i,j,k in zip(a,b,c)]
+
