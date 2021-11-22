@@ -98,7 +98,6 @@ def calculate_regime(k) -> Tuple[int, bool, int]:
 def pack_to_ui(regime, frac):
     return regime + frac
 
-
 def calc_ui(k, frac16):
     regime, reg_s, reg_len = calculate_regime(k)
     if reg_len > 6:
@@ -106,7 +105,7 @@ def calc_ui(k, frac16):
     else:
         frac16 = (frac16 & 0x3fff) >> reg_len
         frac = (frac16 >> 8) & 0xff
-        #                    ^^^^^^ => as u8
+
         bit_n_plus_one = (frac16 & 0x80) != 0
         u_z = pack_to_ui(regime, frac)
         if bit_n_plus_one:
@@ -126,12 +125,14 @@ def wrapping_neg(a):
 def is_nar(a):  return a == 0x80
 def is_zero(a): return a == 0
 
-def mul(a: int, b: int) -> Ans:
+####### end aux functions #######
 
+
+def mul(a: int, b: int) -> Ans:
     if is_nar(a) or is_nar(b):
-        return Ans(z=0x80) # NaR
+        return Ans(z=0x80)  # NaR
     elif is_zero(a) or is_zero(b):
-        return Ans(z=0) # 0
+        return Ans(z=0)     # 0
 
     sign_a = a & 0x80
     sign_b = b & 0x80
@@ -174,6 +175,7 @@ def mul(a: int, b: int) -> Ans:
                frac_a=frac_a, frac_b=frac_b, frac16=frac16, rcarry=rcarry, z=z)
 
 
+
 def add_mags(a, b):
     sign = (a & 0x80) != 0
     
@@ -187,9 +189,9 @@ def add_mags(a, b):
     frac16_a = ((frac_a & 0xff) << 7) & 0xffff
 
     k_b, frac_b = separate_bits(ui_b)
-    shift_right = ((k_a & 0xffff) - (k_b & 0xffff)) & 0xffff
+    shift_right = k_a - k_b
     
-    frac16_a += checked_shl( frac_b & 0xffff, (7 - shift_right) & 0xffff_ffff )
+    frac16_a += checked_shl( frac_b, (7 - shift_right) & 0xffff_ffff )
 
     rcarry = (frac16_a & 0x8000) != 0
     if rcarry:
@@ -209,7 +211,6 @@ def sub_mags(a, b):
         ui_a = a
         ui_b = wrapping_neg(b)    
     
-
     if ui_a == ui_b:
         return 0x00
     
@@ -222,7 +223,7 @@ def sub_mags(a, b):
 
     k_b, frac_b = separate_bits(ui_b)
 
-    shift_right = ((k_a & 0xffff) - (k_b & 0xffff)) & 0xffff
+    shift_right = k_a - k_b
     
     frac16_b = ((frac_b & 0xff) << 7) & 0xffff
 
@@ -244,8 +245,8 @@ def sub_mags(a, b):
     u_z = calc_ui(k_a, frac16_a)
     return from_bits(u_z, sign)
 
-u8 = int
 
+u8 = int
 def add(a: u8, b: u8) -> Ans:
     if a == 0 or b == 0:
         z = a | b
@@ -395,7 +396,8 @@ test_mul = [
     ((0x7a, 0x58), 0x7d),
     ((0x42, 0x76), 0x77),
     ((0x03, 0x29), 0x02),
-]
+]   # │      │       │
+    # └─ a   └─ b    └─ P<8,0>::(a * b)
 @pytest.mark.parametrize("test_input,expected", test_mul)
 def test_mul(test_input, expected):
     a, b = test_input
@@ -414,7 +416,8 @@ test_add = [
     ((0x00, 0x4c), 0x4c),
     ((112, 64), 114),
     ((0x68, 0x5c), 0b01110010),
-]
+]   # │      │       │
+    # └─ a   └─ b    └─ P<8,0>::(a + b)
 @pytest.mark.parametrize("test_input,expected", test_add)
 def test_add(test_input, expected):
     a, b = test_input
