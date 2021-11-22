@@ -259,29 +259,6 @@ def add(a: u8, b: u8) -> Ans:
     return Ans(z)
 
 
-# def decode(bits, es=0):
-#     sign = (bits & 0x80) != 0
-#     reg_s = (bits & 0x40) != 0 # regime leftmost bit
-#     reg_len = 0
-#     if reg_s:
-#         while bits & (1 << (7 - reg_len)) != 0:
-#             reg_len += 1
-#     else:
-#         while bits & (1 << (7 - reg_len)) == 0:
-
-
-#     return sign, reg, exp, frac
-
-# def add(a: u8, b: u8) -> Ans:
-#     if a == 0 or b == 0:
-#         z = a | b
-#     elif a == 0x80 or b == 0x80:
-#         z = 0x80
-#     else:
-#         sign_a, reg_a, exp_a, frac_a = decode(a)
-#         sign_b, reg_b, exp_b, frac_b = decode(b)
-
-#     return Ans(z)
 
 
 class TestSum(unittest.TestCase):
