@@ -44,7 +44,7 @@
 # use `brew` if macOS, `apt` if ubuntu
 
 apt install gtkwave    # [1] (~5 MB)
-apt install iverilog   # [2] (~7 MB)
+apt install iverilog   # [2] (~7 MB) use "brew install icarus-verilog" on macOs
 apt install yosys      # [3] optional, (~33 MB)
 ```
 
