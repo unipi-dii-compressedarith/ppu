@@ -14,6 +14,10 @@ python tb_gen.py # generates testbench file `tb_p8e0_mul.sv`
 
 iverilog p8e0_mul.sv tb_p8e0_mul.sv
 
+# If you get any error, try:
+
+iverilog -g2012 p8e0_mul.sv tb_p8e0_mul.sv
+
 ./a.out
 
 
