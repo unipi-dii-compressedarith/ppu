@@ -12,10 +12,9 @@ steps to reproduce:
 ```sh    
 python tb_gen.py # generates testbench file `tb_p8e0_mul.sv`
 
-iverilog p8e0_mul.sv tb_p8e0_mul.sv
+iverilog -g2012 -D PROBE_SIGNALS p8e0_mul.sv tb_p8e0_mul.sv
 
 ./a.out
-
 
 gtkwave tb_p8e0_mul.vcd # opens generated waveform with gtkwave
 
@@ -26,5 +25,5 @@ gtkwave tb_p8e0_mul.gtkw # opens pre-cooked waveform with gtkwave. only works if
 
 run tests?
 ```sh
-pytest p8e0_mul.py -v
+pytest p8e0.py -v
 ```

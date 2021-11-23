@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Nov 21 18:26:40 2021
+[*] Mon Nov 22 10:15:21 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/sum8_tb.vcd"
 [dumpfile_mtime] "Sun Nov 21 18:19:21 2021"
 [dumpfile_size] 70842
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/sum8_tb.gtkw"
 [timestart] 0
-[size] 2560 1418
-[pos] 840 -1
-*-6.294755 53 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1440 855
+[pos] 0 23
+*-4.386911 26 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] sum8_tb.
 [treeopen] sum8_tb.sum8_inst.
 [sst_width] 193
 [signals_width] 198
 [sst_expanded] 1
-[sst_vpaned_height] 563
+[sst_vpaned_height] 590
 @420
 sum8_tb.test_no
 @200
@@ -39,13 +39,13 @@ sum8_tb.p8y_ascii[100:0]
 @22
 [color] 3
 sum8_tb.p8c[7:0]
-@820
-[color] 2
-sum8_tb.p8c_ascii[100:0]
 @200
 -
 @22
 sum8_tb.p8c_exp[7:0]
+@821
+[color] 2
+sum8_tb.p8c_ascii[100:0]
 @28
 sum8_tb.diff_p8c
 [pattern_trace] 1
