@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Nov 23 20:25:18 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_add.vcd"
+[dumpfile_mtime] "Tue Nov 23 20:24:17 2021"
+[dumpfile_size] 20402
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_add.gtkw"
+[timestart] 0
+[size] 2560 1418
+[pos] -1 -1
+*-6.265078 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_p8e0_add.
+[sst_width] 193
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 445
+@420
+tb_p8e0_add.test_no
+@200
+-
+@22
+tb_p8e0_add.a[7:0]
+tb_p8e0_add.a_ascii[100:0]
+tb_p8e0_add.b[7:0]
+tb_p8e0_add.b_ascii[100:0]
+@200
+-
+@22
+tb_p8e0_add.z[7:0]
+@201
+-
+@22
+tb_p8e0_add.z_ascii[100:0]
+tb_p8e0_add.z_exp[7:0]
+@28
+tb_p8e0_add.is_zero
+tb_p8e0_add.is_nar
+tb_p8e0_add.diff_z
+[pattern_trace] 1
+[pattern_trace] 0

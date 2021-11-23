@@ -14,22 +14,21 @@ module tb_p8e0_mul;
 
     localparam ZERO = 'h0;
     localparam P8_NAR = 8'h80;
-    /// localparam UNDEFINED = 'hz; // generic, no length specified.
 
-    logic  [7:0]  a, b;
-    wire [7:0]  ui_a, ui_b;
+    logic   [7:0]   a, b;
+    wire    [7:0]   ui_a, ui_b;
     
-    logic  [100:0] a_ascii, b_ascii, z_ascii;
+    logic   [100:0] a_ascii, b_ascii, z_ascii;
 
-    wire [7:0]  z;
-    wire        is_zero;
-    wire        is_nar;
+    wire    [7:0]   z;
+    wire            is_zero;
+    wire            is_nar;
 
-    wire [7:0]  k_a, k_b;
-    wire [7:0]  frac_a, frac_b;
-    wire [7:0]  k_c;
-    wire [15:0] frac16;
-    wire        rcarry;
+    wire    [7:0]   k_a, k_b;
+    wire    [7:0]   frac_a, frac_b;
+    wire    [7:0]   k_c;
+    wire    [15:0]  frac16;
+    wire            rcarry;
 
     p8e0_mul p8e0_mul_inst(
         .a      (a),
@@ -50,28 +49,28 @@ module tb_p8e0_mul;
         .z      (z)
     );
 
-    logic [7:0] z_exp;
-    logic diff_z;
+    logic   [7:0]   z_exp;
+    logic           diff_z;
 
 
 `ifdef PROBE_SIGNALS
-    logic [7:0] ui_a_exp, ui_b_exp;
-    logic [7:0] k_a_exp, k_b_exp, k_c_exp;
+    logic   [7:0]   ui_a_exp, ui_b_exp;
+    logic   [7:0]   k_a_exp, k_b_exp, k_c_exp;
     
-    logic rcarry_exp;
+    logic           rcarry_exp;
 
-    logic [7:0] frac_a_exp, frac_b_exp;
-    logic [15:0] frac16_exp;
+    logic   [7:0]   frac_a_exp, frac_b_exp;
+    logic   [15:0]  frac16_exp;
 
-    logic diff_ui_a, diff_ui_b,
-          diff_k_a, diff_k_b, diff_k_c,
-          diff_rcarry,
-          diff_frac_a, diff_frac_b,
-          diff_frac16;
-
-    integer test_no;
-        
+    logic           diff_ui_a, diff_ui_b,
+                    diff_k_a, diff_k_b, diff_k_c,
+                    diff_rcarry,
+                    diff_frac_a, diff_frac_b,
+                    diff_frac16;
 `endif
+
+    integer         test_no;
+
 
     always_comb begin
         diff_z      = diff(z, z_exp);
