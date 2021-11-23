@@ -44,13 +44,20 @@ fn fast_sigmoid(x: f64) -> f64 {
     let x_n = if x > 0_f64 { x } else { -x };
     let X = P8E0::from(x_n).to_bits();
     let s = x > 0_f64;
-    let invert_bit = 1 << (8 - 2);
+    let invert_bit = 1 << (N - 2);
     let Y = (invert_bit + (X >> 1)) >> 1;
+    let Y = match s {
+        true => Y,
+        _ => c1(Y)
+    };
     let y = P8E0::from_bits(Y).to_f64().unwrap();
-    match s {
-        true => y,
-        _ => 1.0 - y
-    }
+    y
+}
+
+fn c1(X: u8) -> u8 {
+    let invert_bit = 1 << (N - 2);
+    let Y = invert_bit.checked_sub(&X).unwrap_or(0); // (invert_bit - X) with boundary check
+    Y
 }
 
 fn fast_elu(x: f64) -> f64 {
@@ -92,9 +99,7 @@ fn twice(x: f64) -> f64 {
 
 fn comp_one(x: f64) -> f64 {
     let X = P8E0::from(x).to_bits();
-    let invert_bit = 1 << (8 - 2);
-    let Y = invert_bit.checked_sub(&X).unwrap_or(0);
-    //                   └──── (invert_bit - X) with boundary check
+    let Y = c1(X);
     let y = P8E0::from_bits(Y).to_f64().unwrap();
     y
 }
@@ -157,6 +162,11 @@ fn main() {
     Page::single(&elu).save("elu.svg").expect("saving svg");
 }
 
+
+#[test]
+fn my_test() {
+    assert_eq!(c1(0b0001_1001), 0b0010_0111);
+}
 
 // use plotters::prelude::*;
 
