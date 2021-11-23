@@ -34,11 +34,11 @@
 
 ### cli tools
 
-|linux (*)             |macOS                        |                      |
-|----------------------|-----------------------------|----------------------|
-|`apt install gtkwave` |`brew install gtkwave`       |[1] (~5 MB)           |
-|`apt install iverilog`|`brew install icarus-verilog`|[2] (~7 MB)           |
-|`apt install yosys`   |`brew install yosys`         |[3] optional, (~33 MB)|
+|   |linux (*)             |macOS                        |                |
+|---|----------------------|-----------------------------|----------------|
+|[1]|`apt install gtkwave` |`brew install gtkwave`       |~5 MB           |
+|[2]|`apt install iverilog`|`brew install icarus-verilog`|~7 MB           |
+|[3]|`apt install yosys`   |`brew install yosys`         |optional, ~33 MB|
 
 
 ---
