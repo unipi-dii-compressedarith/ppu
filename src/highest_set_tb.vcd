@@ -1,0 +1,67 @@
+$date
+	Sat Nov 20 15:48:02 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module highest_set_tb $end
+$var wire 3 ! index [2:0] $end
+$var reg 8 " bits [7:0] $end
+$scope module highest_set_inst $end
+$var wire 8 # bits [7:0] $end
+$var wire 3 $ index [2:0] $end
+$scope begin _gen[0] $end
+$upscope $end
+$scope begin _gen[1] $end
+$upscope $end
+$scope begin _gen[2] $end
+$upscope $end
+$scope begin _gen[3] $end
+$upscope $end
+$scope begin _gen[4] $end
+$upscope $end
+$scope begin _gen[5] $end
+$upscope $end
+$scope begin _gen[6] $end
+$upscope $end
+$scope begin _gen[7] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b111 $
+b0 #
+b0 "
+b111 !
+$end
+#10
+b0 !
+b0 $
+b1 "
+b1 #
+#20
+b1 !
+b1 $
+b11 "
+b11 #
+#30
+b11 !
+b11 $
+b1000 "
+b1000 #
+#40
+b101 !
+b101 $
+b100000 "
+b100000 #
+#50
+b110 !
+b110 $
+b1000101 "
+b1000101 #
+#60
