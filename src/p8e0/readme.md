@@ -29,6 +29,7 @@ gtkwave tb_p8e0_mul.vcd
 gtkwave tb_p8e0_mul.gtkw
 ```
 
+For macOs, follow this to enable gtkwave from CLI: https://ughe.github.io/2018/11/06/gtkwave-osx
 
 (\*) on macOS this may not work, just open gtkwave like a normal application and then File -> Open New Tab -> pick the `.gktw` or `.vcd` file you need.
 
