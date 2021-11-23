@@ -1,16 +1,23 @@
 # either:
-#   pytest mul.py -v  
+#   pytest p8e0.py -v
 # or
-#   python mul.py -v
+#   python p8e0.py -v
 
 from typing import Tuple
 import pytest 
 import unittest
 import random
 import softposit as sp
+import enum
 
 # random.seed(12)
 N = 8 # num bits
+
+class P8E0(enum.Enum):
+    ZERO = 0x00
+    NAR = 0x80
+    REG_S = 0x40
+
 
 class Ans:
     def __init__(
@@ -61,6 +68,7 @@ def separate_bits(bits):
     return (k, tmp)
 
 def calc_k(bits):
+    #### TODO: find a better way
     k = -6 if ( bits << 1 & 0xff) >> 1 == 1 else \
         -5 if ( bits << 1 & 0xff) >> 2 == 1 else \
         -4 if ( bits << 1 & 0xff) >> 3 == 1 else \
@@ -80,20 +88,21 @@ def calc_k(bits):
     return (k, reg_len)
             
 
-def checked_shr(bits, rhs):
-    # https://doc.rust-lang.org/std/primitive.u32.html#method.checked_shr
+def shr(bits, rhs):
+    """shift right"""
     return bits >> rhs 
 
-def checked_shl(bits, rhs):
+def shl(bits, rhs):
+    """shift left"""
     return (bits << rhs) & 0xffff
 
 def calculate_regime(k) -> Tuple[int, bool, int]:
     if k < 0:
         length = -k & 0xffff_ffff
-        return (checked_shr(0x40, length), False, length)
+        return (shr(0x40, length), False, length)
     else:
         length = (k + 1) & 0xffff_ffff
-        return (0x7f - checked_shr(0x7f, length), True, length)
+        return (0x7f - shr(0x7f, length), True, length)
 
 def pack_to_ui(regime, frac):
     return regime + frac
@@ -116,10 +125,10 @@ def calc_ui(k, frac16):
 def from_bits(bits: int, sign: bool) -> int:
     return c2(bits) if sign else bits
     
-def c2(a: int) -> int: 
+def c2(a: int) -> int:
     return (~a + 1) & 0xff
 
-def wrapping_neg(a): 
+def wrapping_neg(a):
     return c2(a) & 0x7f
 
 def is_nar(a):  return a == 0x80
@@ -191,7 +200,7 @@ def add_mags(a, b):
     k_b, frac_b = separate_bits(ui_b)
     shift_right = k_a - k_b
     
-    frac16_a += checked_shl( frac_b, (7 - shift_right) & 0xffff_ffff )
+    frac16_a += shl( frac_b, (7 - shift_right) & 0xffff_ffff )
 
     rcarry = (frac16_a & 0x8000) != 0
     if rcarry:

@@ -23,4 +23,5 @@ __pycache__
 
 # yosys generated
 *.vqm
+*.edif
 verif_post

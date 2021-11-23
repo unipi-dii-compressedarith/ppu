@@ -17,15 +17,7 @@ pip install softposit
 ```
 
 ```sh
-# generates testbench file `tb_p8e0_mul.sv`
-python tb_gen.py 
-```
-
-compilation and exe
-```sh
-iverilog -g2012 -D PROBE_SIGNALS p8e0_mul.sv tb_p8e0_mul.sv
-
-./a.out
+make mul
 ```
 
 visualization (\*)

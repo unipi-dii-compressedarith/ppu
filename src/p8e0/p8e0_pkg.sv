@@ -80,14 +80,13 @@ package p8e0_pkg;
             logic       reg_s; 
             logic [7:0] length;
 
-            if (k & 8'h80) begin
-            //  └── check if k is negative
+            if (k & 8'h80) begin // k is negative
                 length = c2(k);
-                regime = checked_shr(8'h40, length);
+                regime = checked_shr(8'h40, c2(k));
                 reg_s = 1'b0;
             end else begin
                 length = k + 1;
-                regime = 8'h7f - checked_shr(8'h7f, length);
+                regime = 8'h7f - checked_shr(8'h7f, k + 1);
                 reg_s = 1'b1;
             end
             calculate_regime = {regime, reg_s, length};
@@ -106,6 +105,7 @@ package p8e0_pkg;
             input [7:0] expected
         );
         diff = reference === expected ? 0 : 1'bx;
+        //                └── tests for 1, 0, z and x (https://stackoverflow.com/a/5927857/6164816)
     endfunction
 
 endpackage

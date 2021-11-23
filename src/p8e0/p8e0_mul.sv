@@ -9,15 +9,19 @@
  *     - todo: fix inferred latches 
  *
  *
- *  ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" p8e0_mul.sv > yosys.out
+ *  $ which sv2v
+ *  ~/Documents/dev/sv2v/bin/sv2v  (https://github.com/zachjs/sv2v)
+ *
+ *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" out.v > yosys_intel.out
+ *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && ~/Documents/dev/yosys/yosys -p "synth_xilinx -edif p8e0_mul.edif -top p8e0_mul" out.v > yosys_xilinx.out
  *  iverilog -D POST_IMPL -o verif_post -s p8e0_mul p8e0_mul.sv  $(yosys-config --datdir/intel/max10/cells_sim.v) && vvp -N verif_post
  */
 
 import p8e0_pkg::*;
 
 module p8e0_mul(
-        input      [7:0]    a,
-        input      [7:0]    b,
+        input        [7:0]    a,
+        input        [7:0]    b,
 `ifdef PROBE_SIGNALS
         output logic [7:0]    ui_a,   ui_b,
         output logic [7:0]    k_a,    k_b,
@@ -26,8 +30,8 @@ module p8e0_mul(
         output logic [15:0]   frac16,
         output logic          rcarry,
 `endif
-        output /* wire */           is_zero,
-        output    wire     is_nar,
+        output /* wire */     is_zero,
+        output    wire        is_nar,
         output logic [7:0]    z
     );
 
@@ -56,15 +60,21 @@ module p8e0_mul(
     
     logic [7:0] u_z;
 
-    always_comb begin
-
-      //////  z = 0; // always comb does not infer purely combinational logic? 
+`ifdef ALTERA_RESERVED_QIS // https://stackoverflow.com/a/59250550/6164816
+    always @(*)
+`else
+    always_comb
+`endif
+    begin
+        //////  z = 0; // always comb does not infer purely combinational logic? 
 
         if (a == 0 || b == 0 || a == 8'h80 || b == 8'h80) begin
             if (a == 0 || b == 0) begin
                 z = 0;
             end else if (a == 8'h80  || b == 8'h80) begin
                 z = 8'h80;
+            end else begin
+                z = 0; // never reached
             end
             ui_a = 0;
             ui_b = 0;

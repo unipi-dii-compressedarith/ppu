@@ -21,14 +21,14 @@
 ├── readme.md
 │
 └── src
-    ├── p16e0
-    │   ├── p16e0_add.sv
+    ├── p8e0
+    │   ├── p8e0_add.sv
     │   ├── convert.sv
-    │   └── p16e0_mul.sv
-    └── p8e0
-        ├── p8e0_add.sv
+    │   └── p8e0_mul.sv
+    └── p16e0
+        ├── p16e0_add.sv
         ├── convert.sv
-        └── p8e0_mul.sv
+        └── p16e0_mul.sv
 ```
 
 
