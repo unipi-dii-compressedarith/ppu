@@ -100,6 +100,16 @@ package p8e0_pkg;
         checked_shr = bits >> rhs;
     endfunction
 
+    function [7:0] from_bits(
+            input [7:0] u_z,
+            input       sign_z  
+        );
+        case (sign_z)
+            0: from_bits = u_z;
+            1: from_bits = c2(u_z);
+        endcase
+    endfunction
+
     function diff(
             input [7:0] reference,
             input [7:0] expected

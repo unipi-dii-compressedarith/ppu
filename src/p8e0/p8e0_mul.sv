@@ -49,11 +49,11 @@ module p8e0_mul(
 `endif
 
 
-    // calc_ui regs
+    //// calc_ui regs
     logic [7:0] regime;               // 8 bits
     logic       reg_s;                // 1 bit
     logic [7:0] reg_len;              // 8 bits
-    // end calc_ui regs
+    //// end calc_ui regs
 
     logic [7:0] frac;
     logic       bits_more;
@@ -118,7 +118,7 @@ module p8e0_mul(
             end
 
 
-            // calc_ui function            
+            //// calc_ui function            
             {regime, reg_s, reg_len} = calculate_regime(k_c);
             if (reg_len > 6) begin
                 case (reg_s)
@@ -135,7 +135,8 @@ module p8e0_mul(
             
             // u_z = calc_ui(k_c, frac16);
 
-            z = sign_z == 0 ? u_z : c2(u_z);
+            // z = sign_z == 0 ? u_z : c2(u_z);
+            z = from_bits(u_z, sign_z);
         end
     end
     

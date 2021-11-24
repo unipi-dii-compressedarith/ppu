@@ -11,8 +11,6 @@ N = 8 # num bits
 NUM_RANDOM_TEST_CASES = 80
 TEST_ALL_COMBINATIONS = False
 
-# random.seed(3)
-
 class Tb(enum.Enum):
     MUL = 'mul'
     ADD = 'add'
@@ -24,11 +22,17 @@ parser.add_argument('--operation',
                     choices=list(Tb),
                     required=True,
                     help='Type of test bench: adder/multiplier/etc')
+parser.add_argument('--shuffle-random',
+                    type=bool,
+                    default=False,
+                    required=False,
+                    help='Shuffle random')
 
 args = parser.parse_args()
 
 
-
+if args.shuffle_random == False:
+    random.seed(3)
 
 
 ans_preamble = f"""/*-------------------------------------+
@@ -87,22 +91,22 @@ if args.operation == Tb.MUL:
         counter += 1
         
         body += f"""    
-                        test_no =   {counter};
-                        a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
-                        b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
-                        a_ascii =   \"{sp.posit8(bits=a)}\";
-                        b_ascii =   \"{sp.posit8(bits=b)}\";
-                        ui_a_exp =  {_hex(ui_a)};
-                        ui_b_exp =  {_hex(ui_b)};
-                        k_a_exp =   {k_a};
-                        k_b_exp =   {k_b};
-                        k_c_exp =   {k_c};
-                        frac_a_exp = {_hex(frac_a)};
-                        frac_b_exp = {_hex(frac_b)};
-                        frac16_exp = 16'h{frac16:04x};
-                        rcarry_exp = {1 if rcarry else 0};
-                        z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
-                        z_ascii    = \"{sp.posit8(bits=z)}\";
+                    test_no =   {counter};
+                    a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
+                    b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
+                    a_ascii =   \"{sp.posit8(bits=a)}\";
+                    b_ascii =   \"{sp.posit8(bits=b)}\";
+                    ui_a_exp =  {_hex(ui_a)};
+                    ui_b_exp =  {_hex(ui_b)};
+                    k_a_exp =   {k_a};
+                    k_b_exp =   {k_b};
+                    k_c_exp =   {k_c};
+                    frac_a_exp = {_hex(frac_a)};
+                    frac_b_exp = {_hex(frac_b)};
+                    frac16_exp = 16'h{frac16:04x};
+                    rcarry_exp = {1 if rcarry else 0};
+                    z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
+                    z_ascii    = \"{sp.posit8(bits=z)}\";
             #10;
         """
 
@@ -110,10 +114,7 @@ if args.operation == Tb.MUL:
     with open("tb_p8e0_mul_template.sv", "r") as f:
         ans += f.read()
 
-    ans = ans \
-            .replace(PLACEHOLDER, body) \
-            .replace('\t', ' '*4)
-
+    ans = ans.replace(PLACEHOLDER, body)
 
     output = "tb_p8e0_mul.sv"
     with open(output, "w") as f: 
@@ -135,13 +136,13 @@ if args.operation == Tb.ADD:
         counter += 1
         
         body += f"""    
-                        test_no =   {counter};
-                        a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
-                        b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
-                        a_ascii =   \"{sp.posit8(bits=a)}\";
-                        b_ascii =   \"{sp.posit8(bits=b)}\";
-                        z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
-                        z_ascii    = \"{sp.posit8(bits=z)}\";
+                    test_no =   {counter};
+                    a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
+                    b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
+                    a_ascii =   \"{sp.posit8(bits=a)}\";
+                    b_ascii =   \"{sp.posit8(bits=b)}\";
+                    z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
+                    z_ascii    = \"{sp.posit8(bits=z)}\";
             #10;
         """
 
@@ -149,10 +150,9 @@ if args.operation == Tb.ADD:
     with open("tb_p8e0_add_template.sv", "r") as f:
         ans += f.read()
 
+    ans = ans.replace(PLACEHOLDER, body)
+
     output = "tb_p8e0_add.sv"
     with open(output, "w") as f:
-        ans = ans \
-                .replace(PLACEHOLDER, body) \
-                .replace('\t', ' '*4)
         print(f'Wrote {output}; {f.write(ans)} characters')
 

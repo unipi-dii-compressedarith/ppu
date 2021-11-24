@@ -110,17 +110,17 @@ def pack_to_ui(regime, frac):
 def calc_ui(k, frac16):
     regime, reg_s, reg_len = calculate_regime(k)
     if reg_len > 6:
-        return 0x7f if reg_s else 0x01
+        u_z = 0x7f if reg_s else 0x01
     else:
-        frac16 = (frac16 & 0x3fff) >> reg_len
-        frac = (frac16 >> 8) & 0xff
+        frac16_updated = (frac16 & 0x3fff) >> reg_len
+        frac = (frac16_updated >> 8) & 0xff
 
-        bit_n_plus_one = (frac16 & 0x80) != 0
+        bit_n_plus_one = (frac16_updated & 0x80) != 0
         u_z = pack_to_ui(regime, frac)
         if bit_n_plus_one:
-            bits_more = (frac16 & 0x7f) != 0
+            bits_more = (frac16_updated & 0x7f) != 0
             u_z += (u_z & 1) | (bits_more & 0xff)
-        return u_z
+    return u_z
 
 def from_bits(bits: int, sign: bool) -> int:
     return c2(bits) if sign else bits
@@ -166,22 +166,31 @@ def mul(a: int, b: int) -> Ans:
         k_c_updated = k_c
         frac16 = frac_c
         
-    # u_z = calc_ui(k_c_updated, frac16)
+    u_z = calc_ui(k_c_updated, frac16)
 
-    regime, reg_s, reg_len = calculate_regime(k_c_updated)
-    if reg_len > 6:
-        u_z = 0x7f if reg_s else 0x01
-    else:
-        frac16 = (frac16 & 0x3fff) >> reg_len
-        u_z = regime + ((frac16 >> 8) & 0xff)
-        if (frac16 & 0x80) != 0:
-            bits_more = (frac16 & 0x7f) != 0
-            u_z += (u_z & 1) | (bits_more & 0xff)
+    # regime, reg_s, reg_len = calculate_regime(k_c_updated)
+    # if reg_len > 6:
+    #     u_z = 0x7f if reg_s else 0x01
+    # else:
+    #     frac16 = (frac16 & 0x3fff) >> reg_len
+    #     u_z = regime + ((frac16 >> 8) & 0xff)
+    #     if (frac16 & 0x80) != 0:
+    #         bits_more = (frac16 & 0x7f) != 0
+    #         u_z += (u_z & 1) | (bits_more & 0xff)
     
     z = from_bits(u_z, sign_z)
 
-    return Ans(ui_a=ui_a, ui_b=ui_b, k_a=k_a, k_b=k_b, k_c=k_c_updated, 
-               frac_a=frac_a, frac_b=frac_b, frac16=frac16, rcarry=rcarry, z=z)
+    return Ans(
+        ui_a=ui_a,
+        ui_b=ui_b,
+        k_a=k_a,
+        k_b=k_b,
+        k_c=k_c_updated,
+        frac_a=frac_a,
+        frac_b=frac_b,
+        frac16=frac16,
+        rcarry=rcarry,
+        z=z)
 
 
 
@@ -315,7 +324,7 @@ class TestSum(unittest.TestCase):
         )
 
     def test_mix_mul(self):
-        for _ in range(1000):
+        for _ in range(100):
             # 1) generate random 8bits numbers
             a = random.randint(0, 2**N - 1)
             b = random.randint(0, 2**N - 1)
@@ -332,7 +341,7 @@ class TestSum(unittest.TestCase):
             )
     
     def test_mix_add(self):
-        for _ in range(1000):
+        for _ in range(100):
             # 1) generate random 8bits numbers
             a = random.randint(0, 2**N - 1)
             b = random.randint(0, 2**N - 1)
