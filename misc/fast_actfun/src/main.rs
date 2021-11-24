@@ -15,17 +15,21 @@ use num_traits::{CheckedSub, ToPrimitive};
 
 const N: u8 = 8;
 
-fn sigmoid(x: f64) -> f64 {
-    1.0 / (1.0 + (-x).exp())
-}
 
-fn elu(x: f64) -> f64 {
-    let α = 1.0;
-    match x.is_sign_positive() {
-        true => x,
-        _ => α * (x.exp() - 1.0) 
+mod fp {
+    pub fn sigmoid(x: f64) -> f64 {
+        1.0 / (1.0 + (-x).exp())
+    }
+    
+    pub fn elu(x: f64) -> f64 {
+        let α = 1.0;
+        match x.is_sign_positive() {
+            true => x,
+            _ => α * (x.exp() - 1.0) 
+        }
     }
 }
+
 
 /// e.g.:
 /// ```text
@@ -48,22 +52,29 @@ fn fast_sigmoid(x: f64) -> f64 {
     let Y = (invert_bit + (X >> 1)) >> 1;
     let Y = match s {
         true => Y,
-        _ => c1(Y)
+        _ => _c1(Y)
     };
     let y = P8E0::from_bits(Y).to_f64().unwrap();
     y
 }
 
-fn c1(X: u8) -> u8 {
+fn _c1(X: u8) -> u8 {
     let invert_bit = 1 << (N - 2);
     let Y = invert_bit.checked_sub(&X).unwrap_or(0); // (invert_bit - X) with boundary check
     Y
+}
+
+fn c1(X: P8E0) -> P8E0 {
+    let X = X.to_bits();
+    let Y = _c1(X);
+    P8E0::from_bits(Y)
 }
 
 fn fast_elu(x: f64) -> f64 {
     let neg = |x: f64| -x;
     let reciprocate = |x: f64| x.recip();
     let half = |x: f64| x/2.0;
+    let twice = |x: f64| x + x;
 
     let y_n = neg(twice(comp_one(half(reciprocate(fast_sigmoid(neg(x)))))));
 
@@ -93,18 +104,15 @@ fn inv(x: f64) -> (f64, f64) {
     (y, y2)
 }
 
-fn twice(x: f64) -> f64 {
-    x + x
-}
-
 fn comp_one(x: f64) -> f64 {
-    let X = P8E0::from(x).to_bits();
+    let X = P8E0::from(x);
     let Y = c1(X);
-    let y = P8E0::from_bits(Y).to_f64().unwrap();
+    let y = Y.to_f64().unwrap();
     y
 }
 
 fn fast_tanh(x: f64) -> f64 {
+    let twice = |x: f64| x + x;
     let x_n = if x > 0.0 { -x } else { x };
     let s = x >= 0.0;
     let y_n = -comp_one(twice(fast_sigmoid(twice(x_n))));
@@ -114,10 +122,11 @@ fn fast_tanh(x: f64) -> f64 {
 
 
 fn main() {
+
     let (lower, upper) = (-5.0, 5.0);
 
     let f1 = 
-        Plot::from_function(|x| sigmoid(x), lower, upper).line_style(LineStyle::new().colour("red"));
+        Plot::from_function(|x| fp::sigmoid(x), lower, upper).line_style(LineStyle::new().colour("red"));
 
     let f2 =
         Plot::from_function(|x| fast_sigmoid(x), lower, upper).line_style(LineStyle::new().colour("blue"));
@@ -144,7 +153,7 @@ fn main() {
         Plot::from_function(|x| comp_one(x), 0.0, 1.0).line_style(LineStyle::new().colour("blue"));
 
     let f9 =
-        Plot::from_function(|x| elu(x), lower, 2.0).line_style(LineStyle::new().colour("red"));
+        Plot::from_function(|x| fp::elu(x), lower, 2.0).line_style(LineStyle::new().colour("red"));
 
     let f10 =
         Plot::from_function(|x| fast_elu(x), lower, 2.0).line_style(LineStyle::new().colour("blue"));
@@ -160,12 +169,13 @@ fn main() {
     Page::single(&inv).save("inv.svg").expect("saving svg");
     Page::single(&c1).save("comp1.svg").expect("saving svg");
     Page::single(&elu).save("elu.svg").expect("saving svg");
+
 }
 
 
 #[test]
 fn my_test() {
-    assert_eq!(c1(0b0001_1001), 0b0010_0111);
+    assert_eq!(_c1(0b0001_1001), 0b0010_0111);
 }
 
 // use plotters::prelude::*;

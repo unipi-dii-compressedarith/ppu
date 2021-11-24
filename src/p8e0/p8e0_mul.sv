@@ -12,8 +12,8 @@
  *  $ which sv2v
  *  ~/Documents/dev/sv2v/bin/sv2v  (https://github.com/zachjs/sv2v)
  *
- *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && ~/Documents/dev/yosys/yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" out.v > yosys_intel.out
- *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && ~/Documents/dev/yosys/yosys -p "synth_xilinx -edif p8e0_mul.edif -top p8e0_mul" out.v > yosys_xilinx.out
+ *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && yosys -p "synth_intel -family max10 -top p8e0_mul -vqm p8e0_mul.vqm" out.v > yosys_intel.out
+ *  sv2v p8e0_mul.sv p8e0_pkg.sv > out.v && yosys -p "synth_xilinx -edif p8e0_mul.edif -top p8e0_mul" out.v > yosys_xilinx.out
  *  iverilog -D POST_IMPL -o verif_post -s p8e0_mul p8e0_mul.sv  $(yosys-config --datdir/intel/max10/cells_sim.v) && vvp -N verif_post
  */
 
@@ -47,13 +47,6 @@ module p8e0_mul(
 
     logic        rcarry;
 `endif
-
-
-    //// calc_ui regs
-    logic [7:0] regime;               // 8 bits
-    logic       reg_s;                // 1 bit
-    logic [7:0] reg_len;              // 8 bits
-    //// end calc_ui regs
 
     logic [7:0] frac;
     logic       bits_more;
@@ -90,10 +83,6 @@ module p8e0_mul(
             rcarry = 0;
             u_z = 0;
             
-            reg_len = 0;
-            regime = 0;
-            reg_s = 0;
-
         end else begin
             sign_a = (a & 8'h80) >> 7;
             sign_b = (b & 8'h80) >> 7;
@@ -116,26 +105,8 @@ module p8e0_mul(
                 k_c = k_c;
                 frac16 = frac16;
             end
-
-
-            //// calc_ui function            
-            {regime, reg_s, reg_len} = calculate_regime(k_c);
-            if (reg_len > 6) begin
-                case (reg_s)
-                    1'b1: u_z = 8'h7f;
-                    1'b0: u_z = 8'h01;
-                endcase
-            end else begin
-                frac16 = (frac16 & 16'h3fff) >> reg_len;
-                u_z = regime + (frac16 >> 8);
-                if ((frac16 & 8'h80) != 0) begin
-                    u_z = u_z + ( (u_z & 1'b1) | ((frac16 & 8'h7f) != 0) );
-                end
-            end
             
-            // u_z = calc_ui(k_c, frac16);
-
-            // z = sign_z == 0 ? u_z : c2(u_z);
+            u_z = calc_ui(k_c, frac16);
             z = from_bits(u_z, sign_z);
         end
     end

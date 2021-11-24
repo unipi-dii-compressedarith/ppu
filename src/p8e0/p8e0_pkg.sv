@@ -35,7 +35,7 @@ package p8e0_pkg;
             reg_length = 1 + 
                         (first_regime_bit == 1'b1 ? k + 1 : c2(k));
 
-            if (reg_length == 8) reg_length = 7;                            // <---- is this line unnecessary?
+            if (reg_length == 8) reg_length = 7; // <- is this line unnecessary?
 
             tmp = ((bits << reg_length) & 8'h7f) | 8'h80;
 
@@ -43,34 +43,32 @@ package p8e0_pkg;
         end
     endfunction
 
-    /*
     function [7:0] calc_ui(
             input [7:0] k,
-            input [7:0] frac16
+            input [15:0] frac16
         );
         begin: _calc_ui
-            logic [7:0] regime;               // 8 bits
-            logic       reg_s;                // 1 bit
-            logic [7:0] reg_len;              // 8 bits
-            
-            logic       bits_more;
+            logic [7:0] regime;
+            logic       reg_s; 
+            logic [7:0] reg_len;
 
             {regime, reg_s, reg_len} = calculate_regime(k);
-            
+
             if (reg_len > 6) begin
-                if (reg_s)  calc_ui = 8'h7f;
-                else        calc_ui = 8'h01;
+                case (reg_s)
+                    1'b1: u_z = 8'h7f;
+                    1'b0: u_z = 8'h01;
+                endcase
             end else begin
                 frac16 = (frac16 & 16'h3fff) >> reg_len;
-                calc_ui = regime + (frac16 >> 8);
+                u_z = regime + (frac16 >> 8);
                 if ((frac16 & 8'h80) != 0) begin
-                    bits_more = (frac16 & 8'h7f) != 0;
-                    calc_ui = calc_ui + ((calc_ui & 1'b1) | bits_more);
+                    u_z = u_z + ( (u_z & 1'b1) | ((frac16 & 8'h7f) != 0) );
                 end
             end
+            calc_ui = u_z;
         end
     endfunction
-    */
 
     function [(8+1+8)-1:0] calculate_regime(
             input [7:0] k
@@ -82,11 +80,11 @@ package p8e0_pkg;
 
             if (k & 8'h80) begin // k is negative
                 length = c2(k);
-                regime = checked_shr(8'h40, c2(k));
+                regime = checked_shr(8'h40, length);
                 reg_s = 1'b0;
             end else begin
                 length = k + 1;
-                regime = 8'h7f - checked_shr(8'h7f, k + 1);
+                regime = 8'h7f - checked_shr(8'h7f, length);
                 reg_s = 1'b1;
             end
             calculate_regime = {regime, reg_s, length};
