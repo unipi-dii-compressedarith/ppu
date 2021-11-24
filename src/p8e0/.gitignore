@@ -4,3 +4,5 @@ tb_p8e0_add.sv
 
 
 *.vcd
+
+out.v

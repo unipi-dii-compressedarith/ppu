@@ -1,5 +1,4 @@
 /*
-iverilog -g2012 p8e0_add.sv tb_p8e0_add.sv && ./a.out
 
 [https://github.com/zachjs/sv2v](https://github.com/zachjs/sv2v)
 sv2v -DPROBE_SIGNALS  p8e0_add.sv p8e0_pkg.sv tb_p8e0_add.sv > out.v
@@ -51,13 +50,8 @@ module tb_p8e0_add;
     end
 
     initial begin
-`ifdef PROBE_SIGNALS
         $dumpfile("tb_p8e0_add.vcd");
-        $display("probe defined");
-`else
-        $dumpfile("tb_p8e0_add_noprobe.vcd");
         $display("probe NOT defined");
-`endif
         $dumpvars(0, tb_p8e0_add);
     end
 

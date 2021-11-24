@@ -1,5 +1,4 @@
 /*
-iverilog -g2012 -DPROBE_SIGNALS p8e0_mul.sv tb_p8e0_mul.sv && ./a.out
 
 [https://github.com/zachjs/sv2v](https://github.com/zachjs/sv2v)
 sv2v -DPROBE_SIGNALS  p8e0_mul.sv p8e0_pkg.sv tb_p8e0_mul.sv > out.v
