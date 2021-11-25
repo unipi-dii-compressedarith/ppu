@@ -7,6 +7,10 @@ iverilog out.v && ./a.out
 
 // synopsys translate_off
 
+`define TEST_BENCH
+
+`ifdef TEST_BENCH
+
 import p8e0_pkg::*;
 
 module tb_p8e0_add;
@@ -44,7 +48,7 @@ module tb_p8e0_add;
 
 
     integer         test_no;
-
+    integer         error_count = 0;
 
     always_comb begin
         diff_z = diff(z, z_exp);
@@ -52,9 +56,16 @@ module tb_p8e0_add;
         inputs_have_same_sign = ((a ^ b) & 8'h80) == 0 ? 1 : 0;
     end
 
+    always_comb begin
+        #1;
+        if (z != z_exp) begin
+            error_count += 1;
+            $display("error test #%d: %x != %x", test_no, z, z_exp);
+        end
+    end
+
     initial begin
         $dumpfile("tb_p8e0_add.vcd");
-        $display("probe NOT defined");
         $dumpvars(0, tb_p8e0_add);
     end
 
@@ -65,7 +76,9 @@ module tb_p8e0_add;
 
     /*{add stuff here}*/
 
-
+        // $display("ERRORS: %d/%d", error_count, test_no);
     end
 endmodule
 // synopsys translate_on
+
+`endif

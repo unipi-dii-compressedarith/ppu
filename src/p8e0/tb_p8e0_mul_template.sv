@@ -7,6 +7,10 @@ iverilog out.v && ./a.out
 
 // synopsys translate_off                   // <- include guards for quartus (et al.) so that he ingores this
 
+`define TEST_BENCH
+
+`ifdef TEST_BENCH
+
 import p8e0_pkg::*;
 
 module tb_p8e0_mul;
@@ -69,6 +73,7 @@ module tb_p8e0_mul;
 `endif
 
     integer         test_no;
+    integer         error_count = 0;
 
 
     always_comb begin
@@ -84,6 +89,14 @@ module tb_p8e0_mul;
         diff_frac_b = diff(frac_b, frac_b_exp);
         diff_frac16 = diff(frac16, frac16_exp);
 `endif
+    end
+
+    always_comb begin
+        #1;
+        if (z != z_exp) begin
+            error_count += 1;
+            $display("error test #%d: %x != %x", test_no, z, z_exp);
+        end
     end
 
     initial begin
@@ -121,7 +134,9 @@ module tb_p8e0_mul;
 
     /*{add stuff here}*/
 
-
+        // $display("    ERRORS: %d/%d", error_count, test_no);
     end
 endmodule
 // synopsys translate_on
+
+`endif
