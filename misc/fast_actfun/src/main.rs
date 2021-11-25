@@ -15,7 +15,7 @@ use plotlib::view::ContinuousView;
 mod fast_af {
 
     use softposit::{P8E0};
-    use num_traits::{CheckedSub, ToPrimitive};
+    use num_traits::ToPrimitive;
 
     const N: u8 = 8;
 
@@ -56,14 +56,18 @@ mod fast_af {
             true => Y,
             _ => _c1(Y)
         };
-        let y = P8E0::from_bits(Y).to_f64().unwrap();
-        y
+        P8E0::from_bits(Y).to_f64().unwrap()
     }
 
     fn _c1(X: u8) -> u8 {
-        let invert_bit = 1 << (N - 2);
-        let Y = invert_bit.checked_sub(&X).unwrap_or(0); // (invert_bit - X) with boundary check
-        Y
+        let invert_bit: u8 = 1 << (N - 2);
+        invert_bit.saturating_sub(X)    // (invert_bit - X) with boundary check
+                                        // same as `invert_bit.checked_sub(&X).unwrap_or(0)` but
+                                        // this returned a warning: warning: manual saturating arithmetic                            
+                                        //   |
+                                        //   |         invert_bit.checked_sub(&X).unwrap_or(0) // (invert_bit - X) with boundary check
+                                        //   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try using `saturating_sub`: `invert_bit.saturating_sub(&X)`
+                                        //   = note: `#[warn(clippy::manual_saturating_arithmetic)]` on by default
     }
 
     pub fn c1(X: P8E0) -> P8E0 {
@@ -114,8 +118,7 @@ mod fast_af {
     pub fn comp_one(x: f64) -> f64 {
         let X = P8E0::from(x);
         let Y = c1(X);
-        let y = Y.to_f64().unwrap();
-        y
+        Y.to_f64().unwrap()
     }
 
     pub fn fast_tanh(x: f64) -> f64 {
@@ -123,8 +126,7 @@ mod fast_af {
         let x_n = if x > 0.0 { -x } else { x };
         let s = x >= 0.0;
         let y_n = -comp_one(twice(fast_sigmoid(twice(x_n))));
-        let y = if s { -y_n } else { y_n };
-        y
+        if s { -y_n } else { y_n }
     }
 }
 
@@ -133,16 +135,16 @@ fn main() {
     let (lower, upper) = (-5.0, 5.0);
 
     let f1 = 
-        Plot::from_function(|x| fast_af::sigmoid(x), lower, upper).line_style(LineStyle::new().colour("red"));
+        Plot::from_function(fast_af::sigmoid, lower, upper).line_style(LineStyle::new().colour("red"));
 
     let f2 =
-        Plot::from_function(|x| fast_af::fast_sigmoid(x), lower, upper).line_style(LineStyle::new().colour("blue"));
+        Plot::from_function(fast_af::fast_sigmoid, lower, upper).line_style(LineStyle::new().colour("blue"));
 
     let f3 = 
         Plot::from_function(|x| x.tanh(), lower, upper).line_style(LineStyle::new().colour("red"));
 
     let f4 =
-        Plot::from_function(|x| fast_af::fast_tanh(x), lower, upper).line_style(LineStyle::new().colour("blue"));
+        Plot::from_function(fast_af::fast_tanh, lower, upper).line_style(LineStyle::new().colour("blue"));
 
     let f5 =
         Plot::from_function(|x| 1.0/x, 0.05, 1.0).line_style(LineStyle::new().colour("red"));
@@ -157,13 +159,13 @@ fn main() {
         Plot::from_function(|x| (1.0-x), 0.0, 1.0).line_style(LineStyle::new().colour("red"));
 
     let f8 =
-        Plot::from_function(|x| fast_af::comp_one(x), 0.0, 1.0).line_style(LineStyle::new().colour("blue"));
+        Plot::from_function(fast_af::comp_one, 0.0, 1.0).line_style(LineStyle::new().colour("blue"));
 
     let f9 =
-        Plot::from_function(|x| fast_af::elu(x), lower, 2.0).line_style(LineStyle::new().colour("red"));
+        Plot::from_function(fast_af::elu, lower, 2.0).line_style(LineStyle::new().colour("red"));
 
     let f10 =
-        Plot::from_function(|x| fast_af::fast_elu(x), lower, 2.0).line_style(LineStyle::new().colour("blue"));
+        Plot::from_function(fast_af::fast_elu, lower, 2.0).line_style(LineStyle::new().colour("blue"));
 
     let sigmoid = ContinuousView::new().add(f1).add(f2);    
     let tanh = ContinuousView::new().add(f3).add(f4);
