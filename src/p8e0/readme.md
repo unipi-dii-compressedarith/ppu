@@ -22,6 +22,7 @@ make mul # (**)
 ```
 
 - visualization (\*)
+
 ```sh
 # opens generated waveform with gtkwave
 gtkwave tb_p8e0_mul.vcd
@@ -32,6 +33,7 @@ gtkwave tb_p8e0_mul.gtkw
 
 
 - run tests
+
 ```sh
 pytest p8e0.py -v
 ```
