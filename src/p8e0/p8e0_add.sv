@@ -70,7 +70,52 @@ module p8e0_add(
             input [7:0] b
         );
         begin: _sub_mags_fun
-            sub_mags = a - b;
+            logic sign;
+
+            sign = a[7];
+            if (sign) begin
+                ui_a = c2(a);
+                ui_b = b;
+            end else begin
+                ui_a = a;
+                ui_b = c2(b);
+            end
+
+            if (ui_a == ui_b) begin
+                z = 0;
+            end else begin
+
+                if (ui_a < ui_b) begin
+                    ui_a_2 = ui_b;
+                    ui_b_2 = ui_a;
+                    sign = !sign;
+                else begin
+                    ui_a_2 = ui_a;
+                    ui_b_2 = ui_b;
+                    sign = sign;
+                end
+
+                {k_a, frac_a} = separate_bits(ui_a);
+                frac16_a = frac_a << 7;
+
+                {k_b, frac_b} = separate_bits(ui_b);
+
+                shift_right = k_a - k_b;
+
+                frac16_b = frac_b << 7;
+
+                if (shift_right >= 14) begin
+                    z = from_bits(ui_a, sign)
+                end else begin
+                    frac16_b >>= shift_right;
+                end
+                frac16_a -= frac16_b;
+
+                
+
+            end
+
+
         end
     endfunction;
 

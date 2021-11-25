@@ -8,7 +8,7 @@ import p8e0
 
 N = 8 # num bits
 
-NUM_RANDOM_TEST_CASES = 80
+NUM_RANDOM_TEST_CASES = 200
 TEST_ALL_COMBINATIONS = False
 
 class Tb(enum.Enum):
@@ -130,7 +130,7 @@ if args.operation == Tb.ADD:
     counter = 0
     body = ""
     for a, b in zip(list_a, list_b):
-        if (a ^ b) & 0x80 == 0:                  # <-- only testing same sign numbers, remove later
+        if (a ^ b) & 0x80 != 0:                  # <-- only testing opposite sign numbers, remove later
             ans_p8e0_add = p8e0.add(a, b)
             z = ans_p8e0_add.z
 

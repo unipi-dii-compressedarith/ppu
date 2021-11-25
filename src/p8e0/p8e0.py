@@ -94,7 +94,7 @@ def shr(bits, rhs):
 
 def shl(bits, rhs):
     """shift left"""
-    return (bits << rhs) & 0xffff
+    return (bits << rhs) & 0xffff if rhs > 0 else bits
 
 def calculate_regime(k) -> Tuple[int, bool, int]:
     if k < 0:
@@ -167,17 +167,6 @@ def mul(a: int, b: int) -> Ans:
         frac16 = frac_c
         
     u_z = calc_ui(k_c_updated, frac16)
-
-    # regime, reg_s, reg_len = calculate_regime(k_c_updated)
-    # if reg_len > 6:
-    #     u_z = 0x7f if reg_s else 0x01
-    # else:
-    #     frac16 = (frac16 & 0x3fff) >> reg_len
-    #     u_z = regime + ((frac16 >> 8) & 0xff)
-    #     if (frac16 & 0x80) != 0:
-    #         bits_more = (frac16 & 0x7f) != 0
-    #         u_z += (u_z & 1) | (bits_more & 0xff)
-    
     z = from_bits(u_z, sign_z)
 
     return Ans(
@@ -220,14 +209,46 @@ def add_mags(a, b):
     return from_bits(u_z, sign)
 
 
+def _update_k_and_frac16_a(k, frac):
+    while (frac >> 14) == 0:
+        k -= 1
+        frac = (frac << 1) & 0xffff
+    return (k, frac)
+
+def update_k_and_frac16_a(k, frac):
+    n = 0 if frac >> 14 == 1 else \
+        1 if frac >> 13 == 1 else \
+        2 if frac >> 12 == 1 else \
+        3 if frac >> 11 == 1 else \
+        4 if frac >> 11 == 1 else \
+        5 if frac >> 10 == 1 else \
+        6 if frac >> 9  == 1 else \
+        7 if frac >> 8 == 1 else \
+        8 if frac >> 7 == 1 else \
+        9 if frac >> 6 == 1 else \
+        10 if frac >> 5 == 1 else \
+        11 if frac >> 4 == 1 else \
+        12 if frac >> 3 == 1 else \
+        13 if frac >> 2 == 1 else \
+        14 if frac >> 1 == 1 else \
+        15 if frac >> 0 == 1 else 16
+    
+    # for i in range(13):
+    #     if frac >> (13 - i) == 1:
+    #         n = i
+            
+    frac = shl(frac, n - 1) & 0xffff    ## both -1 and -0 fails
+    k = k - (n - 1)                     ## both -1 and -0 fails
+    return (k, frac)
+
 def sub_mags(a, b):
     sign = a & 0x80 != 0
     if sign:
-        ui_a = wrapping_neg(a)
+        ui_a = c2(a)
         ui_b = b
     else:
         ui_a = a
-        ui_b = wrapping_neg(b)    
+        ui_b = c2(b)    
     
     if ui_a == ui_b:
         return 0x00
@@ -251,10 +272,8 @@ def sub_mags(a, b):
         frac16_b >>= shift_right
     frac16_a -= frac16_b
 
-    while (frac16_a >> 14) == 0:
-        k_a -= 1
-        frac16_a <<= 1
-    
+    (k_a, frac16_a) = _update_k_and_frac16_a(k_a, frac16_a)
+
     ecarry = ( (0x4000 & frac16_a) >> 14) != 0
     if not ecarry:
         k_a -= 1
@@ -433,6 +452,8 @@ test_add = [
     ((0xf1, 0x4c), 0b01000100),
     ((0x00, 0x4c), 0x4c),
     ((112, 64), 114),
+    # ((65, 188), 0b01111111),          # fails
+    # ((65, 14), 0b01111100),           # fails
     ((0x68, 0x5c), 0b01110010),
 ]   # │      │       │
     # └─ a   └─ b    └─ P<8,0>::(a + b)
