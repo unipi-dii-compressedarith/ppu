@@ -1,41 +1,55 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Wed Nov 24 11:34:17 2021
+[*] Thu Nov 25 12:21:22 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_add.vcd"
-[dumpfile_mtime] "Wed Nov 24 11:33:50 2021"
-[dumpfile_size] 20246
+[dumpfile_mtime] "Thu Nov 25 12:20:50 2021"
+[dumpfile_size] 35894
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_add.gtkw"
 [timestart] 0
 [size] 2560 1418
-[pos] 840 -1
-*-6.265078 39 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-6.265078 8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_p8e0_add.
 [sst_width] 193
-[signals_width] 222
+[signals_width] 300
 [sst_expanded] 1
-[sst_vpaned_height] 1177
+[sst_vpaned_height] 1063
 @420
 tb_p8e0_add.test_no
 @200
 -
 @22
+[color] 3
 tb_p8e0_add.a[7:0]
+@820
+[color] 2
 tb_p8e0_add.a_ascii[100:0]
+@22
+[color] 3
 tb_p8e0_add.b[7:0]
+@820
+[color] 2
 tb_p8e0_add.b_ascii[100:0]
 @200
 -
 @22
+[color] 3
 tb_p8e0_add.z[7:0]
 @200
 -
-@22
+@820
+[color] 2
 tb_p8e0_add.z_ascii[100:0]
+@22
+[color] 6
 tb_p8e0_add.z_exp[7:0]
-@28
-tb_p8e0_add.is_zero
-tb_p8e0_add.is_nar
+@29
 tb_p8e0_add.diff_z
+@200
+-
+@28
+tb_p8e0_add.inputs_have_same_sign
+tb_p8e0_add.is_nar
 [pattern_trace] 1
 [pattern_trace] 0

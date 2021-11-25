@@ -197,8 +197,8 @@ def mul(a: int, b: int) -> Ans:
 def add_mags(a, b):
     sign = (a & 0x80) != 0
     
-    ui_a = a if sign == 0 else wrapping_neg(a)
-    ui_b = b if sign == 0 else wrapping_neg(b)
+    ui_a = a if sign == 0 else c2(a)
+    ui_b = b if sign == 0 else c2(b)
 
     if ui_a < ui_b:
         ui_a, ui_b = ui_b, ui_a

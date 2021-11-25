@@ -4,7 +4,7 @@ package p8e0_pkg;
         c2 = ~a + 1'b1;
     endfunction
 
-    function [15:0] separate_bits(
+    function [(8+8)-1:0] separate_bits(
             input [7:0] bits
         );
         begin: _separate_bits
@@ -51,6 +51,7 @@ package p8e0_pkg;
             logic [7:0] regime;
             logic       reg_s; 
             logic [7:0] reg_len;
+            logic [7:0] u_z;
 
             {regime, reg_s, reg_len} = calculate_regime(k);
 
@@ -80,22 +81,35 @@ package p8e0_pkg;
 
             if (k & 8'h80) begin // k is negative
                 length = c2(k);
-                regime = checked_shr(8'h40, length);
+                regime = shr(8'h40, length);
                 reg_s = 1'b0;
             end else begin
                 length = k + 1;
-                regime = 8'h7f - checked_shr(8'h7f, length);
+                regime = 8'h7f - shr(8'h7f, length);
                 reg_s = 1'b1;
             end
             calculate_regime = {regime, reg_s, length};
         end
     endfunction
 
-    function [7:0] checked_shr(
+    function [7:0] shr(
             input [7:0] bits,
             input [7:0] rhs   
         );
-        checked_shr = bits >> rhs;
+        shr = bits >> rhs;
+    endfunction
+
+    function [15:0] shl(
+            input [7:0] bits,
+            input [7:0] rhs   
+        );
+        begin
+            if (rhs & 8'h80) begin // rhs is negative
+                shl = bits; // shift by 0, ie don't.
+            end else begin
+                shl = bits << rhs;    
+            end
+        end
     endfunction
 
     function [7:0] from_bits(

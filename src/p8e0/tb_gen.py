@@ -130,21 +130,22 @@ if args.operation == Tb.ADD:
     counter = 0
     body = ""
     for a, b in zip(list_a, list_b):
-        ans_p8e0_add = p8e0.add(a, b)
-        z = ans_p8e0_add.z
+        if (a ^ b) & 0x80 == 0:                  # <-- only testing same sign numbers, remove later
+            ans_p8e0_add = p8e0.add(a, b)
+            z = ans_p8e0_add.z
 
-        counter += 1
-        
-        body += f"""    
-                    test_no =   {counter};
-                    a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
-                    b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
-                    a_ascii =   \"{sp.posit8(bits=a)}\";
-                    b_ascii =   \"{sp.posit8(bits=b)}\";
-                    z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
-                    z_ascii    = \"{sp.posit8(bits=z)}\";
-            #10;
-        """
+            counter += 1
+            
+            body += f"""    
+                        test_no =   {counter};
+                        a =         {_hex(a)}; /* {sp.posit8(bits=a)} */
+                        b =         {_hex(b)}; /* {sp.posit8(bits=b)} */
+                        a_ascii =   \"{sp.posit8(bits=a)}\";
+                        b_ascii =   \"{sp.posit8(bits=b)}\";
+                        z_exp      = {_hex(z)}; /* {sp.posit8(bits=z)} */
+                        z_ascii    = \"{sp.posit8(bits=z)}\";
+                #10;
+            """
 
     ans = ans_preamble
     with open("tb_p8e0_add_template.sv", "r") as f:

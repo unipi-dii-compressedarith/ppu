@@ -20,7 +20,6 @@ module tb_p8e0_add;
     logic   [100:0] a_ascii, b_ascii, z_ascii;
 
     wire    [7:0]   z;
-    wire            is_zero;
     wire            is_nar;
 
     wire    [7:0]   k_a, k_b;
@@ -32,13 +31,15 @@ module tb_p8e0_add;
     p8e0_add p8e0_add_inst(
         .a      (a),
         .b      (b),
-        .is_zero(is_zero),
+
         .is_nar (is_nar),
         .z      (z)
     );
 
     logic [7:0]     z_exp;
     logic           diff_z;
+
+    logic           inputs_have_same_sign;
 
 
 
@@ -47,6 +48,8 @@ module tb_p8e0_add;
 
     always_comb begin
         diff_z = diff(z, z_exp);
+
+        inputs_have_same_sign = ((a ^ b) & 8'h80) == 0 ? 1 : 0;
     end
 
     initial begin

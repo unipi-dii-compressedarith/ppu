@@ -1,22 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Nov 23 15:16:20 2021
+[*] Thu Nov 25 12:16:49 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_mul.vcd"
-[dumpfile_mtime] "Tue Nov 23 15:15:12 2021"
-[dumpfile_size] 53514
+[dumpfile_mtime] "Thu Nov 25 12:16:39 2021"
+[dumpfile_size] 57394
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p8e0/tb_p8e0_mul.gtkw"
 [timestart] 0
 [size] 2560 1418
 [pos] -1 -1
-*-6.329937 7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.332732 83 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_p8e0_mul.
 [treeopen] tb_p8e0_mul.p8e0_mul_inst.
 [sst_width] 193
 [signals_width] 249
 [sst_expanded] 1
-[sst_vpaned_height] 482
-@421
+[sst_vpaned_height] 483
+@420
 tb_p8e0_mul.test_no
 @200
 -
@@ -117,9 +117,10 @@ tb_p8e0_mul.p8e0_mul_inst.z[7:0]
 @820
 [color] 2
 tb_p8e0_mul.z_ascii[100:0]
-@28
+@29
 [color] 6
 tb_p8e0_mul.z_exp[7:0]
+@28
 tb_p8e0_mul.diff_z
 @200
 -
