@@ -30,28 +30,31 @@ endmodule
 
 
 
-// /// reg8 test bench
+`ifdef REG8_TB
+/// reg8 test bench
 // synopsys translate_off
-// module reg8_tb();
+module reg8_tb();
 
-// 	reg [6:0] regbits;
-// 	wire [6:0] k_val;
-// 	wire [2:0] reg_length;
+	reg [6:0] regbits;
+	wire [6:0] k_val;
+	wire [2:0] reg_length;
 
-// 	reg8 reg8_inst(.regbits(regbits),.k_val(k_val),.reg_length(reg_length));
+	reg8 reg8_inst(.regbits(regbits),.k_val(k_val),.reg_length(reg_length));
 
-// 	initial begin
-// 		$dumpfile("reg8_tb.vcd");
-// 	    $dumpvars(0, reg8_tb);
+	initial begin
+		$dumpfile("reg8_tb.vcd");
+	    $dumpvars(0, reg8_tb);
 
-// 	    #10 	regbits = 7'b0000001;
-// 	    #10 	regbits = 7'b1111110;
-// 		#10 	regbits = 7'b1011110;
-// 		#10 	regbits = 7'b0000111;
-// 		#10 	regbits = 7'b0000000;
-// 		#10 	regbits = 7'b1111111;
-// 		$finish;
-// 	end
+	    	 	regbits = 7'b0000001;
+	    #10 	regbits = 7'b1111110;
+		#10 	regbits = 7'b1011110;
+		#10 	regbits = 7'b0000111;
+		#10 	regbits = 7'b0000000;
+		#10 	regbits = 7'b1111111;
+		#10;
+		$finish;
+	end
 
-// endmodule
+endmodule
 // synopsys translate_on
+`endif

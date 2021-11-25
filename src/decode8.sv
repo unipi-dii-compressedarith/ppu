@@ -34,29 +34,29 @@ module decode8(p8,r,k,f,s);
 endmodule
 
 
-// /// decode8 test bench
-// synopsys translate_off
-// module decode8_tb();
-// 	reg signed [7:0] 	p8;
-// 	wire [2:0] r;
-// 	wire s;
-// 	wire  signed [7:0] k;
-// 	wire [7:0] f;
+`ifdef DECODE8_TB
+module decode8_tb();
+	reg signed [7:0] 	p8;
+	wire [2:0] r;
+	wire s;
+	wire  signed [7:0] k;
+	wire [7:0] f;
 
-// 	decode8 decode8_inst(.*);
+	decode8 decode8_inst(.*);
 	
-// 	initial begin
-// 		$dumpfile("decode8_tb.vcd");
-// 	    $dumpvars(0, decode8_tb);
+	initial begin
+		$dumpfile("decode8_tb.vcd");
+	    $dumpvars(0, decode8_tb);
 
-// 	    #10 	p8 = 8'b0000001;
-// 	    #10 	p8 = 8'b1111110;
-// 		#10 	p8 = 8'b1011110;
-// 		#10 	p8 = 8'b0000111;
-// 		#10 	p8 = 8'b0000000;
-// 		#10 	p8 = 8'b1111111;
-// 		$finish;
-// 	end
+	    		p8 = 8'b0000001;
+	    #10 	p8 = 8'b1111110;
+		#10 	p8 = 8'b1011110;
+		#10 	p8 = 8'b0000111;
+		#10 	p8 = 8'b0000000;
+		#10 	p8 = 8'b1111111;
+		#10;
+		$finish;
+	end
 
-// endmodule
-// synopsys translate_on
+endmodule
+`endif

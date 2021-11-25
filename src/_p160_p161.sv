@@ -35,9 +35,7 @@ endmodule
 
 
 
-
-/// p160_p161 test bench
-// synopsys translate_off
+`ifdef P160_P161_TB
 module p160_p161_tb();
 	
 	logic[15:0] p160;
@@ -59,4 +57,4 @@ module p160_p161_tb();
 	end
 
 endmodule
-// synopsys translate_on
+`endif

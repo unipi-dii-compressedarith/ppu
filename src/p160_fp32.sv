@@ -30,6 +30,8 @@ endmodule
 
 
 
+
+`ifdef P160_FP32_TB
 /// p160_fp32 test bench
 // synopsys translate_off
 module p160_fp32_tb();
@@ -55,3 +57,4 @@ module p160_fp32_tb();
 
 endmodule
 // synopsys translate_on
+`endif

@@ -35,3 +35,14 @@ module p8_fx16(p8,fx16);
 		fx16 = (pos_sign)?~abs_fx+1:abs_fx;
 	end
 endmodule
+
+
+
+
+`ifdef P8_FX16_TB
+module p8_fx16_tb;
+
+
+
+endmodule
+`endif

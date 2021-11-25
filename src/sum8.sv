@@ -35,7 +35,7 @@ endmodule
 
 
 
-
+`ifdef SUM8_TB
 /// sum8 test bench
 // synopsys translate_off
 module sum8_tb();
@@ -819,3 +819,4 @@ module sum8_tb();
 
 endmodule
 // synopsys translate_on
+`endif

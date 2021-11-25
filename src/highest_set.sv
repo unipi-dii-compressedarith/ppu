@@ -23,6 +23,7 @@ endmodule
 
 
 
+`ifdef HIGHEST_SET_TB
 /// highest_set test bench
 // synopsys translate_off
 module highest_set_tb();
@@ -56,3 +57,4 @@ module highest_set_tb();
 	end
 endmodule
 // synopsys translate_on
+`endif

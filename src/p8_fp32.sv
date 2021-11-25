@@ -29,6 +29,7 @@ endmodule
 
 
 
+`ifdef P8_FP32_TB
 /// p8_fp32 test bench
 // synopsys translate_off
 module p8_fp32_tb();
@@ -53,3 +54,4 @@ module p8_fp32_tb();
 
 endmodule
 // synopsys translate_on
+`endif

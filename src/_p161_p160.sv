@@ -1,17 +1,19 @@
+// sv2v -DP161_P160_TB _p161_p160.sv reg16.sv ger16.sv > _p161_p160.v && iverilog _p161_p160.v && ./a.out
+
 module p161_p160(p161,p160);
 	input logic[15:0] p161;
 	output logic signed[15:0] p160;
 
 
     logic [14:0] reg_bits_w;
-	wire [15:0] reg_bits_wo;
-	wire signed [6:0] k_value_w;
+	logic [15:0] reg_bits_wo;
+	logic signed [6:0] k_value_w;
     logic signed[15:0] full_exp;
-	wire [3:0] reg_length_w;
+	logic [3:0] reg_length_w;
 	reg16 myreg16(.regbits (reg_bits_w),.k_val(k_value_w),.reg_length(reg_length_w));
     ger16 myger16(.f_exp(full_exp),.regbits(reg_bits_wo));
     
-	always @(*) begin: _
+	always_comb begin
 		logic pos_sign;
 		logic signed[15:0] abs_posit,fp_exp,fp_mant;
 		logic signed[15:0] posit_body,pos_mant,pos_content;	
@@ -37,6 +39,7 @@ endmodule
 
 
 
+`ifdef P161_P160_TB
 /// p161_p160 test bench
 // synopsys translate_off
 module p161_p160_tb();
@@ -56,8 +59,10 @@ module p161_p160_tb();
 		#10 	p161 = 16'b0_00001_0_000000000;
 		#10 	p161 = 16'b1_00001_0_000000000;
 		#10 	p161 = 16'b0_11110_0_000000000;
-		$finish;
+		
+		#10;
 	end
 
 endmodule
 // synopsys translate_on
+`endif

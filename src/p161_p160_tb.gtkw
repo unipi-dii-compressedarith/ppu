@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Thu Nov 25 11:37:23 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p161_p160_tb.vcd"
+[dumpfile_mtime] "Thu Nov 25 11:36:21 2021"
+[dumpfile_size] 2315
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/p161_p160_tb.gtkw"
+[timestart] 0
+[size] 2560 1418
+[pos] -1 -1
+*-2.634434 8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] p161_p160_tb.
+[treeopen] p161_p160_tb.p161_p160_inst.
+[sst_width] 193
+[signals_width] 314
+[sst_expanded] 1
+[sst_vpaned_height] 445
+@28
+p161_p160_tb.p161_p160_inst.p161[15:0]
+@200
+-
+@420
+p161_p160_tb.p161_p160_inst.full_exp[15:0]
+@22
+p161_p160_tb.p161_p160_inst.reg_bits_wo[15:0]
+@420
+p161_p160_tb.p161_p160_inst.k_value_w[6:0]
+@22
+p161_p160_tb.p161_p160_inst.reg_bits_w[14:0]
+p161_p160_tb.p161_p160_inst.reg_length_w[3:0]
+@200
+-
+@28
+p161_p160_tb.p161_p160_inst.p160[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

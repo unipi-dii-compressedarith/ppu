@@ -122,7 +122,7 @@ def calc_ui(k, frac16):
             u_z += (u_z & 1) | (bits_more & 0xff)
     return u_z
 
-def from_bits(bits: int, sign: bool) -> int:
+def from_bits(bits, sign):
     return c2(bits) if sign else bits
     
 def c2(a: int) -> int:

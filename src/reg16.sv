@@ -66,6 +66,7 @@ endmodule
 
 
 
+`ifdef REG16_TB
 /// reg16 test bench
 // synopsys translate_off
 module reg16_tb();
@@ -92,3 +93,4 @@ module reg16_tb();
 
 endmodule
 // synopsys translate_on
+`endif

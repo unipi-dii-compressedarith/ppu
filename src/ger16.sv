@@ -26,3 +26,12 @@ module ger16(f_exp,regbits);
 		regbits = built_reg & 16'h7fff;
 	end
 endmodule
+
+
+
+`ifdef GER16_TB
+module ger16_tb;
+
+
+endmodule
+`endif

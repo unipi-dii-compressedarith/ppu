@@ -41,6 +41,7 @@ endmodule
 
 
 
+`ifdef MUL8_TB
 /// mul8 test bench
 // synopsys translate_off
 module mul8_tb();
@@ -379,3 +380,4 @@ module mul8_tb();
 
 endmodule
 // synopsys translate_on
+`endif
