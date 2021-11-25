@@ -11,7 +11,7 @@ module p8e0_add(
             input [7:0] a,
             input [7:0] b
         );
-        begin
+        begin: _add_mags_fun
             logic           sign;
             logic [7:0]     ui_a, ui_b, ui_a_2, ui_b_2;
             logic [7:0]     k_a, k_b;
@@ -71,6 +71,12 @@ module p8e0_add(
         );
         begin: _sub_mags_fun
             logic sign;
+            logic [7:0] ui_a, ui_b, ui_a_2, ui_b_2;
+            logic [7:0] frac_a, frac_b;
+            logic [15:0] k_a, k_b;
+            logic [15:0] frac16_a, frac16_b;
+            logic [7:0] shift_right;
+            logic [7:0] z;
 
             sign = a[7];
             if (sign) begin
@@ -89,7 +95,7 @@ module p8e0_add(
                     ui_a_2 = ui_b;
                     ui_b_2 = ui_a;
                     sign = !sign;
-                else begin
+                end else begin
                     ui_a_2 = ui_a;
                     ui_b_2 = ui_b;
                     sign = sign;
@@ -105,17 +111,15 @@ module p8e0_add(
                 frac16_b = frac_b << 7;
 
                 if (shift_right >= 14) begin
-                    z = from_bits(ui_a, sign)
+                    z = from_bits(ui_a, sign);
                 end else begin
                     frac16_b >>= shift_right;
                 end
                 frac16_a -= frac16_b;
 
-                
 
             end
-
-
+            sub_mags = 0;
         end
     endfunction;
 
