@@ -104,21 +104,28 @@ def calculate_regime(k) -> Tuple[int, bool, int]:
         length = (k + 1) & 0xffff_ffff
         return (0x7f - shr(0x7f, length), True, length)
 
-def pack_to_ui(regime, frac):
-    return regime + frac
+def pack_to_ui(regime, frac16):
+    return regime + ((frac16 & 0xffff) >> 8)
+
+# def encode_posit(k, frac16):
+#     regime, reg_s, reg_len = calculate_regime(k)
+#     if reg_len > 6:
+#         u_z = 0x7f if reg_s else 0x01
+#     else:
+#         # to be finished
+#         uz = 0x00000
 
 def calc_ui(k, frac16):
     regime, reg_s, reg_len = calculate_regime(k)
     if reg_len > 6:
         u_z = 0x7f if reg_s else 0x01
     else:
-        frac16_updated = (frac16 & 0x3fff) >> reg_len
-        frac = (frac16_updated >> 8) & 0xff
+        frac16 = (frac16 & 0x3fff) >> reg_len
 
-        bit_n_plus_one = (frac16_updated & 0x80) != 0
-        u_z = pack_to_ui(regime, frac)
+        bit_n_plus_one = (frac16 & 0x80) != 0
+        u_z = pack_to_ui(regime, frac16)
         if bit_n_plus_one:
-            bits_more = (frac16_updated & 0x7f) != 0
+            bits_more = (frac16 & 0x7f) != 0
             u_z += (u_z & 1) | (bits_more & 0xff)
     return u_z
 
@@ -150,6 +157,7 @@ def mul(a: int, b: int) -> Ans:
     ui_a = a if sign_a == 0 else wrapping_neg(a)
     ui_b = b if sign_b == 0 else wrapping_neg(b)
 
+    #### sign_a, reg_a, es_a, frac_a = decode_posit(a)
     k_a, frac_a = separate_bits(ui_a)
     k_b, frac_b = separate_bits(ui_b)
 
@@ -442,6 +450,16 @@ def test_mul(test_input, expected):
 
 
 
+
+
+"""
+>>> import softposit as sp
+>>> sp.posit8(bits=0x41) + sp.posit8(bits=0xe)
+1.25
+>>> _.toBinaryFormatted()
+01001000
+>>>
+"""
 test_add = [
     ((0x74, 0x51), 0x77),
     ((0x72, 0x71), 0x79),
@@ -452,8 +470,8 @@ test_add = [
     ((0xf1, 0x4c), 0x44),
     ((0x00, 0x4c), 0x4c),
     ((0x70, 0x40), 0x72),
-    # ((0x41, 0xbc), 0x7f),         # fails
-    # ((0x41, 0x0e), 0x7c),         # fails
+    ((0x41, 0xbc), 0xfa),
+    ((0x41, 0x0e), 0x48),
     ((0x68, 0x5c), 0x72),
 ]   # │      │       │
     # └─ a   └─ b    └─ P<8,0>::(a + b)

@@ -40,7 +40,7 @@ pytest p8e0.py -v
 
 ---
 
-(\*) on macOS this may not work natively. Follow this to enable gtkwave from CLI: https://ughe.github.io/2018/11/06/gtkwave-osx or just open gtkwave like a normal application and then File -> Open New Tab -> pick the `.gktw` or `.vcd` file you need.
+(\*) on macOS this may not work natively. Follow this to enable gtkwave from CLI: https://gist.github.com/urbanij/ea2a4c355c1827ec9e52b5a3dfab9a74 or just open gtkwave like a normal application and then File -> Open New Tab -> pick the `.gktw` or `.vcd` file you need.
 
 
 
