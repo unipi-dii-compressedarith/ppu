@@ -1,6 +1,6 @@
 mul:
 	python tb_gen.py --operation mul --shuffle-random true
-	sv2v -DPROBE_SIGNALS p8e0_mul.sv p8e0_pkg.sv tb_p8e0_mul.sv > out.v
+	sv2v -DPROBE_SIGNALS -DTEST_BENCH p8e0_mul.sv p8e0_pkg.sv tb_p8e0_mul.sv > out.v
 	iverilog out.v
 	./a.out
 
@@ -9,7 +9,7 @@ mul:
 
 add:
 	python tb_gen.py --operation add --shuffle-random true
-	sv2v p8e0_add.sv p8e0_pkg.sv tb_p8e0_add.sv > out.v
+	sv2v -DTEST_BENCH p8e0_add.sv p8e0_pkg.sv tb_p8e0_add.sv > out.v
 	iverilog out.v
 	./a.out
 

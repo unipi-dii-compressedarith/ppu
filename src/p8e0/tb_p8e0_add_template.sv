@@ -7,8 +7,6 @@ iverilog out.v && ./a.out
 
 // synopsys translate_off
 
-`define TEST_BENCH
-
 `ifdef TEST_BENCH
 
 import p8e0_pkg::*;
