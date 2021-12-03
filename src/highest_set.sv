@@ -1,5 +1,12 @@
 /*
-iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
+    iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
+
+
+
+    ======
+    Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
+    e.g.:
+        bits = 8b00001001 -> 3
 */
 
 module highest_set #(

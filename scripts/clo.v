@@ -1,41 +1,42 @@
-module clo #(
-        parameter N = 8,
-        parameter S = $clog2(N)  
-    )(
-        input [N-1:0] bits,
-        output [S-1:0] run_length
-    );
-
-    wire [S-1:0] _tmp_out [0:N];
-
-    genvar i;
-    generate
-        for (i=0; i<N; i=i+1) begin: _gen_for
-            mux_base #(
-                .DATA_WIDTH (S)
-            ) mux_base_ist (
-                .a          (_tmp_out[i]),
-                .b          (i),
-                .sel        (bits[N-1-i]),
-                .out        (_tmp_out[i+1])
-            );
-        end
-    endgenerate
-
-    assign run_length = _tmp_out[N];
-    assign _tmp_out[0] = bits[N-1];
+module clo (
+	bits,
+	leading_ones,
+	index_highest_set
+);
+	parameter N = 8;
+	parameter S = $clog2(N);
+	input [N - 1:0] bits;
+	output wire [S - 1:0] leading_ones;
+	output wire [S - 1:0] index_highest_set;
+	highest_set #(
+		.SIZE(N),
+		.VAL(0)
+	) highest_set_inst(
+		.bits(bits),
+		.index(index_highest_set)
+	);
+	assign leading_ones = (N - 1) - index_highest_set;
+endmodule
+module highest_set (
+	bits,
+	index
+);
+	parameter SIZE = 8;
+	parameter VAL = 1;
+	parameter OUTW = $clog2(SIZE);
+	input wire [SIZE - 1:0] bits;
+	output wire [OUTW - 1:0] index;
+	wire [OUTW - 1:0] out_stage [0:SIZE];
+	assign out_stage[0] = ~0;
+	genvar i;
+	generate
+		for (i = 0; i < SIZE; i = i + 1) begin : _gen
+			assign out_stage[i + 1] = (bits[i] == VAL ? i : out_stage[i]);
+		end
+	endgenerate
+	assign index = out_stage[SIZE];
 endmodule
 
-module mux_base #(
-        parameter DATA_WIDTH = 8
-    )(
-        input  [DATA_WIDTH-1:0] a,
-        input  [DATA_WIDTH-1:0] b,
-        input                   sel,
-        output [DATA_WIDTH-1:0] out
-    );
-    assign out = sel == 0 ? a : b;
-endmodule
 
 
 ////////////////////////////////////////////////////////////////
@@ -96,30 +97,6 @@ module LOD #(
     endgenerate
 endmodule
 
-/////////////////
-module highest_set #(
-	parameter SIZE = 8,
-	parameter VAL = 1,
-	parameter OUTW = $clog2(SIZE)
-)(
-	input logic[SIZE-1:0] bits,
-	output wire [OUTW-1:0] index
-);
-
-	wire [OUTW-1:0]out_stage[0:SIZE];
-	assign out_stage[0] = ~0; // desired default output if no bits set
-
-	generate genvar i;
-		for (i=0; i<SIZE; i=i+1) begin: _gen
-    		assign out_stage[i+1] = (bits[i] == VAL) ? i : out_stage[i];
-    	end
-	endgenerate
-
-	assign index = out_stage[SIZE];
-
-endmodule
-///////////////
-
 
 module tb;
 
@@ -127,9 +104,9 @@ module tb;
     parameter S = $clog2(N);
 
     reg [N-1:0] bits;
-    wire [S-1:0] run_length_pacogen, run_length_mine, run_length_federicos;
+    wire [S-1:0] run_length_pacogen, run_length_mine;
 
-    reg diff1, diff2;
+    reg diff;
 
     LOD_N #(
         .N(N),
@@ -144,20 +121,12 @@ module tb;
         .S(S)
     ) clo_inst(
         .bits(bits),
-        .run_length(run_length_mine)
-    );
-
-    highest_set #(
-        .SIZE(N),
-        .VAL(1) // search first val
-    ) highest_set_inst (
-        .bits(~bits),
-        .index(run_length_federicos)
+        .leading_ones(run_length_mine),
+        .index_highest_set()
     );
 
     always @(*) begin
-        diff1 = run_length_mine == run_length_pacogen ? 0 : 1'bx;
-        diff2 = N-run_length_federicos == run_length_pacogen ? 0 : 1'bx;
+        diff = run_length_mine == run_length_pacogen ? 0 : 1'bx;
     end
 
     initial begin

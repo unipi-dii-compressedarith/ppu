@@ -1,6 +1,13 @@
 /*
 
-clo: count leading ones
+clo: count leading ones.
+It wraps the `highest_set` module; returns the number of ones starting from the left:
+
+e.g:
+    bits = 0b11010000 -> 2
+    bits = 0b01111000 -> 0
+    bits = 0b11100000 -> 3
+
 
 iverilog -DTEST_BENCH clo.sv highest_set.sv && ./a.out
 */
@@ -28,6 +35,8 @@ module clo #(
 endmodule
 
 
+
+
 `ifdef TEST_BENCH
 module tb_clo;
 
@@ -38,24 +47,25 @@ module tb_clo;
     wire [S-1:0] leading_ones, leading_zeros;
     wire [S-1:0] index_highest_set_1, index_highest_set_2;
 
+    /* count leading ones */
     clo #(
         .N              (N),
         .S              (S)
-    ) clo_inst_co (
+    ) count_leading_ones (
         .bits           (bits),
         .leading_ones   (leading_ones),
         .index_highest_set(index_highest_set_1)
     );
 
+    /* count leading zeros, inputs bits are flipped */
     clo #(
         .N              (N),
         .S              (S)
-    ) clo_inst_cz (
+    ) count_leading_zeros (
         .bits           (~bits),
         .leading_ones   (leading_zeros),
         .index_highest_set(index_highest_set_2)
     );
-
 
 
 
