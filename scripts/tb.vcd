@@ -1,0 +1,249 @@
+$date
+	Fri Dec  3 15:15:20 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb $end
+$var wire 2 ! run_length_pacogen [1:0] $end
+$var wire 2 " run_length_mine [1:0] $end
+$var wire 2 # run_length_federicos [1:0] $end
+$var reg 4 $ bits [3:0] $end
+$var reg 1 % diff1 $end
+$var reg 1 & diff2 $end
+$scope module clo_inst $end
+$var wire 4 ' bits [3:0] $end
+$var wire 2 ( run_length [1:0] $end
+$scope begin _gen_for[0] $end
+$scope module mux_base_ist $end
+$var wire 2 ) a [1:0] $end
+$var wire 2 * b [1:0] $end
+$var wire 1 + sel $end
+$var wire 2 , out [1:0] $end
+$upscope $end
+$upscope $end
+$scope begin _gen_for[1] $end
+$scope module mux_base_ist $end
+$var wire 2 - a [1:0] $end
+$var wire 2 . b [1:0] $end
+$var wire 1 / sel $end
+$var wire 2 0 out [1:0] $end
+$upscope $end
+$upscope $end
+$scope begin _gen_for[2] $end
+$scope module mux_base_ist $end
+$var wire 2 1 a [1:0] $end
+$var wire 2 2 b [1:0] $end
+$var wire 1 3 sel $end
+$var wire 2 4 out [1:0] $end
+$upscope $end
+$upscope $end
+$scope begin _gen_for[3] $end
+$scope module mux_base_ist $end
+$var wire 2 5 a [1:0] $end
+$var wire 2 6 b [1:0] $end
+$var wire 1 7 sel $end
+$var wire 2 8 out [1:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module highest_set_inst $end
+$var wire 4 9 bits [3:0] $end
+$var wire 2 : index [1:0] $end
+$scope begin _gen[0] $end
+$upscope $end
+$scope begin _gen[1] $end
+$upscope $end
+$scope begin _gen[2] $end
+$upscope $end
+$scope begin _gen[3] $end
+$upscope $end
+$upscope $end
+$scope module lod_n_inst $end
+$var wire 4 ; in [3:0] $end
+$var wire 1 < vld $end
+$var wire 2 = out [1:0] $end
+$scope module l1 $end
+$var wire 4 > in [3:0] $end
+$var wire 1 < vld $end
+$var wire 2 ? out [1:0] $end
+$scope begin genblk4 $end
+$var wire 1 @ out_vl $end
+$var wire 1 A out_vh $end
+$var wire 1 B out_l $end
+$var wire 1 C out_h $end
+$scope module h $end
+$var wire 2 D in [1:0] $end
+$var wire 1 A vld $end
+$var wire 1 C out $end
+$scope begin genblk1 $end
+$upscope $end
+$upscope $end
+$scope module l $end
+$var wire 2 E in [1:0] $end
+$var wire 1 @ vld $end
+$var wire 1 B out $end
+$scope begin genblk1 $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b1 E
+b0 D
+0C
+1B
+0A
+1@
+b11 ?
+b1 >
+b11 =
+1<
+b1 ;
+b0 :
+b1 9
+b10 8
+07
+b11 6
+b10 5
+b10 4
+13
+b10 2
+b1 1
+b1 0
+1/
+b1 .
+b0 -
+b0 ,
+1+
+b0 *
+b1 )
+b10 (
+b1110 '
+x&
+x%
+b1110 $
+b0 #
+b10 "
+b11 !
+$end
+#10
+b1 #
+b1 :
+b10 !
+b10 =
+b10 ?
+0B
+b1 "
+b1 (
+b1 8
+b1 4
+b1 5
+b11 E
+03
+b11 9
+b11 ;
+b11 >
+b1100 $
+b1100 '
+#20
+b10 #
+b10 :
+b0 "
+b0 (
+b0 8
+1C
+b0 4
+b0 5
+b1 !
+b1 =
+b1 ?
+b0 0
+b0 1
+1A
+b1 D
+0/
+b111 9
+b111 ;
+b111 >
+b1000 $
+b1000 '
+#30
+0%
+b0 !
+b0 =
+b0 ?
+x&
+0C
+b11 #
+b11 :
+b11 D
+0+
+b0 )
+b1111 9
+b1111 ;
+b1111 >
+b0 $
+b0 '
+#40
+1B
+x%
+b10 "
+b10 (
+b10 8
+b1 0
+b1 1
+b10 4
+b10 5
+b1 E
+b10 D
+1/
+13
+b1001 9
+b1001 ;
+b1001 >
+b110 $
+b110 '
+#50
+0B
+b0 0
+b0 1
+b0 4
+b0 5
+b11 "
+b11 (
+b11 8
+b10 E
+b11 D
+0/
+03
+17
+b1110 9
+b1110 ;
+b1110 >
+b1 $
+b1 '
+#60
+1B
+x%
+b10 4
+b10 5
+b10 "
+b10 (
+b10 8
+b1 E
+13
+07
+b1101 9
+b1101 ;
+b1101 >
+b10 $
+b10 '
+#70
