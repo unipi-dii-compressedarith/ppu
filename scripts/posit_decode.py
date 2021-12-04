@@ -71,12 +71,21 @@ class Posit:
         0_0000_e_00 +     exp
         0_0000_0_mm +     mant
         """
-        return (
-            shl(self.sign, (self.size - 1), self.size)
-            + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
-            + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
-            + self.mant
-        )
+        if self.sign == 0:
+            return (
+                shl(self.sign, (self.size - 1), self.size)
+                + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
+                + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                + self.mant
+            )
+        else:
+            # WRONG
+            return (
+                shl(self.sign, (self.size - 1), self.size)
+                + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
+                + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                + self.mant
+            )
 
     def to_real(self):
         if self.is_zero:
@@ -93,7 +102,7 @@ class Posit:
             )
     
     def tb(self):
-        return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
+        return f"""//bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
 regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
 mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
@@ -258,6 +267,7 @@ for bits in list_of_bits:
     if bits != (1 << N - 1) and bits != 0:
         posit = decode(bits, 8, 0)
         assert posit.to_real() == sp.posit8(bits=bits)
+        print(f"bits = {N}'b{get_bin(bits, N)};")
         print(posit.tb())
 
 
