@@ -1,7 +1,7 @@
-# import softposit as sp  # used for printing only
+import softposit as sp
 
 import signal
-
+import random
 
 def handler(signum, frame):
     exit(1)
@@ -47,13 +47,15 @@ class Regime:
 
 
 class Posit:
-    def __init__(self, size, es, sign, regime, exp, mant):
+    def __init__(self, size, es, sign, regime, exp, mant, is_zero=False, is_inf=False):
         self.size = size
         self.es = es
         self.sign = sign
         self.regime = regime
         self.exp = exp or 0
         self.mant = mant
+        self.is_zero = is_zero
+        self.is_inf = is_inf
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -76,6 +78,20 @@ class Posit:
             + self.mant
         )
 
+    def to_real(self):
+        if self.is_zero:
+            return 0
+        elif self.is_inf:
+            return None
+        else:
+            F = self.size - 1 - self.regime.reg_len - self.es  # lenth of mantissa
+            return (
+                (-1) ** self.sign.real
+                * (2 ** (2 ** self.es)) ** self.regime.k
+                * (2 ** self.exp)
+                * (1 + self.mant / (2 ** F))
+            )
+
     def color_code(self):
         # bug with eg: bits = 0b0110 es 1
         """
@@ -85,14 +101,18 @@ class Posit:
         mant_len = size - sign_len - reg_len - ex_len
         """
         mant_len = self.size - 1 - self.regime.reg_len - self.es
-        regime_bits_str = f"{self.regime.bits:032b}"[32 - self.regime.reg_len :]
-        exp_bits_str = f"{self.exp:032b}"[32 - self.es :]
-        mant_bits_str = f"{self.mant:032b}"[32 - mant_len :]
-        # breakpoint()
-        return f"{SIGN_COLOR}{self.sign.real}{REG_COLOR}{regime_bits_str}{EXP_COLOR}{exp_bits_str}{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
+        regime_bits_str = f"{self.regime.bits:064b}"[64 - self.regime.reg_len :]
+        exp_bits_str = f"{self.exp:064b}"[64 - self.es :]
+        mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
+
+        ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
+
+        ans = f"{SIGN_COLOR}{self.sign.real}{REG_COLOR}{regime_bits_str}{EXP_COLOR}{exp_bits_str}{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
+        assert len(ans_no_color) == self.size
+        return ans
 
     def __repr__(self):
-        return f"""P<{self.size},{self.es}>: {self.color_code()} {get_bin(self.bit_repr(), self.size)}
+        return f"""P<{self.size},{self.es}>: {self.color_code()} {get_bin(self.bit_repr(), self.size)} {self.to_real()}
 s:    {self.sign.real}
 reg_s:{self.regime.reg_s.real}
 reg_len:{self.regime.reg_len}
@@ -103,7 +123,8 @@ mant: {get_bin(self.mant, self.size)}
 {'-'*20}"""
 
 
-def c2(bits, mask):
+def c2(bits, size):
+    mask = (2 ** size) - 1
     return (~bits & mask) + 1
 
 
@@ -123,11 +144,15 @@ def clz(bits, size):
 
 def decode(bits, size, es) -> Posit:
     """Break down P<size, es> in its components (sign, regime, exponent, mantissa)"""
-
-    MASK = (2 ** size) - 1
+    mask = (2 ** size) - 1
     msb = 1 << (size - 1)
     sign = bool(bits & msb)
-    u_bits = bits if sign == 0 else c2(bits, MASK)
+    if (bits << 1) == 0:
+        if sign == True:
+            return Posit(is_zero=True)
+        else:
+            return Posit(is_inf=True)
+    u_bits = bits if sign == 0 else c2(bits, mask)
     reg_msb = 1 << (size - 2)
     reg_s = bool(u_bits & reg_msb)
     if reg_s == True:
@@ -137,14 +162,14 @@ def decode(bits, size, es) -> Posit:
         k = -clz(u_bits << 1, size)
         reg_len = min(-k + 1, size - 1)
 
-    regime_bits = ((u_bits << 1) & MASK) >> (
+    regime_bits = ((u_bits << 1) & mask) >> (
         size - reg_len
-    )  # Regime(reg_s, reg_len, k).get_bits(MASK)
+    )  # Regime(reg_s, reg_len, k).get_bits(mask)
 
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
-    exp = ((u_bits << (1 + reg_len)) & MASK) >> (size - es)
+    exp = ((u_bits << (1 + reg_len)) & mask) >> (size - es)
 
-    mant = ((u_bits << (1 + reg_len + es)) & MASK) >> (1 + reg_len + es)
+    mant = ((u_bits << (1 + reg_len + es)) & mask) >> (1 + reg_len + es)
 
     return Posit(
         size=size,
@@ -166,8 +191,6 @@ assert clo(0b00111111, 8) == 0
 assert clz(0b01111111, 8) == 1
 assert clz(0b00001100, 8) == 4
 assert clz(0b00111111, 8) == 2
-assert clz(0b00001110, 8) == 4
-assert clz(0b00000000, 8) == 8
 
 
 assert decode(0b01110011, 8, 3) == Posit(
@@ -214,6 +237,33 @@ assert decode(0b01111111, 8, 0) == Posit(
     exp=0,
     mant=0b0,
 )
+
+
+
+random.seed(10)
+
+NUM_RANDOM_TEST_CASES = 80
+N = 8
+list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+for bits in list_of_bits:
+    print(get_bin(bits, N) + ';')
+    if bits != (1 << N - 1) and bits != 0:
+        assert decode(bits, 8, 0).to_real() == sp.posit8(bits=bits)
+
+N = 16
+list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+for bits in list_of_bits:
+    print(get_bin(bits, N))
+    if bits != (1 << N - 1) and bits != 0:
+        assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+
+# N = 32
+# list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+# for bits in list_of_bits:
+#     print(get_bin(bits, N))
+#     if bits != (1 << N - 1) and bits != 0:
+#         assert decode(bits, 32, 2).to_real() == sp.posit32(bits=bits)
+
 
 # print(decode(0b01110011, 8, 3))
 # print(decode(0b11110011, 8, 0))
