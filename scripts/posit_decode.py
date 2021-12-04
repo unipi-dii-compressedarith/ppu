@@ -1,5 +1,5 @@
 import softposit as sp
-
+from numpy import inf
 import signal
 import random
 
@@ -82,7 +82,7 @@ class Posit:
         if self.is_zero:
             return 0
         elif self.is_inf:
-            return None
+            return inf # numpy.inf
         else:
             F = self.size - 1 - self.regime.reg_len - self.es  # lenth of mantissa
             return (
@@ -91,6 +91,15 @@ class Posit:
                 * (2 ** self.exp)
                 * (1 + self.mant / (2 ** F))
             )
+    
+    def tb(self):
+        return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
+regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
+exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
+mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
+#10;
+"""
+
 
     def color_code(self):
         # bug with eg: bits = 0b0110 es 1
@@ -246,16 +255,18 @@ NUM_RANDOM_TEST_CASES = 80
 N = 8
 list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
 for bits in list_of_bits:
-    print(get_bin(bits, N) + ';')
     if bits != (1 << N - 1) and bits != 0:
-        assert decode(bits, 8, 0).to_real() == sp.posit8(bits=bits)
+        posit = decode(bits, 8, 0)
+        assert posit.to_real() == sp.posit8(bits=bits)
+        print(posit.tb())
 
-N = 16
-list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
-for bits in list_of_bits:
-    print(get_bin(bits, N))
-    if bits != (1 << N - 1) and bits != 0:
-        assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+
+# N = 16
+# list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+# for bits in list_of_bits:
+#     print(get_bin(bits, N))
+#     if bits != (1 << N - 1) and bits != 0:
+#         assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 
 # N = 32
 # list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
@@ -269,7 +280,8 @@ for bits in list_of_bits:
 # print(decode(0b11110011, 8, 0))
 # print(decode(0b0110011101110011, 16, 1))
 
-while True:
-    bits = input(">>> 0b") or "0"
-    es = int(input(">>> es: ") or 0)
-    print(decode(int(bits, 2), len(bits), es))
+if 0:
+    while True:
+        bits = input(">>> 0b") or "0"
+        es = int(input(">>> es: ") or 0)
+        print(decode(int(bits, 2), len(bits), es))
