@@ -127,6 +127,9 @@ class Posit:
 
     def tb(self):
         return f"""//bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
+sign = {self.sign.real};
+reg_s = {self.regime.reg_s};
+reg_len = {self.regime.reg_len};
 regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
 mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
@@ -300,24 +303,24 @@ for bits in list_of_bits:
         print(posit.tb())
 
 
-N, ES = 5, 1
-list_of_bits = random.sample(
-    range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
-)
-for bits in list_of_bits:
-    if bits != (1 << N - 1) and bits != 0:
-        posit = decode(bits, N, ES)
-        # posit.to_real()
-        print(f"bits = {N}'b{get_bin(bits, N)};")
-        print(posit.tb())
+# N, ES = 5, 1
+# list_of_bits = random.sample(
+#     range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
+# )
+# for bits in list_of_bits:
+#     if bits != (1 << N - 1) and bits != 0:
+#         posit = decode(bits, N, ES)
+#         # posit.to_real()
+#         print(f"bits = {N}'b{get_bin(bits, N)};")
+#         print(posit.tb())
 
 
-N = 16
-list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
-for bits in list_of_bits:
-    print(get_bin(bits, N))
-    if bits != (1 << N - 1) and bits != 0:
-        assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+# N = 16
+# list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+# for bits in list_of_bits:
+#     print(get_bin(bits, N))
+#     if bits != (1 << N - 1) and bits != 0:
+#         assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 
 
 # N = 32
@@ -332,7 +335,7 @@ for bits in list_of_bits:
 # print(decode(0b11110011, 8, 0))
 # print(decode(0b0110011101110011, 16, 1))
 
-REPL = 1
+REPL = 0
 if REPL:
     while True:
         bits = input(">>> 0b") or "0"

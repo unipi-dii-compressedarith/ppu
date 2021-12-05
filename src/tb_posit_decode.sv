@@ -1,6 +1,9 @@
 if (N == 8 && ES == 0) begin
     bits = 8'b10010010;
     //bits                 = 8'b11101110;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001110;
@@ -8,6 +11,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00001000;
     //bits                 = 8'b00001000;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -15,6 +21,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01101101;
     //bits                 = 8'b01101101;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001101;
@@ -22,6 +31,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01111011;
     //bits                 = 8'b01111011;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 5;
     regime_bits_expected = 8'b00011110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -29,6 +41,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10010011;
     //bits                 = 8'b11101101;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001101;
@@ -36,6 +51,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00000011;
     //bits                 = 8'b00000011;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 6;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -43,6 +61,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00110100;
     //bits                 = 8'b00110100;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010100;
@@ -50,6 +71,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01110110;
     //bits                 = 8'b01110110;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000110;
@@ -57,6 +81,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11010000;
     //bits                 = 8'b10110000;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010000;
@@ -64,6 +91,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01111101;
     //bits                 = 8'b01111101;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 6;
     regime_bits_expected = 8'b00111110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -71,6 +101,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11010010;
     //bits                 = 8'b10101110;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001110;
@@ -78,6 +111,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01000111;
     //bits                 = 8'b01000111;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000111;
@@ -85,6 +121,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10100111;
     //bits                 = 8'b11011001;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011001;
@@ -92,6 +131,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11001111;
     //bits                 = 8'b10110001;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010001;
@@ -99,6 +141,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00101001;
     //bits                 = 8'b00101001;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001001;
@@ -106,6 +151,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11111101;
     //bits                 = 8'b10000011;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 6;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -113,6 +161,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10000101;
     //bits                 = 8'b11111011;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 5;
     regime_bits_expected = 8'b00011110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -120,6 +171,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11110101;
     //bits                 = 8'b10001011;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -127,6 +181,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01010011;
     //bits                 = 8'b01010011;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010011;
@@ -134,6 +191,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00010011;
     //bits                 = 8'b00010011;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -141,6 +201,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00111111;
     //bits                 = 8'b00111111;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011111;
@@ -148,6 +211,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10111110;
     //bits                 = 8'b11000010;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000010;
@@ -155,6 +221,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01011100;
     //bits                 = 8'b01011100;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011100;
@@ -162,6 +231,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00001011;
     //bits                 = 8'b00001011;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -169,6 +241,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01101011;
     //bits                 = 8'b01101011;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001011;
@@ -176,6 +251,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11011100;
     //bits                 = 8'b10100100;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000100;
@@ -183,6 +261,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00100011;
     //bits                 = 8'b00100011;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -190,6 +271,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10011010;
     //bits                 = 8'b11100110;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000110;
@@ -197,6 +281,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01011010;
     //bits                 = 8'b01011010;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011010;
@@ -204,6 +291,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01100001;
     //bits                 = 8'b01100001;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -211,6 +301,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11100110;
     //bits                 = 8'b10011010;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001010;
@@ -218,6 +311,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01001000;
     //bits                 = 8'b01001000;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001000;
@@ -225,6 +321,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11010011;
     //bits                 = 8'b10101101;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001101;
@@ -232,6 +331,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10101100;
     //bits                 = 8'b11010100;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010100;
@@ -239,6 +341,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01000011;
     //bits                 = 8'b01000011;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -246,6 +351,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01110100;
     //bits                 = 8'b01110100;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000100;
@@ -253,6 +361,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00101100;
     //bits                 = 8'b00101100;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001100;
@@ -260,6 +371,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10101111;
     //bits                 = 8'b11010001;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010001;
@@ -267,6 +381,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01001101;
     //bits                 = 8'b01001101;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001101;
@@ -274,6 +391,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10101001;
     //bits                 = 8'b11010111;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010111;
@@ -281,6 +401,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11101000;
     //bits                 = 8'b10011000;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001000;
@@ -288,6 +411,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00100010;
     //bits                 = 8'b00100010;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000010;
@@ -295,6 +421,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11011011;
     //bits                 = 8'b10100101;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000101;
@@ -302,6 +431,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11000100;
     //bits                 = 8'b10111100;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011100;
@@ -309,6 +441,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00111101;
     //bits                 = 8'b00111101;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011101;
@@ -316,6 +451,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01110000;
     //bits                 = 8'b01110000;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -323,6 +461,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10011101;
     //bits                 = 8'b11100011;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -330,6 +471,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01100000;
     //bits                 = 8'b01100000;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -337,6 +481,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11100111;
     //bits                 = 8'b10011001;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001001;
@@ -344,6 +491,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10010101;
     //bits                 = 8'b11101011;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001011;
@@ -351,6 +501,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00000001;
     //bits                 = 8'b00000001;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 7;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -358,6 +511,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00111100;
     //bits                 = 8'b00111100;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011100;
@@ -365,6 +521,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11010101;
     //bits                 = 8'b10101011;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001011;
@@ -372,6 +531,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00110001;
     //bits                 = 8'b00110001;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010001;
@@ -379,6 +541,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11011000;
     //bits                 = 8'b10101000;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001000;
@@ -386,6 +551,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10001001;
     //bits                 = 8'b11110111;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000111;
@@ -393,6 +561,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01011101;
     //bits                 = 8'b01011101;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011101;
@@ -400,6 +571,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11000101;
     //bits                 = 8'b10111011;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011011;
@@ -407,6 +581,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11110100;
     //bits                 = 8'b10001100;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000100;
@@ -414,6 +591,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01010000;
     //bits                 = 8'b01010000;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010000;
@@ -421,6 +601,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10101010;
     //bits                 = 8'b11010110;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010110;
@@ -428,6 +611,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10001100;
     //bits                 = 8'b11110100;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000100;
@@ -435,6 +621,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01110011;
     //bits                 = 8'b01110011;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 4;
     regime_bits_expected = 8'b00001110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000011;
@@ -442,6 +631,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01101111;
     //bits                 = 8'b01101111;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001111;
@@ -449,6 +641,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01111000;
     //bits                 = 8'b01111000;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 5;
     regime_bits_expected = 8'b00011110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -456,6 +651,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00010000;
     //bits                 = 8'b00010000;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -463,6 +661,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11110010;
     //bits                 = 8'b10001110;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000110;
@@ -470,6 +671,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11001101;
     //bits                 = 8'b10110011;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00010011;
@@ -477,6 +681,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11101100;
     //bits                 = 8'b10010100;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000100;
@@ -484,6 +691,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00101000;
     //bits                 = 8'b00101000;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001000;
@@ -491,6 +701,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00111001;
     //bits                 = 8'b00111001;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011001;
@@ -498,6 +711,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01101001;
     //bits                 = 8'b01101001;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00001001;
@@ -505,6 +721,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11011110;
     //bits                 = 8'b10100010;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000010;
@@ -512,6 +731,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b00001001;
     //bits                 = 8'b00001001;
+    sign = 0;
+    reg_s = 0;
+    reg_len = 4;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -519,6 +741,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11101111;
     //bits                 = 8'b10010001;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 3;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000001;
@@ -526,6 +751,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b01111111;
     //bits                 = 8'b01111111;
+    sign = 0;
+    reg_s = 1;
+    reg_len = 7;
     regime_bits_expected = 8'b01111111;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000000;
@@ -533,6 +761,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b11001000;
     //bits                 = 8'b10111000;
+    sign = 1;
+    reg_s = 0;
+    reg_len = 2;
     regime_bits_expected = 8'b00000001;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011000;
@@ -540,6 +771,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10011011;
     //bits                 = 8'b11100101;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 3;
     regime_bits_expected = 8'b00000110;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00000101;
@@ -547,6 +781,9 @@ if (N == 8 && ES == 0) begin
 
     bits = 8'b10101000;
     //bits                 = 8'b11011000;
+    sign = 1;
+    reg_s = 1;
+    reg_len = 2;
     regime_bits_expected = 8'b00000010;
     exp_expected         = 8'b00000000;
     mant_expected        = 8'b00011000;
