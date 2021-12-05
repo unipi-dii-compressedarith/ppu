@@ -1,23 +1,25 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Dec  4 18:28:47 2021
+[*] Sun Dec  5 11:16:03 2021
 [*]
-[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_decode.vcd"
-[dumpfile_mtime] "Sat Dec  4 18:25:36 2021"
-[dumpfile_size] 20392
-[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_decode.gtkw"
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_decode_P8E0.vcd"
+[dumpfile_mtime] "Sun Dec  5 11:09:06 2021"
+[dumpfile_size] 20467
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_decode_P8E0.gtkw"
 [timestart] 0
-[size] 1440 825
-[pos] -1 -1
-*-5.429980 89 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1950 1154
+[pos] -1 -330
+*-4.798664 89 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_posit_decode.
 [treeopen] tb_posit_decode.posit_decode_inst.
 [sst_width] 193
 [signals_width] 266
 [sst_expanded] 1
-[sst_vpaned_height] 245
+[sst_vpaned_height] 361
 @28
 tb_posit_decode.bits[7:0]
+@29
+[color] 2
 tb_posit_decode.sign
 @200
 -
@@ -36,17 +38,20 @@ tb_posit_decode.is_inf
 tb_posit_decode.is_zero
 @24
 tb_posit_decode.posit_decode_inst.reg_len[2:0]
-@28
+@29
+[color] 2
 tb_posit_decode.posit_decode_inst.regime_bits[7:0]
+@28
 tb_posit_decode.regime_bits_expected[7:0]
 @8024
 [color] 7
 tb_posit_decode.diff_regime_bits[7:0]
-@421
+@420
 tb_posit_decode.k[7:0]
 @20000
 -
-@28
+@29
+[color] 2
 tb_posit_decode.mant[7:0]
 @200
 -

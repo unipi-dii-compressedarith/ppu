@@ -1,5 +1,8 @@
 /*
 iverilog -DTEST_BENCH_DECODE posit_decode.sv clo.sv highest_set.sv && ./a.out
+
+yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" posit_decode.sv clo.sv highest_set.sv > yosys_intel.out
+
 */
 module posit_decode #(
         parameter N = 8,
@@ -17,6 +20,7 @@ module posit_decode #(
         output [ES-1:0] exp,
         output [N-1:0]  mant
     );
+
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
@@ -24,14 +28,15 @@ module posit_decode #(
     function [N-1:0] min(input [N-1:0] a, b);
         min = a < b ? a : b;
     endfunction
-          
-    wire [N-1:0] mask = {N{1'b1}};
+
+
+    // wire [N-1:0] mask = {N{1'b1}}; // unused
     assign is_zero = bits == {N{1'b0}};
     assign is_inf = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
     
     wire [N-1:0] u_bits;
-    assign u_bits = sign == 0 ? bits : ~bits + 1;
+    assign u_bits = sign == 0 ? bits : c2(bits);
 
     wire [S-1:0] leading_ones, leading_zeros;
 
@@ -40,18 +45,21 @@ module posit_decode #(
     assign k = reg_s == 1 ? leading_ones - 1 : c2(leading_zeros);
     
     assign reg_len = reg_s == 1 ? min(k + 2, N - 1) : min(c2(k) + 1, N - 1);
-    
+
+    // not useful but anyway
     assign regime_bits = (u_bits << 1) >> (N - reg_len);
 
     assign exp = (u_bits << (1 + reg_len)) >> (N - ES);
 
     assign mant = (u_bits << (1 + reg_len + ES)) >> (1 + reg_len + ES);
 
+    
+    // count leading X
     clo #(
         .N(N),
         .S(S)
     ) clo_inst_o (
-        .bits               (u_bits << 1),
+        .bits               (u_bits << 1), // strip sign bit and count ones from the left
         .leading_ones       (leading_ones),
         .index_highest_set  ()
     );
@@ -59,7 +67,7 @@ module posit_decode #(
         .N(N),
         .S(S)
     ) clo_inst_z (
-        .bits               (~u_bits << 1),
+        .bits               (~u_bits << 1), // flip bits, strip sign bit and count zeros from the left
         .leading_ones       (leading_zeros),
         .index_highest_set  ()
     );
@@ -77,9 +85,19 @@ module tb_posit_decode;
         abs = in[N-1] == 0 ? in : c2(in);
     endfunction
 
+`ifdef N
+    parameter N = `N;
+`else
     parameter N = 8;
+`endif
+
     parameter S = $clog2(N);
+
+`ifdef ES
+    parameter ES = `ES;
+`else
     parameter ES = 0;
+`endif
 
     reg [N-1:0]     bits;
     wire            is_zero;
@@ -123,12 +141,16 @@ module tb_posit_decode;
     );
 
     initial begin
-		$dumpfile("tb_posit_decode.vcd");
+        if (N == 8 && ES == 0) $dumpfile("tb_posit_decode_P8E0.vcd");
+        else if (N == 5 && ES == 1) $dumpfile("tb_posit_decode_P5E1.vcd");
+        else
+        $dumpfile("tb_posit_decode.vcd");
+
 	    $dumpvars(0, tb_posit_decode);                        
             
-            `include "tb_posit_decode.sv"
+        `include "tb_posit_decode.sv"
 
-            #10;
+        #10;
 		$finish;
     end
 

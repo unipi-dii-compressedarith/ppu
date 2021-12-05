@@ -261,6 +261,7 @@ assert decode(0b01111111, 8, 0) == Posit(
 random.seed(10)
 
 NUM_RANDOM_TEST_CASES = 80
+
 N = 8
 list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
 for bits in list_of_bits:
@@ -271,12 +272,24 @@ for bits in list_of_bits:
         print(posit.tb())
 
 
-# N = 16
-# list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
-# for bits in list_of_bits:
-#     print(get_bin(bits, N))
-#     if bits != (1 << N - 1) and bits != 0:
-#         assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+N, ES = 5, 1
+list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2**N-1))
+for bits in list_of_bits:
+    if bits != (1 << N - 1) and bits != 0:
+        posit = decode(bits, N, ES)
+        # posit.to_real()
+        print(f"bits = {N}'b{get_bin(bits, N)};")
+        print(posit.tb())
+
+
+
+N = 16
+list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+for bits in list_of_bits:
+    print(get_bin(bits, N))
+    if bits != (1 << N - 1) and bits != 0:
+        assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+
 
 # N = 32
 # list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
@@ -290,7 +303,8 @@ for bits in list_of_bits:
 # print(decode(0b11110011, 8, 0))
 # print(decode(0b0110011101110011, 16, 1))
 
-if 0:
+CLI = 0
+if CLI:
     while True:
         bits = input(">>> 0b") or "0"
         es = int(input(">>> es: ") or 0)
