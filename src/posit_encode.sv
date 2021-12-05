@@ -1,7 +1,7 @@
 /*
 iverilog -DTEST_BENCH_ENCODE posit_encode.sv && ./a.out
 
-yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" posit_decode.sv clo.sv highest_set.sv > yosys_intel.out
+yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" posit_encode.sv > yosys_intel.out
 
 */
 module posit_encode #(
@@ -20,7 +20,11 @@ module posit_encode #(
         input [N-1:0]  mant,
         output [N-1:0] bits
     );
-
+    
+    function [N-1:0] c2(input [N-1:0] a);
+        c2 = ~a + 1'b1;
+    endfunction
+    
     function [N-1:0] shl (
             input [N-1:0] bits,
             input [N-1:0] rhs
@@ -28,16 +32,27 @@ module posit_encode #(
         shl = rhs > 0 ? bits << rhs : bits;
     endfunction
 
-    assign bits = sign == 0 ? 
-        ( 
-              shl(sign, N-1) 
-            + shl(regime_bits, N-1-reg_len)
-            + shl(exp, N-1-reg_len-ES) 
-            + mant 
-        ) : 
-        ( 0 ) ;
+    wire [N-1:0] bits_assembled;
+    assign bits_assembled = ( 
+          shl(sign, N-1)
+        + shl(regime_bits, N-1-reg_len)
+        + shl(exp, N-1-reg_len-ES)
+        + mant
+    );
 
+    assign bits = 
+        sign == 0 ? bits_assembled : 
+                    c2(bits_assembled & ~(1 << (N-1)));
 
+    /*
+    ~(1'b1 << (N-1)) === {1'b0, {N-1{1'b1}}}
+    */
+
+    assign posit = 
+        is_zero == 1 ? 0 : 
+        is_inf == 1 ? (1 << (N-1)) :
+                      bits;
+        
 endmodule
 
 

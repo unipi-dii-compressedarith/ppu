@@ -75,29 +75,18 @@ class Posit:
         0_0000_e_00 +     exp
         0_0000_0_mm +     mant
         """
+        bits = (
+            shl(self.sign, (self.size - 1), self.size)
+            + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
+            + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+            + self.mant
+        )
         if self.sign == 0:
-            return (
-                shl(self.sign, (self.size - 1), self.size)
-                + shl(
-                    self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size
-                )
-                + shl(
-                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
-                )
-                + self.mant
-            )
+            return bits
         else:
-            # WRONG
-            return (
-                shl(self.sign, (self.size - 1), self.size)
-                + shl(
-                    self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size
-                )
-                + shl(
-                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
-                )
-                + self.mant
-            )
+            mask = 2 ** self.size - 1
+            # ~(1 << (self.size - 1)) = 0x7f if 8 bits
+            return c2(bits & ~(1 << (self.size - 1)), self.size)
 
     def to_real(self):
         if self.is_zero:
@@ -126,9 +115,9 @@ class Posit:
             return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2 ** {EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
 
     def tb(self):
-        return f"""//bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
+        return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
 sign = {self.sign.real};
-reg_s = {self.regime.reg_s};
+reg_s = {self.regime.reg_s.real};
 reg_len = {self.regime.reg_len};
 regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
@@ -299,7 +288,7 @@ for bits in list_of_bits:
     if bits != (1 << N - 1) and bits != 0:
         posit = decode(bits, 8, 0)
         assert posit.to_real() == sp.posit8(bits=bits)
-        print(f"bits = {N}'b{get_bin(bits, N)};")
+        # print(f"bits = {N}'b{get_bin(bits, N)};")
         print(posit.tb())
 
 

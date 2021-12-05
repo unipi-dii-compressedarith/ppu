@@ -34,6 +34,7 @@ $ tree -t -L 1
 ├── p8e0                   # p8e0 related things (~ abandoned)
 ├── clo.sv                 # count leading ones: f(0b111010) -> 3
 ├── reverse_bits.sv        # self explanatory
+├── posit_encode.sv        # output a posit P<N,ES> after taking as input sign, regime, exponent, mantissa
 └── highest_set.sv         # outputs leftmost 1 in a sequence
 
 ```

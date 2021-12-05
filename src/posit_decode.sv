@@ -110,6 +110,8 @@ module tb_posit_decode;
     wire [ES-1:0]   exp;
     wire [N-1:0]    mant;
 
+    reg sign_expected, reg_s_expected;
+    reg [S-1:0] reg_len_expected;
     reg [ES-1:0] exp_expected;
     reg [N-1:0] regime_bits_expected, mant_expected;
     reg err;
