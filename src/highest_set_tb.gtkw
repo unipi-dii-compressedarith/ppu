@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Dec  5 14:47:23 2021
+[*] Sun Dec  5 15:46:36 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/highest_set_tb.vcd"
-[dumpfile_mtime] "Sun Dec  5 14:45:43 2021"
-[dumpfile_size] 3359
+[dumpfile_mtime] "Sun Dec  5 15:44:02 2021"
+[dumpfile_size] 3578
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/highest_set_tb.gtkw"
 [timestart] 0
 [size] 1440 855
@@ -25,9 +25,15 @@ highest_set_tb.posit8[7:0]
 highest_set_tb.index_v1[2:0]
 @200
 -
-@24
+@800025
 highest_set_tb.index_v2[2:0]
 @29
+(0)highest_set_tb.index_v2[2:0]
+(1)highest_set_tb.index_v2[2:0]
+(2)highest_set_tb.index_v2[2:0]
+@1001201
+-group_end
+@28
 highest_set_tb.highest_set_inst2.index_bit[7:0]
 @200
 -

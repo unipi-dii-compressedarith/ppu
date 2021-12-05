@@ -1,7 +1,8 @@
 /*
 iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
 
-yosys -p "synth_intel -family max10 -top highest_set -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set.out
+yosys -p "synth_intel -family max10 -top highest_set_v1 -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set_v1.out
+yosys -p "synth_intel -family max10 -top highest_set_v2 -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set_v2.out
 
 ======
 Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
@@ -34,6 +35,9 @@ module highest_set_v1 #(
 endmodule
 
 
+/*
+ref: http://www.ece.ualberta.ca/~jhan8/publications/1570528628.pdf
+*/
 module highest_set_v2 #(
         parameter SIZE = 8,
         parameter VAL = 1

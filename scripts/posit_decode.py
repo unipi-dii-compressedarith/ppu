@@ -1,7 +1,11 @@
+"""
+black posit_decode.py # code formatter (pip install black)
+"""
 import softposit as sp
 from numpy import inf
 import signal
 import random
+
 
 def handler(signum, frame):
     exit(1)
@@ -74,16 +78,24 @@ class Posit:
         if self.sign == 0:
             return (
                 shl(self.sign, (self.size - 1), self.size)
-                + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
-                + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                + shl(
+                    self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size
+                )
+                + shl(
+                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
+                )
                 + self.mant
             )
         else:
-            # WRONG
+            # WRONG
             return (
                 shl(self.sign, (self.size - 1), self.size)
-                + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
-                + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                + shl(
+                    self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size
+                )
+                + shl(
+                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
+                )
                 + self.mant
             )
 
@@ -91,16 +103,28 @@ class Posit:
         if self.is_zero:
             return 0
         elif self.is_inf:
-            return inf # numpy.inf
+            return inf  # numpy.inf
         else:
             F = self.size - 1 - self.regime.reg_len - self.es  # lenth of mantissa
-            return (
-                (-1) ** self.sign.real
-                * (2 ** (2 ** self.es)) ** self.regime.k
-                * (2 ** self.exp)
-                * (1 + self.mant / (2 ** F))
-            )
-    
+            try:
+                return (
+                    (-1) ** self.sign.real
+                    * (2 ** (2 ** self.es)) ** self.regime.k
+                    * (2 ** self.exp)
+                    * (1 + self.mant / (2 ** F))
+                )
+            except OverflowError:
+                return inf
+
+    def break_down(self):
+        if self.is_zero:
+            return 0
+        elif self.is_inf:
+            return inf  # numpy.inf
+        else:
+            F = self.mant_len()
+            return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2 ** {EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+
     def tb(self):
         return f"""//bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
 regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
@@ -109,16 +133,18 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 #10;
 """
 
+    def mant_len(self):
+        return self.size - 1 - self.regime.reg_len - self.es
 
     def color_code(self):
         # bug with eg: bits = 0b0110 es 1
         """
-        sign_len = 1
-        reg_len = self.regime.reg_len
-        ex_len = es
-        mant_len = size - sign_len - reg_len - ex_len
+        sign length:     1
+        regime length:   self.regime.reg_len
+        exponent length: es
+        mantissa length: size - sign_len - reg_len - ex_len
         """
-        mant_len = self.size - 1 - self.regime.reg_len - self.es
+        mant_len = self.mant_len()
         regime_bits_str = f"{self.regime.bits:064b}"[64 - self.regime.reg_len :]
         exp_bits_str = f"{self.exp:064b}"[64 - self.es :]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
@@ -126,17 +152,20 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
 
         ans = f"{SIGN_COLOR}{self.sign.real}{REG_COLOR}{regime_bits_str}{EXP_COLOR}{exp_bits_str}{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
-        assert len(ans_no_color) == self.size
+        # assert len(ans_no_color) == self.size
         return ans
 
     def __repr__(self):
-        return f"""P<{self.size},{self.es}>: {self.color_code()} {get_bin(self.bit_repr(), self.size)} {self.to_real()}
+        return f"""P<{self.size},{self.es}>: {self.color_code()} 
+{get_bin(self.bit_repr(), self.size)} 
+{self.break_down()} = {self.to_real()} 
 s:    {self.sign.real}
 reg_s:{self.regime.reg_s.real}
 reg_len:{self.regime.reg_len}
 reg:  {get_bin(self.regime.bits, self.size)}
 k:    {self.regime.k}
 {f'exp:  {get_bin(self.exp, self.size)}' if self.es else ''}
+mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
 mant: {get_bin(self.mant, self.size)}
 {'-'*20}"""
 
@@ -164,12 +193,12 @@ def decode(bits, size, es) -> Posit:
     """Break down P<size, es> in its components (sign, regime, exponent, mantissa)"""
     mask = (2 ** size) - 1
     msb = 1 << (size - 1)
-    sign = bool(bits & msb)
-    if (bits << 1) == 0:
-        if sign == True:
-            return Posit(is_zero=True)
+    sign = bits >> (size - 1)
+    if (bits << 1) & mask == 0:
+        if sign == 0:
+            return Posit(is_zero=True)  # to be fixed
         else:
-            return Posit(is_inf=True)
+            return Posit(is_inf=True)  # to be fixed
     u_bits = bits if sign == 0 else c2(bits, mask)
     reg_msb = 1 << (size - 2)
     reg_s = bool(u_bits & reg_msb)
@@ -185,7 +214,7 @@ def decode(bits, size, es) -> Posit:
     )  # Regime(reg_s, reg_len, k).get_bits(mask)
 
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
-    exp = ((u_bits << (1 + reg_len)) & mask) >> (size - es)
+    exp = ((u_bits << (1 + reg_len)) & mask) >> max(0, (size - es))
 
     mant = ((u_bits << (1 + reg_len + es)) & mask) >> (1 + reg_len + es)
 
@@ -257,7 +286,6 @@ assert decode(0b01111111, 8, 0) == Posit(
 )
 
 
-
 random.seed(10)
 
 NUM_RANDOM_TEST_CASES = 80
@@ -273,14 +301,15 @@ for bits in list_of_bits:
 
 
 N, ES = 5, 1
-list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2**N-1))
+list_of_bits = random.sample(
+    range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
+)
 for bits in list_of_bits:
     if bits != (1 << N - 1) and bits != 0:
         posit = decode(bits, N, ES)
         # posit.to_real()
         print(f"bits = {N}'b{get_bin(bits, N)};")
         print(posit.tb())
-
 
 
 N = 16
@@ -303,8 +332,8 @@ for bits in list_of_bits:
 # print(decode(0b11110011, 8, 0))
 # print(decode(0b0110011101110011, 16, 1))
 
-CLI = 0
-if CLI:
+REPL = 1
+if REPL:
     while True:
         bits = input(">>> 0b") or "0"
         es = int(input(">>> es: ") or 0)

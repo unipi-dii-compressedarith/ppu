@@ -22,7 +22,7 @@ module clo #(
         output [S-1:0] index_highest_set
     );
 
-    highest_set #(
+    highest_set_v1 #(
         .SIZE   (N),
         .VAL    (0)
     )
