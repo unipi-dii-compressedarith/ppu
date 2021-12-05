@@ -8,7 +8,6 @@
 # *.vcd  
 
 # quartus workspace
-quartus
 
 # jupyter garbage
 .ipynb*
