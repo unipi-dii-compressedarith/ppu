@@ -1,23 +1,39 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Nov 20 15:25:47 2021
+[*] Sun Dec  5 14:47:23 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/highest_set_tb.vcd"
-[dumpfile_mtime] "Sat Nov 20 14:48:02 2021"
-[dumpfile_size] 853
+[dumpfile_mtime] "Sun Dec  5 14:45:43 2021"
+[dumpfile_size] 3359
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/highest_set_tb.gtkw"
 [timestart] 0
-[size] 2560 1418
+[size] 1440 855
 [pos] -1 -1
-*-2.474588 12 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-3.718124 14 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] highest_set_tb.
+[treeopen] highest_set_tb.highest_set_inst2.
+[treeopen] highest_set_tb.highest_set_inst2.genblk1[0].
 [sst_width] 193
-[signals_width] 116
+[signals_width] 150
 [sst_expanded] 1
 [sst_vpaned_height] 445
 @28
-highest_set_tb.highest_set_inst.bits[7:0]
-@25
-highest_set_tb.highest_set_inst.index[2:0]
+highest_set_tb.posit8[7:0]
+@200
+-
+@24
+highest_set_tb.index_v1[2:0]
+@200
+-
+@24
+highest_set_tb.index_v2[2:0]
+@29
+highest_set_tb.highest_set_inst2.index_bit[7:0]
+@200
+-
+@28
+highest_set_tb.diff
+@200
+-
 [pattern_trace] 1
 [pattern_trace] 0

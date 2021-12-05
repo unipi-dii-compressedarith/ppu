@@ -1,15 +1,17 @@
 /*
-    iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
+iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
 
+yosys -p "synth_intel -family max10 -top highest_set -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set.out
 
+======
+Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
+e.g.:
+    bits = 8b00001001 -> 3
 
-    ======
-    Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
-    e.g.:
-        bits = 8b00001001 -> 3
 */
 
-module highest_set #(
+
+module highest_set_v1 #(
     parameter SIZE = 8,
     parameter VAL = 1,
     parameter OUTW = $clog2(SIZE)
@@ -32,6 +34,50 @@ module highest_set #(
 endmodule
 
 
+module highest_set_v2 #(
+        parameter SIZE = 8,
+        parameter VAL = 1
+    )(
+        input logic [N-1:0] bits,
+        output wire [N-1:0] index_bit,
+        output wire [$clog2(N)-1:0] index
+    );
+
+    localparam N = SIZE;
+    wire [N-1:0] _wire;
+    
+    generate
+        for (genvar i=0; i<N-1; i=i+1) begin
+            mux mux_inst (
+                .a      (_wire[i+1]),
+                .sel    (bits[i+1]),
+                .and_in (bits[i]),
+                .mux_out(_wire[i]),
+                .and_out(index_bit[i])
+            );
+        end
+    endgenerate
+
+    assign _wire[N-1] = 1;
+    assign index_bit[N-1] = bits[N-1];
+
+    assign index = $clog2(index_bit);
+endmodule
+
+
+module mux (
+        input a,
+        /* input b, */
+        input sel,
+        input and_in,
+        output mux_out,
+        output and_out
+    );
+    wire b = 0;
+    assign mux_out = sel == 0 ? a : b;
+    assign and_out = and_in & mux_out; 
+endmodule
+
 
 
 `ifdef HIGHEST_SET_TB
@@ -41,17 +87,31 @@ module highest_set_tb();
     localparam OUTW = $clog2(SIZE);
 
     reg [SIZE-1:0] posit8;
-    wire [OUTW-1:0] index;
+    wire [OUTW-1:0] index_v1, index_v2;
 
-    highest_set #(
+    reg diff;
+
+    highest_set_v1 #(
         .SIZE   (SIZE),
         .VAL    (VAL)
     )
-    highest_set_inst(
+    highest_set_inst1 (
         .bits   (posit8),
-        .index  (index)
+        .index  (index_v1)
     );
 
+    highest_set_v2 #(
+        .SIZE   (SIZE),
+        .VAL    (VAL)
+    )
+    highest_set_inst2 (
+        .bits   (posit8),
+        .index  (index_v2)
+    );
+
+    always @(*) begin
+        diff = index_v1 == index_v2 ? 0 : 1'bx;
+    end
 
     initial begin
         $dumpfile("highest_set_tb.vcd");
