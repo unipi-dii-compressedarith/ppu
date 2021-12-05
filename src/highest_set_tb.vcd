@@ -1,5 +1,5 @@
 $date
-	Sun Dec  5 16:44:02 2021
+	Sun Dec  5 17:34:53 2021
 $end
 $version
 	Icarus Verilog
@@ -8,13 +8,14 @@ $timescale
 	1s
 $end
 $scope module highest_set_tb $end
-$var wire 3 ! index_v2 [2:0] $end
-$var wire 3 " index_v1 [2:0] $end
-$var reg 1 # diff $end
-$var reg 8 $ posit8 [7:0] $end
+$var wire 3 ! index_v3 [2:0] $end
+$var wire 3 " index_v2 [2:0] $end
+$var wire 3 # index_v1 [2:0] $end
+$var reg 1 $ diff $end
+$var reg 8 % posit8 [7:0] $end
 $scope module highest_set_inst1 $end
-$var wire 8 % bits [7:0] $end
-$var wire 3 & index [2:0] $end
+$var wire 8 & bits [7:0] $end
+$var wire 3 ' index [2:0] $end
 $scope begin _gen[0] $end
 $upscope $end
 $scope begin _gen[1] $end
@@ -33,282 +34,343 @@ $scope begin _gen[7] $end
 $upscope $end
 $upscope $end
 $scope module highest_set_inst2 $end
-$var wire 8 ' bits [7:0] $end
-$var wire 8 ( index_bit [7:0] $end
-$var wire 3 ) index [2:0] $end
-$var wire 8 * _wire [7:0] $end
-$scope function log2 $end
-$var reg 8 + in [7:0] $end
-$scope begin _log2_fun $end
-$var reg 8 , val [7:0] $end
-$upscope $end
-$upscope $end
+$var wire 8 ( bits [7:0] $end
+$var wire 8 ) index_bit [7:0] $end
+$var wire 3 * index [2:0] $end
+$var wire 8 + _wire [7:0] $end
 $scope begin genblk1[0] $end
 $scope module mux_inst $end
-$var wire 1 - a $end
-$var wire 1 . and_in $end
-$var wire 1 / and_out $end
-$var wire 1 0 b $end
-$var wire 1 1 sel $end
-$var wire 1 2 mux_out $end
+$var wire 1 , a $end
+$var wire 1 - and_in $end
+$var wire 1 . and_out $end
+$var wire 1 / b $end
+$var wire 1 0 sel $end
+$var wire 1 1 mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[1] $end
 $scope module mux_inst $end
-$var wire 1 3 a $end
-$var wire 1 4 and_in $end
-$var wire 1 5 and_out $end
-$var wire 1 6 b $end
-$var wire 1 7 sel $end
-$var wire 1 8 mux_out $end
+$var wire 1 2 a $end
+$var wire 1 3 and_in $end
+$var wire 1 4 and_out $end
+$var wire 1 5 b $end
+$var wire 1 6 sel $end
+$var wire 1 7 mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[2] $end
 $scope module mux_inst $end
-$var wire 1 9 a $end
-$var wire 1 : and_in $end
-$var wire 1 ; and_out $end
-$var wire 1 < b $end
-$var wire 1 = sel $end
-$var wire 1 > mux_out $end
+$var wire 1 8 a $end
+$var wire 1 9 and_in $end
+$var wire 1 : and_out $end
+$var wire 1 ; b $end
+$var wire 1 < sel $end
+$var wire 1 = mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[3] $end
 $scope module mux_inst $end
-$var wire 1 ? a $end
-$var wire 1 @ and_in $end
-$var wire 1 A and_out $end
-$var wire 1 B b $end
-$var wire 1 C sel $end
-$var wire 1 D mux_out $end
+$var wire 1 > a $end
+$var wire 1 ? and_in $end
+$var wire 1 @ and_out $end
+$var wire 1 A b $end
+$var wire 1 B sel $end
+$var wire 1 C mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[4] $end
 $scope module mux_inst $end
-$var wire 1 E a $end
-$var wire 1 F and_in $end
-$var wire 1 G and_out $end
-$var wire 1 H b $end
-$var wire 1 I sel $end
-$var wire 1 J mux_out $end
+$var wire 1 D a $end
+$var wire 1 E and_in $end
+$var wire 1 F and_out $end
+$var wire 1 G b $end
+$var wire 1 H sel $end
+$var wire 1 I mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[5] $end
 $scope module mux_inst $end
-$var wire 1 K a $end
-$var wire 1 L and_in $end
-$var wire 1 M and_out $end
-$var wire 1 N b $end
-$var wire 1 O sel $end
-$var wire 1 P mux_out $end
+$var wire 1 J a $end
+$var wire 1 K and_in $end
+$var wire 1 L and_out $end
+$var wire 1 M b $end
+$var wire 1 N sel $end
+$var wire 1 O mux_out $end
 $upscope $end
 $upscope $end
 $scope begin genblk1[6] $end
 $scope module mux_inst $end
-$var wire 1 Q a $end
-$var wire 1 R and_in $end
-$var wire 1 S and_out $end
-$var wire 1 T b $end
-$var wire 1 U sel $end
-$var wire 1 V mux_out $end
+$var wire 1 P a $end
+$var wire 1 Q and_in $end
+$var wire 1 R and_out $end
+$var wire 1 S b $end
+$var wire 1 T sel $end
+$var wire 1 U mux_out $end
 $upscope $end
+$upscope $end
+$upscope $end
+$scope module highest_set_inst3 $end
+$var wire 8 V _index_bit_tmp [7:0] $end
+$var wire 8 W bits [7:0] $end
+$var wire 3 X index [2:0] $end
+$var wire 8 Y index_bit [7:0] $end
+$var wire 8 Z bits_reversed [7:0] $end
+$scope function c2 $end
+$var reg 8 [ a [7:0] $end
+$upscope $end
+$scope begin genblk1[0] $end
+$upscope $end
+$scope begin genblk1[1] $end
+$upscope $end
+$scope begin genblk1[2] $end
+$upscope $end
+$scope begin genblk1[3] $end
+$upscope $end
+$scope begin genblk1[4] $end
+$upscope $end
+$scope begin genblk1[5] $end
+$upscope $end
+$scope begin genblk1[6] $end
+$upscope $end
+$scope begin genblk1[7] $end
+$upscope $end
+$scope begin genblk2[0] $end
+$upscope $end
+$scope begin genblk2[1] $end
+$upscope $end
+$scope begin genblk2[2] $end
+$upscope $end
+$scope begin genblk2[3] $end
+$upscope $end
+$scope begin genblk2[4] $end
+$upscope $end
+$scope begin genblk2[5] $end
+$upscope $end
+$scope begin genblk2[6] $end
+$upscope $end
+$scope begin genblk2[7] $end
 $upscope $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
-1V
-0U
+b10000000 [
+b10000000 Z
+b1 Y
+bz X
+b1 W
+b10000000 V
+1U
 0T
 0S
 0R
-1Q
+0Q
 1P
-0O
+1O
 0N
 0M
 0L
-1K
+0K
 1J
-0I
+1I
 0H
 0G
 0F
-1E
+0E
 1D
-0C
+1C
 0B
 0A
 0@
-1?
+0?
 1>
-0=
+1=
 0<
 0;
 0:
-19
+09
 18
-07
+17
 06
 05
 04
-13
+03
 12
-01
+11
 00
-1/
+0/
 1.
 1-
-b0 ,
-b1 +
-b11111111 *
-b0 )
+1,
+b11111111 +
+b0 *
+b1 )
 b1 (
-b1 '
-b0 &
+b0 '
+b1 &
 b1 %
-b1 $
-0#
+0$
+b0 #
 b0 "
-b0 !
+bz !
 $end
 #10
+b1 #
+b1 '
+0$
 b1 "
-b1 &
-0#
-b1 !
-b1 )
-0/
-b0 ,
-b10 +
-b11111110 *
-02
-b10 (
-15
-11
-14
-b11 $
-b11 %
-b11 '
-#20
-b11 "
-b11 &
-0-
-0#
-08
-b11 !
-b11 )
-03
-b0 ,
-b1000 +
-02
-05
-b11111000 *
-0>
-b1000 (
-1A
-01
+b1 *
+b10 Y
 0.
-04
-1=
-1@
-b1000 $
-b1000 %
-b1000 '
-#30
-b101 "
-b101 &
+b1000000 V
+b11111110 +
+01
+b10 )
+14
+b11000000 [
+10
+13
+b11000000 Z
+b11 %
+b11 &
+b11 (
+b11 W
+#20
+b11 #
+b11 '
+0,
+0$
+07
+b11 "
+b11 *
 02
+b1000 Y
+01
+04
+b11111000 +
+0=
+b1000 )
+1@
+b10000 [
+b10000 V
+00
 0-
-0#
-08
-b101 !
-b101 )
 03
-09
+1<
+1?
+b10000 Z
+b1000 %
+b1000 &
+b1000 (
+b1000 W
+#30
+b101 #
+b101 '
+01
+0,
+0$
+07
+b101 "
+b101 *
+02
+08
+0>
+b100000 Y
+0=
+0C
+0@
+b11100000 +
+0I
+0F
+b100000 )
+1L
+b1100 [
+b100 V
+0<
+1B
 0?
-b0 ,
-b100000 +
+1H
+1E
+1K
+b1100 Z
+b110000 %
+b110000 &
+b110000 (
+b110000 W
+#40
+b110 #
+b110 '
+0$
+b110 "
+b110 *
+0F
 0>
 0D
-0A
-b11100000 *
-0J
-0G
-b100000 (
-1M
-0=
-1C
-0@
-1I
-1F
-1L
-b110000 $
-b110000 %
-b110000 '
-#40
-b110 "
-b110 &
-0#
-b110 !
-b110 )
-0G
-0?
-0E
-b0 ,
-b1000000 +
-0J
-b11000000 *
-0P
-0M
-b1000000 (
-1S
-1.
-17
-1:
+b1000000 Y
 0I
-1O
+b11000000 +
+0O
 0L
+b1000000 )
 1R
-b1010101 $
-b1010101 %
-b1010101 '
-#50
-0#
-b111 "
-b111 &
-0S
+b10101010 [
+b10 V
+1-
+16
+19
+0H
+1N
 0K
-b111 !
-b111 )
-b10000000 *
-0V
-b0 ,
+1Q
+b10101010 Z
+b1010101 %
+b1010101 &
+b1010101 (
+b1010101 W
+#50
+0$
+b10000000 Y
+b111 #
+b111 '
+0R
+0J
+b111 "
+b111 *
+b1 V
 b10000000 +
-0.
-07
-0:
-0C
-0F
-1U
-b10000000 (
-b11000000 $
+0U
+b11 [
+0-
+06
+09
+0B
+0E
+1T
+b10000000 )
+b11 Z
 b11000000 %
-b11000000 '
+b11000000 &
+b11000000 (
+b11000000 W
 #60
-11
-1.
-17
-14
-1=
-1:
-1C
-1@
-1I
-1F
-1L
-b11111111 $
+b10000000 Y
+b11111111 [
+b1 V
+10
+1-
+16
+13
+1<
+19
+1B
+1?
+1H
+1E
+1K
+b11111111 Z
 b11111111 %
-b11111111 '
+b11111111 &
+b11111111 (
+b11111111 W
 #70

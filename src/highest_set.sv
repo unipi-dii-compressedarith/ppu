@@ -82,6 +82,43 @@ module mux (
     assign and_out = and_in & mux_out; 
 endmodule
 
+module highest_set_v3 #(
+        parameter SIZE = 8,
+        parameter VAL = 1
+    )(
+        input logic [N-1:0] bits,
+        output wire [N-1:0] index_bit,
+        output wire [$clog2(N)-1:0] index
+    );
+
+    function [N-1:0] c2(input [N-1:0] a);
+        c2 = ~a + 1'b1;
+    endfunction
+
+
+    localparam N = SIZE;    
+
+    wire [N-1:0] bits_reversed;
+    wire [N-1:0] _index_bit_tmp;
+    
+    generate
+        for (genvar i=0; i<N; i=i+1) begin
+            assign bits_reversed[i] = bits[N-1-i];
+        end
+    endgenerate
+    
+    
+    /// detect the rightmost bit-set index: 10'b0011001000 -> 5'b0000001000
+    assign _index_bit_tmp = bits_reversed & c2(bits_reversed);
+
+
+    generate
+        for (genvar i=0; i<N; i=i+1) begin
+            assign index_bit[i] = _index_bit_tmp[N-1-i];
+        end
+    endgenerate
+
+endmodule
 
 
 `ifdef HIGHEST_SET_TB
@@ -91,7 +128,7 @@ module highest_set_tb();
     localparam OUTW = $clog2(SIZE);
 
     reg [SIZE-1:0] posit8;
-    wire [OUTW-1:0] index_v1, index_v2;
+    wire [OUTW-1:0] index_v1, index_v2, index_v3;
 
     reg diff;
 
@@ -111,6 +148,15 @@ module highest_set_tb();
     highest_set_inst2 (
         .bits   (posit8),
         .index  (index_v2)
+    );
+
+    highest_set_v3 #(
+        .SIZE   (SIZE),
+        .VAL    (VAL)
+    )
+    highest_set_inst3 (
+        .bits   (posit8),
+        .index  (index_v3)
     );
 
     always @(*) begin
