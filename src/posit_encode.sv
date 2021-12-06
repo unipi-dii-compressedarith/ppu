@@ -117,10 +117,9 @@ module tb_posit_encode;
     end
 
     initial begin
-        if (N == 8 && ES == 0) $dumpfile("tb_posit_encode_P8E0.vcd");
+             if (N == 8 && ES == 0) $dumpfile("tb_posit_encode_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_posit_encode_P5E1.vcd");
-        else
-        $dumpfile("tb_posit_encode.vcd");
+        else                        $dumpfile("tb_posit_encode.vcd");
 
 	    $dumpvars(0, tb_posit_encode);                        
             
@@ -917,7 +916,7 @@ module tb_posit_encode;
         
         end
        
-    
+
 
         #10;
 		$finish;

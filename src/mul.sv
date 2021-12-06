@@ -1,5 +1,8 @@
 /*
 iverilog -DTEST_BENCH_MUL mul.sv && ./a.out
+
+
+TODO: get rid of unnecessary flags
 */
 module mul #(
         parameter N = 8,

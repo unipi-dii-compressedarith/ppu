@@ -1,8 +1,12 @@
 from posit_decode import Posit, Regime
 
 
-def build_reg_bits(k):
-    pass
+def build_reg_bits(k, size):
+    if k >= 0:
+        return (2**(k+1) - 1) << 1
+    else:
+        mask = 2**size -1
+        return ~( (2**(-k) - 1) << 1 ) & mask
 
 def mul(p1: Posit, p2: Posit) -> Posit:
     assert p1.size == p2.size
