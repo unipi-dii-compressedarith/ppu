@@ -5,8 +5,13 @@ class Regime:
     def __init__(self, reg_s=None, reg_len=None, k=None):
         if ((reg_s, reg_len) == (None, None)) and (k != None):
             self._init_k(k)
-        elif (reg_s != None and reg_len != None and bool(reg_s).real == reg_s) and (k == None):
-            self._init_reg_s_reg_len(reg_s, reg_len)
+        elif (reg_s != None and reg_len != None) and (k == None):
+            if bool(reg_s).real != reg_s:
+                print("reg_s has to be either 0 or 1.")
+            elif (reg_len <= 1):
+                print("`reg_len` has to be > 0. It can be 1 but it's an edge case not yet handled.") 
+            else:
+                self._init_reg_s_reg_len(reg_s, reg_len)
         else:
             print("cant initialize regime")
 
@@ -37,8 +42,17 @@ class Regime:
         else:
             self.k = -(self.reg_len-1)
 
-    def get_bits(self, mask):
-        return self.bits  # ~ (~1 << (self.reg_len - 2) << 1) & mask
+    def calc_reg_bits(self, size=64):
+        if self.k >= 0:
+            return (2**(self.k+1) - 1) << 1
+        else:
+            return 1
+            mask = 2**size -1
+            return ~( (2**(-self.k) - 1) << 1 ) & mask
+
+    # def get_bits(self, size):
+    #     mask = 2**size - 1
+    #     return self.bits  # ~ (~1 << (self.reg_len - 2) << 1) & mask
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -48,3 +62,12 @@ class Regime:
     
     def __repr__(self):
         return f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
+
+
+
+if __name__ == "__main__":
+    assert Regime(k=1).calc_reg_bits(size=8) == 0b00000110
+    assert Regime(k=2).calc_reg_bits(size=8) == 0b00001110
+    assert Regime(k=0).calc_reg_bits(size=8) == 0b00000010
+    assert Regime(k=-3).calc_reg_bits(size=8) == 0b00000001
+    assert Regime(reg_s=1, reg_len=4).calc_reg_bits() == 0b00001110

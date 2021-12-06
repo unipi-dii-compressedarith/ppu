@@ -6,6 +6,8 @@ from numpy import inf
 import signal
 import random
 
+from regime import Regime
+
 
 def handler(signum, frame):
     exit(1)
@@ -33,23 +35,6 @@ def shr(bits, rhs):
     return bits >> rhs if rhs > 0 else bits
 
 
-class Regime:
-    def __init__(self, bits, reg_s, reg_len, k):
-        self.bits = bits
-        self.reg_s = reg_s
-        self.reg_len = reg_len
-        self.k = k
-
-    def get_bits(self, mask):
-        return self.bits  # ~ (~1 << (self.reg_len - 2) << 1) & mask
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__
-        else:
-            return False
-
-
 class Posit:
     def __init__(self, size, es, sign, regime, exp, mant, is_zero=False, is_inf=False):
         self.size = size
@@ -70,16 +55,16 @@ class Posit:
     def bit_repr(self):
         """
         s_rrrr_e_mm =
-        s_0000_0_00 +     sign
-        0_rrrr_0_00 +     regime
-        0_0000_e_00 +     exp
-        0_0000_0_mm +     mant
+        s_0000_0_00 |     sign
+        0_rrrr_0_00 |     regime
+        0_0000_e_00 |     exp
+        0_0000_0_mm |     mant
         """
         bits = (
             shl(self.sign, (self.size - 1), self.size)
-            + shl(self.regime.bits, (self.size - 1 - self.regime.reg_len), self.size)
-            + shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
-            + self.mant
+            | shl(self.regime.calc_reg_bits(self.size), (self.size - 1 - self.regime.reg_len), self.size)
+            | shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+            | self.mant
         )
         if self.sign == 0:
             return bits
@@ -118,7 +103,7 @@ class Posit:
 sign = {self.sign.real};
 reg_s = {self.regime.reg_s.real};
 reg_len = {self.regime.reg_len};
-regime_bits_expected = {self.size}'b{get_bin(self.regime.bits, self.size)};
+regime_bits_expected = {self.size}'b{get_bin(self.regime.calc_reg_bits(self.size), self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
 mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 #10;
@@ -136,7 +121,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         mantissa length: size - sign_len - reg_len - ex_len
         """
         mant_len = self.mant_len()
-        regime_bits_str = f"{self.regime.bits:064b}"[64 - self.regime.reg_len :]
+        regime_bits_str = f"{self.regime.calc_reg_bits(self.size):064b}"[64 - self.regime.reg_len :]
         exp_bits_str = f"{self.exp:064b}"[64 - self.es :]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
@@ -153,7 +138,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 s:    {self.sign.real}
 reg_s:{self.regime.reg_s.real}
 reg_len:{self.regime.reg_len}
-reg:  {get_bin(self.regime.bits, self.size)}
+reg:  {get_bin(self.regime.calc_reg_bits(self.size), self.size)}
 k:    {self.regime.k}
 {f'exp:  {get_bin(self.exp, self.size)}' if self.es else ''}
 mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
@@ -213,7 +198,7 @@ def decode(bits, size, es) -> Posit:
         size=size,
         es=es,
         sign=sign,
-        regime=Regime(regime_bits, reg_s, reg_len, k),
+        regime=Regime(k=k),
         exp=exp,
         mant=mant,
     )
@@ -235,7 +220,7 @@ assert decode(0b01110011, 8, 3) == Posit(
     size=8,
     es=3,
     sign=0,
-    regime=Regime(bits=0b1110, reg_s=1, reg_len=4, k=2),
+    regime=Regime(k=2),
     exp=3,
     mant=0,
 )
@@ -244,7 +229,7 @@ assert decode(0b01110111, 8, 2) == Posit(
     size=8,
     es=2,
     sign=0,
-    regime=Regime(bits=0b1110, reg_s=1, reg_len=4, k=2),
+    regime=Regime(k=2),
     exp=3,
     mant=1,
 )
@@ -253,7 +238,7 @@ assert decode(0b11110111, 8, 2) == Posit(
     size=8,
     es=2,
     sign=1,
-    regime=Regime(bits=0b001, reg_s=0, reg_len=4, k=-3),
+    regime=Regime(k=-3),
     exp=0,
     mant=1,
 )
@@ -262,7 +247,7 @@ assert decode(0b10110111, 8, 1) == Posit(
     size=8,
     es=1,
     sign=1,
-    regime=Regime(bits=0b10, reg_s=1, reg_len=2, k=0),
+    regime=Regime(reg_s=1, reg_len=2),
     exp=0,
     mant=0b1001,
 )
@@ -271,10 +256,12 @@ assert decode(0b01111111, 8, 0) == Posit(
     size=8,
     es=0,
     sign=0,
-    regime=Regime(bits=0b01111111, reg_s=1, reg_len=7, k=6),
+    regime=Regime(k=6), # bug: regime=Regime(reg_s=1, reg_len=7), # bug: k does not account how long the size is when it returns reg_len regime=Regime(k=k),
     exp=0,
     mant=0b0,
 )
+
+
 
 if __name__ == "__main__":
 
