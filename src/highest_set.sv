@@ -69,6 +69,7 @@ module highest_set_v2 #(
 endmodule
 
 
+/// mux + and gate actually. only instantiated by `highest_set_v2`. maybe unnecessary later on.
 module mux (
         input a,
         /* input b, */

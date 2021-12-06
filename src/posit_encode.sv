@@ -18,7 +18,7 @@ module posit_encode #(
         input [N-1:0]  k,
         input [ES-1:0] exp,
         input [N-1:0]  mant,
-        output [N-1:0] bits
+        output [N-1:0] posit
     );
     
     function [N-1:0] c2(input [N-1:0] a);
@@ -32,7 +32,7 @@ module posit_encode #(
         shl = rhs > 0 ? bits << rhs : bits;
     endfunction
 
-    wire [N-1:0] bits_assembled;
+    wire [N-1:0] bits, bits_assembled;
     assign bits_assembled = ( 
           shl(sign, N-1)
         + shl(regime_bits, N-1-reg_len)
@@ -49,10 +49,12 @@ module posit_encode #(
     */
 
     assign posit = 
-        is_zero == 1 ? 0 : 
-        is_inf == 1 ? (1 << (N-1)) :
-                      bits;
-        
+        is_zero === 1 ? 0 : 
+        is_inf  === 1 ? (1 << (N-1)) :
+                        bits;
+            /*  ^^^ 3 equal signs needed to compare against 1'bx, 
+                otherwise if `is_zero` or `is_inf` == 1'bx, also 
+                `posit` would be 'bX, regardless. */
 endmodule
 
 
@@ -88,9 +90,9 @@ module tb_posit_encode;
     reg [N-1:0]    k;
     reg [ES-1:0]   exp;
     reg [N-1:0]    mant;
-    wire [N-1:0]   bits;
+    wire [N-1:0]   posit;
 
-    reg [N-1:0]   bits_expected;
+    reg [N-1:0]   posit_expected;
     reg err;
 
     posit_encode #(
@@ -107,11 +109,11 @@ module tb_posit_encode;
         .k              (k),
         .exp            (exp),
         .mant           (mant),
-        .bits           (bits)
+        .posit          (posit)
     );
 
     always @(*) begin
-        err = bits == bits_expected ? 0 : 1'bx;
+        err = posit == posit_expected ? 0 : 1'bx;
     end
 
     initial begin
@@ -122,7 +124,8 @@ module tb_posit_encode;
 
 	    $dumpvars(0, tb_posit_encode);                        
             
-            bits_expected = 8'b10010010;
+        if (N == 8 && ES == 0) begin
+            posit_expected = 8'b10010010;
             //bits                 = 8'b11101110;
             sign = 1;
             reg_s = 1;
@@ -132,7 +135,7 @@ module tb_posit_encode;
             mant        = 8'b00001110;
             #10;
 
-            bits_expected = 8'b00001000;
+            posit_expected = 8'b00001000;
             //bits                 = 8'b00001000;
             sign = 0;
             reg_s = 0;
@@ -142,7 +145,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b01101101;
+            posit_expected = 8'b01101101;
             //bits                 = 8'b01101101;
             sign = 0;
             reg_s = 1;
@@ -152,7 +155,7 @@ module tb_posit_encode;
             mant        = 8'b00001101;
             #10;
 
-            bits_expected = 8'b01111011;
+            posit_expected = 8'b01111011;
             //bits                 = 8'b01111011;
             sign = 0;
             reg_s = 1;
@@ -162,7 +165,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b10010011;
+            posit_expected = 8'b10010011;
             //bits                 = 8'b11101101;
             sign = 1;
             reg_s = 1;
@@ -172,7 +175,7 @@ module tb_posit_encode;
             mant        = 8'b00001101;
             #10;
 
-            bits_expected = 8'b00000011;
+            posit_expected = 8'b00000011;
             //bits                 = 8'b00000011;
             sign = 0;
             reg_s = 0;
@@ -182,7 +185,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b00110100;
+            posit_expected = 8'b00110100;
             //bits                 = 8'b00110100;
             sign = 0;
             reg_s = 0;
@@ -192,7 +195,7 @@ module tb_posit_encode;
             mant        = 8'b00010100;
             #10;
 
-            bits_expected = 8'b01110110;
+            posit_expected = 8'b01110110;
             //bits                 = 8'b01110110;
             sign = 0;
             reg_s = 1;
@@ -202,7 +205,7 @@ module tb_posit_encode;
             mant        = 8'b00000110;
             #10;
 
-            bits_expected = 8'b11010000;
+            posit_expected = 8'b11010000;
             //bits                 = 8'b10110000;
             sign = 1;
             reg_s = 0;
@@ -212,7 +215,7 @@ module tb_posit_encode;
             mant        = 8'b00010000;
             #10;
 
-            bits_expected = 8'b01111101;
+            posit_expected = 8'b01111101;
             //bits                 = 8'b01111101;
             sign = 0;
             reg_s = 1;
@@ -222,7 +225,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b11010010;
+            posit_expected = 8'b11010010;
             //bits                 = 8'b10101110;
             sign = 1;
             reg_s = 0;
@@ -232,7 +235,7 @@ module tb_posit_encode;
             mant        = 8'b00001110;
             #10;
 
-            bits_expected = 8'b01000111;
+            posit_expected = 8'b01000111;
             //bits                 = 8'b01000111;
             sign = 0;
             reg_s = 1;
@@ -242,7 +245,7 @@ module tb_posit_encode;
             mant        = 8'b00000111;
             #10;
 
-            bits_expected = 8'b10100111;
+            posit_expected = 8'b10100111;
             //bits                 = 8'b11011001;
             sign = 1;
             reg_s = 1;
@@ -252,7 +255,7 @@ module tb_posit_encode;
             mant        = 8'b00011001;
             #10;
 
-            bits_expected = 8'b11001111;
+            posit_expected = 8'b11001111;
             //bits                 = 8'b10110001;
             sign = 1;
             reg_s = 0;
@@ -262,7 +265,7 @@ module tb_posit_encode;
             mant        = 8'b00010001;
             #10;
 
-            bits_expected = 8'b00101001;
+            posit_expected = 8'b00101001;
             //bits                 = 8'b00101001;
             sign = 0;
             reg_s = 0;
@@ -272,7 +275,7 @@ module tb_posit_encode;
             mant        = 8'b00001001;
             #10;
 
-            bits_expected = 8'b11111101;
+            posit_expected = 8'b11111101;
             //bits                 = 8'b10000011;
             sign = 1;
             reg_s = 0;
@@ -282,7 +285,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b10000101;
+            posit_expected = 8'b10000101;
             //bits                 = 8'b11111011;
             sign = 1;
             reg_s = 1;
@@ -292,7 +295,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b11110101;
+            posit_expected = 8'b11110101;
             //bits                 = 8'b10001011;
             sign = 1;
             reg_s = 0;
@@ -302,7 +305,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b01010011;
+            posit_expected = 8'b01010011;
             //bits                 = 8'b01010011;
             sign = 0;
             reg_s = 1;
@@ -312,7 +315,7 @@ module tb_posit_encode;
             mant        = 8'b00010011;
             #10;
 
-            bits_expected = 8'b00010011;
+            posit_expected = 8'b00010011;
             //bits                 = 8'b00010011;
             sign = 0;
             reg_s = 0;
@@ -322,7 +325,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b00111111;
+            posit_expected = 8'b00111111;
             //bits                 = 8'b00111111;
             sign = 0;
             reg_s = 0;
@@ -332,7 +335,7 @@ module tb_posit_encode;
             mant        = 8'b00011111;
             #10;
 
-            bits_expected = 8'b10111110;
+            posit_expected = 8'b10111110;
             //bits                 = 8'b11000010;
             sign = 1;
             reg_s = 1;
@@ -342,7 +345,7 @@ module tb_posit_encode;
             mant        = 8'b00000010;
             #10;
 
-            bits_expected = 8'b01011100;
+            posit_expected = 8'b01011100;
             //bits                 = 8'b01011100;
             sign = 0;
             reg_s = 1;
@@ -352,7 +355,7 @@ module tb_posit_encode;
             mant        = 8'b00011100;
             #10;
 
-            bits_expected = 8'b00001011;
+            posit_expected = 8'b00001011;
             //bits                 = 8'b00001011;
             sign = 0;
             reg_s = 0;
@@ -362,7 +365,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b01101011;
+            posit_expected = 8'b01101011;
             //bits                 = 8'b01101011;
             sign = 0;
             reg_s = 1;
@@ -372,7 +375,7 @@ module tb_posit_encode;
             mant        = 8'b00001011;
             #10;
 
-            bits_expected = 8'b11011100;
+            posit_expected = 8'b11011100;
             //bits                 = 8'b10100100;
             sign = 1;
             reg_s = 0;
@@ -382,7 +385,7 @@ module tb_posit_encode;
             mant        = 8'b00000100;
             #10;
 
-            bits_expected = 8'b00100011;
+            posit_expected = 8'b00100011;
             //bits                 = 8'b00100011;
             sign = 0;
             reg_s = 0;
@@ -392,7 +395,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b10011010;
+            posit_expected = 8'b10011010;
             //bits                 = 8'b11100110;
             sign = 1;
             reg_s = 1;
@@ -402,7 +405,7 @@ module tb_posit_encode;
             mant        = 8'b00000110;
             #10;
 
-            bits_expected = 8'b01011010;
+            posit_expected = 8'b01011010;
             //bits                 = 8'b01011010;
             sign = 0;
             reg_s = 1;
@@ -412,7 +415,7 @@ module tb_posit_encode;
             mant        = 8'b00011010;
             #10;
 
-            bits_expected = 8'b01100001;
+            posit_expected = 8'b01100001;
             //bits                 = 8'b01100001;
             sign = 0;
             reg_s = 1;
@@ -422,7 +425,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b11100110;
+            posit_expected = 8'b11100110;
             //bits                 = 8'b10011010;
             sign = 1;
             reg_s = 0;
@@ -432,7 +435,7 @@ module tb_posit_encode;
             mant        = 8'b00001010;
             #10;
 
-            bits_expected = 8'b01001000;
+            posit_expected = 8'b01001000;
             //bits                 = 8'b01001000;
             sign = 0;
             reg_s = 1;
@@ -442,7 +445,7 @@ module tb_posit_encode;
             mant        = 8'b00001000;
             #10;
 
-            bits_expected = 8'b11010011;
+            posit_expected = 8'b11010011;
             //bits                 = 8'b10101101;
             sign = 1;
             reg_s = 0;
@@ -452,7 +455,7 @@ module tb_posit_encode;
             mant        = 8'b00001101;
             #10;
 
-            bits_expected = 8'b10101100;
+            posit_expected = 8'b10101100;
             //bits                 = 8'b11010100;
             sign = 1;
             reg_s = 1;
@@ -462,7 +465,7 @@ module tb_posit_encode;
             mant        = 8'b00010100;
             #10;
 
-            bits_expected = 8'b01000011;
+            posit_expected = 8'b01000011;
             //bits                 = 8'b01000011;
             sign = 0;
             reg_s = 1;
@@ -472,7 +475,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b01110100;
+            posit_expected = 8'b01110100;
             //bits                 = 8'b01110100;
             sign = 0;
             reg_s = 1;
@@ -482,7 +485,7 @@ module tb_posit_encode;
             mant        = 8'b00000100;
             #10;
 
-            bits_expected = 8'b00101100;
+            posit_expected = 8'b00101100;
             //bits                 = 8'b00101100;
             sign = 0;
             reg_s = 0;
@@ -492,7 +495,7 @@ module tb_posit_encode;
             mant        = 8'b00001100;
             #10;
 
-            bits_expected = 8'b10101111;
+            posit_expected = 8'b10101111;
             //bits                 = 8'b11010001;
             sign = 1;
             reg_s = 1;
@@ -502,7 +505,7 @@ module tb_posit_encode;
             mant        = 8'b00010001;
             #10;
 
-            bits_expected = 8'b01001101;
+            posit_expected = 8'b01001101;
             //bits                 = 8'b01001101;
             sign = 0;
             reg_s = 1;
@@ -512,7 +515,7 @@ module tb_posit_encode;
             mant        = 8'b00001101;
             #10;
 
-            bits_expected = 8'b10101001;
+            posit_expected = 8'b10101001;
             //bits                 = 8'b11010111;
             sign = 1;
             reg_s = 1;
@@ -522,7 +525,7 @@ module tb_posit_encode;
             mant        = 8'b00010111;
             #10;
 
-            bits_expected = 8'b11101000;
+            posit_expected = 8'b11101000;
             //bits                 = 8'b10011000;
             sign = 1;
             reg_s = 0;
@@ -532,7 +535,7 @@ module tb_posit_encode;
             mant        = 8'b00001000;
             #10;
 
-            bits_expected = 8'b00100010;
+            posit_expected = 8'b00100010;
             //bits                 = 8'b00100010;
             sign = 0;
             reg_s = 0;
@@ -542,7 +545,7 @@ module tb_posit_encode;
             mant        = 8'b00000010;
             #10;
 
-            bits_expected = 8'b11011011;
+            posit_expected = 8'b11011011;
             //bits                 = 8'b10100101;
             sign = 1;
             reg_s = 0;
@@ -552,7 +555,7 @@ module tb_posit_encode;
             mant        = 8'b00000101;
             #10;
 
-            bits_expected = 8'b11000100;
+            posit_expected = 8'b11000100;
             //bits                 = 8'b10111100;
             sign = 1;
             reg_s = 0;
@@ -562,7 +565,7 @@ module tb_posit_encode;
             mant        = 8'b00011100;
             #10;
 
-            bits_expected = 8'b00111101;
+            posit_expected = 8'b00111101;
             //bits                 = 8'b00111101;
             sign = 0;
             reg_s = 0;
@@ -572,7 +575,7 @@ module tb_posit_encode;
             mant        = 8'b00011101;
             #10;
 
-            bits_expected = 8'b01110000;
+            posit_expected = 8'b01110000;
             //bits                 = 8'b01110000;
             sign = 0;
             reg_s = 1;
@@ -582,7 +585,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b10011101;
+            posit_expected = 8'b10011101;
             //bits                 = 8'b11100011;
             sign = 1;
             reg_s = 1;
@@ -592,7 +595,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b01100000;
+            posit_expected = 8'b01100000;
             //bits                 = 8'b01100000;
             sign = 0;
             reg_s = 1;
@@ -602,7 +605,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b11100111;
+            posit_expected = 8'b11100111;
             //bits                 = 8'b10011001;
             sign = 1;
             reg_s = 0;
@@ -612,7 +615,7 @@ module tb_posit_encode;
             mant        = 8'b00001001;
             #10;
 
-            bits_expected = 8'b10010101;
+            posit_expected = 8'b10010101;
             //bits                 = 8'b11101011;
             sign = 1;
             reg_s = 1;
@@ -622,7 +625,7 @@ module tb_posit_encode;
             mant        = 8'b00001011;
             #10;
 
-            bits_expected = 8'b00000001;
+            posit_expected = 8'b00000001;
             //bits                 = 8'b00000001;
             sign = 0;
             reg_s = 0;
@@ -632,7 +635,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b00111100;
+            posit_expected = 8'b00111100;
             //bits                 = 8'b00111100;
             sign = 0;
             reg_s = 0;
@@ -642,7 +645,7 @@ module tb_posit_encode;
             mant        = 8'b00011100;
             #10;
 
-            bits_expected = 8'b11010101;
+            posit_expected = 8'b11010101;
             //bits                 = 8'b10101011;
             sign = 1;
             reg_s = 0;
@@ -652,7 +655,7 @@ module tb_posit_encode;
             mant        = 8'b00001011;
             #10;
 
-            bits_expected = 8'b00110001;
+            posit_expected = 8'b00110001;
             //bits                 = 8'b00110001;
             sign = 0;
             reg_s = 0;
@@ -662,7 +665,7 @@ module tb_posit_encode;
             mant        = 8'b00010001;
             #10;
 
-            bits_expected = 8'b11011000;
+            posit_expected = 8'b11011000;
             //bits                 = 8'b10101000;
             sign = 1;
             reg_s = 0;
@@ -672,7 +675,7 @@ module tb_posit_encode;
             mant        = 8'b00001000;
             #10;
 
-            bits_expected = 8'b10001001;
+            posit_expected = 8'b10001001;
             //bits                 = 8'b11110111;
             sign = 1;
             reg_s = 1;
@@ -682,7 +685,7 @@ module tb_posit_encode;
             mant        = 8'b00000111;
             #10;
 
-            bits_expected = 8'b01011101;
+            posit_expected = 8'b01011101;
             //bits                 = 8'b01011101;
             sign = 0;
             reg_s = 1;
@@ -692,7 +695,7 @@ module tb_posit_encode;
             mant        = 8'b00011101;
             #10;
 
-            bits_expected = 8'b11000101;
+            posit_expected = 8'b11000101;
             //bits                 = 8'b10111011;
             sign = 1;
             reg_s = 0;
@@ -702,7 +705,7 @@ module tb_posit_encode;
             mant        = 8'b00011011;
             #10;
 
-            bits_expected = 8'b11110100;
+            posit_expected = 8'b11110100;
             //bits                 = 8'b10001100;
             sign = 1;
             reg_s = 0;
@@ -712,7 +715,7 @@ module tb_posit_encode;
             mant        = 8'b00000100;
             #10;
 
-            bits_expected = 8'b01010000;
+            posit_expected = 8'b01010000;
             //bits                 = 8'b01010000;
             sign = 0;
             reg_s = 1;
@@ -722,7 +725,7 @@ module tb_posit_encode;
             mant        = 8'b00010000;
             #10;
 
-            bits_expected = 8'b10101010;
+            posit_expected = 8'b10101010;
             //bits                 = 8'b11010110;
             sign = 1;
             reg_s = 1;
@@ -732,7 +735,7 @@ module tb_posit_encode;
             mant        = 8'b00010110;
             #10;
 
-            bits_expected = 8'b10001100;
+            posit_expected = 8'b10001100;
             //bits                 = 8'b11110100;
             sign = 1;
             reg_s = 1;
@@ -742,7 +745,7 @@ module tb_posit_encode;
             mant        = 8'b00000100;
             #10;
 
-            bits_expected = 8'b01110011;
+            posit_expected = 8'b01110011;
             //bits                 = 8'b01110011;
             sign = 0;
             reg_s = 1;
@@ -752,7 +755,7 @@ module tb_posit_encode;
             mant        = 8'b00000011;
             #10;
 
-            bits_expected = 8'b01101111;
+            posit_expected = 8'b01101111;
             //bits                 = 8'b01101111;
             sign = 0;
             reg_s = 1;
@@ -762,7 +765,7 @@ module tb_posit_encode;
             mant        = 8'b00001111;
             #10;
 
-            bits_expected = 8'b01111000;
+            posit_expected = 8'b01111000;
             //bits                 = 8'b01111000;
             sign = 0;
             reg_s = 1;
@@ -772,7 +775,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b00010000;
+            posit_expected = 8'b00010000;
             //bits                 = 8'b00010000;
             sign = 0;
             reg_s = 0;
@@ -782,7 +785,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b11110010;
+            posit_expected = 8'b11110010;
             //bits                 = 8'b10001110;
             sign = 1;
             reg_s = 0;
@@ -792,7 +795,7 @@ module tb_posit_encode;
             mant        = 8'b00000110;
             #10;
 
-            bits_expected = 8'b11001101;
+            posit_expected = 8'b11001101;
             //bits                 = 8'b10110011;
             sign = 1;
             reg_s = 0;
@@ -802,7 +805,7 @@ module tb_posit_encode;
             mant        = 8'b00010011;
             #10;
 
-            bits_expected = 8'b11101100;
+            posit_expected = 8'b11101100;
             //bits                 = 8'b10010100;
             sign = 1;
             reg_s = 0;
@@ -812,7 +815,7 @@ module tb_posit_encode;
             mant        = 8'b00000100;
             #10;
 
-            bits_expected = 8'b00101000;
+            posit_expected = 8'b00101000;
             //bits                 = 8'b00101000;
             sign = 0;
             reg_s = 0;
@@ -822,7 +825,7 @@ module tb_posit_encode;
             mant        = 8'b00001000;
             #10;
 
-            bits_expected = 8'b00111001;
+            posit_expected = 8'b00111001;
             //bits                 = 8'b00111001;
             sign = 0;
             reg_s = 0;
@@ -832,7 +835,7 @@ module tb_posit_encode;
             mant        = 8'b00011001;
             #10;
 
-            bits_expected = 8'b01101001;
+            posit_expected = 8'b01101001;
             //bits                 = 8'b01101001;
             sign = 0;
             reg_s = 1;
@@ -842,7 +845,7 @@ module tb_posit_encode;
             mant        = 8'b00001001;
             #10;
 
-            bits_expected = 8'b11011110;
+            posit_expected = 8'b11011110;
             //bits                 = 8'b10100010;
             sign = 1;
             reg_s = 0;
@@ -852,7 +855,7 @@ module tb_posit_encode;
             mant        = 8'b00000010;
             #10;
 
-            bits_expected = 8'b00001001;
+            posit_expected = 8'b00001001;
             //bits                 = 8'b00001001;
             sign = 0;
             reg_s = 0;
@@ -862,7 +865,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b11101111;
+            posit_expected = 8'b11101111;
             //bits                 = 8'b10010001;
             sign = 1;
             reg_s = 0;
@@ -872,7 +875,7 @@ module tb_posit_encode;
             mant        = 8'b00000001;
             #10;
 
-            bits_expected = 8'b01111111;
+            posit_expected = 8'b01111111;
             //bits                 = 8'b01111111;
             sign = 0;
             reg_s = 1;
@@ -882,7 +885,7 @@ module tb_posit_encode;
             mant        = 8'b00000000;
             #10;
 
-            bits_expected = 8'b11001000;
+            posit_expected = 8'b11001000;
             //bits                 = 8'b10111000;
             sign = 1;
             reg_s = 0;
@@ -892,7 +895,7 @@ module tb_posit_encode;
             mant        = 8'b00011000;
             #10;
 
-            bits_expected = 8'b10011011;
+            posit_expected = 8'b10011011;
             //bits                 = 8'b11100101;
             sign = 1;
             reg_s = 1;
@@ -902,7 +905,7 @@ module tb_posit_encode;
             mant        = 8'b00000101;
             #10;
 
-            bits_expected = 8'b10101000;
+            posit_expected = 8'b10101000;
             //bits                 = 8'b11011000;
             sign = 1;
             reg_s = 1;
@@ -911,9 +914,10 @@ module tb_posit_encode;
             exp         = 8'b00000000;
             mant        = 8'b00011000;
             #10; 
-
+        
+        end
        
-
+    
 
         #10;
 		$finish;
