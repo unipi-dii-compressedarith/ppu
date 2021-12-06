@@ -94,7 +94,7 @@ class Posit:
         elif self.is_inf:
             return inf  # numpy.inf
         else:
-            F = self.size - 1 - self.regime.reg_len - self.es  # lenth of mantissa
+            F = self.size - 1 - self.regime.reg_len - self.es  # length of mantissa
             try:
                 return (
                     (-1) ** self.sign.real
@@ -325,7 +325,7 @@ if __name__ == "__main__":
     # print(decode(0b11110011, 8, 0))
     # print(decode(0b0110011101110011, 16, 1))
 
-    REPL = 0
+    REPL = 1
     if REPL:
         while True:
             bits = input(">>> 0b") or "0"
