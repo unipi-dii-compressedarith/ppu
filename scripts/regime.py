@@ -8,8 +8,10 @@ class Regime:
         elif (reg_s != None and reg_len != None) and (k == None):
             if bool(reg_s).real != reg_s:
                 print("reg_s has to be either 0 or 1.")
-            elif (reg_len <= 1):
-                print("`reg_len` has to be > 0. It can be 1 but it's an edge case not yet handled.") 
+            elif reg_len <= 1:
+                print(
+                    "`reg_len` has to be > 0. It can be 1 but it's an edge case not yet handled."
+                )
             else:
                 self._init_reg_s_reg_len(reg_s, reg_len)
         else:
@@ -25,30 +27,30 @@ class Regime:
             self.reg_s = reg_s
             self.reg_len = reg_len
             self._calc_k()
-    
+
     def _calc_reg_s_reg_len(self):
         """Given k, computes leftmost regime bit (reg_s) and regime length (reg_len)"""
-        if self.k>=0:
+        if self.k >= 0:
             self.reg_s = 1
-            self.reg_len = self.k+2
+            self.reg_len = self.k + 2
         else:
             self.reg_s = 0
-            self.reg_len = -self.k+1
+            self.reg_len = -self.k + 1
 
     def _calc_k(self):
         """Given leftmost regime bit (reg_s) and regime length (reg_len), computes k"""
         if self.reg_s == 1:
-            self.k = self.reg_len-2
+            self.k = self.reg_len - 2
         else:
-            self.k = -(self.reg_len-1)
+            self.k = -(self.reg_len - 1)
 
     def calc_reg_bits(self, size=64):
         if self.k >= 0:
-            return (2**(self.k+1) - 1) << 1
+            return (2 ** (self.k + 1) - 1) << 1
         else:
             return 1
-            mask = 2**size -1
-            return ~( (2**(-self.k) - 1) << 1 ) & mask
+            mask = 2 ** size - 1
+            return ~((2 ** (-self.k) - 1) << 1) & mask
 
     # def get_bits(self, size):
     #     mask = 2**size - 1
@@ -59,10 +61,9 @@ class Regime:
             return self.__dict__ == other.__dict__
         else:
             return False
-    
+
     def __repr__(self):
         return f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
-
 
 
 if __name__ == "__main__":

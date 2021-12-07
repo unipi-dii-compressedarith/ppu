@@ -1,6 +1,6 @@
 /*
 
-clo: count leading ones.
+cls: count leading ones.
 It wraps the `highest_set` module; returns the number of ones starting from the left:
 
 e.g:
@@ -9,11 +9,11 @@ e.g:
     bits = 0b11100000 -> 3
 
 
-iverilog -DTEST_BENCH clo.sv highest_set.sv && ./a.out
+iverilog -DTEST_BENCH cls.sv highest_set.sv && ./a.out
 */
 
 
-module clo #(
+module cls #(
         parameter N = 8,
         parameter S = $clog2(N)
     )(
@@ -38,7 +38,7 @@ endmodule
 
 
 `ifdef TEST_BENCH
-module tb_clo;
+module tb_cls;
 
     parameter N = 8;
     parameter S = $clog2(N);
@@ -47,8 +47,8 @@ module tb_clo;
     wire [S-1:0] leading_ones, leading_zeros;
     wire [S-1:0] index_highest_set_1, index_highest_set_2;
 
-    /* count leading ones */
-    clo #(
+    /* count leading set (ones) */
+    cls #(
         .N              (N),
         .S              (S)
     ) count_leading_ones (
@@ -57,8 +57,8 @@ module tb_clo;
         .index_highest_set(index_highest_set_1)
     );
 
-    /* count leading zeros, inputs bits are flipped */
-    clo #(
+    /* count leading set (zeros), inputs bits are flipped */
+    cls #(
         .N              (N),
         .S              (S)
     ) count_leading_zeros (
@@ -70,8 +70,8 @@ module tb_clo;
 
 
     initial begin
-        $dumpfile("tb_clo.vcd");
-        $dumpvars(0, tb_clo);
+        $dumpfile("tb_cls.vcd");
+        $dumpvars(0, tb_cls);
 
                 bits = 8'b0000_0001;
         #10     bits = 8'b1000_0011;
