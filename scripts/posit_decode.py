@@ -18,8 +18,6 @@ def handler(signum, frame):
 signal.signal(signal.SIGINT, handler)
 
 
-
-
 def decode(bits, size=2, es=0) -> Posit:
     """Break down P<size, es> in its components (sign, regime, exponent, mantissa)"""
     size = max(size, ceil(log2(bits + 1)))
@@ -59,7 +57,6 @@ def decode(bits, size=2, es=0) -> Posit:
         exp=exp,
         mant=mant,
     )
-
 
 
 assert decode(0b01110011, 8, 3) == Posit(

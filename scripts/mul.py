@@ -17,44 +17,40 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
     F1, F2 = p1.mant_len(), p2.mant_len()
 
-    if es == 0:
+    k = p1.regime.k + p2.regime.k
+    exp = p1.exp + p2.exp
 
-        k = p1.regime.k + p2.regime.k
+    mant_1_left_shifted = p1.mant << (size - 1 - F1)
+    mant_2_left_shifted = p2.mant << (size - 1 - F2)
 
-        mant_1_left_shifted = p1.mant << (size - 1 - F1)
-        mant_2_left_shifted = p2.mant << (size - 1 - F2)
+    ### left align and set a 1 at the msb position, indicating a fixed point number represented as 1.mant
+    mant = (mant_1_left_shifted | (1 << (size - 1))) * (
+        mant_2_left_shifted | (1 << (size - 1))
+    )
 
-        ### left align and set a 1 at the msb position, indicating a fixed point number represented as 1.mant
-        mant = (mant_1_left_shifted | (1 << (size - 1))) * (
-            mant_2_left_shifted | (1 << (size - 1))
-        )
+    mant_carry = (mant & (1 << (2 * size - 1))) != 0
+    if mant_carry:
+        mant = mant >> 1
+        k = k + 1
 
-        mant_carry = (mant & (1 << (2 * size - 1))) != 0
-        if mant_carry:
-            mant = mant >> 1
-            k = k + 1
+    reg_len = Regime(k=k).reg_len
 
-        reg_len = Regime(k=k).reg_len
+    mant_len = size - 1 - es - reg_len
 
-        mant_len = size - 1 - es - reg_len
+    mask_2n = 2 ** (2 * size) - 1
 
-        mask_2n = 2 ** (2 * size) - 1
+    mant &= (~0 & mask_2n) >> 2
 
-        mant &= (~0 & mask_2n) >> 2
+    mant = mant >> (2 * size - mant_len - 2)
 
-        mant = mant >> (2 * size - mant_len - 2)
-
-        return Posit(
-            size=size,
-            es=es,
-            sign=sign,
-            regime=Regime(k=k),
-            exp=0,
-            mant=mant,
-        )
-
-    else:
-        raise NotImplemented
+    return Posit(
+        size=size,
+        es=es,
+        sign=sign,
+        regime=Regime(k=k),
+        exp=0,
+        mant=mant,
+    )
 
 
 p1 = decode(0b01110011, 8, 0)

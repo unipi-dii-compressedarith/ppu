@@ -8,7 +8,6 @@ EXP_COLOR = "\033[1;37;44m"
 MANT_COLOR = "\033[1;37;40m"
 
 
-
 def shl(bits, rhs, size):
     mask = (2 ** size) - 1
     return (bits << rhs) & mask if rhs > 0 else bits
@@ -18,10 +17,10 @@ def shr(bits, rhs):
     return bits >> rhs if rhs > 0 else bits
 
 
-
 def c2(bits, size):
     mask = (2 ** size) - 1
     return (~bits & mask) + 1
+
 
 def cls(bits, size, val=1):
     """count leading set"""
@@ -30,8 +29,7 @@ def cls(bits, size, val=1):
     elif val == 0:
         return _clz(bits, size)
     else:
-        raise("val is binary! pass 0/1.")
-        
+        raise ("val is binary! pass 0/1.")
 
 
 def _clo(bits, size):
@@ -64,6 +62,9 @@ class Posit:
             return self.__dict__ == other.__dict__
         else:
             return False
+
+    def mant_len(self):
+        return self.size - 1 - self.regime.reg_len - self.es
 
     def bit_repr(self):
         """
@@ -125,9 +126,6 @@ exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
 mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 #10;
 """
-
-    def mant_len(self):
-        return self.size - 1 - self.regime.reg_len - self.es
 
     def color_code(self):
         # bug with eg: bits = 0b0110 es 1
