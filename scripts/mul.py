@@ -8,10 +8,10 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
     size, es = p1.size, p1.es
 
-    if p1.is_zero or p2.is_zero:
-        return Posit(is_zero=True)
     if p1.is_inf or p2.is_inf:
         return Posit(is_inf=True)
+    if p1.is_zero or p2.is_zero:
+        return Posit(is_zero=True)
 
     sign = p1.sign ^ p2.sign
 
@@ -63,7 +63,6 @@ ans = mul(p1, p2)
 assert mul(p1, p2) == decode(0b01111101, 8, 0)
 
 
-
 p1 = decode(0b01110011, 8, 0)
 p2 = decode(0b01000111, 8, 0)
 ans = mul(p1, p2)
@@ -80,7 +79,6 @@ print(p1)
 print(p2)
 print(ans)
 """
-
 
 p1 = decode(0b0111000101100011, 16, 0)
 p2 = decode(0b0100000101110001, 16, 0)
