@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Dec  7 11:03:25 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_calc_regime_bits.vcd"
+[dumpfile_mtime] "Tue Dec  7 11:02:43 2021"
+[dumpfile_size] 632
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_calc_regime_bits.gtkw"
+[timestart] 0
+[size] 1379 779
+[pos] -1 -1
+*-3.084036 13 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_calc_regime_bits.
+[sst_width] 193
+[signals_width] 167
+[sst_expanded] 1
+[sst_vpaned_height] 230
+@28
+tb_calc_regime_bits.reg_s
+@24
+tb_calc_regime_bits.reg_len[2:0]
+@200
+-
+@29
+tb_calc_regime_bits.calc_regime_bits_inst.mask[7:0]
+@28
+tb_calc_regime_bits.regime_bits[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
