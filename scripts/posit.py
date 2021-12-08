@@ -165,15 +165,15 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 
         ans = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
         ans += f"{self.color_code()}\n"
-        ans += f"{self.break_down()} = {self.to_real()}\n"
-        ans += f"s: {self.sign.real:>45}\n"
-        ans += f"reg_s: {self.regime.reg_s.real:>45}\n"
-        ans += f"reg_len: {self.regime.reg_len:>45}\n"
-        ans += f"k: {self.regime.k:>45}\n"
-        ans += f"reg: {regime_binary_repr:>45}\n"
+        ans += f"{self.break_down()} = {self.to_real()}\n\n"
+        ans += f"{'s':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
+        ans += f"{'reg_s:':<19}{self.regime.reg_s.real}\n"
+        ans += f"{'reg_len:':<19}{self.regime.reg_len}\n"
+        ans += f"k: {self.regime.k}\n"
+        ans += f"{'reg:':<19}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
         if self.es:
-            ans += f"exp: {exponent_binary_repr:>45}\n"
-        ans += f"mant: {mantissa_binary_repr:>45}\n"
+            ans += f"{'exp:':<19}{exponent_binary_repr[:self.size-self.es]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{RESET_COLOR}\n"
+        ans += f"{'mant:':<19}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
         ans += f"F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}\n"
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
         return ans

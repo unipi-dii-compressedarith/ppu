@@ -34,8 +34,6 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     if p1.bit_repr() == 0 or p2.bit_repr() == 0:
         return Posit(size, es, sign, Regime(), 0, 0)
 
-    
-
     F1, F2 = p1.mant_len(), p2.mant_len()
 
     k = p1.regime.k + p2.regime.k
