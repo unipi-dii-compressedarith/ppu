@@ -18,6 +18,8 @@ def handler(signum, frame):
 signal.signal(signal.SIGINT, handler)
 
 
+get_bin = lambda x, n: format(x, "b").zfill(n)
+
 def decode(bits, size=2, es=0) -> Posit:
     """Break down P<size, es> in its components (sign, regime, exponent, mantissa)"""
     size = max(size, ceil(log2(bits + 1)))
@@ -133,12 +135,12 @@ if __name__ == "__main__":
     #         print(f"bits = {N}'b{get_bin(bits, N)};")
     #         print(posit.tb())
 
-    # N = 16
-    # list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
-    # for bits in list_of_bits:
-    #     print(get_bin(bits, N))
-    #     if bits != (1 << N - 1) and bits != 0:
-    #         assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+    N = 16
+    list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+    for bits in list_of_bits:
+        print(get_bin(bits, N))
+        if bits != (1 << N - 1) and bits != 0:
+            assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 
     # N = 32
     # list_of_bits = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)

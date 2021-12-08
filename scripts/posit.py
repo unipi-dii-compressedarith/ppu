@@ -1,5 +1,9 @@
+import softposit as sp
+
 get_bin = lambda x, n: format(x, "b").zfill(n)
 get_hex = lambda x, n: format(x, "h").zfill(n)
+
+ANSI_COLOR_CYAN = "\x1b[36m"
 
 RESET_COLOR = "\033[0m"
 SIGN_COLOR = "\033[1;37;41m"
@@ -149,19 +153,19 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         return ans
 
     def __repr__(self):
-        return f"""P<{self.size},{self.es}>: {self.color_code()} 
-{get_bin(self.bit_repr(), self.size)} 
+        return f"""P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)} 
+{self.color_code()}
 {self.break_down()} = {self.to_real()} 
-s:    {self.sign.real}
-reg_s:{self.regime.reg_s.real}
-reg_len:{self.regime.reg_len}
+s:    {self.sign.real:>12}
+reg_s:{self.regime.reg_s.real:>12}
+reg_len:{self.regime.reg_len:>12}
+k:    {self.regime.k:>12}
 reg:  {get_bin(self.regime.calc_reg_bits(self.size), self.size)}
 # reg: {self.regime}
-k:    {self.regime.k}
-{f'exp:  {get_bin(self.exp, self.size)}' if self.es else ''}
-mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
-mant: {get_bin(self.mant, self.size)}
-{'-'*20}"""
+{f'exp:  {get_bin(self.exp, self.size):>12}' if self.es else ''}
+mant: {get_bin(self.mant, self.size):>12}
+F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
+{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}"""
 
 
 if __name__ == "__main__":
