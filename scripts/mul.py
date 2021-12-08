@@ -2,14 +2,22 @@ from posit_decode import decode
 from posit import Posit, get_bin
 from regime import Regime
 
+import pytest
 import os
 
 
 RESET_COLOR = "\033[0m"
+SIGN_COLOR = "\033[1;37;41m"
+REG_COLOR = "\033[1;30;43m"
+EXP_COLOR = "\033[1;37;44m"
 MANT_COLOR = "\033[1;37;40m"
 
+def shl(bits, rhs, size):
+    mask = (2 ** size) - 1
+    return (bits << rhs) & mask if rhs > 0 else bits
 
-msb = lambda N: 1 << (N - 1)  # 8bits: 1000_0000
+
+msb = lambda N: shl(1, N-1, N)  # 8bits: 1 << 8 i.e. 1000_0000
 mask = lambda N: 2 ** N - 1  # 8bits: 1111_1111
 
 
@@ -47,36 +55,28 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 """
     )
 
-    if exp > 2 ** es - 1:  # overflows
+
+    mant_carry = bool((mant & msb(2 * size)) != 0).real
+    print(f"mant_carry = {MANT_COLOR}{mant_carry.real}{RESET_COLOR}")
+    print(f"k + exp + mant_carry = {REG_COLOR}{k}{RESET_COLOR} + {EXP_COLOR}{exp}{RESET_COLOR} + {MANT_COLOR}{mant_carry}{RESET_COLOR}")
+
+    
+    if mant_carry == 1:
+        exp += 1
+        mant_carry -= 1
+        mant = mant >> 1
+
+    exp_carry = bool((exp & msb(es)) != 0).real 
+    if exp_carry == 1:
         k += 1
-        exp -= 2 ** es
+        exp_carry -= 1
+        exp >>= 1
 
-    if es == 0:
-        mant_carry = (mant & msb(2 * size)) != 0
-    else:
-        mant_carry = mant >> (size - 3)
-
-    if mant_carry:
-        if es == 0:
-            k += 1
-            mant = mant >> 1
-        elif es == 1:
-            if exp != 0:
-                k += 1
-            exp = exp ^ 1
-            mant = mant >> 1
-        elif es == 2:
-            exp += 1
-            if exp > 3:
-                k += 1
-                exp -= 4
-            mant = mant >> 1
-        else:  # prob wrong
-            exp += 1
-            if exp > 2 ** es - 1:
-                k += 1
-                exp -= 2 ** es
-            mant = mant >> 1
+    # k += int(exp / (2**es))
+    # exp = exp % (2**es)
+    
+    
+    print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
 
     reg_len = Regime(k=k).reg_len
 
@@ -97,16 +97,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
 
 if __name__ == "__main__":
-    p1 = decode(0b01110011, 8, 0)
-    p2 = decode(0b01110010, 8, 0)
-    ans = mul(p1, p2)
-    assert mul(p1, p2) == decode(0b01111101, 8, 0)
-
-    p1 = decode(0b01110011, 8, 0)
-    p2 = decode(0b01000111, 8, 0)
-    ans = mul(p1, p2)
-    assert mul(p1, p2) == decode(0b01110101, 8, 0)
-
+    
     p1 = decode(0b01100011, 8, 0)
     p2 = decode(0b00111111, 8, 0)
     print(p1)
@@ -193,3 +184,32 @@ if __name__ == "__main__":
 
 
 # todo: figure out why it doesnt work (try paper version first)
+
+
+
+
+if __name__ == "__main__":
+    print(f"run `pytest mul.py -v` to run the tests.")
+
+
+test_mul_inputs = [
+    (
+        (decode(0b01110011, 8, 0), decode(0b01110010, 8, 0)), 
+        decode(0b01111101, 8, 0)
+    ),
+    (
+        (decode(0b01110011, 8, 0), decode(0b01000111, 8, 0)), 
+        decode(0b01110101, 8, 0)
+    ),
+    (
+        (Posit(16,1,0,Regime(k=3),0,2), Posit(16,1,0,Regime(k=2),0,3)),
+        Posit(16,1,1,Regime(k=2),1,0b1010000)
+    ),
+    (
+        
+    ),
+]
+    
+@pytest.mark.parametrize("test_input,expected", test_mul_inputs)
+def test_cls(test_input, expected):
+    assert (mul(*test_input) == expected)

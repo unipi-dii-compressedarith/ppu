@@ -1,3 +1,5 @@
+from numpy import inf
+
 class Regime:
     (reg_s, reg_len) = (None, None)
     k = None
@@ -15,7 +17,8 @@ class Regime:
             else:
                 self._init_reg_s_reg_len(reg_s, reg_len)
         else:
-            print("cant initialize regime")
+            self._init_k(-inf)
+            print("initialized a \"subnormal\" regime")
 
     def _init_k(self, k):
         if (self.reg_s, self.reg_len) == (None, None):
@@ -30,7 +33,10 @@ class Regime:
 
     def _calc_reg_s_reg_len(self):
         """Given k, computes leftmost regime bit (reg_s) and regime length (reg_len)"""
-        if self.k >= 0:
+        if self.k == -inf:
+            self.reg_s = None
+            self.reg_len = None
+        elif self.k >= 0:
             self.reg_s = 1
             self.reg_len = self.k + 2
         else:
@@ -45,7 +51,9 @@ class Regime:
             self.k = -(self.reg_len - 1)
 
     def calc_reg_bits(self, size=64):
-        if self.k >= 0:
+        if self.k == -inf:
+            return 0
+        elif self.k >= 0:
             return (2 ** (self.k + 1) - 1) << 1
         else:
             return 1
@@ -72,3 +80,4 @@ if __name__ == "__main__":
     assert Regime(k=0).calc_reg_bits(size=8) == 0b00000010
     assert Regime(k=-3).calc_reg_bits(size=8) == 0b00000001
     assert Regime(reg_s=1, reg_len=4).calc_reg_bits() == 0b00001110
+    assert Regime(k=-inf).calc_reg_bits(size=8) == 0b00000000

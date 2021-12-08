@@ -1,7 +1,9 @@
+import pytest
 import softposit as sp
+from numpy import inf
 
 get_bin = lambda x, n: format(x, "b").zfill(n)
-get_hex = lambda x, n: format(x, "h").zfill(n)
+get_hex = lambda x, n: format(x, "x").zfill(n)
 
 ANSI_COLOR_CYAN = "\x1b[36m"
 
@@ -13,27 +15,32 @@ MANT_COLOR = "\033[1;37;40m"
 
 
 def shl(bits, rhs, size):
+    """shift left on `size` bits"""
     mask = (2 ** size) - 1
     return (bits << rhs) & mask if rhs > 0 else bits
 
 
 def shr(bits, rhs):
+    """shift right"""
     return bits >> rhs if rhs > 0 else bits
 
 
 def c2(bits, size):
+    """two's complement on `size` bits"""
     mask = (2 ** size) - 1
     return (~bits & mask) + 1
 
 
 def cls(bits, size, val=1):
-    """count leading set"""
+    """count leading set
+    counts leading `val`, leftwise
+    """
     if val == 1:
         return _clo(bits, size)
     elif val == 0:
         return _clz(bits, size)
     else:
-        raise ("val is binary! pass 0/1.")
+        raise ("val is binary! pass either 0 or 1.")
 
 
 def _clo(bits, size):
@@ -51,15 +58,13 @@ def _clz(bits, size):
 
 
 class Posit:
-    def __init__(self, size, es, sign, regime, exp, mant, is_zero=False, is_inf=False):
+    def __init__(self, size, es, sign, regime, exp, mant):
         self.size = size
         self.es = es
         self.sign = sign
         self.regime = regime
         self.exp = exp or 0
         self.mant = mant
-        self.is_zero = is_zero
-        self.is_inf = is_inf
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -78,27 +83,28 @@ class Posit:
         0_0000_e_00 |     exp
         0_0000_0_mm |     mant
         """
-        bits = (
-            shl(self.sign, (self.size - 1), self.size)
-            | shl(
-                self.regime.calc_reg_bits(self.size),
-                (self.size - 1 - self.regime.reg_len),
-                self.size,
-            )
-            | shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
-            | self.mant
-        )
-        if self.sign == 0:
-            return bits
+        if self.regime.reg_len == None: # 0 or inf
+            return 0 if self.sign == 0 else (1 << (self.size - 1))
         else:
-            # ~(1 << (self.size - 1)) = 0x7f if 8 bits
-            return c2(bits & ~(1 << (self.size - 1)), self.size)
+            bits = (
+                shl(self.sign, (self.size - 1), self.size)
+                | shl(
+                    self.regime.calc_reg_bits(self.size),
+                    (self.size - 1 - self.regime.reg_len),
+                    self.size,
+                )
+                | shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                | self.mant
+            )
+            if self.sign == 0:
+                return bits
+            else:
+                # ~(1 << (self.size - 1)) = 0x7f if 8 bits
+                return c2(bits & ~(1 << (self.size - 1)), self.size)
 
     def to_real(self):
-        if self.is_zero:
-            return 0
-        elif self.is_inf:
-            return inf  # numpy.inf
+        if self.regime.reg_len == None: # 0 or inf
+            return 0 if self.sign == 0 else inf
         else:
             F = self.size - 1 - self.regime.reg_len - self.es  # length of mantissa
             try:
@@ -118,12 +124,12 @@ class Posit:
             return inf  # numpy.inf
         else:
             F = self.mant_len()
-            return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2 ** {EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+            return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
 
     def tb(self):
         return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
 sign = {self.sign.real};
-reg_s = {self.regime.reg_s.real};
+reg_s = {self.regime.reg_s.real if self.regime.reg_s else ''};
 reg_len = {self.regime.reg_len};
 regime_bits_expected = {self.size}'b{get_bin(self.regime.calc_reg_bits(self.size), self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
@@ -169,13 +175,20 @@ F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
 
 
 if __name__ == "__main__":
-    assert cls(0b01111111 << 1, 8, 1) == 7
-    assert cls(0b11111111, 8, 1) == 8
-    assert cls(0b11001100, 8, 1) == 2
-    assert cls(0b10111111, 8, 1) == 1
-    assert cls(0b11111110, 8, 1) == 7
-    assert cls(0b00111111, 8, 1) == 0
+    print(f"run `pytest posit.py -v` to run the tests.")
 
-    assert cls(0b01111111, 8, 0) == 1
-    assert cls(0b00001100, 8, 0) == 4
-    assert cls(0b00111111, 8, 0) == 2
+
+test_cls_inputs = [
+    ((0b11111111, 8, 1), 8),
+    ((0b11001100, 8, 1), 2),
+    ((0b10111111, 8, 1), 1),
+    ((0b11111110, 8, 1), 7),
+    ((0b00111111, 8, 1), 0),
+
+    ((0b01111111, 8, 0), 1),
+    ((0b00001100, 8, 0), 4),
+    ((0b00111111, 8, 0), 2)]
+    
+@pytest.mark.parametrize("test_input,expected", test_cls_inputs)
+def test_cls(test_input, expected):
+    assert (cls(*test_input) == expected)
