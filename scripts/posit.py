@@ -73,7 +73,7 @@ class Posit:
             return False
 
     def mant_len(self):
-        return self.size - 1 - self.regime.reg_len - self.es
+        return max(0, self.size - 1 - self.regime.reg_len - self.es)
 
     def bit_repr(self):
         """
@@ -108,7 +108,7 @@ class Posit:
         if self.regime.reg_len == None:  # 0 or inf
             return 0 if self.sign == 0 else inf
         else:
-            F = self.size - 1 - self.regime.reg_len - self.es  # length of mantissa
+            F = self.mant_len()
             try:
                 return (
                     (-1) ** self.sign.real
@@ -125,9 +125,18 @@ class Posit:
         else:
             F = self.mant_len()
             if self.es == 0:
-                return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**{REG_COLOR}{self.regime.k}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                return (
+                    f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
+                    + f"(2**{REG_COLOR}{self.regime.k}{RESET_COLOR}) * "
+                    + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                )
             else:
-                return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                return (
+                    f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
+                    + f"(2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * "
+                    + f"(2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * "
+                    + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                )
 
     def tb(self):
         return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
@@ -152,7 +161,9 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         regime_bits_str = f"{self.regime.calc_reg_bits(self.size):064b}"[
             64 - self.regime.reg_len :
         ]
-        exp_bits_str = f"{self.exp:064b}"[64 - self.es :]
+        exp_bits_str = f"{self.exp:064b}"[
+            64 - min(self.es, self.size - 1 - self.regime.reg_len) :
+        ]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
         ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"

@@ -42,7 +42,7 @@ def decode(bits, size=2, es=0) -> Posit:
     msb = 1 << (size - 1)
     sign = bits >> (size - 1)
 
-    if (bits << 1) & mask == 0: # 0 or inf
+    if (bits << 1) & mask == 0:  # 0 or inf
         return Posit(size, es, sign, Regime(), 0, 0)
 
     u_bits = bits if sign == 0 else c2(bits, mask)
@@ -58,7 +58,7 @@ def decode(bits, size=2, es=0) -> Posit:
     regime_bits = ((u_bits << 1) & mask) >> (size - reg_len)
 
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
-    exp = ((u_bits << (1 + reg_len)) & mask) >> max(0, (size - es))
+    exp = ((u_bits << (1 + reg_len)) & mask) >> max((size - es), (size - 1 - reg_len))
 
     mant = ((u_bits << (1 + reg_len + es)) & mask) >> (1 + reg_len + es)
 
@@ -73,7 +73,7 @@ def decode(bits, size=2, es=0) -> Posit:
 
 
 print(decode(0b01100110, 8, 5))
-    
+
 
 if __name__ == "__main__":
 
