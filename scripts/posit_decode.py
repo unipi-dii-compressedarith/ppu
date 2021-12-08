@@ -2,10 +2,8 @@
 black posit_decode.py # code formatter (pip install black)
 """
 import softposit as sp
-from numpy import inf
 import signal
 import random
-from math import ceil, log2
 import pytest
 
 from regime import Regime
@@ -231,6 +229,28 @@ tb = [
             mant=0b0,
         ),
     ),
+    (
+        decode(0b0111111111111100, 16, 1).to_real(),
+        16777216.0,
+    ),
+    (decode(0b0111111111111111, 16, 1).to_real(), 268435456.0),
+    (
+        decode(0b0111111111111100, 16, 1).color_code(),
+        "\x1b[1;37;41m0\x1b[1;30;43m11111111111110\x1b[1;37;44m0\x1b[1;37;40m\x1b[0m",
+    ),
+    (
+        decode(0b0000000000000001, 16, 1).to_real(),
+        3.725290298461914e-09
+    ),
+    (
+        decode(0b0000000000000001, 16, 1).color_code(),
+        '\x1b[1;37;41m0\x1b[1;30;43m000000000000001\x1b[1;37;44m\x1b[1;37;40m\x1b[0m'
+    ),
+    (
+        decode(0b0111111111111111, 16, 1).color_code(),
+        "\x1b[1;37;41m0\x1b[1;30;43m111111111111111\x1b[1;37;44m\x1b[1;37;40m\x1b[0m",  # this fails until you adjust the regime out of border
+    ),
+
 ]
 
 
