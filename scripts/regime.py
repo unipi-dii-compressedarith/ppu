@@ -20,7 +20,7 @@ class Regime:
                 self._init_reg_s_reg_len(reg_s, reg_len)
         else:
             self._init_k(-inf)
-            print('initialized a "subnormal" regime')
+            # print('initialized a "subnormal" regime')
 
     def _init_k(self, k):
         if (self.reg_s, self.reg_len) == (None, None):
@@ -86,7 +86,7 @@ tb = [
     (Regime(k=0).calc_reg_bits(size=8), 0b00000010),
     (Regime(k=-3).calc_reg_bits(size=8), 0b00000001),
     (Regime(reg_s=1, reg_len=4).calc_reg_bits(), 0b00001110),
-    (Regime(k=-inf).calc_reg_bits(size=8), 0b00000000),
+    (Regime().calc_reg_bits(size=8), 0b00000000),
 ]
 
 

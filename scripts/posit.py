@@ -86,16 +86,16 @@ class Posit:
         if self.regime.reg_len == None:  # 0 or inf
             return 0 if self.sign == 0 else (1 << (self.size - 1))
         else:
+            sign_shift = self.size - 1
+            regime_shift = self.size - 1 - self.regime.reg_len
+            exp_shift = max(0, self.size - 1 - self.regime.reg_len - self.es)
+
+            regime_bits = self.regime.calc_reg_bits(self.size)
+
             bits = (
-                shl(self.sign, (self.size - 1), self.size)
-                | shl(
-                    self.regime.calc_reg_bits(self.size),
-                    (self.size - 1 - self.regime.reg_len),
-                    self.size,
-                )
-                | shl(
-                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
-                )
+                shl(self.sign, sign_shift, self.size)
+                | shl(regime_bits, regime_shift, self.size)
+                | shl(self.exp, exp_shift, self.size)
                 | self.mant
             )
             if self.sign == 0:
@@ -124,7 +124,10 @@ class Posit:
             pass
         else:
             F = self.mant_len()
-            return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+            if self.es == 0:
+                return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**{REG_COLOR}{self.regime.k}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+            else:
+                return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
 
     def tb(self):
         return f"""bits                 = {self.size}'b{get_bin(self.bit_repr(), self.size)};
@@ -166,10 +169,11 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         ans = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
         ans += f"{self.color_code()}\n"
         ans += f"{self.break_down()} = {self.to_real()}\n\n"
-        ans += f"{'s':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
-        ans += f"{'reg_s:':<19}{self.regime.reg_s.real}\n"
-        ans += f"{'reg_len:':<19}{self.regime.reg_len}\n"
-        ans += f"k: {self.regime.k}\n"
+        ans += f"{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
+        # ans += f"{'reg_s:':<19}{self.regime.reg_s.real}\n"
+        # ans += f"{'reg_len:':<19}{self.regime.reg_len}\n"
+        # ans += f"k: {self.regime.k}\n"
+        ans += f"{self.regime}\n"
         ans += f"{'reg:':<19}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
         if self.es:
             ans += f"{'exp:':<19}{exponent_binary_repr[:self.size-self.es]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{RESET_COLOR}\n"

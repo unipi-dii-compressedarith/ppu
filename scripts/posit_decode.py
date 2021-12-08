@@ -42,8 +42,8 @@ def decode(bits, size=2, es=0) -> Posit:
     msb = 1 << (size - 1)
     sign = bits >> (size - 1)
 
-    if (bits << 1) & mask == 0:
-        return Posit(size, es, sign, Regime(k=-inf), 0, 0)
+    if (bits << 1) & mask == 0: # 0 or inf
+        return Posit(size, es, sign, Regime(), 0, 0)
 
     u_bits = bits if sign == 0 else c2(bits, mask)
     reg_msb = 1 << (size - 2)
@@ -71,6 +71,9 @@ def decode(bits, size=2, es=0) -> Posit:
         mant=mant,
     )
 
+
+print(decode(0b01100110, 8, 5))
+    
 
 if __name__ == "__main__":
 
@@ -121,7 +124,7 @@ if __name__ == "__main__":
     print(decode(0b0110011101110011, 16, 1))
     """
 
-    REPL = 1
+    REPL = 0
     if REPL:
         while True:
             bits = input(">>> 0b") or "0"
