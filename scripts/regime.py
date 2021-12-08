@@ -6,7 +6,9 @@ class Regime:
     (reg_s, reg_len) = (None, None)
     k = None
 
-    def __init__(self, reg_s=None, reg_len=None, k=None):
+    def __init__(self, size, reg_s=None, reg_len=None, k=None):
+        self.size = size
+
         if ((reg_s, reg_len) == (None, None)) and (k != None):
             self._init_k(k)
         elif (reg_s != None and reg_len != None) and (k == None):
@@ -40,10 +42,16 @@ class Regime:
             self.reg_len = None
         elif self.k >= 0:
             self.reg_s = 1
-            self.reg_len = self.k + 2
+            if self.k < self.size - 1:
+                self.reg_len = self.k + 2
+            else:
+                self.reg_len = self.k + 1
         else:
             self.reg_s = 0
-            self.reg_len = -self.k + 1
+            if -self.k < self.size - 1:
+                self.reg_len = -self.k + 1
+            else:
+                self.reg_len = -self.k
 
     def _calc_k(self):
         """Given leftmost regime bit (reg_s) and regime length (reg_len), computes k"""
@@ -52,14 +60,14 @@ class Regime:
         else:
             self.k = -(self.reg_len - 1)
 
-    def calc_reg_bits(self, size=64):
+    def calc_reg_bits(self):
         if self.k == -inf:
             return 0
         elif self.k >= 0:
             return (2 ** (self.k + 1) - 1) << 1
         else:
             return 1
-            mask = 2 ** size - 1
+            mask = 2 ** self.size - 1
             return ~((2 ** (-self.k) - 1) << 1) & mask
 
     # def get_bits(self, size):
@@ -73,7 +81,7 @@ class Regime:
             return False
 
     def __repr__(self):
-        return f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
+        return f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k} | {self.calc_reg_bits()}"
 
 
 if __name__ == "__main__":
@@ -81,12 +89,19 @@ if __name__ == "__main__":
 
 
 tb = [
-    (Regime(k=1).calc_reg_bits(size=8), 0b00000110),
-    (Regime(k=2).calc_reg_bits(size=8), 0b00001110),
-    (Regime(k=0).calc_reg_bits(size=8), 0b00000010),
-    (Regime(k=-3).calc_reg_bits(size=8), 0b00000001),
-    (Regime(reg_s=1, reg_len=4).calc_reg_bits(), 0b00001110),
-    (Regime().calc_reg_bits(size=8), 0b00000000),
+    (Regime(size=8, k=1).calc_reg_bits(), 0b00000110),
+    (Regime(size=8, k=2).calc_reg_bits(), 0b00001110),
+    (Regime(size=8, k=0).calc_reg_bits(), 0b00000010),
+    (Regime(size=8, k=-3).calc_reg_bits(), 0b00000001),
+    (Regime(size=8, reg_s=1, reg_len=4).calc_reg_bits(), 0b00001110),
+    (Regime(size=8).calc_reg_bits(), 0b00000000),
+    (Regime(size=8, reg_s=1, reg_len=5), Regime(size=8, k=3)),
+    (Regime(size=16, reg_s=1, reg_len=15), Regime(size=16, k=13)),
+    (
+        Regime(size=16, reg_s=1, reg_len=15),
+        Regime(size=16, k=14),
+    ),  # edge case: only ones, no trailing 0 like any other regime sequence.
+    # when printed it's actually >> 1 and the rightmost bit is chopped off.
 ]
 
 

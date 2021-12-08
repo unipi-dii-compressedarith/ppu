@@ -1,8 +1,8 @@
 test:
-	pytest mul.py -v
-	pytest posit.py -v
-	pytest regime.py -v
-	pytest posit_decode.py -v
+	pytest mul.py
+	pytest posit.py
+	pytest regime.py
+	pytest posit_decode.py
 
 clean:
 	rm -rf .pytest_cache .ipynb_checkpoints __pycache__ *.out

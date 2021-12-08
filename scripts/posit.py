@@ -72,8 +72,16 @@ class Posit:
         else:
             return False
 
+    @property
+    def es_effective(self):
+        """the actual size of the exponent field.
+        This takes into account the cases such as
+        P<16,0> 0b01111111_11111111 where the regime field overrides the exponent.
+        """
+        return min(self.es, self.size - 1 - self.regime.reg_len)
+
     def mant_len(self):
-        return max(0, self.size - 1 - self.regime.reg_len - self.es)
+        return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
 
     def bit_repr(self):
         """
@@ -88,9 +96,9 @@ class Posit:
         else:
             sign_shift = self.size - 1
             regime_shift = self.size - 1 - self.regime.reg_len
-            exp_shift = max(0, self.size - 1 - self.regime.reg_len - self.es)
+            exp_shift = self.size - 1 - self.regime.reg_len - self.es_effective
 
-            regime_bits = self.regime.calc_reg_bits(self.size)
+            regime_bits = self.regime.calc_reg_bits()
 
             bits = (
                 shl(self.sign, sign_shift, self.size)
@@ -143,7 +151,7 @@ class Posit:
 sign = {self.sign.real};
 reg_s = {self.regime.reg_s.real if self.regime.reg_s else ''};
 reg_len = {self.regime.reg_len};
-regime_bits_expected = {self.size}'b{get_bin(self.regime.calc_reg_bits(self.size), self.size)};
+regime_bits_expected = {self.size}'b{get_bin(self.regime.calc_reg_bits(), self.size)};
 exp_expected         = {self.size}'b{get_bin(self.exp, self.size)};
 mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 #10;
@@ -158,22 +166,27 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         mantissa length: size - sign_len - reg_len - ex_len
         """
         mant_len = self.mant_len()
-        regime_bits_str = f"{self.regime.calc_reg_bits(self.size):064b}"[
+        regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[
             64 - self.regime.reg_len :
         ]
         exp_bits_str = f"{self.exp:064b}"[
-            64 - min(self.es, self.size - 1 - self.regime.reg_len) :
+            64 - min(self.es_effective, self.size - 1 - self.regime.reg_len) :
         ]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
         ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
 
-        ans = f"{SIGN_COLOR}{self.sign.real}{REG_COLOR}{regime_bits_str}{EXP_COLOR}{exp_bits_str}{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
+        ans = (
+            f"{SIGN_COLOR}{self.sign.real}"
+            + f"{REG_COLOR}{regime_bits_str}"
+            + f"{EXP_COLOR}{exp_bits_str}"
+            + f"{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
+        )
         # assert len(ans_no_color) == self.size
         return ans
 
     def __repr__(self):
-        regime_binary_repr = get_bin(self.regime.calc_reg_bits(self.size), self.size)
+        regime_binary_repr = get_bin(self.regime.calc_reg_bits(), self.size)
         exponent_binary_repr = get_bin(self.exp, self.size)
         mantissa_binary_repr = get_bin(self.mant, self.size)
 
@@ -187,7 +200,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         ans += f"{self.regime}\n"
         ans += f"{'reg:':<19}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
         if self.es:
-            ans += f"{'exp:':<19}{exponent_binary_repr[:self.size-self.es]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{RESET_COLOR}\n"
+            ans += f"{'exp:':<19}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
         ans += f"{'mant:':<19}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
         ans += f"F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}\n"
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
