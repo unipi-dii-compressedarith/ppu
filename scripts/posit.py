@@ -83,7 +83,7 @@ class Posit:
         0_0000_e_00 |     exp
         0_0000_0_mm |     mant
         """
-        if self.regime.reg_len == None: # 0 or inf
+        if self.regime.reg_len == None:  # 0 or inf
             return 0 if self.sign == 0 else (1 << (self.size - 1))
         else:
             bits = (
@@ -93,7 +93,9 @@ class Posit:
                     (self.size - 1 - self.regime.reg_len),
                     self.size,
                 )
-                | shl(self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size)
+                | shl(
+                    self.exp, (self.size - 1 - self.regime.reg_len - self.es), self.size
+                )
                 | self.mant
             )
             if self.sign == 0:
@@ -103,7 +105,7 @@ class Posit:
                 return c2(bits & ~(1 << (self.size - 1)), self.size)
 
     def to_real(self):
-        if self.regime.reg_len == None: # 0 or inf
+        if self.regime.reg_len == None:  # 0 or inf
             return 0 if self.sign == 0 else inf
         else:
             F = self.size - 1 - self.regime.reg_len - self.es  # length of mantissa
@@ -118,7 +120,7 @@ class Posit:
                 return inf
 
     def break_down(self):
-        if self.regime.reg_len == None: # 0 or inf
+        if self.regime.reg_len == None:  # 0 or inf
             pass
         else:
             F = self.mant_len()
@@ -161,7 +163,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         exponent_binary_repr = get_bin(self.exp, self.size)
         mantissa_binary_repr = get_bin(self.mant, self.size)
 
-        ans  = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
+        ans = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
         ans += f"{self.color_code()}\n"
         ans += f"{self.break_down()} = {self.to_real()}\n"
         ans += f"s: {self.sign.real:>45}\n"
@@ -176,9 +178,9 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
         return ans
 
+
 if __name__ == "__main__":
     print(f"run `pytest posit.py -v` to run the tests.")
-
 
 
 test_cls_inputs = [
@@ -187,11 +189,12 @@ test_cls_inputs = [
     ((0b10111111, 8, 1), 1),
     ((0b11111110, 8, 1), 7),
     ((0b00111111, 8, 1), 0),
-
     ((0b01111111, 8, 0), 1),
     ((0b00001100, 8, 0), 4),
-    ((0b00111111, 8, 0), 2)]
-    
+    ((0b00111111, 8, 0), 2),
+]
+
+
 @pytest.mark.parametrize("test_input,expected", test_cls_inputs)
 def test_cls(test_input, expected):
-    assert (cls(*test_input) == expected)
+    assert cls(*test_input) == expected

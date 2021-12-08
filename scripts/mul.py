@@ -12,12 +12,13 @@ REG_COLOR = "\033[1;30;43m"
 EXP_COLOR = "\033[1;37;44m"
 MANT_COLOR = "\033[1;37;40m"
 
+
 def shl(bits, rhs, size):
     mask = (2 ** size) - 1
     return (bits << rhs) & mask if rhs > 0 else bits
 
 
-msb = lambda N: shl(1, N-1, N)  # 8bits: 1 << 8 i.e. 1000_0000
+msb = lambda N: shl(1, N - 1, N)  # 8bits: 1 << 8 i.e. 1000_0000
 mask = lambda N: 2 ** N - 1  # 8bits: 1111_1111
 
 
@@ -55,18 +56,18 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 """
     )
 
-
     mant_carry = bool((mant & msb(2 * size)) != 0).real
     print(f"mant_carry = {MANT_COLOR}{mant_carry.real}{RESET_COLOR}")
-    print(f"k + exp + mant_carry = {REG_COLOR}{k}{RESET_COLOR} + {EXP_COLOR}{exp}{RESET_COLOR} + {MANT_COLOR}{mant_carry}{RESET_COLOR}")
+    print(
+        f"k + exp + mant_carry = {REG_COLOR}{k}{RESET_COLOR} + {EXP_COLOR}{exp}{RESET_COLOR} + {MANT_COLOR}{mant_carry}{RESET_COLOR}"
+    )
 
-    
     if mant_carry == 1:
         exp += 1
         mant_carry -= 1
         mant = mant >> 1
 
-    exp_carry = bool((exp & msb(es)) != 0).real 
+    exp_carry = bool((exp & msb(es)) != 0).real
     if exp_carry == 1:
         k += 1
         exp_carry -= 1
@@ -74,11 +75,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
     # k += int(exp / (2**es))
     # exp = exp % (2**es)
-    
 
     #### fix overflow / underflow of k
 
-    
     print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
 
     reg_len = Regime(k=k).reg_len
@@ -100,7 +99,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
 
 if __name__ == "__main__":
-    
+
     p1 = decode(0b01100011, 8, 0)
     p2 = decode(0b00111111, 8, 0)
     print(p1)
@@ -175,7 +174,7 @@ if __name__ == "__main__":
     ans = mul(p1, p2)  #              10001111
     print(ans)
 
-    os.system('clear')
+    os.system("clear")
     p1 = decode(0b1001001100001100, 16, 1)  # 0x930c   # -12.953125
     p2 = decode(0b0101010101010010, 16, 1)  # 0x5552   # 2.6650390625
     print(p1)
@@ -185,10 +184,7 @@ if __name__ == "__main__":
     print(ans)
 
 
-
 # todo: figure out why it doesnt work (try paper version first)
-
-
 
 
 if __name__ == "__main__":
@@ -196,24 +192,16 @@ if __name__ == "__main__":
 
 
 test_mul_inputs = [
-    (
-        (decode(0b01110011, 8, 0), decode(0b01110010, 8, 0)), 
-        decode(0b01111101, 8, 0)
-    ),
-    (
-        (decode(0b01110011, 8, 0), decode(0b01000111, 8, 0)), 
-        decode(0b01110101, 8, 0)
-    ),
+    ((decode(0b01110011, 8, 0), decode(0b01110010, 8, 0)), decode(0b01111101, 8, 0)),
+    ((decode(0b01110011, 8, 0), decode(0b01000111, 8, 0)), decode(0b01110101, 8, 0)),
     # (
     #     (Posit(16,1,0,Regime(k=3),0,2), Posit(16,1,0,Regime(k=2),0,3)),
     #     Posit(16,1,1,Regime(k=2),1,0b1010000)
     # ),
-    (
-        (decode(0b00000001, 8, 0), decode(0b01111111, 8, 0)), 
-        decode(0b01000000, 8, 0)
-    ),
+    ((decode(0b00000001, 8, 0), decode(0b01111111, 8, 0)), decode(0b01000000, 8, 0)),
 ]
-    
+
+
 @pytest.mark.parametrize("test_input,expected", test_mul_inputs)
 def test_cls(test_input, expected):
-    assert (mul(*test_input) == expected)
+    assert mul(*test_input) == expected
