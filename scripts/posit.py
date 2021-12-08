@@ -118,10 +118,8 @@ class Posit:
                 return inf
 
     def break_down(self):
-        if self.is_zero:
-            return 0
-        elif self.is_inf:
-            return inf  # numpy.inf
+        if self.regime.reg_len == None: # 0 or inf
+            pass
         else:
             F = self.mant_len()
             return f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * (2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * (2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * (1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
@@ -159,23 +157,28 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         return ans
 
     def __repr__(self):
-        return f"""P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)} 
-{self.color_code()}
-{self.break_down()} = {self.to_real()} 
-s:    {self.sign.real:>12}
-reg_s:{self.regime.reg_s.real:>12}
-reg_len:{self.regime.reg_len:>12}
-k:    {self.regime.k:>12}
-reg:  {get_bin(self.regime.calc_reg_bits(self.size), self.size)}
-# reg: {self.regime}
-{f'exp:  {get_bin(self.exp, self.size):>12}' if self.es else ''}
-mant: {get_bin(self.mant, self.size):>12}
-F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}
-{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}"""
+        regime_binary_repr = get_bin(self.regime.calc_reg_bits(self.size), self.size)
+        exponent_binary_repr = get_bin(self.exp, self.size)
+        mantissa_binary_repr = get_bin(self.mant, self.size)
 
+        ans  = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
+        ans += f"{self.color_code()}\n"
+        ans += f"{self.break_down()} = {self.to_real()}\n"
+        ans += f"s: {self.sign.real:>45}\n"
+        ans += f"reg_s: {self.regime.reg_s.real:>45}\n"
+        ans += f"reg_len: {self.regime.reg_len:>45}\n"
+        ans += f"k: {self.regime.k:>45}\n"
+        ans += f"reg: {regime_binary_repr:>45}\n"
+        if self.es:
+            ans += f"exp: {exponent_binary_repr:>45}\n"
+        ans += f"mant: {mantissa_binary_repr:>45}\n"
+        ans += f"F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}\n"
+        ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
+        return ans
 
 if __name__ == "__main__":
     print(f"run `pytest posit.py -v` to run the tests.")
+
 
 
 test_cls_inputs = [

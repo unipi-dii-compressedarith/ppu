@@ -1,4 +1,5 @@
 from numpy import inf
+import pytest
 
 class Regime:
     (reg_s, reg_len) = (None, None)
@@ -75,9 +76,18 @@ class Regime:
 
 
 if __name__ == "__main__":
-    assert Regime(k=1).calc_reg_bits(size=8) == 0b00000110
-    assert Regime(k=2).calc_reg_bits(size=8) == 0b00001110
-    assert Regime(k=0).calc_reg_bits(size=8) == 0b00000010
-    assert Regime(k=-3).calc_reg_bits(size=8) == 0b00000001
-    assert Regime(reg_s=1, reg_len=4).calc_reg_bits() == 0b00001110
-    assert Regime(k=-inf).calc_reg_bits(size=8) == 0b00000000
+    print(f"run `pytest regime.py -v` to run the tests.")
+
+
+tb = [
+    (Regime(k=1).calc_reg_bits(size=8), 0b00000110),
+    (Regime(k=2).calc_reg_bits(size=8), 0b00001110),
+    (Regime(k=0).calc_reg_bits(size=8), 0b00000010),
+    (Regime(k=-3).calc_reg_bits(size=8), 0b00000001),
+    (Regime(reg_s=1, reg_len=4).calc_reg_bits(), 0b00001110),
+    (Regime(k=-inf).calc_reg_bits(size=8), 0b00000000)]
+
+@pytest.mark.parametrize("left,right", tb)
+def test_regime(left, right):
+    assert left == right
+    

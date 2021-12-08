@@ -27,9 +27,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
     size, es = p1.size, p1.es
 
-    if p1.is_inf or p2.is_inf:
+    if p1.bit_repr() == msb(size) or p2.bit_repr() == msb(size):
         return Posit(is_inf=True)
-    if p1.is_zero or p2.is_zero:
+    if p1.bit_repr() == 0 or p2.bit_repr() == 0:
         return Posit(is_zero=True)
 
     sign = p1.sign ^ p2.sign
@@ -75,6 +75,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     # k += int(exp / (2**es))
     # exp = exp % (2**es)
     
+
+    #### fix overflow / underflow of k
+
     
     print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
 
@@ -201,12 +204,13 @@ test_mul_inputs = [
         (decode(0b01110011, 8, 0), decode(0b01000111, 8, 0)), 
         decode(0b01110101, 8, 0)
     ),
+    # (
+    #     (Posit(16,1,0,Regime(k=3),0,2), Posit(16,1,0,Regime(k=2),0,3)),
+    #     Posit(16,1,1,Regime(k=2),1,0b1010000)
+    # ),
     (
-        (Posit(16,1,0,Regime(k=3),0,2), Posit(16,1,0,Regime(k=2),0,3)),
-        Posit(16,1,1,Regime(k=2),1,0b1010000)
-    ),
-    (
-        
+        (decode(0b00000001, 8, 0), decode(0b01111111, 8, 0)), 
+        decode(0b01000000, 8, 0)
     ),
 ]
     

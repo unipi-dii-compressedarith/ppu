@@ -39,11 +39,11 @@ def decode(bits, size=2, es=0) -> Posit:
     mask = (2 ** size) - 1
     msb = 1 << (size - 1)
     sign = bits >> (size - 1)
+
     if (bits << 1) & mask == 0:
-        if sign == 0:
-            return Posit(size, es, sign, Regime(k=-inf), 0, 0)
-        else:
-            return Posit(size, es, sign, Regime(k=-inf), 0, 0)
+        return Posit(size, es, sign, Regime(k=-inf), 0, 0)
+
+
     u_bits = bits if sign == 0 else c2(bits, mask)
     reg_msb = 1 << (size - 2)
     reg_s = bool(u_bits & reg_msb)
@@ -56,7 +56,7 @@ def decode(bits, size=2, es=0) -> Posit:
 
     regime_bits = ((u_bits << 1) & mask) >> (
         size - reg_len
-    )  # Regime(reg_s, reg_len, k).get_bits(mask)
+    )
 
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
     exp = ((u_bits << (1 + reg_len)) & mask) >> max(0, (size - es))
@@ -133,35 +133,39 @@ if __name__ == "__main__":
         posit = decode(bits, 8, 0)
         assert posit.to_real() == sp.posit8(bits=bits)
         # print(f"bits = {N}'b{get_bin(bits, N)};")
-        print(posit.tb())
+        # print(posit.tb())
 
-    # N, ES = 5, 1
-    # list_of_bits = random.sample(
-    #     range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
-    # )
-    # for bits in list_of_bits:
-    #     if bits != (1 << N - 1) and bits != 0:
-    #         posit = decode(bits, N, ES)
-    #         # posit.to_real()
-    #         print(f"bits = {N}'b{get_bin(bits, N)};")
-    #         print(posit.tb())
+    """
+    N, ES = 5, 1
+    list_of_bits = random.sample(
+        range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
+    )
+    for bits in list_of_bits:
+        if bits != (1 << N - 1) and bits != 0:
+            posit = decode(bits, N, ES)
+            # posit.to_real()
+            print(f"bits = {N}'b{get_bin(bits, N)};")
+            print(posit.tb())
+    """
 
     N = 16
     list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
     for bits in list_of_bits:
-        print(get_bin(bits, N))
         assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 
-    # N = 32
-    # list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
-    # for bits in list_of_bits:
-    #     print(get_bin(bits, N))
-    #     if bits != (1 << N - 1) and bits != 0:
-    #         assert decode(bits, 32, 2).to_real() == sp.posit32(bits=bits)
+    """
+    N = 32
+    list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+    for bits in list_of_bits:
+        print(get_bin(bits, N))
+        if bits != (1 << N - 1) and bits != 0:
+            assert decode(bits, 32, 2).to_real() == sp.posit32(bits=bits)
 
-    # print(decode(0b01110011, 8, 3))
-    # print(decode(0b11110011, 8, 0))
-    # print(decode(0b0110011101110011, 16, 1))
+    print(decode(0b01110011, 8, 3))
+    print(decode(0b11110011, 8, 0))
+    print(decode(0b0110011101110011, 16, 1))
+    """
+
 
     REPL = 1
     if REPL:
@@ -169,3 +173,4 @@ if __name__ == "__main__":
             bits = input(">>> 0b") or "0"
             es = int(input(">>> es: ") or 0)
             print(decode(int(bits, 2), len(bits), es))
+
