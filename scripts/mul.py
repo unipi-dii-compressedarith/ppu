@@ -27,13 +27,14 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     assert p1.es == p2.es
 
     size, es = p1.size, p1.es
+    sign = p1.sign ^ p2.sign
 
     if p1.bit_repr() == msb(size) or p2.bit_repr() == msb(size):
-        return Posit(is_inf=True)
+        return Posit(size, es, sign, Regime(), 0, 0)
     if p1.bit_repr() == 0 or p2.bit_repr() == 0:
-        return Posit(is_zero=True)
+        return Posit(size, es, sign, Regime(), 0, 0)
 
-    sign = p1.sign ^ p2.sign
+    
 
     F1, F2 = p1.mant_len(), p2.mant_len()
 
