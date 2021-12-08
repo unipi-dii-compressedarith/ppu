@@ -49,12 +49,12 @@ def decode(bits, size, es) -> Posit:
     reg_s = bool(u_bits & reg_msb)
     if reg_s == True:
         k = cls(u_bits << 1, size, 1) - 1
-        reg_len = min(k + 2, size - 1)
+        # reg_len = min(k + 2, size - 1)
     else:
         k = -cls(u_bits << 1, size, 0)
-        reg_len = min(-k + 1, size - 1)
+        # reg_len = min(-k + 1, size - 1)
 
-    assert Regime(size=size, reg_s=reg_s, reg_len=reg_len) == Regime(size=size, k=k)
+    reg_len = Regime(size, k).reg_len
 
     regime_bits = ((u_bits << 1) & mask) >> (size - reg_len)
 
@@ -182,7 +182,7 @@ tb = [
             size=8,
             es=1,
             sign=1,
-            regime=Regime(size=8, reg_s=1, reg_len=2),
+            regime=Regime(size=8, k=0),
             exp=0,
             mant=0b1001,
         ),
@@ -193,9 +193,7 @@ tb = [
             size=8,
             es=0,
             sign=0,
-            regime=Regime(
-                size=8, k=6
-            ),  # bug: regime=Regime(size=8,reg_s=1, reg_len=7), # bug: k does not account how long the size is when it returns reg_len regime=Regime(size=size,k=k),
+            regime=Regime(size=8, k=6),
             exp=0,
             mant=0b0,
         ),
@@ -206,9 +204,7 @@ tb = [
             size=16,
             es=1,
             sign=0,
-            regime=Regime(
-                size=16, k=12
-            ),  # bug: regime=Regime(size=size,reg_s=1, reg_len=7), # bug: k does not account how long the size is when it returns reg_len regime=Regime(size=size,k=k),
+            regime=Regime(size=16, k=12),
             exp=0,
             mant=0b0,
         ),
@@ -219,9 +215,7 @@ tb = [
             size=16,
             es=1,
             sign=0,
-            regime=Regime(
-                size=16, k=13
-            ),  # bug: regime=Regime(reg_s=1, reg_len=7), # bug: k does not account how long the size is when it returns reg_len regime=Regime(k=k),
+            regime=Regime(size=16, k=13),
             exp=0,
             mant=0b0,
         ),
@@ -232,9 +226,7 @@ tb = [
             size=16,
             es=1,
             sign=0,
-            regime=Regime(
-                k=14
-            ),  # bug: regime=Regime(reg_s=1, reg_len=7), # bug: k does not account how long the size is when it returns reg_len regime=Regime(k=k),
+            regime=Regime(size=16, k=14),
             exp=0,
             mant=0b0,
         ),

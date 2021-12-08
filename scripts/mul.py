@@ -30,9 +30,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     sign = p1.sign ^ p2.sign
 
     if p1.bit_repr() == msb(size) or p2.bit_repr() == msb(size):
-        return Posit(size, es, sign, Regime(), 0, 0)
+        return Posit(size, es, sign, Regime(size=size), 0, 0)
     if p1.bit_repr() == 0 or p2.bit_repr() == 0:
-        return Posit(size, es, sign, Regime(), 0, 0)
+        return Posit(size, es, sign, Regime(size=size), 0, 0)
 
     F1, F2 = p1.mant_len(), p2.mant_len()
 
@@ -78,7 +78,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
 
     print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
 
-    reg_len = Regime(k=k).reg_len
+    reg_len = Regime(size=size, k=k).reg_len
 
     mant_len = size - 1 - es - reg_len
 
@@ -90,7 +90,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
         size=size,
         es=es,
         sign=sign,
-        regime=Regime(k=k),
+        regime=Regime(size=size, k=k),
         exp=exp,
         mant=mant,
     )

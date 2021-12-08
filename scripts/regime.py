@@ -116,20 +116,20 @@ class Regime:
     @property
     def reg_s(self):
         if self.k == None:  # 0 or inf
-            self.reg_s = None
+            return None
         elif self.k >= 0:
-            self.reg_s = 1
+            return 1
         else:
-            self.reg_s = 0
+            return 0
 
     @property
     def reg_len(self):
         if self.k == None:  # 0 or inf
-            self.reg_len = None
+            return None
         elif self.k >= 0:
-            self.reg_len = self.k + 2
+            return self.k + 2
         else:
-            self.reg_len = -self.k + 1
+            return -self.k + 1
 
     def calc_reg_bits(self):
         if self.k == None:
