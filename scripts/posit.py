@@ -33,7 +33,8 @@ def c2(bits, size):
 
 
 def cls(bits, size, val=1):
-    """count leading set
+    """
+    count leading set
     counts leading `val`, leftwise
     """
     if val == 1:
@@ -45,7 +46,8 @@ def cls(bits, size, val=1):
 
 
 def _clo(bits, size):
-    """count leading ones
+    """
+    count leading ones
     0b1111_0111 -> 4
     """
     mask = 2 ** size - 1
@@ -79,12 +81,12 @@ class Posit:
             return False
 
     @property
-    def is_zero(self):
-        return self.bit_repr() == 0
+    def is_special(self):
+        """
+        zero or infinity
+        """
+        return self.bit_repr() == 0 or self.bit_repr() == (1 << (self.size - 1))
 
-    @property
-    def is_inf(self):
-        return self.bit_repr() == (1 << (self.size - 1))
 
     @property
     def es_effective(self):
@@ -97,7 +99,7 @@ class Posit:
 
     def mant_len(self):
         """length of mantissa field"""
-        if self.is_zero == False and self.is_inf == False:
+        if self.is_special == False:
             return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
         else:
             None
@@ -185,7 +187,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         exponent length: es
         mantissa length: size - sign_len - reg_len - ex_len
         """
-        if self.is_zero == True or self.is_inf == True:
+        if self.is_special == True:
             ans = f"{SIGN_COLOR}{self.sign.real}{RESET_COLOR}" + f"{ANSI_COLOR_GREY}{'0'*(self.size-1)}{RESET_COLOR}"
         else:
             mant_len = self.mant_len()
@@ -224,7 +226,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         ans += f"{self.break_down()} = {self.to_real()}\n"
         # sign
         ans += f"\n{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
-        if self.is_zero == False and self.is_inf == False:
+        if self.is_special == False:
             # regime
             ans += f"{'reg_bits:':<19}{self.regime}\n"
             # exponent
