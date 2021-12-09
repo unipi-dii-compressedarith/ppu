@@ -66,7 +66,10 @@ class Posit:
         self.es = es
         self.sign = sign
         self.regime = regime
-        self.exp = exp or 0
+        if exp > (2 ** es - 1):
+            raise Exception("exponent does not fit in `es`.")
+        else:
+            self.exp = exp
         self.mant = mant
 
     def __eq__(self, other):
@@ -74,6 +77,14 @@ class Posit:
             return self.__dict__ == other.__dict__
         else:
             return False
+
+    @property
+    def is_zero(self):
+        return self.bit_repr() == 0
+
+    @property
+    def is_inf(self):
+        return self.bit_repr() == (1 << (self.size - 1))
 
     @property
     def es_effective(self):
@@ -86,7 +97,10 @@ class Posit:
 
     def mant_len(self):
         """length of mantissa field"""
-        return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
+        if self.is_zero == False and self.is_inf == False:
+            return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
+        else:
+            None
 
     def bit_repr(self):
         """
@@ -171,27 +185,36 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         exponent length: es
         mantissa length: size - sign_len - reg_len - ex_len
         """
-        mant_len = self.mant_len()
-        regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[
-            64 - self.regime._reg_len_bound_checked :
-        ]
-        exp_bits_str = f"{self.exp:064b}"[
-            64
-            - min(
-                self.es_effective, self.size - 1 - self.regime._reg_len_bound_checked
-            ) :
-        ]
-        mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
+        if self.is_zero == True or self.is_inf == True:
+            ans = (
+                f"{SIGN_COLOR}{self.sign.real}{RESET_COLOR}"
+                + f"{ANSI_COLOR_GREY}{'0'*(self.size-1)}{RESET_COLOR}"
+            )
+        else:
+            mant_len = self.mant_len()
+            regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[
+                64 - self.regime._reg_len_bound_checked :
+            ]
+            exp_bits_str = f"{self.exp:064b}"[
+                64
+                - min(
+                    self.es_effective,
+                    self.size - 1 - self.regime._reg_len_bound_checked,
+                ) :
+            ]
+            mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
-        ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
+            ans_no_color = (
+                f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
+            )
 
-        ans = (
-            f"{SIGN_COLOR}{self.sign.real}"
-            + f"{REG_COLOR}{regime_bits_str}"
-            + f"{EXP_COLOR}{exp_bits_str}"
-            + f"{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
-        )
-        # assert len(ans_no_color) == self.size
+            ans = (
+                f"{SIGN_COLOR}{self.sign.real}"
+                + f"{REG_COLOR}{regime_bits_str}"
+                + f"{EXP_COLOR}{exp_bits_str}"
+                + f"{MANT_COLOR}{mant_bits_str}{RESET_COLOR}"
+            )
+            # assert len(ans_no_color) == self.size
         return ans
 
     def __repr__(self):
@@ -203,13 +226,14 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 
         ans = f"{posit_signature:<17}0b{get_bin(self.bit_repr(), self.size)}\n"
         ans += f"{' ':<19}{self.color_code()}   "
-        ans += f"{self.break_down()} = {self.to_real()}\n\n"
-        ans += f"{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
-        ans += f"{'reg_bits:':<19}{self.regime}\n"
-        if self.es:
-            ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
-        ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
-        ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"
+        ans += f"{self.break_down()} = {self.to_real()}\n"
+        ans += f"\n{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
+        if self.is_zero == False and self.is_inf == False:
+            ans += f"{'reg_bits:':<19}{self.regime}\n"
+            if self.es:
+                ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
+            ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
+            ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
         return ans
 
