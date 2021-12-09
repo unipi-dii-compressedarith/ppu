@@ -8,6 +8,7 @@ import pytest
 
 from regime import Regime
 from posit import Posit, cls, c2
+from math import log2
 
 
 def handler(signum, frame):
@@ -42,6 +43,9 @@ def decode(bits, size, es) -> Posit:
     if (bits << 1) & mask == 0:  # 0 or inf
         return Posit(size, es, sign, Regime(size=size), 0, 0)
 
+    if log2(bits) > size:
+        raise Exception("cant fit {} in {} bits".format(bits, size))
+
     u_bits = bits if sign == 0 else c2(bits, size)
     reg_msb = 1 << (size - 2)
     reg_s = bool(u_bits & reg_msb)
@@ -59,13 +63,9 @@ def decode(bits, size, es) -> Posit:
     es_effective = min(es, size - 1 - reg_len)
 
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
-    exp = ((u_bits << (1 + reg_len)) & mask) >> (
-        size - es
-    )  # max((size - es), (size - 1 - reg_len))
+    exp = ((u_bits << (1 + reg_len)) & mask) >> (size - es)  # max((size - es), (size - 1 - reg_len))
 
-    mant = ((u_bits << (1 + reg_len + es_effective)) & mask) >> (
-        1 + reg_len + es_effective
-    )
+    mant = ((u_bits << (1 + reg_len + es_effective)) & mask) >> (1 + reg_len + es_effective)
 
     posit = Posit(
         size=size,
@@ -82,6 +82,8 @@ def decode(bits, size, es) -> Posit:
 
 
 if __name__ == "__main__":
+
+    print(decode(0b01111111111111111111111111111101, 32, 2))
 
     print(decode(0b01111111, 8, 0))
 
@@ -115,9 +117,7 @@ if __name__ == "__main__":
         """
 
         N = 16
-        list_of_bits = random.sample(
-            range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1)
-        )
+        list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
         for bits in list_of_bits:
             assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 

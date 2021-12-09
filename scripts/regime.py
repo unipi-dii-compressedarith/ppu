@@ -193,10 +193,7 @@ class Regime:
         return f"{ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self._reg_len_bound_checked]}{REG_COLOR}{regime_bits_binary[self.size-self._reg_len_bound_checked:]}{RESET_COLOR}"
 
     def __repr__(self):
-        return (
-            f"{self.color_code()} -> "
-            + f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
-        )
+        return f"{self.color_code()} -> " + f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
 
 
 if __name__ == "__main__":
