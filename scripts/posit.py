@@ -176,7 +176,10 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             64 - self.regime._reg_len_bound_checked :
         ]
         exp_bits_str = f"{self.exp:064b}"[
-            64 - min(self.es_effective, self.size - 1 - self.regime._reg_len_bound_checked) :
+            64
+            - min(
+                self.es_effective, self.size - 1 - self.regime._reg_len_bound_checked
+            ) :
         ]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
@@ -197,7 +200,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         mantissa_binary_repr = get_bin(self.mant, self.size)
 
         posit_signature = f"P<{self.size},{self.es}>:"
-        
+
         ans = f"{posit_signature:<17}0b{get_bin(self.bit_repr(), self.size)}\n"
         ans += f"{' ':<19}{self.color_code()}   "
         ans += f"{self.break_down()} = {self.to_real()}\n\n"

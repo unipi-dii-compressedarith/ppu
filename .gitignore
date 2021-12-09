@@ -24,3 +24,8 @@ __pycache__
 *.vqm
 *.edif
 verif_post
+
+
+# python code coverage
+.coverage
+htmlcov

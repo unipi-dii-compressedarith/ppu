@@ -125,40 +125,38 @@ class Regime:
     @property
     def reg_s(self):
         """
-        'regime sign': leftmost regime bit 
+        'regime sign': leftmost regime bit
         (of the unsigned posit, i.e. two's complemented if negative"""
         if self.k == None:  # 0 or inf
             return None
         else:
             return bool(self.k >= 0).real
-            
+
     @property
     def reg_len(self):
         """regime length, regardless of whether it's out of bound or not."""
         if self.k == None:  # 0 or inf
             return None
         elif self.k >= 0:
-            return self.k + 2 # not bound checked
+            return self.k + 2  # not bound checked
             # return min(self.size - 1, self.k + 2) # bound checked
         else:
-            return -self.k + 1 # not bound checked
+            return -self.k + 1  # not bound checked
             # return min(self.size - 1, -self.k + 1) # bound checked
-
 
     @property
     def _reg_len_bound_checked(self):
         """regime length, used to represent the regime. It accounts for edge cases.
         e.g.:
         (reg_s, reg_len) = (1, 8) -> k = 6
-        regime: 0_1111111 
+        regime: 0_1111111
         """
         if self.k == None:  # 0 or inf
             return None
         elif self.k >= 0:
-            return min(self.size - 1, self.k + 2) # bound checked
+            return min(self.size - 1, self.k + 2)  # bound checked
         else:
-            return min(self.size - 1, -self.k + 1) # bound checked
-
+            return min(self.size - 1, -self.k + 1)  # bound checked
 
     def calc_reg_bits(self):
         if self.k == None:
@@ -189,14 +187,14 @@ class Regime:
             return self.__dict__ == other.__dict__
         else:
             return False
-    
+
     def color_code(self):
         regime_bits_binary = get_bin(self.calc_reg_bits(), self.size)
         return f"{ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self._reg_len_bound_checked]}{REG_COLOR}{regime_bits_binary[self.size-self._reg_len_bound_checked:]}{RESET_COLOR}"
 
     def __repr__(self):
         return (
-            f"{self.color_code()} -> " \
+            f"{self.color_code()} -> "
             + f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
         )
 
@@ -216,7 +214,6 @@ tb = [
         0b0111111111111111,
     ),  # technically true but it needs to be >> 1 later on because it doesn't fit.
     (Regime(size=16, k=13).calc_reg_bits(), 0b111111111111110),
-
 ]
 
 

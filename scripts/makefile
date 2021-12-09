@@ -1,9 +1,5 @@
 test:
-	pytest mul.py
-	pytest posit.py
-	pytest regime.py
-	pytest posit_decode.py
+	coverage run -m pytest regime.py posit.py posit_decode.py mul.py
 
 clean:
-	rm -rf .pytest_cache .ipynb_checkpoints __pycache__ *.out
-
+	rm -rf .pytest_cache .ipynb_checkpoints __pycache__ *.out .coverage
