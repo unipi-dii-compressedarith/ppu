@@ -6,6 +6,7 @@ get_bin = lambda x, n: format(x, "b").zfill(n)
 get_hex = lambda x, n: format(x, "x").zfill(n)
 
 ANSI_COLOR_CYAN = "\x1b[36m"
+ANSI_COLOR_GREY = "\x1b[90m"
 
 RESET_COLOR = "\033[0m"
 SIGN_COLOR = "\033[1;37;41m"
@@ -198,10 +199,10 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         # ans += f"{'reg_len:':<19}{self.regime.reg_len}\n"
         # ans += f"k: {self.regime.k}\n"
         ans += f"{self.regime}\n"
-        ans += f"{'reg:':<19}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
+        ans += f"{'reg:':<19}{ANSI_COLOR_GREY}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
         if self.es:
-            ans += f"{'exp:':<19}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
-        ans += f"{'mant:':<19}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
+            ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
+        ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
         ans += f"F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}\n"
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
         return ans
