@@ -80,10 +80,12 @@ class Posit:
         """the actual size of the exponent field.
         This takes into account the cases such as
         P<16,0> 0b01111111_11111111 where the regime field overrides the exponent.
+        This only comes into play when printed, it does not affect the `2 ** (2 ** es)` componenet.
         """
         return min(self.es, self.size - 1 - self.regime.reg_len)
 
     def mant_len(self):
+        """length of mantissa field"""
         return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
 
     def bit_repr(self):
@@ -109,6 +111,7 @@ class Posit:
                 | shl(self.exp, exp_shift, self.size)
                 | self.mant
             )
+
             if self.sign == 0:
                 return bits
             else:
