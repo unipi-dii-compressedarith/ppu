@@ -140,15 +140,15 @@ class Posit:
             F = self.mant_len()
             if self.es == 0:
                 return (
-                    f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
-                    + f"(2**{REG_COLOR}{self.regime.k}{RESET_COLOR}) * "
+                    f"(-1) ** {SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
+                    + f"(2 ** {REG_COLOR}{self.regime.k}{RESET_COLOR}) * "
                     + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
                 )
             else:
                 return (
-                    f"(-1)**{SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
-                    + f"(2**(2**{EXP_COLOR}{self.es}{RESET_COLOR}))**{REG_COLOR}{self.regime.k}{RESET_COLOR} * "
-                    + f"(2**{EXP_COLOR}{self.exp}{RESET_COLOR}) * "
+                    f"(-1) ** {SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
+                    + f"(2 ** (2 ** {EXP_COLOR}{self.es}{RESET_COLOR})) ** {REG_COLOR}{self.regime.k}{RESET_COLOR} * "
+                    + f"(2 ** {EXP_COLOR}{self.exp}{RESET_COLOR}) * "
                     + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
                 )
 
@@ -173,10 +173,10 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         """
         mant_len = self.mant_len()
         regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[
-            64 - self.regime.reg_len :
+            64 - self.regime._reg_len_bound_checked :
         ]
         exp_bits_str = f"{self.exp:064b}"[
-            64 - min(self.es_effective, self.size - 1 - self.regime.reg_len) :
+            64 - min(self.es_effective, self.size - 1 - self.regime._reg_len_bound_checked) :
         ]
         mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
@@ -196,19 +196,17 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         exponent_binary_repr = get_bin(self.exp, self.size)
         mantissa_binary_repr = get_bin(self.mant, self.size)
 
-        ans = f"P<{self.size},{self.es}>: 0b{get_bin(self.bit_repr(), self.size)}\n"
-        ans += f"{self.color_code()}\n"
+        posit_signature = f"P<{self.size},{self.es}>:"
+        
+        ans = f"{posit_signature:<17}0b{get_bin(self.bit_repr(), self.size)}\n"
+        ans += f"{' ':<19}{self.color_code()}   "
         ans += f"{self.break_down()} = {self.to_real()}\n\n"
         ans += f"{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
-        # ans += f"{'reg_s:':<19}{self.regime.reg_s.real}\n"
-        # ans += f"{'reg_len:':<19}{self.regime.reg_len}\n"
-        # ans += f"k: {self.regime.k}\n"
-        ans += f"{self.regime}\n"
-        ans += f"{'reg:':<19}{ANSI_COLOR_GREY}{regime_binary_repr[:self.size-self.regime.reg_len]}{REG_COLOR}{regime_binary_repr[self.size-self.regime.reg_len:]}{RESET_COLOR}\n"
+        ans += f"{'reg_bits:':<19}{self.regime}\n"
         if self.es:
             ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
         ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
-        ans += f"F = mant_len: {self.mant_len()} -> 2**F = {2**self.mant_len()}\n"
+        ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"
         ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
         return ans
 

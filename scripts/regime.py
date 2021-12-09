@@ -189,12 +189,15 @@ class Regime:
             return self.__dict__ == other.__dict__
         else:
             return False
+    
+    def color_code(self):
+        regime_bits_binary = get_bin(self.calc_reg_bits(), self.size)
+        return f"{ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self._reg_len_bound_checked]}{REG_COLOR}{regime_bits_binary[self.size-self._reg_len_bound_checked:]}{RESET_COLOR}"
 
     def __repr__(self):
-        regime_bits_binary = get_bin(self.calc_reg_bits(), self.size)
         return (
-            f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}\n"
-            + f"regime: {ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self._reg_len_bound_checked]}{REG_COLOR}{regime_bits_binary[self.size-self._reg_len_bound_checked:]}{RESET_COLOR}"
+            f"{self.color_code()} -> " \
+            + f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
         )
 
 
