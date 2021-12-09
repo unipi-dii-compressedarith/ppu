@@ -48,6 +48,8 @@ def _clo(bits, size):
     """count leading ones
     0b1111_0111 -> 4
     """
+    mask = 2 ** size - 1
+    bits &= mask
     if bool(bits & (1 << (size - 1))) == False:
         return 0
     return 1 + _clo(bits << 1, size)
