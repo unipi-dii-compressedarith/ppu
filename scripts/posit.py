@@ -119,12 +119,12 @@ class Posit:
 
             regime_bits = self.regime.calc_reg_bits()
 
-            bits = (
-                shl(self.sign, sign_shift, self.size)
-                | shl(regime_bits, regime_shift, self.size)
-                | shl(self.exp, exp_shift, self.size)
-                | self.mant
-            )
+            _sign = shl(self.sign, sign_shift, self.size)
+            _regime = shl(regime_bits, regime_shift, self.size)
+            _exponent = shl(self.exp, exp_shift, self.size)
+            _mantissa = self.mant
+
+            bits = _sign | _regime | _exponent | _mantissa
 
             if self.sign == 0:
                 return bits
