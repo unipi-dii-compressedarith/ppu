@@ -196,7 +196,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             return "".join(
                 [
                     AnsiColor.SIGN_COLOR,
-                    self.sign.real,
+                    str(self.sign.real),
                     AnsiColor.RESET_COLOR,
                     AnsiColor.ANSI_COLOR_GREY,
                     "0" * (self.size - 1),
