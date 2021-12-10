@@ -43,16 +43,16 @@ def ansilen(s):
 def shl(bits, rhs, size):
     """shift left on `size` bits"""
     mask = (2 ** size) - 1
-    if rhs < 0:
-        dbg_print("shl shifted by a neg number")
+    # if rhs < 0:
+    #     dbg_print("shl shifted by a neg number")
     return (bits << rhs) & mask if rhs > 0 else (bits >> -rhs)
 
 
 def shr(bits, rhs, size):
     """shift right"""
     mask = (2 ** size) - 1
-    if rhs < 0:
-        dbg_print("shr shifted by a neg number")
+    # if rhs < 0:
+    #     dbg_print("shr shifted by a neg number")
     return (bits >> rhs) if rhs > 0 else (bits << -rhs) & mask
 
 

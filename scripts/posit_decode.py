@@ -88,13 +88,8 @@ def decode(bits, size, es) -> Posit:
 
 if __name__ == "__main__":
 
-    print(decode(0b01111111111111111111111111111111, 32, 2))
-
-    decode(0b01111111111111111111111111111101, 32, 2).bit_repr()
-
-    print(decode(0b01111111, 8, 0))
-
-    TESTS = 0
+    
+    TESTS = 1
 
     if TESTS:
 
@@ -123,10 +118,10 @@ if __name__ == "__main__":
                 print(posit.tb())
         """
 
-        N = 16
-        list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
-        for bits in list_of_bits:
-            assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
+        # N = 16
+        # list_of_bits = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+        # for bits in list_of_bits:
+        #     assert decode(bits, 16, 1).to_real() == sp.posit16(bits=bits)
 
         """
         N = 32
@@ -140,6 +135,12 @@ if __name__ == "__main__":
         print(decode(0b11110011, 8, 0))
         print(decode(0b0110011101110011, 16, 1))
         """
+
+    # N = 4
+    # vals = []
+    # for bits in range(2**N-1):
+    #     vals.append(decode(bits, N, 2).to_real())
+    # print(vals)
 
     REPL = 0
     if REPL:
