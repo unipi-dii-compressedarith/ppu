@@ -19,10 +19,8 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     size, es = p1.size, p1.es
     sign = p1.sign ^ p2.sign
 
-    if p1.bit_repr() == msb(size) or p2.bit_repr() == msb(size):
-        return Posit(size, es, sign, Regime(size=size), 0, 0)
-    if p1.bit_repr() == 0 or p2.bit_repr() == 0:
-        return Posit(size, es, sign, Regime(size=size), 0, 0)
+    if p1.is_special or p1.is_special:
+        return Posit(size, es, sign, Regime(size=size, k=None), 0, 0)
 
     F1, F2 = p1.mant_len(), p2.mant_len()
 
@@ -37,6 +35,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     f2 = mant_2_left_aligned | msb(size)
     mant = f1 * f2  # fixed point mantissa product of 1.fff.. * 1.ffff.. on 2N bits
 
+    print(p1.bit_repr(), p2.bit_repr(), size, es)
     print(
         f"""{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f1, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f1, size)[1:]} x
 {' '*size}{AnsiColor.MANT_COLOR}{get_bin(f2, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f2, size)[1:]} =
@@ -46,27 +45,43 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     )
 
     mant_carry = bool((mant & msb(2 * size)) != 0).real
+
     print(f"mant_carry = {AnsiColor.MANT_COLOR}{mant_carry.real}{AnsiColor.RESET_COLOR}")
+    print(
+        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
+    )
+
+    exp_carry = bool((exp & msb(es + 1)) != 0).real
+    if exp_carry == 1:
+        k += 1
+        # wrap exponent
+        exp &= 2 ** es - 1
+
     print(
         f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
     )
 
     if mant_carry == 1:
         exp += 1
-        mant_carry -= 1
+        exp_carry = bool((exp & msb(es + 1)) != 0).real
+        if exp_carry == 1:
+            k += 1
+            # wrap exponent
+            exp &= 2 ** es - 1
         mant = mant >> 1
 
-    exp_carry = bool((exp & msb(es + 1)) != 0).real
-    if exp_carry == 1:
-        k += 1
-        exp >>= 1
+    print(
+        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
+    )
 
-    # k += int(exp / (2**es))
-    # exp = exp % (2**es)
+    if k >= 0:
+        k = min(k, size - 2)
+    else:
+        k = max(k, -(size - 2))
 
     #### fix overflow / underflow of k
 
-    print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
+    # print(f"k + exp + mant_carry = {k} + {exp} + {mant_carry}")
 
     reg_len = Regime(size=size, k=k).reg_len
 
@@ -86,10 +101,19 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     )
 
 
-
-
-
 if __name__ == "__main__":
+
+    p1 = decode(27598, 16, 1)
+    p2 = decode(15701, 16, 1)
+    print(mul(p1, p2))
+
+    p1 = decode(55662, 16, 1)
+    p2 = decode(32244, 16, 1)
+    print(mul(p1, p2))
+
+    p1 = decode(2904643641, 32, 2)
+    p2 = decode(1545728239, 32, 2)
+    print(mul(p1, p2))
 
     p1 = decode(0b00111001110110111000000110101010, 32, 2)
     p2 = decode(0b01100000001111111100000111111001, 32, 2)
@@ -140,10 +164,8 @@ if __name__ == "__main__":
 
     p1 = decode(0b01110000011100001010001111010111, 32, 2)  # 312.3199996948242
     p2 = decode(0b00101100110011001100110011001101, 32, 2)  # 0.20000000018626451
-    print(p1)
-    print(p2)
-    ans = mul(p1, p2)
-    print(ans)
+    ans = mul(p1, p2)  # 62.46400022506714
+    assert ans == decode(0b01100111110011101101100100010111, 32, 2)
 
     p1 = decode(0b0011101000111100, 16, 1)  # 0.81982421875
     p2 = decode(0b0011000011100111, 16, 1)  # 0.5281982421875
@@ -198,12 +220,12 @@ test_mul_inputs = [
         decode(0b01011010011110001010000011101001, 32, 2),
     ),
 ]
+
+
 @pytest.mark.parametrize("test_input,expected", test_mul_inputs)
 def test_cls(test_input, expected):
     # assert mul(*test_input).bit_repr() == expected.bit_repr()
     assert mul(*test_input).to_real() == expected.to_real()
-
-
 
 
 test_mul_p8e0 = [

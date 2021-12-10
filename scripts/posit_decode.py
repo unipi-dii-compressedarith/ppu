@@ -336,9 +336,9 @@ tb = [
         "\x1b[1;37;41m0\x1b[1;30;43m111111111111111111111111111110\x1b[1;37;44m0\x1b[1;37;40m\x1b[0m",
     ),
     (decode(0x0, 8, 7).to_real(), 0),
-    (decode(0x0, 8, 7).color_code(), '\x1b[1;37;41m0\x1b[0m\x1b[90m0000000\x1b[0m'),
+    (decode(0x0, 8, 7).color_code(), "\x1b[1;37;41m0\x1b[0m\x1b[90m0000000\x1b[0m"),
     (decode(0x80, 8, 0).to_real(), inf),
-    (decode(0x80, 8, 0).color_code(), '\x1b[1;37;41m1\x1b[0m\x1b[90m0000000\x1b[0m'),
+    (decode(0x80, 8, 0).color_code(), "\x1b[1;37;41m1\x1b[0m\x1b[90m0000000\x1b[0m"),
 ]
 
 
