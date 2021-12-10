@@ -3,20 +3,7 @@ import pytest
 from numpy import inf
 import re
 
-get_bin = lambda x, n: format(x, "b").zfill(n)
-get_hex = lambda x, n: format(x, "x").zfill(n)
-
-ANSI_COLOR_CYAN = "\x1b[36m"
-ANSI_COLOR_GREY = "\x1b[90m"
-
-RESET_COLOR = "\033[0m"
-SIGN_COLOR = "\033[1;37;41m"
-REG_COLOR = "\033[1;30;43m"
-EXP_COLOR = "\033[1;37;44m"
-MANT_COLOR = "\033[1;37;40m"
-
-dbg_print = lambda s: print(f"{ANSI_COLOR_GREY}{s}{RESET_COLOR}")
-
+from utils import get_bin, get_hex, shl, c2, AnsiColor
 
 # https://github.com/jonathaneunice/colors/blob/c965f5b9103c5bd32a1572adb8024ebe83278fb0/colors/colors.py#L122
 def strip_color(s):
@@ -38,28 +25,6 @@ def ansilen(s):
     length be without those codes?
     """
     return len(strip_color(s))
-
-
-def shl(bits, rhs, size):
-    """shift left on `size` bits"""
-    mask = (2 ** size) - 1
-    # if rhs < 0:
-    #     dbg_print("shl shifted by a neg number")
-    return (bits << rhs) & mask if rhs > 0 else (bits >> -rhs)
-
-
-def shr(bits, rhs, size):
-    """shift right"""
-    mask = (2 ** size) - 1
-    # if rhs < 0:
-    #     dbg_print("shr shifted by a neg number")
-    return (bits >> rhs) if rhs > 0 else (bits << -rhs) & mask
-
-
-def c2(bits, size):
-    """two's complement on `size` bits"""
-    mask = (2 ** size) - 1
-    return (~bits & mask) + 1
 
 
 def cls(bits, size, val=1):
@@ -177,16 +142,16 @@ class Posit:
             F = self.mant_len()
             if self.es == 0:
                 return (
-                    f"(-1) ** {SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
-                    + f"(2 ** {REG_COLOR}{self.regime.k}{RESET_COLOR}) * "
-                    + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                    f"(-1) ** {AnsiColor.SIGN_COLOR}{self.sign.real}{AnsiColor.RESET_COLOR} * "
+                    + f"(2 ** {AnsiColor.REG_COLOR}{self.regime.k}{AnsiColor.RESET_COLOR}) * "
+                    + f"(1 + {AnsiColor.MANT_COLOR}{self.mant}{AnsiColor.RESET_COLOR}/{2**F})"
                 )
             else:
                 return (
-                    f"(-1) ** {SIGN_COLOR}{self.sign.real}{RESET_COLOR} * "
-                    + f"(2 ** (2 ** {EXP_COLOR}{self.es}{RESET_COLOR})) ** {REG_COLOR}{self.regime.k}{RESET_COLOR} * "
-                    + f"(2 ** {EXP_COLOR}{self.exp}{RESET_COLOR}) * "
-                    + f"(1 + {MANT_COLOR}{self.mant}{RESET_COLOR}/{2**F})"
+                    f"(-1) ** {AnsiColor.SIGN_COLOR}{self.sign.real}{AnsiColor.RESET_COLOR} * "
+                    + f"(2 ** (2 ** {AnsiColor.EXP_COLOR}{self.es}{AnsiColor.RESET_COLOR})) ** {AnsiColor.REG_COLOR}{self.regime.k}{AnsiColor.RESET_COLOR} * "
+                    + f"(2 ** {AnsiColor.EXP_COLOR}{self.exp}{AnsiColor.RESET_COLOR}) * "
+                    + f"(1 + {AnsiColor.MANT_COLOR}{self.mant}{AnsiColor.RESET_COLOR}/{2**F})"
                 )
 
     def tb(self):
@@ -214,22 +179,29 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
             ans = {
-                "sign_color": SIGN_COLOR,
+                "sign_color": AnsiColor.SIGN_COLOR,
                 "sign_val": str(self.sign.real),
-                "reg_color": REG_COLOR,
+                "reg_color": AnsiColor.REG_COLOR,
                 "reg_bits": regime_bits_str,
-                "exp_color": EXP_COLOR,
+                "exp_color": AnsiColor.EXP_COLOR,
                 "exp_bits": exp_bits_str,
-                "mant_color": MANT_COLOR,
+                "mant_color": AnsiColor.MANT_COLOR,
                 "mant_bits": mant_bits_str,
-                "ansi_reset": RESET_COLOR,
+                "ansi_reset": AnsiColor.RESET_COLOR,
             }
         return ans
 
     def color_code(self, trimmed=True) -> str:
         if self.is_special:
             return "".join(
-                [SIGN_COLOR, self.sign.real, RESET_COLOR, ANSI_COLOR_GREY, "0" * (self.size - 1), RESET_COLOR]
+                [
+                    AnsiColor.SIGN_COLOR,
+                    self.sign.real,
+                    AnsiColor.RESET_COLOR,
+                    AnsiColor.ANSI_COLOR_GREY,
+                    "0" * (self.size - 1),
+                    AnsiColor.RESET_COLOR,
+                ]
             )
 
         color_code_dict: Dict[str, str] = self._color_code()
@@ -275,18 +247,18 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
         # posit broken down
         ans += f"{self.break_down()} = {self.to_real()}\n"
         # sign
-        ans += f"\n{'s:':<19}{SIGN_COLOR}{self.sign.real}{RESET_COLOR}\n"
+        ans += f"\n{'s:':<19}{AnsiColor.SIGN_COLOR}{self.sign.real}{AnsiColor.RESET_COLOR}\n"
         if self.is_special == False:
             # regime
             ans += f"{'reg_bits:':<19}{self.regime}\n"
             # exponent
             if self.es:
-                ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{RESET_COLOR}\n"
+                ans += f"{'exp:':<19}{AnsiColor.ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es]}{AnsiColor.EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{AnsiColor.RESET_COLOR}\n"
             # mantissa
-            ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
+            ans += f"{'mant:':<19}{AnsiColor.ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{AnsiColor.MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{AnsiColor.RESET_COLOR}\n"
             # ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"
         ans += f"{' ':<19}{''.join(self.color_code(trimmed=False))}   \n"
-        ans += f"{ANSI_COLOR_CYAN}{'~'*45}{RESET_COLOR}\n"
+        ans += f"{AnsiColor.ANSI_COLOR_CYAN}{'~'*45}{AnsiColor.RESET_COLOR}\n"
         return ans
 
 

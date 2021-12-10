@@ -88,7 +88,6 @@ def decode(bits, size, es) -> Posit:
 
 if __name__ == "__main__":
 
-    
     TESTS = 1
 
     if TESTS:

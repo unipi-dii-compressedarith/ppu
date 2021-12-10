@@ -5,17 +5,7 @@ from regime import Regime
 import pytest
 import os
 
-
-RESET_COLOR = "\033[0m"
-SIGN_COLOR = "\033[1;37;41m"
-REG_COLOR = "\033[1;30;43m"
-EXP_COLOR = "\033[1;37;44m"
-MANT_COLOR = "\033[1;37;40m"
-
-
-def shl(bits, rhs, size):
-    mask = (2 ** size) - 1
-    return (bits << rhs) & mask if rhs > 0 else bits
+from utils import shl
 
 
 msb = lambda N: shl(1, N - 1, N)  # 8bits: 1 << 8 i.e. 1000_0000
