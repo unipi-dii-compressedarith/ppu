@@ -12,7 +12,7 @@ class Regime:
     def __init__(self, size, k=None):
         """k is None when the regime represents a 0 or infinity posit."""
         self.size = size
-        if k == None or (k <= (size - 2) and k >= (-size + 1)):
+        if k == None or (k <= (size - 2) and k >= (-size + 2)):
             self.k = k
         else:
             raise Exception("k is out of bound")
@@ -48,17 +48,17 @@ class Regime:
         """
         if self.k == None:  # 0 or inf
             return None
-        return min(self.size - 1, self.reg_len) # bound checked
-        
-        
+        return min(self.size - 1, self.reg_len)  # bound checked
+
     def calc_reg_bits(self):
         if self.k == None:
             return 0
         elif self.k >= 0:
-            if self.reg_len < self.size:
-                return (2 ** (self.k + 1) - 1) << 1
-            else:
-                return 2 ** (self.k + 1) - 1
+            # if self.reg_len < self.size:
+            #     return (2 ** (self.k + 1) - 1) << 1
+            # else:
+            #     return 2 ** (self.k + 1) - 1
+            return (2 ** (self.k + 1) - 1) << 1
         else:
             if self.reg_len < self.size:
                 return 1
@@ -68,12 +68,6 @@ class Regime:
                 # (reg_s, reg_len) = (0, 8) -> k = -7
                 # regime: 00000000
                 return 0
-            mask = 2 ** self.size - 1
-            return ~((2 ** (-self.k) - 1) << 1) & mask
-
-    # def get_bits(self, size):
-    #     mask = 2**size - 1
-    #     return self.bits  # ~ (~1 << (self.reg_len - 2) << 1) & mask
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -83,7 +77,7 @@ class Regime:
 
     def color_code(self):
         regime_bits_binary = get_bin(self.calc_reg_bits(), self.size)
-        return f"{ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self._reg_len_bound_checked]}{REG_COLOR}{regime_bits_binary[self.size-self._reg_len_bound_checked:]}{RESET_COLOR}"
+        return f"{ANSI_COLOR_GREY}{regime_bits_binary[:self.size - self.reg_len]}{REG_COLOR}{regime_bits_binary[self.size-self.reg_len:]}{RESET_COLOR}"
 
     def __repr__(self):
         return f"{self.color_code()} -> " + f"(reg_s, reg_len) = ({self.reg_s}, {self.reg_len}) -> k = {self.k}"
@@ -99,14 +93,21 @@ tb = [
     (Regime(size=8, k=0).calc_reg_bits(), 0b00000010),
     (Regime(size=8, k=-3).calc_reg_bits(), 0b00000001),
     (Regime(size=8).calc_reg_bits(), 0b00000000),
-    (
-        Regime(size=16, k=14).calc_reg_bits(),
-        0b0111111111111111,
-    ),  # technically true but it needs to be >> 1 later on because it doesn't fit.
+    (Regime(size=16, k=14).calc_reg_bits(), 0b1111111111111110),
     (Regime(size=16, k=13).calc_reg_bits(), 0b111111111111110),
+    (Regime(8, -4).color_code(), "\x1b[90m000\x1b[1;30;43m00001\x1b[0m"),
+    (Regime(8, 5).color_code(), "\x1b[90m0\x1b[1;30;43m1111110\x1b[0m"),
+    (Regime(8, 6).color_code(), "\x1b[90m\x1b[1;30;43m11111110\x1b[0m"),
 ]
 
 
 @pytest.mark.parametrize("left,right", tb)
 def test_regime(left, right):
     assert left == right
+
+
+def test_invalid_regime():
+    with pytest.raises(Exception):
+        # Regime(8, -7)
+        # Out[15]: 00000000 -> (reg_s, reg_len) = (0, 8) -> k = -7
+        Regime(size=8, k=-7).calc_reg_bits()

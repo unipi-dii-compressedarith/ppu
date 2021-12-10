@@ -36,6 +36,9 @@ def decode(bits, size, es) -> Posit:
     Posit object
     """
 
+    if es > size - 1:
+        raise ValueError("`es` field can't be larger than the full posit itself.")
+
     mask = (2 ** size) - 1
     msb = 1 << (size - 1)
     sign = bits >> (size - 1)
@@ -51,12 +54,14 @@ def decode(bits, size, es) -> Posit:
     reg_s = bool(u_bits & reg_msb)
     if reg_s == True:
         k = cls(u_bits << 1, size, 1) - 1
-        # reg_len = min(k + 2, size - 1)
+        reg_len = 2 + k  # min(k + 2, size - 1)
     else:
         k = -cls(u_bits << 1, size, 0)
-        # reg_len = min(-k + 1, size - 1)
+        reg_len = 1 - k  # min(-k + 1, size - 1)
 
-    reg_len = Regime(size, k).reg_len
+    r = Regime(size=size, k=k)
+
+    assert r.reg_len == reg_len
 
     regime_bits = ((u_bits << 1) & mask) >> (size - reg_len)
 
@@ -65,13 +70,13 @@ def decode(bits, size, es) -> Posit:
     # align remaining of u_bits to the left after dropping sign (1 bit) and regime (`reg_len` bits)
     exp = ((u_bits << (1 + reg_len)) & mask) >> (size - es)  # max((size - es), (size - 1 - reg_len))
 
-    mant = ((u_bits << (1 + reg_len + es_effective)) & mask) >> (1 + reg_len + es_effective)
+    mant = ((u_bits << (1 + reg_len + es)) & mask) >> (1 + reg_len + es)
 
     posit = Posit(
         size=size,
         es=es,
         sign=sign,
-        regime=Regime(size=size, k=k),
+        regime=r,
         exp=exp,
         mant=mant,
     )
@@ -83,7 +88,9 @@ def decode(bits, size, es) -> Posit:
 
 if __name__ == "__main__":
 
-    print(decode(0b01111111111111111111111111111101, 32, 2))
+    print(decode(0b01111111111111111111111111111111, 32, 2))
+
+    decode(0b01111111111111111111111111111101, 32, 2).bit_repr()
 
     print(decode(0b01111111, 8, 0))
 
@@ -313,6 +320,31 @@ tb = [
         decode(0b10000000000000000000000000000001, 32, 2).bit_repr(),
         0b10000000000000000000000000000001,  # wrong
     ),
+    (
+        decode(0b01111111111111111111111111111111, 32, 2).to_real(), 1.329227995784916e+36
+    ),
+    (
+        decode(0b01111111111111111111111111111111, 32, 2).color_code(),
+        '\x1b[1;37;41m0\x1b[1;30;43m1111111111111111111111111111111\x1b[1;37;44m\x1b[1;37;40m\x1b[0m' # fails due to regime shift wrong
+    ),
+    (
+        decode(0b01111111111111111111111111111110, 32, 2).to_real(), 8.307674973655724e+34
+    ),
+    (
+        decode(0b01111111111111111111111111111110, 32, 2).color_code(), 
+        '\x1b[1;37;41m0\x1b[1;30;43m1111111111111111111111111111110\x1b[1;37;44m\x1b[1;37;40m\x1b[0m'
+    ),
+    (
+        decode(0b01111111111111111111111111111100, 32, 2).to_real(), 5.192296858534828e+33
+    ),
+    (
+        decode(0b01111111111111111111111111111100, 32, 2).color_code(),
+        '\x1b[1;37;41m0\x1b[1;30;43m111111111111111111111111111110\x1b[1;37;44m0\x1b[1;37;40m\x1b[0m'
+    )
+
+
+
+
 ]
 
 

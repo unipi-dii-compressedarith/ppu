@@ -18,12 +18,17 @@ MANT_COLOR = "\033[1;37;40m"
 def shl(bits, rhs, size):
     """shift left on `size` bits"""
     mask = (2 ** size) - 1
-    return (bits << rhs) & mask if rhs > 0 else bits
+    if rhs < 0:
+        print("shl shifted by a neg number")
+    return (bits << rhs) & mask if rhs > 0 else (bits >> -rhs)
 
 
-def shr(bits, rhs):
+def shr(bits, rhs, size):
     """shift right"""
-    return bits >> rhs if rhs > 0 else bits
+    mask = (2 ** size) - 1
+    if rhs < 0:
+        print("shr shifted by a neg number")
+    return (bits >> rhs) if rhs > 0 else (bits << -rhs) & mask
 
 
 def c2(bits, size):
@@ -63,6 +68,8 @@ def _clz(bits, size):
 
 
 class Posit:
+    BIAS_REPR = 10
+
     def __init__(self, size, es, sign, regime, exp, mant):
         self.size = size
         self.es = es
@@ -85,24 +92,24 @@ class Posit:
         """
         zero or infinity
         """
-        return self.bit_repr() == 0 or self.bit_repr() == (1 << (self.size - 1))
+        return self.regime.k == None
 
-
-    @property
-    def es_effective(self):
-        """the actual size of the exponent field.
-        This takes into account the cases such as
-        P<16,0> 0b01111111_11111111 where the regime field overrides the exponent.
-        This only comes into play when printed, it does not affect the `2 ** (2 ** es)` componenet.
-        """
-        return min(self.es, self.size - 1 - self.regime.reg_len)
+    # @property
+    # def es_effective(self):
+    #     """the actual size of the exponent field.
+    #     This takes into account the cases such as
+    #     P<16,0> 0b01111111_11111111 where the regime field overrides the exponent.
+    #     This only comes into play when printed, it does not affect the `2 ** (2 ** es)` componenet.
+    #     """
+    #     return min(self.es, self.size - 1 - self.regime.reg_len)
 
     def mant_len(self):
         """length of mantissa field"""
-        if self.is_special == False:
-            return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
-        else:
-            None
+        if self.is_special:  # there is no such thing as mantissa in a 0 / infinity
+            return None
+
+        # return max(0, self.size - 1 - self.regime.reg_len - self.es_effective)
+        return self.size - 1 - self.regime.reg_len - self.es
 
     def bit_repr(self):
         """
@@ -112,27 +119,27 @@ class Posit:
         0_0000_e_00 |     exp
         0_0000_0_mm |     mant
         """
-        if self.regime.reg_len == None:  # 0 or inf
+        if self.is_special:
             return 0 if self.sign == 0 else (1 << (self.size - 1))
+
+        sign_shift = self.size - 1
+        regime_shift = sign_shift - self.regime.reg_len
+        exp_shift = regime_shift - self.es
+
+        regime_bits = self.regime.calc_reg_bits()
+
+        _sign = shl(self.sign, sign_shift, self.size)
+        _regime = shl(regime_bits, regime_shift, self.size)
+        _exponent = shl(self.exp, exp_shift, self.size)
+        _mantissa = self.mant
+
+        bits = _sign | _regime | _exponent | _mantissa
+
+        if self.sign == 0:
+            return bits
         else:
-            sign_shift = self.size - 1
-            regime_shift = self.size - 1 - self.regime.reg_len
-            exp_shift = self.size - 1 - self.regime.reg_len - self.es_effective
-
-            regime_bits = self.regime.calc_reg_bits()
-
-            _sign = shl(self.sign, sign_shift, self.size)
-            _regime = shl(regime_bits, regime_shift, self.size)
-            _exponent = shl(self.exp, exp_shift, self.size)
-            _mantissa = self.mant
-
-            bits = _sign | _regime | _exponent | _mantissa
-
-            if self.sign == 0:
-                return bits
-            else:
-                # ~(1 << (self.size - 1)) = 0x7f if 8 bits
-                return c2(bits & ~(1 << (self.size - 1)), self.size)
+            # ~(1 << (self.size - 1)) = 0x7f if 8 bits
+            return c2(bits & ~(1 << (self.size - 1)), self.size)
 
     def to_real(self):
         if self.regime.reg_len == None:  # 0 or inf
@@ -191,14 +198,8 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             ans = f"{SIGN_COLOR}{self.sign.real}{RESET_COLOR}" + f"{ANSI_COLOR_GREY}{'0'*(self.size-1)}{RESET_COLOR}"
         else:
             mant_len = self.mant_len()
-            regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[64 - self.regime._reg_len_bound_checked :]
-            exp_bits_str = f"{self.exp:064b}"[
-                64
-                - min(
-                    self.es_effective,
-                    self.size - 1 - self.regime._reg_len_bound_checked,
-                ) :
-            ]
+            regime_bits_str = f"{self.regime.calc_reg_bits():064b}"[64 - self.regime.reg_len:]
+            exp_bits_str = f"{self.exp:064b}"[64- self.es :]
             mant_bits_str = f"{self.mant:064b}"[64 - mant_len :]
 
             ans_no_color = f"{self.sign.real}{regime_bits_str}{exp_bits_str}{mant_bits_str}"
@@ -214,12 +215,14 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
 
     def __repr__(self):
         regime_binary_repr = get_bin(self.regime.calc_reg_bits(), self.size)
-        exponent_binary_repr = get_bin(self.exp >> (self.es - self.es_effective), self.size)
+        exponent_binary_repr = get_bin(self.exp, self.size)
         mantissa_binary_repr = get_bin(self.mant, self.size)
+
+        posit_bit_repr = self.bit_repr()
 
         # signature
         posit_signature = f"P<{self.size},{self.es}>:"
-        ans = f"{posit_signature:<17}0b{get_bin(self.bit_repr(), self.size)}   0x{get_hex(self.bit_repr(), int(self.size/4))}\n"
+        ans = f"{posit_signature:<17}0b{get_bin(posit_bit_repr, self.size)}   0x{get_hex(posit_bit_repr, int(self.size/4))}\n"
         # color
         ans += f"{' ':<19}{self.color_code()}   "
         # posit broken down
@@ -231,7 +234,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             ans += f"{'reg_bits:':<19}{self.regime}\n"
             # exponent
             if self.es:
-                ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es_effective]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es_effective:]}{RESET_COLOR}\n"
+                ans += f"{'exp:':<19}{ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es]}{EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{RESET_COLOR}\n"
             # mantissa
             ans += f"{'mant:':<19}{ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{RESET_COLOR}\n"
             # ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"
