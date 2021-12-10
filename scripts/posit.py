@@ -253,7 +253,7 @@ mant_expected        = {self.size}'b{get_bin(self.mant, self.size)};
             ans += f"{'reg_bits:':<19}{self.regime}\n"
             # exponent
             if self.es:
-                ans += f"{'exp:':<19}{AnsiColor.ANSI_COLOR_GREY}{exponent_binary_repr[:self.size-self.es]}{AnsiColor.EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{AnsiColor.RESET_COLOR}\n"
+                ans += f"{'exp:':<19}{' '*(self.size- self.es)}{AnsiColor.EXP_COLOR}{exponent_binary_repr[self.size-self.es:]}{AnsiColor.RESET_COLOR}\n"
             # mantissa
             ans += f"{'mant:':<19}{AnsiColor.ANSI_COLOR_GREY}{mantissa_binary_repr[:self.size-self.mant_len()]}{AnsiColor.MANT_COLOR}{mantissa_binary_repr[self.size-self.mant_len():]}{AnsiColor.RESET_COLOR}\n"
             # ans += f"F = mant_len: {self.mant_len()} -> 2 ** F = {2**self.mant_len()}\n"

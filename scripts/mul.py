@@ -5,7 +5,7 @@ from regime import Regime
 import pytest
 import os
 
-from utils import shl
+from utils import shl, AnsiColor
 
 
 msb = lambda N: shl(1, N - 1, N)  # 8bits: 1 << 8 i.e. 1000_0000
@@ -38,17 +38,17 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     mant = f1 * f2  # fixed point mantissa product of 1.fff.. * 1.ffff.. on 2N bits
 
     print(
-        f"""{' '*size}{MANT_COLOR}{get_bin(f1, size)[:1]}{RESET_COLOR}{get_bin(f1, size)[1:]} x
-{' '*size}{MANT_COLOR}{get_bin(f2, size)[:1]}{RESET_COLOR}{get_bin(f2, size)[1:]} =
+        f"""{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f1, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f1, size)[1:]} x
+{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f2, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f2, size)[1:]} =
 {'-'*(2*size + 2)}
-{MANT_COLOR}{get_bin(mant, 2*size)[:2]}{RESET_COLOR}{get_bin(mant, 2*size)[2:]}
+{AnsiColor.MANT_COLOR}{get_bin(mant, 2*size)[:2]}{AnsiColor.RESET_COLOR}{get_bin(mant, 2*size)[2:]}
 """
     )
 
     mant_carry = bool((mant & msb(2 * size)) != 0).real
-    print(f"mant_carry = {MANT_COLOR}{mant_carry.real}{RESET_COLOR}")
+    print(f"mant_carry = {AnsiColor.MANT_COLOR}{mant_carry.real}{AnsiColor.RESET_COLOR}")
     print(
-        f"k + exp + mant_carry = {REG_COLOR}{k}{RESET_COLOR} + {EXP_COLOR}{exp}{RESET_COLOR} + {MANT_COLOR}{mant_carry}{RESET_COLOR}"
+        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
     )
 
     if mant_carry == 1:
@@ -84,6 +84,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
         exp=exp,
         mant=mant,
     )
+
+
+
 
 
 if __name__ == "__main__":
@@ -195,12 +198,12 @@ test_mul_inputs = [
         decode(0b01011010011110001010000011101001, 32, 2),
     ),
 ]
-
-
 @pytest.mark.parametrize("test_input,expected", test_mul_inputs)
 def test_cls(test_input, expected):
     # assert mul(*test_input).bit_repr() == expected.bit_repr()
     assert mul(*test_input).to_real() == expected.to_real()
+
+
 
 
 test_mul_p8e0 = [
