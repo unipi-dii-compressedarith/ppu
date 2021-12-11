@@ -5,7 +5,7 @@ from regime import Regime
 import pytest
 import os
 
-from utils import shl, AnsiColor
+from utils import shl, AnsiColor, dbg_print
 
 
 msb = lambda N: shl(1, N - 1, N)  # 8bits: 1 << 8 i.e. 1000_0000
@@ -19,7 +19,7 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     size, es = p1.size, p1.es
     sign = p1.sign ^ p2.sign
 
-    if p1.is_special or p1.is_special:
+    if p1.is_special or p2.is_special:
         return Posit(size, es, sign, Regime(size=size, k=None), 0, 0)
 
     F1, F2 = p1.mant_len(), p2.mant_len()
@@ -35,21 +35,21 @@ def mul(p1: Posit, p2: Posit) -> Posit:
     f2 = mant_2_left_aligned | msb(size)
     mant = f1 * f2  # fixed point mantissa product of 1.fff.. * 1.ffff.. on 2N bits
 
-    print(p1.bit_repr(), p2.bit_repr(), size, es)
-    print(
-        f"""{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f1, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f1, size)[1:]} x
-{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f2, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f2, size)[1:]} =
-{'-'*(2*size + 2)}
-{AnsiColor.MANT_COLOR}{get_bin(mant, 2*size)[:2]}{AnsiColor.RESET_COLOR}{get_bin(mant, 2*size)[2:]}
-"""
-    )
+    # print(p1.bit_repr(), p2.bit_repr(), size, es)
+#     dbg_print(
+#         f"""{' '*size}{AnsiColor.MANT_COLOR}{get_bin(f1, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f1, size)[1:]} x
+# {' '*size}{AnsiColor.MANT_COLOR}{get_bin(f2, size)[:1]}{AnsiColor.RESET_COLOR}{get_bin(f2, size)[1:]} =
+# {'-'*(2*size + 2)}
+# {AnsiColor.MANT_COLOR}{get_bin(mant, 2*size)[:2]}{AnsiColor.RESET_COLOR}{get_bin(mant, 2*size)[2:]}
+# """
+#     )
 
     mant_carry = bool((mant & msb(2 * size)) != 0).real
 
-    print(f"mant_carry = {AnsiColor.MANT_COLOR}{mant_carry.real}{AnsiColor.RESET_COLOR}")
-    print(
-        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
-    )
+    # dbg_print(f"mant_carry = {AnsiColor.MANT_COLOR}{mant_carry.real}{AnsiColor.RESET_COLOR}")
+    # dbg_print(
+    #     f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
+    # )
 
     exp_carry = bool((exp & msb(es + 1)) != 0).real
     if exp_carry == 1:
@@ -57,9 +57,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
         # wrap exponent
         exp &= 2 ** es - 1
 
-    print(
-        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
-    )
+    # dbg_print(
+    #     f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
+    # )
 
     if mant_carry == 1:
         exp += 1
@@ -70,9 +70,9 @@ def mul(p1: Posit, p2: Posit) -> Posit:
             exp &= 2 ** es - 1
         mant = mant >> 1
 
-    print(
-        f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
-    )
+    # dbg_print(
+    #     f"k + exp + mant_carry = {AnsiColor.REG_COLOR}{k}{AnsiColor.RESET_COLOR} + {AnsiColor.EXP_COLOR}{exp}{AnsiColor.RESET_COLOR} + {AnsiColor.MANT_COLOR}{mant_carry}{AnsiColor.RESET_COLOR}"
+    # )
 
     if k >= 0:
         k = min(k, size - 2)
@@ -219,6 +219,7 @@ test_mul_inputs = [
         ),
         decode(0b01011010011110001010000011101001, 32, 2),
     ),
+    ((decode(0b01111110, 8, 0), decode(0b01111000, 8, 0)), decode(0b01111111, 8, 0)),
 ]
 
 

@@ -339,6 +339,14 @@ tb = [
     (decode(0x0, 8, 7).color_code(), "\x1b[1;37;41m0\x1b[0m\x1b[90m0000000\x1b[0m"),
     (decode(0x80, 8, 0).to_real(), inf),
     (decode(0x80, 8, 0).color_code(), "\x1b[1;37;41m1\x1b[0m\x1b[90m0000000\x1b[0m"),
+    (
+        decode(0b000110111011101, 16, 3).to_real(),
+        3.553926944732666e-06,
+    ),  # Gustafson example from 'Posit Arithmetic John L. Gustafson 10 October 2017' page 6
+    (
+        decode(0b000110111011101, 16, 3).color_code(),
+        "\x1b[1;37;41m0\x1b[1;30;43m0001\x1b[1;37;44m101\x1b[1;37;40m11011101\x1b[0m",
+    ),
 ]
 
 
