@@ -6,27 +6,31 @@ import enum
 
 import p8e0
 
-N = 8 # num bits
+N = 8  # num bits
 
 NUM_RANDOM_TEST_CASES = 200
 TEST_ALL_COMBINATIONS = False
 
-class Tb(enum.Enum):
-    MUL = 'mul'
-    ADD = 'add'
-    def __str__(self): return self.value
 
-parser = argparse.ArgumentParser(description='Generate test benches')
-parser.add_argument('--operation',
-                    type=Tb,
-                    choices=list(Tb),
-                    required=True,
-                    help='Type of test bench: adder/multiplier/etc')
-parser.add_argument('--shuffle-random',
-                    type=bool,
-                    default=False,
-                    required=False,
-                    help='Shuffle random')
+class Tb(enum.Enum):
+    MUL = "mul"
+    ADD = "add"
+
+    def __str__(self):
+        return self.value
+
+
+parser = argparse.ArgumentParser(description="Generate test benches")
+parser.add_argument(
+    "--operation",
+    type=Tb,
+    choices=list(Tb),
+    required=True,
+    help="Type of test bench: adder/multiplier/etc",
+)
+parser.add_argument(
+    "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
+)
 
 args = parser.parse_args()
 
@@ -40,20 +44,19 @@ ans_preamble = f"""/*-------------------------------------+
  | {datetime.datetime.now().strftime('%c')}            |
  +-------------------------------------*/
 """
-  
 
 
 if TEST_ALL_COMBINATIONS:
     list_a = []
     list_b = []
-    for i in range(2**N):
-        for j in range(i, 2**N):
+    for i in range(2 ** N):
+        for j in range(i, 2 ** N):
             list_a.append(i)
             list_b.append(j)
     print(f"{len(list_a)=}")
-else: # test NUM_RANDOM_TEST_CASES tests. 
-    list_a = random.sample(range(0, 2**N - 1), NUM_RANDOM_TEST_CASES)
-    list_b = random.sample(range(0, 2**N - 1), NUM_RANDOM_TEST_CASES)
+else:  # test NUM_RANDOM_TEST_CASES tests.
+    list_a = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
+    list_b = random.sample(range(0, 2 ** N - 1), NUM_RANDOM_TEST_CASES)
 
 # print 8-bits hex or bin repr of `val`. _bin8(3) = "0b00000011"
 _hex8 = lambda val: f"8'h{val:02x}"
@@ -61,9 +64,8 @@ _bin8 = lambda val: f"8'b{val:08b}"
 
 
 # force add a few special testcases first
-list_a = [0b01111010, 0x00, 0x80] + list_a 
+list_a = [0b01111010, 0x00, 0x80] + list_a
 list_b = [0b01011000, 0x03, 0x90] + list_b
-
 
 
 PLACEHOLDER = "/*{add stuff here}*/"
@@ -89,7 +91,7 @@ if args.operation == Tb.MUL:
         rcarry = ans_p8e0_mul.rcarry
 
         counter += 1
-        
+
         body += f"""    
                     test_no =   {counter};
                     a =         {_hex8(a)}; /* {sp.posit8(bits=a)} */
@@ -117,10 +119,8 @@ if args.operation == Tb.MUL:
     ans = ans.replace(PLACEHOLDER, body)
 
     output = "tb_p8e0_mul.sv"
-    with open(output, "w") as f: 
-        print(f'Wrote {output}; {f.write(ans)} characters')
-
-
+    with open(output, "w") as f:
+        print(f"Wrote {output}; {f.write(ans)} characters")
 
 
 ############### addder ################
@@ -130,12 +130,12 @@ if args.operation == Tb.ADD:
     counter = 0
     body = ""
     for a, b in zip(list_a, list_b):
-        if (a ^ b) & 0x80 == 0:                  # <-- only testing opposite sign numbers, remove later
+        if (a ^ b) & 0x80 == 0:  # <-- only testing opposite sign numbers, remove later
             ans_p8e0_add = p8e0.add(a, b)
             z = ans_p8e0_add.z
 
             counter += 1
-            
+
             body += f"""    
                         test_no =   {counter};
                         a =         {_hex8(a)}; /* {sp.posit8(bits=a)} */
@@ -155,5 +155,4 @@ if args.operation == Tb.ADD:
 
     output = "tb_p8e0_add.sv"
     with open(output, "w") as f:
-        print(f'Wrote {output}; {f.write(ans)} characters')
-
+        print(f"Wrote {output}; {f.write(ans)} characters")

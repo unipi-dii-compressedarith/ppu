@@ -9,16 +9,16 @@ import os
 
 try:
     file = sys.argv[1]
-    if file not in os.listdir('.'):
+    if file not in os.listdir("."):
         print(f"{file} not in current dir")
         exit(1)
 except:
     print("give me a file")
     exit(1)
 
-    
-with open(file, 'r') as f:
+
+with open(file, "r") as f:
     content = f.read()
 
-num = content.count('Latch inferred for signal')
+num = content.count("Latch inferred for signal")
 print(f"{num} inferred latches in {file}")
