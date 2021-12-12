@@ -65,7 +65,7 @@ module highest_set_v2 #(
     assign _wire[N-1] = 1;
     assign index_bit[N-1] = bits[N-1];
 
-    assign index = $clog2(index_bit);
+    assign index = $clog2(index_bit); //// achtung, fails to synthesize.
 endmodule
 
 

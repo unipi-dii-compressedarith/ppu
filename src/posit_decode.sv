@@ -1,7 +1,7 @@
 /*
-iverilog -DTEST_BENCH_DECODE posit_decode.sv clo.sv highest_set.sv && ./a.out
+iverilog -DTEST_BENCH_DECODE posit_decode.sv cls.sv highest_set.sv && ./a.out
 
-yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" posit_decode.sv clo.sv highest_set.sv > yosys_intel.out
+yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" posit_decode.sv cls.sv highest_set.sv > yosys_intel.out
 
 */
 module posit_decode #(
@@ -55,7 +55,7 @@ module posit_decode #(
 
     
     // count leading X
-    clo #(
+    cls #(
         .N(N),
         .S(S)
     ) clo_inst_o (
@@ -63,7 +63,7 @@ module posit_decode #(
         .leading_ones       (leading_ones),
         .index_highest_set  ()
     );
-    clo #(
+    cls #(
         .N(N),
         .S(S)
     ) clo_inst_z (
