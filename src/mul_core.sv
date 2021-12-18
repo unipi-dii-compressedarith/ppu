@@ -1,5 +1,9 @@
 /*
+## === ES: 0 ====#
 iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD mul_core.sv && ./a.out
+
+## === ES: not 0 ====#
+iverilog -DTEST_BENCH_MUL_CORE mul_core.sv && ./a.out
 
 
 TODO: get rid of unnecessary flags
@@ -74,12 +78,12 @@ module mul_core #(
     assign exp = 0;
 `endif
 
-
-    wire [N-1:0] f1, f2;
     
     wire [S-1:0] F1, F2; // mantissae field size
     assign F1 = N - 1 - p1_reg_len - ES;
     assign F2 = N - 1 - p2_reg_len - ES;
+    
+    wire [N-1:0] f1, f2; // mantissae fields, left aligned (N bits)
     assign f1 = MSB | p1_mant << (N - 1 - F1);
     assign f2 = MSB | p2_mant << (N - 1 - F2);
 
@@ -139,6 +143,7 @@ module mul_core #(
     wire [S-1:0] reg_len;
     assign reg_len = k_adjusted_III >= 0 ? k_adjusted_III + 2 : -k_adjusted_III + 1; // not bound checked
 
+    wire [N-1:0] mant_len;
     assign mant_len = N - 1 - ES - reg_len;
 
     wire [(2*N)-1:0] mant_fraction_only;
