@@ -1,5 +1,12 @@
 /*
-iverilog -DTEST_BENCH_CALC_REGIME_BITS calc_regime_bits.sv && ./a.out
+
+Description:
+    This module takes the regime sign `reg_s` and the regime length `reg_len`
+    and outputs the actual regime sequence `regime_bits`.
+
+Usage:
+    cd $PROJECT_ROOT/waveforms
+    iverilog -DTEST_BENCH_CALC_REGIME_BITS -o calc_regime_bits.out ../src/calc_regime_bits.sv && ./calc_regime_bits.out
 */
 module calc_regime_bits #(
         parameter N = 8,
@@ -13,6 +20,9 @@ module calc_regime_bits #(
     wire [N-1:0] mask = {N{1'b1}} >> (N - reg_len);
     assign regime_bits = reg_s == 0 ? 1 : (~0 ^ 1) & mask;
 endmodule
+
+
+
 
 `ifdef TEST_BENCH_CALC_REGIME_BITS
 module tb_calc_regime_bits;

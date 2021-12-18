@@ -1,15 +1,17 @@
 /*
 
-cls: count leading ones.
-It wraps the `highest_set` module; returns the number of ones starting from the left:
+Description:
+    cls: count leading ones.
+    It wraps the `highest_set` module; returns the number of ones starting from the left:
 
-e.g:
-    bits = 0b11010000 -> 2
-    bits = 0b01111000 -> 0
-    bits = 0b11100000 -> 3
+    e.g:
+        bits = 0b11010000 -> 2
+        bits = 0b01111000 -> 0
+        bits = 0b11100000 -> 3
 
-
-iverilog -DTEST_BENCH cls.sv highest_set.sv && ./a.out
+Usage:
+    cd $PROJECT_ROOT/waveforms
+    iverilog -DTEST_BENCH_CLS -o cls.out ../src/cls.sv ../src/highest_set.sv && ./cls.out
 */
 
 
@@ -37,7 +39,7 @@ endmodule
 
 
 
-`ifdef TEST_BENCH
+`ifdef TEST_BENCH_CLS
 module tb_cls;
 
     parameter N = 8;
