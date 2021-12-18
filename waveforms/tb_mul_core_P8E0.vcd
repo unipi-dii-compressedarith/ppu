@@ -1,0 +1,156 @@
+$date
+	Mon Dec 13 09:44:15 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_mul_core $end
+$var wire 1 ! pout_is_inf $end
+$var wire 1 " pout_is_zero $end
+$var wire 3 # pout_reg_len [2:0] $end
+$var wire 1 $ pout_reg_s $end
+$var wire 8 % pout_regime_bits [7:0] $end
+$var wire 1 & pout_sign $end
+$var wire 8 ' pout_mant [7:0] $end
+$var wire 8 ( pout_k [7:0] $end
+$var reg 1 ) p1_is_inf $end
+$var reg 1 * p1_is_zero $end
+$var reg 8 + p1_k [7:0] $end
+$var reg 8 , p1_mant [7:0] $end
+$var reg 3 - p1_reg_len [2:0] $end
+$var reg 1 . p1_reg_s $end
+$var reg 8 / p1_regime_bits [7:0] $end
+$var reg 1 0 p1_sign $end
+$var reg 1 1 p2_is_inf $end
+$var reg 1 2 p2_is_zero $end
+$var reg 8 3 p2_k [7:0] $end
+$var reg 8 4 p2_mant [7:0] $end
+$var reg 3 5 p2_reg_len [2:0] $end
+$var reg 1 6 p2_reg_s $end
+$var reg 8 7 p2_regime_bits [7:0] $end
+$var reg 1 8 p2_sign $end
+$scope module mul_core_inst $end
+$var wire 8 9 exp [7:0] $end
+$var wire 1 : exp_carry $end
+$var wire 1 ; exp_carry_I $end
+$var wire 16 < mant_fraction_only [15:0] $end
+$var wire 1 ) p1_is_inf $end
+$var wire 1 * p1_is_zero $end
+$var wire 8 = p1_k [7:0] $end
+$var wire 8 > p1_mant [7:0] $end
+$var wire 3 ? p1_reg_len [2:0] $end
+$var wire 1 . p1_reg_s $end
+$var wire 8 @ p1_regime_bits [7:0] $end
+$var wire 1 0 p1_sign $end
+$var wire 1 1 p2_is_inf $end
+$var wire 1 2 p2_is_zero $end
+$var wire 8 A p2_k [7:0] $end
+$var wire 8 B p2_mant [7:0] $end
+$var wire 3 C p2_reg_len [2:0] $end
+$var wire 1 6 p2_reg_s $end
+$var wire 8 D p2_regime_bits [7:0] $end
+$var wire 1 8 p2_sign $end
+$var wire 1 ! pout_is_inf $end
+$var wire 1 " pout_is_zero $end
+$var wire 8 E pout_k [7:0] $end
+$var wire 8 F pout_mant [7:0] $end
+$var wire 3 G pout_reg_len [2:0] $end
+$var wire 1 $ pout_reg_s $end
+$var wire 8 H pout_regime_bits [7:0] $end
+$var wire 1 & pout_sign $end
+$var wire 3 I reg_len [2:0] $end
+$var wire 1 J prod_mantissae_adjusted $end
+$var wire 16 K prod_mantissae [15:0] $end
+$var wire 1 L mant_len $end
+$var wire 1 M mant_carry $end
+$var wire 8 N k_adjusted_III [7:0] $end
+$var wire 8 O k_adjusted_II [7:0] $end
+$var wire 8 P k_adjusted_I [7:0] $end
+$var wire 8 Q k [7:0] $end
+$var wire 8 R final_mant [7:0] $end
+$var wire 8 S f2 [7:0] $end
+$var wire 8 T f1 [7:0] $end
+$var wire 8 U exp_adjusted_III [7:0] $end
+$var wire 8 V exp_adjusted_II [7:0] $end
+$var wire 8 W exp_adjusted_I [7:0] $end
+$var wire 3 X F2 [2:0] $end
+$var wire 3 Y F1 [2:0] $end
+$scope function max $end
+$var reg 8 Z a [7:0] $end
+$var reg 8 [ b [7:0] $end
+$upscope $end
+$scope function min $end
+$var reg 8 \ a [7:0] $end
+$var reg 8 ] b [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b110 ]
+b11 \
+b11111010 [
+b11 Z
+b101 Y
+b100 X
+b0 W
+b0 V
+b0 U
+b10000000 T
+b10001000 S
+b0 R
+b11 Q
+b11 P
+b11 O
+b11 N
+0M
+0L
+b100010000000000 K
+0J
+b101 I
+b0 H
+b0 G
+b0 F
+b11 E
+b110 D
+b11 C
+b1 B
+b10 A
+b10 @
+b10 ?
+b0 >
+b1 =
+b0 <
+0;
+0:
+b0 9
+08
+b110 7
+16
+b11 5
+b1 4
+b10 3
+02
+01
+00
+b10 /
+1.
+b10 -
+b0 ,
+b1 +
+0*
+0)
+b11 (
+b0 '
+0&
+b0 %
+0$
+b0 #
+0"
+0!
+$end
+#10
