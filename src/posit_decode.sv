@@ -1,7 +1,20 @@
 /*
-iverilog -DTEST_BENCH_DECODE posit_decode.sv cls.sv highest_set.sv && ./a.out
+Description:
+    Posit decoder.
 
-yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" posit_decode.sv cls.sv highest_set.sv > yosys_intel.out
+Usage:
+    cd $PROJECT_ROOT/waveforms
+
+    iverilog -DTEST_BENCH_DECODE -o posit_decode.out \
+    ../src/posit_decode.sv \
+    ../src/highest_set.sv \
+    ../src/cls.sv \
+    && ./posit_decode.out
+
+    yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" \
+    ../src/posit_decode.sv \
+    ../src/highest_set.sv \
+    ../src/cls.sv > yosys_posit_decode.out
 
 */
 module posit_decode #(
@@ -143,14 +156,13 @@ module tb_posit_decode;
     );
 
     initial begin
-        if (N == 8 && ES == 0) $dumpfile("tb_posit_decode_P8E0.vcd");
+             if (N == 8 && ES == 0) $dumpfile("tb_posit_decode_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_posit_decode_P5E1.vcd");
-        else
-        $dumpfile("tb_posit_decode.vcd");
+        else                        $dumpfile("tb_posit_decode.vcd");
 
 	    $dumpvars(0, tb_posit_decode);                        
             
-        `include "tb_posit_decode.sv"
+        `include "../src/tb_posit_decode.sv"
 
         #10;
 		$finish;

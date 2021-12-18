@@ -1,5 +1,5 @@
 $date
-	Sun Dec  5 17:34:53 2021
+	Sat Dec 18 17:52:49 2021
 $end
 $version
 	Icarus Verilog
@@ -7,7 +7,7 @@ $end
 $timescale
 	1s
 $end
-$scope module highest_set_tb $end
+$scope module tb_highest_set $end
 $var wire 3 ! index_v3 [2:0] $end
 $var wire 3 " index_v2 [2:0] $end
 $var wire 3 # index_v1 [2:0] $end

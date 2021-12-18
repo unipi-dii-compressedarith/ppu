@@ -1,13 +1,16 @@
 /*
-iverilog -DHIGHEST_SET_TB highest_set.sv && ./a.out
 
-yosys -p "synth_intel -family max10 -top highest_set_v1 -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set_v1.out
-yosys -p "synth_intel -family max10 -top highest_set_v2 -vqm highest_set.vqm" highest_set.sv > yosys_intel_highest_set_v2.out
+Description:
+    Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
+    e.g.:
+        bits = 8b00001001 -> 3
 
-======
-Given a sequence of bits returns the highest index of said bits such that the bit is `VAL`.
-e.g.:
-    bits = 8b00001001 -> 3
+Usage:
+    cd $PROJECT_ROOT/waveforms
+    iverilog -DHIGHEST_SET_TB -o highest_set.out ../src/highest_set.sv && ./highest_set.out
+
+    yosys -p "synth_intel -family max10 -top highest_set_v1 -vqm highest_set.vqm" ../src/highest_set.sv > yosys_intel_highest_set_v1.out
+    yosys -p "synth_intel -family max10 -top highest_set_v2 -vqm highest_set.vqm" ../src/highest_set.sv > yosys_intel_highest_set_v2.out
 
 */
 
@@ -123,7 +126,7 @@ endmodule
 
 
 `ifdef HIGHEST_SET_TB
-module highest_set_tb();
+module tb_highest_set;
     parameter SIZE = 8;
     parameter VAL = 1;
     localparam OUTW = $clog2(SIZE);
@@ -165,8 +168,8 @@ module highest_set_tb();
     end
 
     initial begin
-        $dumpfile("highest_set_tb.vcd");
-        $dumpvars(0, highest_set_tb);
+        $dumpfile("tb_highest_set.vcd");
+        $dumpvars(0, tb_highest_set);
 
                 posit8 = 8'b0000_0001;
         #10     posit8 = 8'b0000_0011;
