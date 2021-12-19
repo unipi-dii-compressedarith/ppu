@@ -91,6 +91,7 @@ module tb_posit_encode;
     parameter ES = 0;
 `endif
 
+    /* inputs */
     reg            is_zero;
     reg            is_inf;
     reg            sign;
@@ -100,7 +101,9 @@ module tb_posit_encode;
     reg [N-1:0]    k;
     reg [ES-1:0]   exp;
     reg [N-1:0]    mant;
+    /* output */
     wire [N-1:0]   posit;
+    /*************************/
 
     reg [N-1:0]   posit_expected;
     reg err;

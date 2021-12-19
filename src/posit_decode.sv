@@ -110,9 +110,11 @@ module tb_posit_decode;
     parameter ES = `ES;
 `else
     parameter ES = 0;
-`endif
+`endif  
 
+    /* input */
     reg [N-1:0]     bits;
+    /* outputs */
     wire            is_zero;
     wire            is_inf;
     wire            sign;
@@ -122,12 +124,15 @@ module tb_posit_decode;
     wire [N-1:0]    k;
     wire [ES-1:0]   exp;
     wire [N-1:0]    mant;
+    /*************************/
 
     reg sign_expected, reg_s_expected;
     reg [S-1:0] reg_len_expected;
     reg [ES-1:0] exp_expected;
     reg [N-1:0] regime_bits_expected, mant_expected;
     reg err;
+
+    reg test_no;
 
     reg [N-1:0] diff_exp, diff_regime_bits, diff_mant;
     always @(*) begin
@@ -162,8 +167,12 @@ module tb_posit_decode;
 
 	    $dumpvars(0, tb_posit_decode);                        
             
-        `include "../src/tb_posit_decode.sv"
+        if (N == 8 && ES == 0) begin
+            `include "../src/tb_posit_decode_P8E0.sv"
+        end
 
+
+        
         #10;
 		$finish;
     end

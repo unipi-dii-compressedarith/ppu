@@ -1,18 +1,45 @@
 # pip install posit_playground
 
-import random
-import datetime
+import argparse, random, datetime, enum
 from posit_playground import from_bits
 from posit_playground.utils import get_bin
 
 DECODE = 0
 ENCODE = 1
 X = "'bx"
-random.seed(4)
 
 
 N, ES = 8, 0
 NUM_RANDOM_TEST_CASES = 300
+
+
+class Tb(enum.Enum):
+    MUL = "mul"
+    ADD = "add"
+    DECODE = "decode"
+    ENCODE = "encode"
+
+    def __str__(self):
+        return self.value
+
+
+parser = argparse.ArgumentParser(description="Generate test benches")
+parser.add_argument(
+    "--operation",
+    type=Tb,
+    choices=list(Tb),
+    required=True,
+    help="Type of test bench: adder/multiplier/etc",
+)
+parser.add_argument(
+    "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
+)
+
+args = parser.parse_args()
+
+if args.shuffle_random == False:
+    random.seed(4)
+
 
 if __name__ == "__main__":
 
@@ -28,7 +55,7 @@ if __name__ == "__main__":
 
         c += f"{'test_no ='.ljust(25)} {counter+1};\n"
 
-        if DECODE:
+        if args.operation == Tb.DECODE:
             # posit bits
             c += f"{'bits ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
             # sign
@@ -42,7 +69,7 @@ if __name__ == "__main__":
             c += f"{'exp_expected ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
             # mantissa
             c += f"{'mant_expected ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
-        elif ENCODE:
+        elif args.operation == Tb.ENCODE:
             c += f"{'posit_expected ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
             ### sign
             c += f"{'sign ='.ljust(25)} {p.sign};\n"
@@ -55,11 +82,12 @@ if __name__ == "__main__":
             c += f"{'exp ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
             ### mantissa
             c += f"{'mant ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
+            c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
+            c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
+        
 
-        c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
-        c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
         c += f"#10;\n\n"
 
     if ENCODE:
-        with open(f"../src/tb_posit_encode_P{N}E{ES}.sv", "w") as f:
+        with open(f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv", "w") as f:
             f.write(c)
