@@ -1,9 +1,9 @@
 /*
 ## === ES: 0 ====#
-iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD mul_core.sv && ./a.out
+iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD ../src/mul_core.sv && ./a.out
 
 ## === ES: not 0 ====#
-iverilog -DTEST_BENCH_MUL_CORE mul_core.sv && ./a.out
+iverilog -DTEST_BENCH_MUL_CORE               ../src/mul_core.sv && ./a.out
 
 
 TODO: get rid of unnecessary flags
@@ -167,6 +167,9 @@ module mul_core #(
 endmodule
 
 
+
+
+
 `ifdef TEST_BENCH_MUL_CORE
 module tb_mul_core;
 
@@ -262,6 +265,7 @@ module tb_mul_core;
         
              if (N == 8 && ES == 0) $dumpfile("tb_mul_core_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_mul_core_P5E1.vcd");
+        else if (N == 16 && ES == 1)$dumpfile("tb_mul_core_P16E1.vcd");
         else                        $dumpfile("tb_mul_core.vcd");
 
         $dumpvars(0, tb_mul_core);                        

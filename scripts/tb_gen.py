@@ -1,5 +1,8 @@
 # pip install posit_playground
 
+# e.g.:
+#   python tb_gen.py --operation decode -n 16 -es 1
+
 import argparse, random, datetime, enum
 from posit_playground import from_bits
 from posit_playground.utils import get_bin
@@ -13,6 +16,7 @@ NUM_RANDOM_TEST_CASES = 300
 
 class Tb(enum.Enum):
     MUL = "mul"
+    MUL_CORE = "mul_core"
     ADD = "add"
     DECODE = "decode"
     ENCODE = "encode"
@@ -61,43 +65,51 @@ if __name__ == "__main__":
 
     list_a = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
 
-    for (counter, a) in enumerate(list_a):
-        p = from_bits(a, N, ES)
+    if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
+        for (counter, a) in enumerate(list_a):
+            p = from_bits(a, N, ES)
 
-        c += f"{'test_no ='.ljust(25)} {counter+1};\n"
+            c += f"{'test_no ='.ljust(25)} {counter+1};\n"
 
-        if args.operation == Tb.DECODE:
-            # posit bits
-            c += f"{'bits ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
-            # sign
-            c += f"{'sign_expected ='.ljust(25)} {p.sign};\n"
-            # regime
-            c += f"{'reg_s_expected ='.ljust(25)} {p.regime.reg_s.unwrap_or(X)};\n"
-            c += f"{'reg_len_expected ='.ljust(25)} {p.regime.reg_len.unwrap_or(X)};\n"
-            # c += f"{'k_expected ='.ljust(25)} {p.regime.k.unwrap_or(X)};\n"
-            c += f"{'regime_bits_expected ='.ljust(25)} {N}'b{get_bin(p.regime.calc_reg_bits(), N)};\n"
-            # exponent
-            c += f"{'exp_expected ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
-            # mantissa
-            c += f"{'mant_expected ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
-        elif args.operation == Tb.ENCODE:
-            c += f"{'posit_expected ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
-            ### sign
-            c += f"{'sign ='.ljust(25)} {p.sign};\n"
-            ### regime
-            c += f"{'reg_s ='.ljust(25)} {p.regime.reg_s.unwrap_or(X)};\n"
-            c += f"{'reg_len ='.ljust(25)} {p.regime.reg_len.unwrap_or(X)};\n"
-            # c += f"{'k ='.ljust(25)} {p.regime.k.unwrap_or(X)};\n"
-            c += f"{'regime_bits ='.ljust(25)} {N}'b{get_bin(p.regime.calc_reg_bits(), N)};\n"
-            ### exponent
-            c += f"{'exp ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
-            ### mantissa
-            c += f"{'mant ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
-            c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
-            c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
+            if args.operation == Tb.DECODE:
+                # posit bits
+                c += f"{'bits ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
+                # sign
+                c += f"{'sign_expected ='.ljust(25)} {p.sign};\n"
+                # regime
+                c += f"{'reg_s_expected ='.ljust(25)} {p.regime.reg_s.unwrap_or(X)};\n"
+                c += f"{'reg_len_expected ='.ljust(25)} {p.regime.reg_len.unwrap_or(X)};\n"
+                # c += f"{'k_expected ='.ljust(25)} {p.regime.k.unwrap_or(X)};\n"
+                c += f"{'regime_bits_expected ='.ljust(25)} {N}'b{get_bin(p.regime.calc_reg_bits(), N)};\n"
+                # exponent
+                c += f"{'exp_expected ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
+                # mantissa
+                c += f"{'mant_expected ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
+            elif args.operation == Tb.ENCODE:
+                c += f"{'posit_expected ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
+                ### sign
+                c += f"{'sign ='.ljust(25)} {p.sign};\n"
+                ### regime
+                c += f"{'reg_s ='.ljust(25)} {p.regime.reg_s.unwrap_or(X)};\n"
+                c += f"{'reg_len ='.ljust(25)} {p.regime.reg_len.unwrap_or(X)};\n"
+                # c += f"{'k ='.ljust(25)} {p.regime.k.unwrap_or(X)};\n"
+                c += f"{'regime_bits ='.ljust(25)} {N}'b{get_bin(p.regime.calc_reg_bits(), N)};\n"
+                ### exponent
+                c += f"{'exp ='.ljust(25)} {N}'b{get_bin(p.exp, N)};\n"
+                ### mantissa
+                c += f"{'mant ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
+                c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
+                c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
         
+    
+    list_b = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+    if args.operation == Tb.MUL_CORE:
+        for counter, (a, b) in enumerate(zip(list_a, list_b)):
+            pass
 
-        c += f"#10;\n\n"
+
+
+    c += f"#10;\n\n"
 
     if ENCODE:
         filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"

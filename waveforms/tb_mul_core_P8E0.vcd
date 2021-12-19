@@ -1,5 +1,5 @@
 $date
-	Mon Dec 13 09:44:15 2021
+	Sun Dec 19 12:13:00 2021
 $end
 $version
 	Icarus Verilog
@@ -64,7 +64,7 @@ $var wire 1 & pout_sign $end
 $var wire 3 I reg_len [2:0] $end
 $var wire 1 J prod_mantissae_adjusted $end
 $var wire 16 K prod_mantissae [15:0] $end
-$var wire 1 L mant_len $end
+$var wire 8 L mant_len [7:0] $end
 $var wire 1 M mant_carry $end
 $var wire 8 N k_adjusted_III [7:0] $end
 $var wire 8 O k_adjusted_II [7:0] $end
@@ -108,7 +108,7 @@ b11 P
 b11 O
 b11 N
 0M
-0L
+b10 L
 b100010000000000 K
 0J
 b101 I

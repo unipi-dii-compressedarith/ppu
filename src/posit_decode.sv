@@ -179,6 +179,10 @@ module tb_posit_decode;
             `include "../src/tb_posit_decode_P8E0.sv"
         end
 
+        if (N == 5 && ES == 1) begin
+            `include "../src/tb_posit_decode_P5E1.sv"
+        end
+
         if (N == 16 && ES == 1) begin
             `include "../src/tb_posit_decode_P16E1.sv"
         end
