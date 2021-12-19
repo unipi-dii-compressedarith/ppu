@@ -5,11 +5,18 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
 
-    iverilog -DTEST_BENCH_DECODE -o posit_decode.out \
+    iverilog -DTEST_BENCH_DECODE -DN=8 -DES=0 -o posit_decode.out \
     ../src/posit_decode.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
     && ./posit_decode.out
+
+    iverilog -DTEST_BENCH_DECODE -DN=16 -DES=1 -o posit_decode.out \
+    ../src/posit_decode.sv \
+    ../src/highest_set.sv \
+    ../src/cls.sv \
+    && ./posit_decode.out
+
 
     yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" \
     ../src/posit_decode.sv \
@@ -132,14 +139,14 @@ module tb_posit_decode;
     reg [N-1:0] regime_bits_expected, mant_expected;
     reg err;
 
-    reg test_no;
+    reg [N:0] test_no;
 
     reg [N-1:0] diff_exp, diff_regime_bits, diff_mant;
     always @(*) begin
-        diff_exp = abs(exp - exp_expected);
-        diff_mant = abs(mant - mant_expected);
-        diff_regime_bits = abs(regime_bits - regime_bits_expected);
-        if (diff_exp == 0 && diff_mant == 0 && diff_regime_bits == 0)err = 0;
+        diff_exp = (exp === exp_expected ? 0 : 'bx);
+        diff_mant = (mant === mant_expected ? 0 : 'bx);
+        diff_regime_bits = (regime_bits === regime_bits_expected ? 0 : 'bx);
+        if (diff_exp == 0 && diff_mant == 0 && diff_regime_bits == 0) err = 0;
         else err = 1'bx;
     end
 
@@ -163,12 +170,17 @@ module tb_posit_decode;
     initial begin
              if (N == 8 && ES == 0) $dumpfile("tb_posit_decode_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_posit_decode_P5E1.vcd");
+        else if (N == 16 && ES == 1)$dumpfile("tb_posit_decode_P16E1.vcd");
         else                        $dumpfile("tb_posit_decode.vcd");
 
 	    $dumpvars(0, tb_posit_decode);                        
             
         if (N == 8 && ES == 0) begin
             `include "../src/tb_posit_decode_P8E0.sv"
+        end
+
+        if (N == 16 && ES == 1) begin
+            `include "../src/tb_posit_decode_P16E1.sv"
         end
 
 

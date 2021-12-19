@@ -8,8 +8,6 @@ DECODE = 0
 ENCODE = 1
 X = "'bx"
 
-
-N, ES = 8, 0
 NUM_RANDOM_TEST_CASES = 300
 
 
@@ -35,7 +33,20 @@ parser.add_argument(
     "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
 )
 
+parser.add_argument(
+    "--num-bits", "-n", type=int, required=True, help="Num posit bits"
+)
+
+parser.add_argument(
+    "--es-size", "-es", type=int, required=True, help="Num posit bits"
+)
+
 args = parser.parse_args()
+
+
+
+N, ES = args.num_bits, args.es_size
+
 
 if args.shuffle_random == False:
     random.seed(4)
@@ -89,5 +100,7 @@ if __name__ == "__main__":
         c += f"#10;\n\n"
 
     if ENCODE:
-        with open(f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv", "w") as f:
+        filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"
+        with open(filename, "w") as f:
             f.write(c)
+            print(f"Wrote {filename}")

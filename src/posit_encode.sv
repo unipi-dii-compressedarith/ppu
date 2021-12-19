@@ -6,7 +6,7 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
     
-    iverilog -DTEST_BENCH_ENCODE -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
+    iverilog -DTEST_BENCH_ENCODE -DN=8 -DES=0 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
 
     yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" ../src/posit_encode.sv > yosys_posit_encode.out
 
@@ -108,7 +108,7 @@ module tb_posit_encode;
     reg [N-1:0]   posit_expected;
     reg err;
     
-    reg test_no;
+    reg [N:0] test_no;
 
     posit_encode #(
         .N(N),
