@@ -5,10 +5,8 @@
 
 import argparse, random, datetime, enum
 from posit_playground import from_bits
-from posit_playground.utils import get_bin
+from posit_playground.utils import get_bin, get_hex
 
-DECODE = 0
-ENCODE = 1
 X = "'bx"
 
 NUM_RANDOM_TEST_CASES = 300
@@ -100,19 +98,55 @@ if __name__ == "__main__":
                 c += f"{'mant ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
                 c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
                 c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
-        
+            c += f"#10;\n\n"
     
     list_b = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
     if args.operation == Tb.MUL_CORE:
         for counter, (a, b) in enumerate(zip(list_a, list_b)):
-            pass
+            p1 = from_bits(a, N, ES)
+            p2 = from_bits(b, N, ES)
+
+            pout = p1 * p2
+            
+            c += f"{'test_no ='.ljust(25)} {counter+1};\n\t"
+            
+            c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {get_hex(p1.bit_repr(), int(N/4))} {p1.eval()};\n\t"
+            c += f"{'p1_is_zero ='.ljust(25)} {p1.is_zero.real};\n\t"
+            c += f"{'p1_is_inf ='.ljust(25)} {p1.is_inf.real};\n\t"
+            c += f"{'p1_sign ='.ljust(25)} {p1.sign};\n\t"
+            c += f"{'p1_reg_s ='.ljust(25)} {p1.regime.reg_s.unwrap_or(X)};\n\t"
+            c += f"{'p1_reg_len ='.ljust(25)} {p1.regime.reg_len.unwrap_or(X)};\n\t"
+            if ES > 0:
+                c += f"{'p1_exp ='.ljust(25)} {p1.exp};\n\t"
+            c += f"{'p1_mant ='.ljust(25)} {N}'b{get_bin(p1.mant, N)};\n\t"
+
+
+            c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {get_hex(p2.bit_repr(), int(N/4))} {p2.eval()};\n\t"
+            c += f"{'p2_is_zero ='.ljust(25)} {p2.is_zero.real};\n\t"
+            c += f"{'p2_is_inf ='.ljust(25)} {p2.is_inf.real};\n\t"
+            c += f"{'p2_sign ='.ljust(25)} {p2.sign};\n\t"
+            c += f"{'p2_reg_s ='.ljust(25)} {p2.regime.reg_s.unwrap_or(X)};\n\t"
+            c += f"{'p2_reg_len ='.ljust(25)} {p2.regime.reg_len.unwrap_or(X)};\n\t"
+            if ES > 0:
+                c += f"{'p2_exp ='.ljust(25)} {p2.exp};\n\t"
+            c += f"{'p2_mant ='.ljust(25)} {N}'b{get_bin(p2.mant, N)};\n\t"
+
+            c += f"{'// pout:'.ljust(25)} {get_bin(pout.bit_repr(), N)} {get_hex(pout.bit_repr(), int(N/4))} {pout.eval()};\n\t"
+            c += f"{'pout_is_zero_expected ='.ljust(25)} {pout.is_zero.real};\n\t"
+            c += f"{'pout_is_inf_expected ='.ljust(25)} {pout.is_inf.real};\n\t"
+            c += f"{'pout_sign_expected ='.ljust(25)} {pout.sign};\n\t"
+            c += f"{'pout_reg_s_expected ='.ljust(25)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
+            c += f"{'pout_reg_len_expected ='.ljust(25)} {pout.regime.reg_len.unwrap_or(X)};\n\t"
+            if ES > 0:
+                c += f"{'pout_exp_expected ='.ljust(25)} {pout.exp};\n\t"
+            c += f"{'pout_mant_expected ='.ljust(25)} {N}'b{get_bin(pout.mant, N)};\n\t"
+            
+            c += f"#10;\n\n"
 
 
 
-    c += f"#10;\n\n"
 
-    if ENCODE:
-        filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"
-        with open(filename, "w") as f:
-            f.write(c)
-            print(f"Wrote {filename}")
+    filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"
+    with open(filename, "w") as f:
+        f.write(c)
+        print(f"Wrote {filename}")

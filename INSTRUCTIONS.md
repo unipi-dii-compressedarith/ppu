@@ -14,6 +14,12 @@ tb encode
 
     python tb_gen.py --operation encode -n 8 -es 0
 
+
+tb mul core
+
+    python tb_gen.py --operation mul_core -n 8 -es 0
+
+
 ---
 
 then go back to the waveforms folder to run iverilog
@@ -33,3 +39,8 @@ then go back to the waveforms folder to run iverilog
 
     iverilog -DTEST_BENCH_ENCODE -DN=8 -DES=0 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
 
+
+**mul core** module
+
+    iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD -DN=8 -DES=0 -o mul_core ../src/mul_core.sv && ./mul_core
+    

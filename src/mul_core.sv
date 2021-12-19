@@ -1,9 +1,8 @@
 /*
-## === ES: 0 ====#
-iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD ../src/mul_core.sv && ./a.out
 
-## === ES: not 0 ====#
-iverilog -DTEST_BENCH_MUL_CORE               ../src/mul_core.sv && ./a.out
+iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD -DN=8 -DES=0  -o mul_core.out ../src/mul_core.sv && ./mul_core.out
+
+iverilog -DTEST_BENCH_MUL_CORE               -DN=16 -DES=1 -o mul_core.out ../src/mul_core.sv && ./mul_core.out
 
 
 TODO: get rid of unnecessary flags
@@ -173,13 +172,20 @@ endmodule
 `ifdef TEST_BENCH_MUL_CORE
 module tb_mul_core;
 
-    parameter N = 8;
-    parameter S = $clog2(N);
-`ifndef NO_ES_FIELD
-    parameter ES = 1; // whatever
+
+`ifdef N
+    parameter N = `N;
 `else
-    parameter ES = 0; 
+    parameter N = 8;
 `endif
+
+    parameter S = $clog2(N);
+
+`ifdef ES
+    parameter ES = `ES;
+`else
+    parameter ES = 0;
+`endif  
 
     reg            p1_is_zero;
     reg            p1_is_inf;
@@ -217,12 +223,39 @@ module tb_mul_core;
 `endif
     wire  [N-1:0]  pout_mant;
 
+    reg            pout_is_zero_expected;
+    reg            pout_is_inf_expected;
+    reg            pout_sign_expected;
+    reg            pout_reg_s_expected;
+    reg   [N-1:0]  pout_regime_bits_expected;
+    reg   [S-1:0]  pout_reg_len_expected;
+    reg   [N-1:0]  pout_k_expected;
+`ifndef NO_ES_FIELD    
+    reg   [ES-1:0] pout_exp_expected;
+`endif
+    reg   [N-1:0]  pout_mant_expected;
+
+    reg [N:0] test_no;
+
+    reg diff_pout_is_zero;
+    reg diff_pout_is_inf;
+    reg diff_pout_sign;
+    reg diff_pout_reg_s;
+    reg diff_pout_regime_bits;
+    reg diff_pout_reg_len;
+    reg diff_pout_k;
+`ifndef NO_ES_FIELD
+    reg diff_pout_exp;
+`endif
+    reg diff_pout_mant;
+
 
     mul_core #(
         .N                  (N),
         .S                  (S),
         .ES                 (ES)
-    ) mul_core_inst (  
+    ) mul_core_inst (
+        /************ inputs ************/
         .p1_is_zero         (p1_is_zero),   
         .p1_is_inf          (p1_is_inf), 
         .p1_sign            (p1_sign), 
@@ -235,6 +268,7 @@ module tb_mul_core;
 `endif
         .p1_mant            (p1_mant),
     
+
         .p2_is_zero         (p2_is_zero), 
         .p2_is_inf          (p2_is_inf),   
         .p2_sign            (p2_sign),   
@@ -246,7 +280,8 @@ module tb_mul_core;
         .p2_exp             (p2_exp),
 `endif
         .p2_mant            (p2_mant),
-
+        
+        /************ outputs ************/
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
         .pout_sign          (pout_sign),
@@ -261,6 +296,23 @@ module tb_mul_core;
     );
 
 
+    always @(*) begin
+
+        diff_pout_is_zero = pout_is_zero === pout_is_zero_expected ? 0 : 1'bx;
+        diff_pout_is_inf = pout_is_inf === pout_is_inf_expected ? 0 : 1'bx;
+        diff_pout_sign = pout_sign === pout_sign_expected ? 0 : 1'bx;
+        diff_pout_reg_s = pout_reg_s === pout_reg_s_expected ? 0 : 1'bx;
+        diff_pout_regime_bits = pout_regime_bits === pout_regime_bits_expected ? 0 : 1'bx;
+        diff_pout_reg_len = pout_reg_len === pout_reg_len_expected ? 0 : 1'bx;
+        diff_pout_k = pout_k === pout_k_expected ? 0 : 1'bx;
+`ifndef NO_ES_FIELD
+        diff_pout_exp = pout_exp === pout_exp_expected ? 0 : 1'bx;
+`endif
+        diff_pout_mant = pout_mant === pout_mant_expected ? 0 : 1'bx;
+        
+    end
+
+
     initial begin
         
              if (N == 8 && ES == 0) $dumpfile("tb_mul_core_P8E0.vcd");
@@ -271,33 +323,11 @@ module tb_mul_core;
         $dumpvars(0, tb_mul_core);                        
             
         if (N == 8 && ES == 0) begin
-        
-            // P<8,0>:          0b01100000   0x60    2.0
-            p1_is_zero = 0;
-            p1_is_inf = 0;
-            p1_sign = 0;
-            p1_reg_s = 1;
-            p1_regime_bits = 8'b00000010;
-            p1_reg_len = 2;
-            p1_k = 1;
-`ifndef NO_ES_FIELD   
-            p1_exp = 0;
-`endif
-            p1_mant = 0;
-            // P<8,0>:          0b01110001   0x71    4.5
-            p2_is_zero = 0; 
-            p2_is_inf = 0;
-            p2_sign = 0;
-            p2_reg_s = 1;
-            p2_regime_bits = 8'b00000110;
-            p2_reg_len = 3;
-            p2_k = 2;
-`ifndef NO_ES_FIELD   
-            p2_exp = 0;
-`endif
-            p2_mant = 1;
-            // expected:    8.0
-        
+            `include "../src/tb_posit_mul_core_P8E0.sv"
+        end
+
+        if (N == 16 && ES == 1) begin
+            `include "../src/tb_posit_mul_core_P16E1.sv"
         end
 
         #10;

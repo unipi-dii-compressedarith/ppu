@@ -1,56 +1,95 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Dec 19 11:15:09 2021
+[*] Sun Dec 19 17:37:36 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P8E0.vcd"
-[dumpfile_mtime] "Sun Dec 19 11:13:00 2021"
-[dumpfile_size] 3007
+[dumpfile_mtime] "Sun Dec 19 17:36:57 2021"
+[dumpfile_size] 39965
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P8E0.gtkw"
 [timestart] 0
-[size] 1432 779
-[pos] -1 -180
-*-1.171073 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 2147 1343
+[pos] -1 -1
+*-8.347962 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul_core.
 [sst_width] 193
-[signals_width] 210
+[signals_width] 330
 [sst_expanded] 1
-[sst_vpaned_height] 230
+[sst_vpaned_height] 429
+@23
+tb_mul_core.test_no[8:0]
 @28
-tb_mul_core.p1_is_inf
-tb_mul_core.p1_is_zero
+tb_mul_core.mul_core_inst.F1[2:0]
+tb_mul_core.mul_core_inst.F2[2:0]
 @22
-tb_mul_core.p1_k[7:0]
-tb_mul_core.p1_mant[7:0]
+tb_mul_core.mul_core_inst.exp[7:0]
+tb_mul_core.mul_core_inst.exp_adjusted_III[7:0]
+tb_mul_core.mul_core_inst.exp_adjusted_II[7:0]
+tb_mul_core.mul_core_inst.exp_adjusted_I[7:0]
 @28
-tb_mul_core.p1_reg_len[2:0]
-tb_mul_core.p1_reg_s
+tb_mul_core.mul_core_inst.exp_carry
+tb_mul_core.mul_core_inst.exp_carry_I
 @22
-tb_mul_core.p1_regime_bits[7:0]
+tb_mul_core.mul_core_inst.f1[7:0]
+tb_mul_core.mul_core_inst.f2[7:0]
+tb_mul_core.mul_core_inst.final_mant[7:0]
+tb_mul_core.mul_core_inst.k[7:0]
+tb_mul_core.mul_core_inst.k_adjusted_III[7:0]
+tb_mul_core.mul_core_inst.k_adjusted_II[7:0]
+tb_mul_core.mul_core_inst.k_adjusted_I[7:0]
 @28
-tb_mul_core.p1_sign
-tb_mul_core.p2_is_inf
-tb_mul_core.p2_is_zero
+tb_mul_core.mul_core_inst.mant_carry
 @22
-tb_mul_core.p2_k[7:0]
-tb_mul_core.p2_mant[7:0]
+tb_mul_core.mul_core_inst.mant_fraction_only[15:0]
+tb_mul_core.mul_core_inst.mant_len[7:0]
 @28
-tb_mul_core.p2_reg_len[2:0]
-tb_mul_core.p2_reg_s
+tb_mul_core.mul_core_inst.p1_is_inf
+tb_mul_core.mul_core_inst.p1_is_zero
 @22
-tb_mul_core.p2_regime_bits[7:0]
+tb_mul_core.mul_core_inst.p1_k[7:0]
+tb_mul_core.mul_core_inst.p1_mant[7:0]
 @28
-tb_mul_core.p2_sign
-tb_mul_core.pout_is_inf
-tb_mul_core.pout_is_zero
+tb_mul_core.mul_core_inst.p1_reg_len[2:0]
+tb_mul_core.mul_core_inst.p1_reg_s
 @22
-tb_mul_core.pout_k[7:0]
-tb_mul_core.pout_mant[7:0]
+tb_mul_core.mul_core_inst.p1_regime_bits[7:0]
 @28
-tb_mul_core.pout_reg_len[2:0]
-tb_mul_core.pout_reg_s
+tb_mul_core.mul_core_inst.p1_sign
+tb_mul_core.mul_core_inst.p2_is_inf
+tb_mul_core.mul_core_inst.p2_is_zero
 @22
-tb_mul_core.pout_regime_bits[7:0]
+tb_mul_core.mul_core_inst.p2_k[7:0]
+tb_mul_core.mul_core_inst.p2_mant[7:0]
 @28
-tb_mul_core.pout_sign
+tb_mul_core.mul_core_inst.p2_reg_len[2:0]
+tb_mul_core.mul_core_inst.p2_reg_s
+@22
+tb_mul_core.mul_core_inst.p2_regime_bits[7:0]
+@28
+tb_mul_core.mul_core_inst.p2_sign
+tb_mul_core.mul_core_inst.pout_is_inf
+tb_mul_core.mul_core_inst.pout_is_zero
+@22
+tb_mul_core.mul_core_inst.pout_k[7:0]
+tb_mul_core.mul_core_inst.pout_mant[7:0]
+@28
+tb_mul_core.mul_core_inst.pout_reg_len[2:0]
+tb_mul_core.mul_core_inst.pout_reg_s
+@22
+tb_mul_core.mul_core_inst.pout_regime_bits[7:0]
+@28
+tb_mul_core.mul_core_inst.pout_sign
+@22
+tb_mul_core.mul_core_inst.prod_mantissae[15:0]
+@28
+tb_mul_core.mul_core_inst.prod_mantissae_adjusted
+tb_mul_core.mul_core_inst.reg_len[2:0]
+tb_mul_core.diff_pout_is_inf
+tb_mul_core.diff_pout_is_zero
+tb_mul_core.diff_pout_k
+tb_mul_core.diff_pout_mant
+tb_mul_core.diff_pout_reg_len
+tb_mul_core.diff_pout_reg_s
+tb_mul_core.diff_pout_regime_bits
+tb_mul_core.diff_pout_sign
 [pattern_trace] 1
 [pattern_trace] 0
