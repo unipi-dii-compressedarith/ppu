@@ -110,38 +110,99 @@ if __name__ == "__main__":
             
             c += f"{'test_no ='.ljust(25)} {counter+1};\n\t"
             
-            c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {get_hex(p1.bit_repr(), int(N/4))} {p1.eval()};\n\t"
+            c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {p1.eval()};\n\t"
+            c += f"{'p1_hex ='.ljust(25)} {N}'h{get_hex(p1.bit_repr(), N//4)};\n\t"
             c += f"{'p1_is_zero ='.ljust(25)} {p1.is_zero.real};\n\t"
             c += f"{'p1_is_inf ='.ljust(25)} {p1.is_inf.real};\n\t"
             c += f"{'p1_sign ='.ljust(25)} {p1.sign};\n\t"
             c += f"{'p1_reg_s ='.ljust(25)} {p1.regime.reg_s.unwrap_or(X)};\n\t"
             c += f"{'p1_reg_len ='.ljust(25)} {p1.regime.reg_len.unwrap_or(X)};\n\t"
+            c += f"{'p1_k ='.ljust(25)} {p1.regime.k.unwrap_or(X)};\n\t"
+            c += f"{'p1_regime_bits ='.ljust(25)} {p1.regime.calc_reg_bits()};\n\t"
             if ES > 0:
                 c += f"{'p1_exp ='.ljust(25)} {p1.exp};\n\t"
             c += f"{'p1_mant ='.ljust(25)} {N}'b{get_bin(p1.mant, N)};\n\t"
 
 
-            c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {get_hex(p2.bit_repr(), int(N/4))} {p2.eval()};\n\t"
+            c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {p2.eval()};\n\t"
+            c += f"{'p2_hex ='.ljust(25)} {N}'h{get_hex(p2.bit_repr(), N//4)};\n\t"
             c += f"{'p2_is_zero ='.ljust(25)} {p2.is_zero.real};\n\t"
             c += f"{'p2_is_inf ='.ljust(25)} {p2.is_inf.real};\n\t"
             c += f"{'p2_sign ='.ljust(25)} {p2.sign};\n\t"
             c += f"{'p2_reg_s ='.ljust(25)} {p2.regime.reg_s.unwrap_or(X)};\n\t"
             c += f"{'p2_reg_len ='.ljust(25)} {p2.regime.reg_len.unwrap_or(X)};\n\t"
+            c += f"{'p2_k ='.ljust(25)} {p2.regime.k.unwrap_or(X)};\n\t"
+            c += f"{'p2_regime_bits ='.ljust(25)} {p2.regime.calc_reg_bits()};\n\t"
             if ES > 0:
                 c += f"{'p2_exp ='.ljust(25)} {p2.exp};\n\t"
             c += f"{'p2_mant ='.ljust(25)} {N}'b{get_bin(p2.mant, N)};\n\t"
 
-            c += f"{'// pout:'.ljust(25)} {get_bin(pout.bit_repr(), N)} {get_hex(pout.bit_repr(), int(N/4))} {pout.eval()};\n\t"
+            c += f"{'// pout:'.ljust(25)} {get_bin(pout.bit_repr(), N)} {pout.eval()};\n\t"
+            c += f"{'pout_hex ='.ljust(25)} {N}'h{get_hex(pout.bit_repr(), N//4)};\n\t"
             c += f"{'pout_is_zero_expected ='.ljust(25)} {pout.is_zero.real};\n\t"
             c += f"{'pout_is_inf_expected ='.ljust(25)} {pout.is_inf.real};\n\t"
             c += f"{'pout_sign_expected ='.ljust(25)} {pout.sign};\n\t"
             c += f"{'pout_reg_s_expected ='.ljust(25)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
             c += f"{'pout_reg_len_expected ='.ljust(25)} {pout.regime.reg_len.unwrap_or(X)};\n\t"
+            c += f"{'pout_k_expected ='.ljust(25)} {pout.regime.k.unwrap_or(X)};\n\t"
+            c += f"{'pout_regime_bits_expected ='.ljust(25)} {pout.regime.calc_reg_bits()};\n\t"
             if ES > 0:
                 c += f"{'pout_exp_expected ='.ljust(25)} {pout.exp};\n\t"
             c += f"{'pout_mant_expected ='.ljust(25)} {N}'b{get_bin(pout.mant, N)};\n\t"
             
             c += f"#10;\n\n"
+
+    elif args.operation == Tb.MUL:
+        for counter, (a, b) in enumerate(zip(list_a, list_b)):
+            p1 = from_bits(a, N, ES)
+            p2 = from_bits(b, N, ES)
+
+            pout = p1 * p2
+
+            c += f"{'test_no ='.ljust(25)} {counter+1};\n\t"
+            
+            c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {p1.eval()};\n\t"
+            c += f"{'p1 ='.ljust(25)} {N}'h{get_hex(p1.bit_repr(), N//4)};\n\t"
+            # c += f"{'p1_is_zero ='.ljust(25)} {p1.is_zero.real};\n\t"
+            # c += f"{'p1_is_inf ='.ljust(25)} {p1.is_inf.real};\n\t"
+            # c += f"{'p1_sign ='.ljust(25)} {p1.sign};\n\t"
+            # c += f"{'p1_reg_s ='.ljust(25)} {p1.regime.reg_s.unwrap_or(X)};\n\t"
+            # c += f"{'p1_reg_len ='.ljust(25)} {p1.regime.reg_len.unwrap_or(X)};\n\t"
+            # c += f"{'p1_k ='.ljust(25)} {p1.regime.k.unwrap_or(X)};\n\t"
+            # c += f"{'p1_regime_bits ='.ljust(25)} {p1.regime.calc_reg_bits()};\n\t"
+            # if ES > 0:
+            #     c += f"{'p1_exp ='.ljust(25)} {p1.exp};\n\t"
+            # c += f"{'p1_mant ='.ljust(25)} {N}'b{get_bin(p1.mant, N)};\n\t"
+
+
+            c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {p2.eval()};\n\t"
+            c += f"{'p2 ='.ljust(25)} {N}'h{get_hex(p2.bit_repr(), N//4)};\n\t"
+            # c += f"{'p2_is_zero ='.ljust(25)} {p2.is_zero.real};\n\t"
+            # c += f"{'p2_is_inf ='.ljust(25)} {p2.is_inf.real};\n\t"
+            # c += f"{'p2_sign ='.ljust(25)} {p2.sign};\n\t"
+            # c += f"{'p2_reg_s ='.ljust(25)} {p2.regime.reg_s.unwrap_or(X)};\n\t"
+            # c += f"{'p2_reg_len ='.ljust(25)} {p2.regime.reg_len.unwrap_or(X)};\n\t"
+            # c += f"{'p2_k ='.ljust(25)} {p2.regime.k.unwrap_or(X)};\n\t"
+            # c += f"{'p2_regime_bits ='.ljust(25)} {p2.regime.calc_reg_bits()};\n\t"
+            # if ES > 0:
+            #     c += f"{'p2_exp ='.ljust(25)} {p2.exp};\n\t"
+            # c += f"{'p2_mant ='.ljust(25)} {N}'b{get_bin(p2.mant, N)};\n\t"
+
+            c += f"{'// pout:'.ljust(25)} {get_bin(pout.bit_repr(), N)} {pout.eval()};\n\t"
+            c += f"{'pout_expected ='.ljust(25)} {N}'h{get_hex(pout.bit_repr(), N//4)};\n\t"
+            # c += f"{'pout_is_zero_expected ='.ljust(25)} {pout.is_zero.real};\n\t"
+            # c += f"{'pout_is_inf_expected ='.ljust(25)} {pout.is_inf.real};\n\t"
+            # c += f"{'pout_sign_expected ='.ljust(25)} {pout.sign};\n\t"
+            # c += f"{'pout_reg_s_expected ='.ljust(25)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
+            # c += f"{'pout_reg_len_expected ='.ljust(25)} {pout.regime.reg_len.unwrap_or(X)};\n\t"
+            # c += f"{'pout_k_expected ='.ljust(25)} {pout.regime.k.unwrap_or(X)};\n\t"
+            # c += f"{'pout_regime_bits_expected ='.ljust(25)} {pout.regime.calc_reg_bits()};\n\t"
+            # if ES > 0:
+            #     c += f"{'pout_exp_expected ='.ljust(25)} {pout.exp};\n\t"
+            # c += f"{'pout_mant_expected ='.ljust(25)} {N}'b{get_bin(pout.mant, N)};\n\t"
+            
+            c += f"#10;\n\n"
+
 
 
 

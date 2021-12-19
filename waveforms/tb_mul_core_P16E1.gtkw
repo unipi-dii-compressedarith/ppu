@@ -1,96 +1,101 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Dec 19 17:41:41 2021
+[*] Sun Dec 19 19:24:59 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P16E1.vcd"
-[dumpfile_mtime] "Sun Dec 19 17:41:15 2021"
-[dumpfile_size] 73547
+[dumpfile_mtime] "Sun Dec 19 19:06:21 2021"
+[dumpfile_size] 176020
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P16E1.gtkw"
 [timestart] 0
 [size] 2560 1418
 [pos] -1 -1
-*-8.178209 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-4.266930 45 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul_core.
 [sst_width] 193
-[signals_width] 236
+[signals_width] 360
 [sst_expanded] 1
 [sst_vpaned_height] 454
+@24
+tb_mul_core.test_no[16:0]
 @22
-tb_mul_core.mul_core_inst.F1[3:0]
-tb_mul_core.mul_core_inst.F2[3:0]
-tb_mul_core.mul_core_inst.exp[15:0]
-tb_mul_core.mul_core_inst.exp_adjusted_III[15:0]
-tb_mul_core.mul_core_inst.exp_adjusted_II[15:0]
-tb_mul_core.mul_core_inst.exp_adjusted_I[15:0]
+tb_mul_core.p1_hex[15:0]
+tb_mul_core.p2_hex[15:0]
+tb_mul_core.pout_hex[15:0]
+@200
+-
 @28
-tb_mul_core.mul_core_inst.exp_carry
-tb_mul_core.mul_core_inst.exp_carry_I
+tb_mul_core.p1_sign
+tb_mul_core.p2_sign
+tb_mul_core.pout_sign
+@200
+-
+@28
+tb_mul_core.p1_exp
+tb_mul_core.p2_exp
+@200
+-
+@28
+tb_mul_core.p1_reg_s
 @22
-tb_mul_core.mul_core_inst.f1[15:0]
-tb_mul_core.mul_core_inst.f2[15:0]
-tb_mul_core.mul_core_inst.final_mant[15:0]
-tb_mul_core.mul_core_inst.k[15:0]
-tb_mul_core.mul_core_inst.k_adjusted_III[15:0]
-tb_mul_core.mul_core_inst.k_adjusted_II[15:0]
-tb_mul_core.mul_core_inst.k_adjusted_I[15:0]
-@28
-tb_mul_core.mul_core_inst.mant_carry
+tb_mul_core.p1_reg_len[3:0]
+@420
+tb_mul_core.p1_k[15:0]
 @22
-tb_mul_core.mul_core_inst.mant_fraction_only[31:0]
-tb_mul_core.mul_core_inst.mant_len[15:0]
+tb_mul_core.p1_regime_bits[15:0]
+@200
+-
 @28
-tb_mul_core.mul_core_inst.p1_exp
-tb_mul_core.mul_core_inst.p1_is_inf
-tb_mul_core.mul_core_inst.p1_is_zero
+tb_mul_core.p2_reg_s
 @22
-tb_mul_core.mul_core_inst.p1_k[15:0]
-tb_mul_core.mul_core_inst.p1_mant[15:0]
-tb_mul_core.mul_core_inst.p1_reg_len[3:0]
-@28
-tb_mul_core.mul_core_inst.p1_reg_s
+tb_mul_core.p2_reg_len[3:0]
+@420
+tb_mul_core.p2_k[15:0]
 @22
-tb_mul_core.mul_core_inst.p1_regime_bits[15:0]
-@28
-tb_mul_core.mul_core_inst.p1_sign
-tb_mul_core.mul_core_inst.p2_exp
-tb_mul_core.mul_core_inst.p2_is_inf
-tb_mul_core.mul_core_inst.p2_is_zero
+tb_mul_core.p2_regime_bits[15:0]
+@200
+-
 @22
-tb_mul_core.mul_core_inst.p2_k[15:0]
-tb_mul_core.mul_core_inst.p2_mant[15:0]
-tb_mul_core.mul_core_inst.p2_reg_len[3:0]
+tb_mul_core.p1_mant[15:0]
+tb_mul_core.p2_mant[15:0]
+@200
+-
 @28
-tb_mul_core.mul_core_inst.p2_reg_s
+tb_mul_core.p1_is_zero
+tb_mul_core.p2_is_zero
+tb_mul_core.p1_is_inf
+tb_mul_core.p2_is_inf
+@200
+-
+@28
+tb_mul_core.pout_exp
+tb_mul_core.pout_exp_expected
+tb_mul_core.pout_is_inf_expected
+tb_mul_core.pout_is_zero_expected
+@420
+tb_mul_core.pout_k[15:0]
+tb_mul_core.pout_k_expected[15:0]
 @22
-tb_mul_core.mul_core_inst.p2_regime_bits[15:0]
+tb_mul_core.pout_mant[15:0]
+tb_mul_core.pout_mant_expected[15:0]
+tb_mul_core.pout_reg_len[3:0]
+tb_mul_core.pout_reg_len_expected[3:0]
 @28
-tb_mul_core.mul_core_inst.p2_sign
-tb_mul_core.mul_core_inst.pout_exp
-tb_mul_core.mul_core_inst.pout_is_inf
-tb_mul_core.mul_core_inst.pout_is_zero
+tb_mul_core.diff_pout_reg_len
+tb_mul_core.pout_reg_s
+tb_mul_core.pout_reg_s_expected
+@23
+tb_mul_core.pout_regime_bits[15:0]
 @22
-tb_mul_core.mul_core_inst.pout_k[15:0]
-tb_mul_core.mul_core_inst.pout_mant[15:0]
-tb_mul_core.mul_core_inst.pout_reg_len[3:0]
+tb_mul_core.pout_regime_bits_expected[15:0]
 @28
-tb_mul_core.mul_core_inst.pout_reg_s
-@22
-tb_mul_core.mul_core_inst.pout_regime_bits[15:0]
-@28
-tb_mul_core.mul_core_inst.pout_sign
-@22
-tb_mul_core.mul_core_inst.prod_mantissae[31:0]
-@28
-tb_mul_core.mul_core_inst.prod_mantissae_adjusted
-@22
-tb_mul_core.mul_core_inst.reg_len[3:0]
-@28
+tb_mul_core.pout_sign_expected
+tb_mul_core.pout_is_zero
+tb_mul_core.pout_is_inf
 tb_mul_core.diff_pout_exp
 tb_mul_core.diff_pout_is_inf
 tb_mul_core.diff_pout_is_zero
 tb_mul_core.diff_pout_k
 tb_mul_core.diff_pout_mant
-tb_mul_core.diff_pout_reg_len
 tb_mul_core.diff_pout_reg_s
 tb_mul_core.diff_pout_regime_bits
 tb_mul_core.diff_pout_sign

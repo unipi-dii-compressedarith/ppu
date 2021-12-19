@@ -4,6 +4,8 @@ iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD -DN=8 -DES=0  -o mul_core.out ../sr
 
 iverilog -DTEST_BENCH_MUL_CORE               -DN=16 -DES=1 -o mul_core.out ../src/mul_core.sv && ./mul_core.out
 
+yosys -p "synth_intel -family max10 -top mul_core -vqm mul_core.vqm" \
+    ../src/mul_core.sv > yosys_mul_core.out
 
 TODO: get rid of unnecessary flags
 */
@@ -88,7 +90,7 @@ module mul_core #(
 
 
 
-    wire [2*N-1:0] prod_mantissae;
+    wire [2*N-1:0] prod_mantissae, prod_mantissae_adjusted;
     assign prod_mantissae = f1 * f2;
 
     wire mant_carry;
@@ -130,7 +132,6 @@ module mul_core #(
 `endif
     : exp_adjusted_II;
 
-
     assign prod_mantissae_adjusted = mant_carry == 1 ? prod_mantissae >> 1 : prod_mantissae;
 
 
@@ -151,8 +152,6 @@ module mul_core #(
     wire [N-1:0] final_mant;
     assign final_mant = mant_fraction_only >> (2*N - mant_len - 2);
 
-    assign pout_is_zero = 0;
-    assign pout_is_inf = 0;
     assign pout_sign = p1_sign ^ p2_sign;
     assign pout_reg_s = 0; /* dontcare */
     assign pout_regime_bits = 0; /* dontcare */
@@ -237,6 +236,8 @@ module tb_mul_core;
 
     reg [N:0] test_no;
 
+    reg [N-1:0] p1_hex, p2_hex, pout_hex;
+
     reg diff_pout_is_zero;
     reg diff_pout_is_inf;
     reg diff_pout_sign;
@@ -297,7 +298,6 @@ module tb_mul_core;
 
 
     always @(*) begin
-
         diff_pout_is_zero = pout_is_zero === pout_is_zero_expected ? 0 : 1'bx;
         diff_pout_is_inf = pout_is_inf === pout_is_inf_expected ? 0 : 1'bx;
         diff_pout_sign = pout_sign === pout_sign_expected ? 0 : 1'bx;

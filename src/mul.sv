@@ -1,11 +1,24 @@
 /*
 
-## === ES: 0 ====#
-iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv && ./a.out
+iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
+../src/mul.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv \
+&& ./mul.out
 
 
-## === ES: not 0 ====#
-iverilog -DTEST_BENCH_MUL mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv && ./a.out
+iverilog -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
+../src/mul.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv \
+&& ./mul.out
+
 
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
 
@@ -132,17 +145,27 @@ endmodule
 `ifdef TEST_BENCH_MUL
 module tb_mul;
 
-    parameter N = 8;
-    parameter S = $clog2(N);
-`ifndef NO_ES_FIELD
-    parameter ES = 1; // whatever
+
+`ifdef N
+    parameter N = `N;
 `else
-    parameter ES = 0; 
+    parameter N = 8;
 `endif
+
+    parameter S = $clog2(N);
+
+`ifdef ES
+    parameter ES = `ES;
+`else
+    parameter ES = 0;
+`endif  
 
     reg [N-1:0] p1, p2;
     wire [N-1:0] pout;
 
+    reg [N-1:0] pout_expected;
+
+    reg [N:0] test_no;
 
     mul #(
         .N      (N),
@@ -159,22 +182,19 @@ module tb_mul;
         
              if (N == 8 && ES == 0) $dumpfile("tb_mul_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_mul_P5E1.vcd");
+        else if (N == 16 && ES == 1)$dumpfile("tb_mul_P16E1.vcd");
         else                        $dumpfile("tb_mul.vcd");
 
         $dumpvars(0, tb_mul);                        
             
         if (N == 8 && ES == 0) begin
-        
-            p1 = 8'b01110010;
-            p2 = 8'b01110011;
-        
-        #10;
-            p1 = 8'b11110010;
-            p2 = 8'b00010011;
-        
-        #10;
-        
+            `include "../src/tb_posit_mul_P16E1.sv"
         end
+
+        if (N == 16 && ES == 1) begin
+            `include "../src/tb_posit_mul_P16E1.sv"
+        end
+
 
         #10;
     end
