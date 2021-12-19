@@ -104,6 +104,8 @@ module tb_posit_encode;
 
     reg [N-1:0]   posit_expected;
     reg err;
+    
+    reg test_no;
 
     posit_encode #(
         .N(N),

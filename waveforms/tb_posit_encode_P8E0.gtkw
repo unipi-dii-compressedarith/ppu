@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Mon Dec  6 08:25:56 2021
+[*] Sun Dec 19 08:44:09 2021
 [*]
-[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_encode_P8E0.vcd"
-[dumpfile_mtime] "Mon Dec  6 08:25:10 2021"
-[dumpfile_size] 10558
-[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/tb_posit_encode_P8E0.gtkw"
-[timestart] 0
-[size] 2468 1267
-[pos] -1 -124
-*-4.360256 28 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P8E0.vcd"
+[dumpfile_mtime] "Sun Dec 19 08:43:36 2021"
+[dumpfile_size] 31948
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P8E0.gtkw"
+[timestart] 1409
+[size] 2560 1418
+[pos] 840 -1464
+*-2.968463 1444 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_posit_encode.
 [treeopen] tb_posit_encode.posit_encode_inst.
 [sst_width] 193
 [signals_width] 270
 [sst_expanded] 1
-[sst_vpaned_height] 400
+[sst_vpaned_height] 709
 @28
 tb_posit_encode.sign
 @200
