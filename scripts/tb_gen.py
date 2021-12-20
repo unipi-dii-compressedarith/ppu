@@ -35,16 +35,11 @@ parser.add_argument(
     "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
 )
 
-parser.add_argument(
-    "--num-bits", "-n", type=int, required=True, help="Num posit bits"
-)
+parser.add_argument("--num-bits", "-n", type=int, required=True, help="Num posit bits")
 
-parser.add_argument(
-    "--es-size", "-es", type=int, required=True, help="Num posit bits"
-)
+parser.add_argument("--es-size", "-es", type=int, required=True, help="Num posit bits")
 
 args = parser.parse_args()
-
 
 
 N, ES = args.num_bits, args.es_size
@@ -62,6 +57,12 @@ if __name__ == "__main__":
     +-------------------------------------*/\n"""
 
     list_a = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+    list_b = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+    # force 0 and inf to be somewhere
+    list_a[random.randint(0, N)] = 0
+    list_a[random.randint(0, N)] = 1 << (N-1)
+    list_b[random.randint(0, N)] = 0
+    list_b[random.randint(0, N)] = 1 << (N-1)
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
@@ -84,7 +85,9 @@ if __name__ == "__main__":
                 # mantissa
                 c += f"{'mant_expected ='.ljust(25)} {N}'b{get_bin(p.mant, N)};\n"
             elif args.operation == Tb.ENCODE:
-                c += f"{'posit_expected ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
+                c += (
+                    f"{'posit_expected ='.ljust(25)} {N}'b{get_bin(p.bit_repr(), N)};\n"
+                )
                 ### sign
                 c += f"{'sign ='.ljust(25)} {p.sign};\n"
                 ### regime
@@ -99,17 +102,16 @@ if __name__ == "__main__":
                 c += f"{'is_zero ='.ljust(25)} {p.is_zero.real};\n"
                 c += f"{'is_inf ='.ljust(25)} {p.is_inf.real};\n"
             c += f"#10;\n\n"
-    
-    list_b = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
+
     if args.operation == Tb.MUL_CORE:
         for counter, (a, b) in enumerate(zip(list_a, list_b)):
             p1 = from_bits(a, N, ES)
             p2 = from_bits(b, N, ES)
 
             pout = p1 * p2
-            
+
             c += f"{'test_no ='.ljust(25)} {counter+1};\n\t"
-            
+
             c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {p1.eval()};\n\t"
             c += f"{'p1_hex ='.ljust(25)} {N}'h{get_hex(p1.bit_repr(), N//4)};\n\t"
             c += f"{'p1_is_zero ='.ljust(25)} {p1.is_zero.real};\n\t"
@@ -122,7 +124,6 @@ if __name__ == "__main__":
             if ES > 0:
                 c += f"{'p1_exp ='.ljust(25)} {p1.exp};\n\t"
             c += f"{'p1_mant ='.ljust(25)} {N}'b{get_bin(p1.mant, N)};\n\t"
-
 
             c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {p2.eval()};\n\t"
             c += f"{'p2_hex ='.ljust(25)} {N}'h{get_hex(p2.bit_repr(), N//4)};\n\t"
@@ -149,7 +150,7 @@ if __name__ == "__main__":
             if ES > 0:
                 c += f"{'pout_exp_expected ='.ljust(25)} {pout.exp};\n\t"
             c += f"{'pout_mant_expected ='.ljust(25)} {N}'b{get_bin(pout.mant, N)};\n\t"
-            
+
             c += f"#10;\n\n"
 
     elif args.operation == Tb.MUL:
@@ -160,7 +161,7 @@ if __name__ == "__main__":
             pout = p1 * p2
 
             c += f"{'test_no ='.ljust(25)} {counter+1};\n\t"
-            
+
             c += f"{'// p1:'.ljust(25)} {get_bin(p1.bit_repr(), N)} {p1.eval()};\n\t"
             c += f"{'p1 ='.ljust(25)} {N}'h{get_hex(p1.bit_repr(), N//4)};\n\t"
             # c += f"{'p1_is_zero ='.ljust(25)} {p1.is_zero.real};\n\t"
@@ -173,7 +174,6 @@ if __name__ == "__main__":
             # if ES > 0:
             #     c += f"{'p1_exp ='.ljust(25)} {p1.exp};\n\t"
             # c += f"{'p1_mant ='.ljust(25)} {N}'b{get_bin(p1.mant, N)};\n\t"
-
 
             c += f"{'// p2:'.ljust(25)} {get_bin(p2.bit_repr(), N)} {p2.eval()};\n\t"
             c += f"{'p2 ='.ljust(25)} {N}'h{get_hex(p2.bit_repr(), N//4)};\n\t"
@@ -200,12 +200,8 @@ if __name__ == "__main__":
             # if ES > 0:
             #     c += f"{'pout_exp_expected ='.ljust(25)} {pout.exp};\n\t"
             # c += f"{'pout_mant_expected ='.ljust(25)} {N}'b{get_bin(pout.mant, N)};\n\t"
-            
+
             c += f"#10;\n\n"
-
-
-
-
 
     filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"
     with open(filename, "w") as f:

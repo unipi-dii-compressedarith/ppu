@@ -41,35 +41,35 @@ endmodule
 /*
 ref: http://www.ece.ualberta.ca/~jhan8/publications/1570528628.pdf
 */
-module highest_set_v2 #(
-        parameter SIZE = 8,
-        parameter VAL = 1
-    )(
-        input logic [N-1:0] bits,
-        output wire [N-1:0] index_bit,
-        output wire [$clog2(N)-1:0] index
-    );
+// module highest_set_v2 #(
+//         parameter SIZE = 8,
+//         parameter VAL = 1
+//     )(
+//         input logic [N-1:0] bits,
+//         output wire [N-1:0] index_bit,
+//         output wire [$clog2(N)-1:0] index
+//     );
 
-    localparam N = SIZE;
-    wire [N-1:0] _wire;
+//     localparam N = SIZE;
+//     wire [N-1:0] _wire;
     
-    generate
-        for (genvar i=0; i<N-1; i=i+1) begin
-            mux mux_inst (
-                .a      (_wire[i+1]),
-                .sel    (bits[i+1]),
-                .and_in (bits[i]),
-                .mux_out(_wire[i]),
-                .and_out(index_bit[i])
-            );
-        end
-    endgenerate
+//     generate
+//         for (genvar i=0; i<N-1; i=i+1) begin
+//             mux mux_inst (
+//                 .a      (_wire[i+1]),
+//                 .sel    (bits[i+1]),
+//                 .and_in (bits[i]),
+//                 .mux_out(_wire[i]),
+//                 .and_out(index_bit[i])
+//             );
+//         end
+//     endgenerate
 
-    assign _wire[N-1] = 1;
-    assign index_bit[N-1] = bits[N-1];
+//     assign _wire[N-1] = 1;
+//     assign index_bit[N-1] = bits[N-1];
 
-    assign index = $clog2(index_bit); //// achtung, fails to synthesize.
-endmodule
+//     assign index = $clog2(index_bit); //// achtung, fails to synthesize.
+// endmodule
 
 
 /// mux + and gate actually. only instantiated by `highest_set_v2`. maybe unnecessary later on.
@@ -104,9 +104,10 @@ module highest_set_v3 #(
 
     wire [N-1:0] bits_reversed;
     wire [N-1:0] _index_bit_tmp;
-    
+
+    genvar i;
     generate
-        for (genvar i=0; i<N; i=i+1) begin
+        for (i=0; i<N; i=i+1) begin: _gen1
             assign bits_reversed[i] = bits[N-1-i];
         end
     endgenerate
@@ -115,9 +116,8 @@ module highest_set_v3 #(
     /// detect the rightmost bit-set index: 10'b0011001000 -> 5'b0000001000
     assign _index_bit_tmp = bits_reversed & c2(bits_reversed);
 
-
     generate
-        for (genvar i=0; i<N; i=i+1) begin
+        for (i=0; i<N; i=i+1) begin: _gen2
             assign index_bit[i] = _index_bit_tmp[N-1-i];
         end
     endgenerate

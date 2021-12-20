@@ -26,20 +26,31 @@ yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv po
 
 */
 module mul #(
-        parameter N = 8,
+        parameter N = 16,
         parameter S = $clog2(N),
-        parameter ES = 0
+        parameter ES = 1
     )(
         input [N-1:0] p1, p2,
         output [N-1:0] pout
     );
 
-    wire         p1_reg_s, p2_reg_s;
-    wire [S-1:0] p1_reg_len, p2_reg_len;
-    wire [N-1:0] p1_reg_bits, p2_reg_bits;
-    wire [N-1:0] p1_k, p2_k;
-    wire [ES-1:0] p1_exp, p2_exp;
-    wire [N-1:0] p1_mant, p2_mant;
+    wire            p1_is_zero, p2_is_zero;
+    wire            p1_is_inf, p2_is_inf;
+    wire            p1_reg_s, p2_reg_s;
+    wire [S-1:0]    p1_reg_len, p2_reg_len;
+    wire [N-1:0]    p1_reg_bits, p2_reg_bits;
+    wire [N-1:0]    p1_k, p2_k;
+    wire [ES-1:0]   p1_exp, p2_exp;
+    wire [N-1:0]    p1_mant, p2_mant;
+
+    wire            pout_sign;
+    wire            pout_reg_s;
+    wire [N-1:0]    pout_regime_bits;
+    wire [S-1:0]    pout_reg_len;
+    wire [N-1:0]    pout_k;
+    wire [ES-1:0]   pout_exp;
+    wire [N-1:0]    pout_mant;
+    wire            pout_is_zero, pout_is_inf;
 
 
     posit_decode #(
@@ -48,8 +59,8 @@ module mul #(
         .ES(ES)
     ) posit_decode_p1 (
         .bits           (p1),
-        .is_zero        ( ),
-        .is_inf         ( ),
+        .is_zero        (p1_is_zero),
+        .is_inf         (p1_is_inf),
         .sign           (p1_sign),
         .reg_s          (p1_reg_s),
         .regime_bits    (p1_reg_bits),
@@ -65,8 +76,8 @@ module mul #(
         .ES(ES)
     ) posit_decode_p2 (
         .bits           (p2),
-        .is_zero        ( ),
-        .is_inf         ( ),
+        .is_zero        (p2_is_zero),
+        .is_inf         (p2_is_inf),
         .sign           (p2_sign),
         .reg_s          (p2_reg_s),
         .regime_bits    (p2_reg_bits),
@@ -81,8 +92,8 @@ module mul #(
         .S                  (S),
         .ES                 (ES)
     ) mul_core_inst (  
-        .p1_is_zero         ( ),
-        .p1_is_inf          ( ),
+        .p1_is_zero         (p1_is_zero),
+        .p1_is_inf          (p1_is_inf),
         .p1_sign            (p1_sign), 
         .p1_reg_s           (p1_reg_s),
         .p1_regime_bits     (p1_reg_bits),
@@ -93,29 +104,29 @@ module mul #(
 `endif
         .p1_mant            (p1_mant),
     
-        .p2_is_zero         ( ), 
-        .p2_is_inf          ( ),
+        .p2_is_zero         (p2_is_zero), 
+        .p2_is_inf          (p2_is_inf),
         .p2_sign            (p2_sign),
         .p2_reg_s           (p2_reg_s),
         .p2_regime_bits     (p2_reg_bits),
         .p2_reg_len         (p2_reg_len),
         .p2_k               (p2_k),
 `ifndef NO_ES_FIELD    
-        .p2_exp             ( ),
+        .p2_exp             (p2_exp),
 `endif
-        .p2_mant            ( ),
+        .p2_mant            (p2_mant),
 
-        .pout_is_zero       ( ),
-        .pout_is_inf        ( ),
-        .pout_sign          ( ),
-        .pout_reg_s         ( ),
-        .pout_regime_bits   ( ),
-        .pout_reg_len       ( ),
-        .pout_k             ( ),
+        .pout_is_zero       (pout_is_zero),
+        .pout_is_inf        (pout_is_inf),
+        .pout_sign          (pout_sign),
+        .pout_reg_s         (pout_reg_s),
+        .pout_regime_bits   (pout_regime_bits),
+        .pout_reg_len       (pout_reg_len),
+        .pout_k             (pout_k),
 `ifndef NO_ES_FIELD
-        .pout_exp           (p2_exp),
+        .pout_exp           (pout_exp),
 `endif
-        .pout_mant          (p2_mant)
+        .pout_mant          (pout_mant)
     );
 
     posit_encode #(
@@ -123,15 +134,15 @@ module mul #(
         .S(S),
         .ES(ES)
     ) posit_encode_inst (
-        .is_zero        ( ),
-        .is_inf         ( ),
-        .sign           ( ),
-        .reg_s          ( ),
-        .regime_bits    ( ),
-        .reg_len        ( ),
-        .k              ( ),
-        .exp            ( ),
-        .mant           ( ),
+        .is_zero        (pout_is_zero),
+        .is_inf         (pout_is_inf),
+        .sign           (pout_sign),
+        .reg_s          (pout_reg_s),
+        .regime_bits    (pout_regime_bits),
+        .reg_len        (pout_reg_len),
+        .k              (pout_k),
+        .exp            (pout_exp),
+        .mant           (pout_mant),
         .posit          (pout)
     );
 
@@ -165,6 +176,7 @@ module tb_mul;
 
     reg [N-1:0] pout_expected;
 
+    reg diff_pout;
     reg [N:0] test_no;
 
     mul #(
@@ -177,6 +189,10 @@ module tb_mul;
         .pout   (pout)
     );
 
+
+    always @(*) begin
+        diff_pout = pout === pout_expected ? 0 : 1'bx;
+    end
 
     initial begin
         
