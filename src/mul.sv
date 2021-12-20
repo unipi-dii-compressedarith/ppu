@@ -26,14 +26,14 @@ yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv po
 
 
 `ifdef ALTERA_RESERVED_QIS
-`define NO_ES_FIELD
+//`define NO_ES_FIELD
 `endif
 
 module mul #(
 `ifdef ALTERA_RESERVED_QIS
-        parameter N = 8,
+        parameter N = 16,
         parameter S = $clog2(N),
-        parameter ES = 0
+        parameter ES = 1
 `else
         parameter N = 8,
         parameter S = $clog2(N),
