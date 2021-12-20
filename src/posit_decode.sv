@@ -5,13 +5,19 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
 
-    iverilog -DTEST_BENCH_DECODE -DN=8 -DES=0 -o posit_decode.out \
+    iverilog -DTEST_BENCH_DECODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_decode.out \
     ../src/posit_decode.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
     && ./posit_decode.out
 
-    iverilog -DTEST_BENCH_DECODE -DN=16 -DES=1 -o posit_decode.out \
+    iverilog -DTEST_BENCH_DECODE               -DN=16 -DES=1 -o posit_decode.out \
+    ../src/posit_decode.sv \
+    ../src/highest_set.sv \
+    ../src/cls.sv \
+    && ./posit_decode.out
+
+    iverilog -DTEST_BENCH_DECODE               -DN=32 -DES=2 -o posit_decode.out \
     ../src/posit_decode.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
@@ -34,9 +40,9 @@ module posit_decode #(
         output          is_inf,
         output          sign,
         output          reg_s,
-        output [N-1:0]  regime_bits,
-        output [S-1:0]  reg_len,
-        output [N-1:0]  k,
+
+        output [S:0]    reg_len,
+        output [S:0]    k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] exp,
 `endif
@@ -47,12 +53,10 @@ module posit_decode #(
         c2 = ~a + 1'b1;
     endfunction
 
-    function [N-1:0] min(input [N-1:0] a, b);
-        min = a < b ? a : b;
-    endfunction
+    // function [N-1:0] min(input [N-1:0] a, b);
+    //     min = a < b ? a : b;
+    // endfunction
 
-
-    // wire [N-1:0] mask = {N{1'b1}}; // unused
     assign is_zero = bits == {N{1'b0}};
     assign is_inf = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
@@ -62,21 +66,25 @@ module posit_decode #(
 
     wire [S-1:0] leading_ones, leading_zeros;
 
+    // regime sign
     assign reg_s = u_bits[N-2];
 
     assign k = reg_s == 1 ? leading_ones - 1 : c2(leading_zeros);
     
-    assign reg_len = reg_s == 1 ? min(k + 2, N - 1) : min(c2(k) + 1, N - 1);
+    assign reg_len = reg_s == 1 ? k + 2 : c2(k) + 1;
 
-    // not useful but anyway
-    assign regime_bits = (u_bits << 1) >> (N - reg_len);
+    // // not useful but anyway
 
 `ifndef NO_ES_FIELD
     assign exp = (u_bits << (1 + reg_len)) >> (N - ES);
 `endif
 
-    assign mant = (u_bits << (1 + reg_len + ES)) >> (1 + reg_len + ES);
+    wire [S:0] mant_len;
+    assign mant_len = N - 1 - reg_len - ES;
 
+
+    assign mant = (u_bits << (N - mant_len)) >> (N - mant_len);
+    
     
     // count leading X
     cls #(
@@ -130,9 +138,8 @@ module tb_posit_decode;
     wire            is_inf;
     wire            sign;
     wire            reg_s;
-    wire [N-1:0]    regime_bits;
-    wire [S-1:0]    reg_len;
-    wire [N-1:0]    k;
+    wire [S  :0]    reg_len;
+    wire [S  :0]    k;
 `ifndef NO_ES_FIELD
     wire [ES-1:0]   exp;
 `endif
@@ -140,9 +147,11 @@ module tb_posit_decode;
     /*************************/
 
     reg sign_expected, reg_s_expected;
-    reg [S-1:0] reg_len_expected;
+    reg [S  :0] reg_len_expected, k_expected;
     reg [ES-1:0] exp_expected;
-    reg [N-1:0] regime_bits_expected, mant_expected;
+    reg [N-1:0] mant_expected;
+    reg [S-1:0] mant_len_expected;
+    reg is_zero_expected, is_inf_expected;
     reg err;
 
     reg [N:0] test_no;
@@ -150,16 +159,28 @@ module tb_posit_decode;
 `ifndef NO_ES_FIELD
     reg diff_exp;
 `endif    
-    reg diff_regime_bits, diff_mant;
+    reg diff_k, diff_mant, diff_is_zero, diff_is_inf;
     
+    reg k_is_pos;
     
     always @(*) begin
 `ifndef NO_ES_FIELD
         diff_exp = (exp === exp_expected ? 0 : 'bx);
 `endif
         diff_mant = (mant === mant_expected ? 0 : 'bx);
-        diff_regime_bits = (regime_bits === regime_bits_expected ? 0 : 'bx);
-        if (diff_exp == 0 && diff_mant == 0 && diff_regime_bits == 0) err = 0;
+        diff_k = (k === k_expected ? 0 : 'bx);
+        diff_is_zero = (is_zero === is_zero_expected ? 0 : 'bx);
+        diff_is_inf = (is_inf === is_inf_expected ? 0 : 'bx);
+        
+        if (
+            diff_mant == 0
+`ifndef NO_ES_FIELD
+            && diff_exp == 0 
+`endif
+            && diff_k == 0 
+            && diff_is_zero == 0 
+            && diff_is_inf == 0
+        ) err = 0;
         else err = 1'bx;
     end
 
@@ -173,7 +194,7 @@ module tb_posit_decode;
         .is_inf         (is_inf),
         .sign           (sign),
         .reg_s          (reg_s),
-        .regime_bits    (regime_bits),
+
         .reg_len        (reg_len),
         .k              (k),
 `ifndef NO_ES_FIELD
@@ -186,6 +207,7 @@ module tb_posit_decode;
              if (N == 8 && ES == 0) $dumpfile("tb_posit_decode_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_posit_decode_P5E1.vcd");
         else if (N == 16 && ES == 1)$dumpfile("tb_posit_decode_P16E1.vcd");
+        else if (N == 32 && ES == 2)$dumpfile("tb_posit_decode_P32E2.vcd");
         else                        $dumpfile("tb_posit_decode.vcd");
 
 	    $dumpvars(0, tb_posit_decode);                        
@@ -200,6 +222,10 @@ module tb_posit_decode;
 
         if (N == 16 && ES == 1) begin
             `include "../src/tb_posit_decode_P16E1.sv"
+        end
+
+        if (N == 32 && ES == 2) begin
+            `include "../src/tb_posit_decode_P32E2.sv"
         end
 
 

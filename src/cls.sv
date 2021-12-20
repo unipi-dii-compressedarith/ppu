@@ -11,6 +11,7 @@ Description:
 
 Usage:
     cd $PROJECT_ROOT/waveforms
+    
     iverilog -DTEST_BENCH_CLS -o cls.out ../src/cls.sv ../src/highest_set.sv && ./cls.out
 */
 
