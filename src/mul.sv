@@ -22,13 +22,23 @@ iverilog -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
 
-
-
 */
+
+
+`ifdef ALTERA_RESERVED_QIS
+`define NO_ES_FIELD
+`endif
+
 module mul #(
-        parameter N = 16,
+`ifdef ALTERA_RESERVED_QIS
+        parameter N = 8,
         parameter S = $clog2(N),
-        parameter ES = 1
+        parameter ES = 0
+`else
+        parameter N = 8,
+        parameter S = $clog2(N),
+        parameter ES = 0
+`endif
     )(
         input [N-1:0] p1, p2,
         output [N-1:0] pout
@@ -40,7 +50,9 @@ module mul #(
     wire [S-1:0]    p1_reg_len, p2_reg_len;
     wire [N-1:0]    p1_reg_bits, p2_reg_bits;
     wire [N-1:0]    p1_k, p2_k;
+`ifndef NO_ES_FIELD
     wire [ES-1:0]   p1_exp, p2_exp;
+`endif
     wire [N-1:0]    p1_mant, p2_mant;
 
     wire            pout_sign;
@@ -66,7 +78,9 @@ module mul #(
         .regime_bits    (p1_reg_bits),
         .reg_len        (p1_reg_len),
         .k              (p1_k),
+`ifndef NO_ES_FIELD
         .exp            (p1_exp),
+`endif
         .mant           (p1_mant)
     );
 
@@ -83,7 +97,9 @@ module mul #(
         .regime_bits    (p2_reg_bits),
         .reg_len        (p2_reg_len),
         .k              (p2_k),
+`ifndef NO_ES_FIELD
         .exp            (p2_exp),
+`endif
         .mant           (p2_mant)
     );
 
@@ -99,7 +115,7 @@ module mul #(
         .p1_regime_bits     (p1_reg_bits),
         .p1_reg_len         (p1_reg_len),
         .p1_k               (p1_k),
-`ifndef NO_ES_FIELD    
+`ifndef NO_ES_FIELD
         .p1_exp             (p1_exp),
 `endif
         .p1_mant            (p1_mant),
@@ -141,7 +157,9 @@ module mul #(
         .regime_bits    (pout_regime_bits),
         .reg_len        (pout_reg_len),
         .k              (pout_k),
+`ifndef NO_ES_FIELD
         .exp            (pout_exp),
+`endif
         .mant           (pout_mant),
         .posit          (pout)
     );

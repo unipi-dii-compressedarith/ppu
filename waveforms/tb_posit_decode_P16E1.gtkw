@@ -1,28 +1,26 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Dec 19 10:15:29 2021
+[*] Mon Dec 20 08:52:04 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P16E1.vcd"
-[dumpfile_mtime] "Sun Dec 19 10:15:11 2021"
-[dumpfile_size] 102423
+[dumpfile_mtime] "Mon Dec 20 08:51:34 2021"
+[dumpfile_size] 100807
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P16E1.gtkw"
-[timestart] 429
-[size] 2560 1418
-[pos] -1 -1
-*-3.190055 444 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[timestart] 354
+[size] 2560 855
+[pos] 80 -3
+*-4.190054 446 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_posit_decode.
 [treeopen] tb_posit_decode.posit_decode_inst.
 [sst_width] 193
 [signals_width] 253
 [sst_expanded] 1
-[sst_vpaned_height] 807
-@25
-tb_posit_decode.test_no[16:0]
+[sst_vpaned_height] 283
 @24
+tb_posit_decode.test_no[16:0]
+@28
 tb_posit_decode.bits[15:0]
-tb_posit_decode.diff_exp[15:0]
-tb_posit_decode.diff_mant[15:0]
-tb_posit_decode.diff_regime_bits[15:0]
+@24
 tb_posit_decode.err
 tb_posit_decode.exp
 tb_posit_decode.exp_expected
@@ -41,5 +39,9 @@ tb_posit_decode.regime_bits[15:0]
 tb_posit_decode.regime_bits_expected[15:0]
 tb_posit_decode.sign
 tb_posit_decode.sign_expected
+@28
+tb_posit_decode.diff_exp
+tb_posit_decode.diff_mant
+tb_posit_decode.diff_regime_bits
 [pattern_trace] 1
 [pattern_trace] 0

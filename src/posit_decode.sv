@@ -37,7 +37,9 @@ module posit_decode #(
         output [N-1:0]  regime_bits,
         output [S-1:0]  reg_len,
         output [N-1:0]  k,
+`ifndef NO_ES_FIELD
         output [ES-1:0] exp,
+`endif
         output [N-1:0]  mant
     );
 
@@ -69,7 +71,9 @@ module posit_decode #(
     // not useful but anyway
     assign regime_bits = (u_bits << 1) >> (N - reg_len);
 
+`ifndef NO_ES_FIELD
     assign exp = (u_bits << (1 + reg_len)) >> (N - ES);
+`endif
 
     assign mant = (u_bits << (1 + reg_len + ES)) >> (1 + reg_len + ES);
 
@@ -129,7 +133,9 @@ module tb_posit_decode;
     wire [N-1:0]    regime_bits;
     wire [S-1:0]    reg_len;
     wire [N-1:0]    k;
+`ifndef NO_ES_FIELD
     wire [ES-1:0]   exp;
+`endif
     wire [N-1:0]    mant;
     /*************************/
 
@@ -141,9 +147,16 @@ module tb_posit_decode;
 
     reg [N:0] test_no;
 
-    reg [N-1:0] diff_exp, diff_regime_bits, diff_mant;
+`ifndef NO_ES_FIELD
+    reg diff_exp;
+`endif    
+    reg diff_regime_bits, diff_mant;
+    
+    
     always @(*) begin
+`ifndef NO_ES_FIELD
         diff_exp = (exp === exp_expected ? 0 : 'bx);
+`endif
         diff_mant = (mant === mant_expected ? 0 : 'bx);
         diff_regime_bits = (regime_bits === regime_bits_expected ? 0 : 'bx);
         if (diff_exp == 0 && diff_mant == 0 && diff_regime_bits == 0) err = 0;
@@ -163,7 +176,9 @@ module tb_posit_decode;
         .regime_bits    (regime_bits),
         .reg_len        (reg_len),
         .k              (k),
+`ifndef NO_ES_FIELD
         .exp            (exp),
+`endif
         .mant           (mant)
     );
 
