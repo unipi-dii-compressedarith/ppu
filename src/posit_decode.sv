@@ -39,9 +39,10 @@ module posit_decode #(
         output          is_zero,
         output          is_inf,
         output          sign,
+        
         output          reg_s,
-
         output [S:0]    reg_len,
+        
         output [S:0]    k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] exp,

@@ -18,9 +18,8 @@ module mul_core #(
         input           p1_is_inf,
         input           p1_sign,
         input           p1_reg_s,
-        input  [N-1:0]  p1_regime_bits,
-        input  [S-1:0]  p1_reg_len,
-        input  [N-1:0]  p1_k,
+        input  [S:0]    p1_reg_len,
+        input  [S:0]    p1_k,
 `ifndef NO_ES_FIELD
         input  [ES-1:0] p1_exp,
 `endif
@@ -30,9 +29,8 @@ module mul_core #(
         input           p2_is_inf,
         input           p2_sign,
         input           p2_reg_s,
-        input  [N-1:0]  p2_regime_bits,
-        input  [S-1:0]  p2_reg_len,
-        input  [N-1:0]  p2_k,
+        input  [S:0]    p2_reg_len,
+        input  [S:0]    p2_k,
 `ifndef NO_ES_FIELD        
         input  [ES-1:0] p2_exp,
 `endif
@@ -42,9 +40,8 @@ module mul_core #(
         output          pout_is_inf,
         output          pout_sign,
         output          pout_reg_s,
-        output [N-1:0]  pout_regime_bits,
-        output [S-1:0]  pout_reg_len,
-        output [N-1:0]  pout_k,
+        output [S:0]    pout_reg_len,
+        output [S:0]    pout_k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] pout_exp,
 `endif
@@ -68,15 +65,13 @@ module mul_core #(
     assign pout_is_zero = p1_is_zero || p2_is_zero;
     assign pout_is_inf = (!p1_is_zero && p2_is_inf) || (p1_is_inf && !p2_is_zero);      // ...missing something?
 
-    wire [N-1:0] k, k_adjusted_I, k_adjusted_II, k_adjusted_III;
+    wire [S:0] k, k_adjusted_I, k_adjusted_II, k_adjusted_III;
     assign k = p1_k + p2_k;
 
-    wire [N-1:0] exp, exp_adjusted_I, exp_adjusted_II, exp_adjusted_III;                          // fix size later
-
 `ifndef NO_ES_FIELD
+    wire [ES-1:0] exp, exp_adjusted_I, exp_adjusted_II, exp_adjusted_III;                          // fix size later
+
     assign exp = p1_exp + p2_exp;
-`else
-    assign exp = 0;
 `endif
 
     
@@ -140,7 +135,7 @@ module mul_core #(
                                                  max(k_adjusted_II, -(N - 2)) ;
 
     
-    wire [S-1:0] reg_len;
+    wire [S:0] reg_len;
     assign reg_len = k_adjusted_III >= 0 ? k_adjusted_III + 2 : -k_adjusted_III + 1; // not bound checked
 
     wire [N-1:0] mant_len;
@@ -190,9 +185,8 @@ module tb_mul_core;
     reg            p1_is_inf;
     reg            p1_sign;
     reg            p1_reg_s;
-    reg   [N-1:0]  p1_regime_bits;
-    reg   [S-1:0]  p1_reg_len;
-    reg   [N-1:0]  p1_k;
+    reg   [S:0]    p1_reg_len;
+    reg   [S:0]    p1_k;
 `ifndef NO_ES_FIELD        
     reg   [ES-1:0] p1_exp;
 `endif
@@ -203,8 +197,8 @@ module tb_mul_core;
     reg            p2_sign;
     reg            p2_reg_s;
     reg   [N-1:0]  p2_regime_bits;
-    reg   [S-1:0]  p2_reg_len;
-    reg   [N-1:0]  p2_k;
+    reg   [S:0]    p2_reg_len;
+    reg   [S:0]    p2_k;
 `ifndef NO_ES_FIELD    
     reg   [ES-1:0] p2_exp;
 `endif
@@ -214,9 +208,8 @@ module tb_mul_core;
     wire           pout_is_inf;
     wire           pout_sign;
     wire           pout_reg_s;
-    wire  [N-1:0]  pout_regime_bits;
-    wire  [S-1:0]  pout_reg_len;
-    wire  [N-1:0]  pout_k;
+    wire  [S:0]    pout_reg_len;
+    wire  [S:0]    pout_k;
 `ifndef NO_ES_FIELD    
     wire  [ES-1:0] pout_exp;
 `endif
@@ -226,9 +219,8 @@ module tb_mul_core;
     reg            pout_is_inf_expected;
     reg            pout_sign_expected;
     reg            pout_reg_s_expected;
-    reg   [N-1:0]  pout_regime_bits_expected;
-    reg   [S-1:0]  pout_reg_len_expected;
-    reg   [N-1:0]  pout_k_expected;
+    reg   [S:0]    pout_reg_len_expected;
+    reg   [S:0]    pout_k_expected;
 `ifndef NO_ES_FIELD    
     reg   [ES-1:0] pout_exp_expected;
 `endif
@@ -242,7 +234,6 @@ module tb_mul_core;
     reg diff_pout_is_inf;
     reg diff_pout_sign;
     reg diff_pout_reg_s;
-    reg diff_pout_regime_bits;
     reg diff_pout_reg_len;
     reg diff_pout_k;
 `ifndef NO_ES_FIELD
@@ -261,7 +252,6 @@ module tb_mul_core;
         .p1_is_inf          (p1_is_inf), 
         .p1_sign            (p1_sign), 
         .p1_reg_s           (p1_reg_s),
-        .p1_regime_bits     (p1_regime_bits),
         .p1_reg_len         (p1_reg_len),
         .p1_k               (p1_k),
 `ifndef NO_ES_FIELD    
@@ -274,7 +264,6 @@ module tb_mul_core;
         .p2_is_inf          (p2_is_inf),   
         .p2_sign            (p2_sign),   
         .p2_reg_s           (p2_reg_s),
-        .p2_regime_bits     (p2_regime_bits),
         .p2_reg_len         (p2_reg_len),
         .p2_k               (p2_k),
 `ifndef NO_ES_FIELD    
@@ -287,7 +276,6 @@ module tb_mul_core;
         .pout_is_inf        (pout_is_inf),
         .pout_sign          (pout_sign),
         .pout_reg_s         (pout_reg_s),
-        .pout_regime_bits   (pout_regime_bits),
         .pout_reg_len       (pout_reg_len),
         .pout_k             (pout_k),
 `ifndef NO_ES_FIELD
@@ -302,7 +290,6 @@ module tb_mul_core;
         diff_pout_is_inf = pout_is_inf === pout_is_inf_expected ? 0 : 1'bx;
         diff_pout_sign = pout_sign === pout_sign_expected ? 0 : 1'bx;
         diff_pout_reg_s = pout_reg_s === pout_reg_s_expected ? 0 : 1'bx;
-        diff_pout_regime_bits = pout_regime_bits === pout_regime_bits_expected ? 0 : 1'bx;
         diff_pout_reg_len = pout_reg_len === pout_reg_len_expected ? 0 : 1'bx;
         diff_pout_k = pout_k === pout_k_expected ? 0 : 1'bx;
 `ifndef NO_ES_FIELD

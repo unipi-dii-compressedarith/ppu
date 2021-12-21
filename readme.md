@@ -1,18 +1,7 @@
 # PPU
 
-#### TODO:
 
-- P<8,0>
-    - [ ] add
-    - [x] mul
-    - [ ] div
-    - [ ]
 
-- P<16,0>
-    - [ ] add
-    - [ ] mul
-    - [ ] div
-    - [ ]
 
 
 #### file org:
