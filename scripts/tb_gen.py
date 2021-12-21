@@ -98,15 +98,15 @@ if __name__ == "__main__":
                 c += f"{'is_inf_expected ='.ljust(LJUST)} {p.is_inf.real};\n"
             elif args.operation == Tb.ENCODE:
                 c += (
-                    f"{'posit_expected ='.ljust(LJUST)} {N}'b{p.to_bin(prefix=False)};\n"
+                    f"{'posit_expected ='.ljust(LJUST)} {N}'h{p.to_hex(prefix=False)};\n"
                 )
                 ### sign
                 c += f"{'sign ='.ljust(LJUST)} {p.sign};\n"
                 ### regime
                 c += f"{'reg_s ='.ljust(LJUST)} {p.regime.reg_s.unwrap_or(X)};\n"
                 c += f"{'reg_len ='.ljust(LJUST)} {p.regime.reg_len.unwrap_or(X)};\n"
-                # c += f"{'k ='.ljust(LJUST)} {p.regime.k.unwrap_or(X)};\n"
-                c += f"{'regime_bits ='.ljust(LJUST)} {N}'b{get_bin(p.regime.calc_reg_bits(), N, prefix=False)};\n"
+                c += f"{'k ='.ljust(LJUST)} {p.regime.k.unwrap_or(X)};\n"
+                # c += f"{'regime_bits ='.ljust(LJUST)} {N}'b{get_bin(p.regime.calc_reg_bits(), N, prefix=False)};\n"
                 ### exponent
                 if ES > 0:
                     c += f"{'exp ='.ljust(LJUST)} {N}'b{get_bin(p.exp, N, prefix=False)};\n"

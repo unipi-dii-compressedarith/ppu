@@ -6,7 +6,9 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
     
-    iverilog -DTEST_BENCH_ENCODE -DN=8 -DES=0 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
+    iverilog -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
+
+    iverilog -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
 
     yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" ../src/posit_encode.sv > yosys_posit_encode.out
 
@@ -20,10 +22,11 @@ module posit_encode #(
         input          is_inf,
         input          sign,
         input          reg_s,
-        input [N-1:0]  regime_bits,
-        input [S-1:0]  reg_len,
-        input [N-1:0]  k,
+        input [S:0]  reg_len,
+        input [S:0]  k,
+`ifndef NO_ES_FIELD
         input [ES-1:0] exp,
+`endif
         input [N-1:0]  mant,
         output [N-1:0] posit
     );
@@ -31,22 +34,35 @@ module posit_encode #(
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
+
+    function is_negative(input [S:0] k);
+        is_negative = k[S];
+    endfunction
+
     
     function [N-1:0] shl (
             input [N-1:0] bits,
             input [N-1:0] rhs
         );
-        shl = rhs > 0 ? bits << rhs : bits;
+        shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
     endfunction
 
-    wire [N-1:0] bits, bits_assembled;
+    wire [N-1:0] bits_assembled;
+
+    wire [N:0] regime_bits; // 1 bit longer than it could regularly fit in.
+    
+    assign regime_bits = is_negative(k) ? 1 : (shl(1, (k + 1)) - 1) << 1;
+
     assign bits_assembled = ( 
           shl(sign, N-1)
         + shl(regime_bits, N-1-reg_len)
+`ifndef NO_ES_FIELD
         + shl(exp, N-1-reg_len-ES)
+`endif
         + mant
     );
 
+    wire [N-1:0] bits;
     assign bits = 
         sign == 0 ? bits_assembled : 
                     c2(bits_assembled & ~(1 << (N-1)));
@@ -96,10 +112,11 @@ module tb_posit_encode;
     reg            is_inf;
     reg            sign;
     reg            reg_s;
-    reg [N-1:0]    regime_bits;
-    reg [S-1:0]    reg_len;
-    reg [N-1:0]    k;
+    reg [S:0]    reg_len;
+    reg [S:0]    k;
+`ifndef NO_ES_FIELD
     reg [ES-1:0]   exp;
+`endif
     reg [N-1:0]    mant;
     /* output */
     wire [N-1:0]   posit;
@@ -119,10 +136,11 @@ module tb_posit_encode;
         .is_inf         (is_inf),
         .sign           (sign),
         .reg_s          (reg_s),
-        .regime_bits    (regime_bits),
         .reg_len        (reg_len),
         .k              (k),
+`ifndef NO_ES_FIELD
         .exp            (exp),
+`endif
         .mant           (mant),
         .posit          (posit)
     );
@@ -134,12 +152,17 @@ module tb_posit_encode;
     initial begin
              if (N == 8 && ES == 0) $dumpfile("tb_posit_encode_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_posit_encode_P5E1.vcd");
+        else if (N == 16 && ES == 1) $dumpfile("tb_posit_encode_P16E1.vcd");
         else                        $dumpfile("tb_posit_encode.vcd");
 
 	    $dumpvars(0, tb_posit_encode);                        
             
         if (N == 8 && ES == 0) begin
             `include "../src/tb_posit_encode_P8E0.sv"
+        end
+
+        if (N == 16 && ES == 1) begin
+            `include "../src/tb_posit_encode_P16E1.sv"
         end
        
 

@@ -1,0 +1,49 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Dec 21 13:25:36 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P16E1.vcd"
+[dumpfile_mtime] "Tue Dec 21 13:24:45 2021"
+[dumpfile_size] 63592
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P16E1.gtkw"
+[timestart] 0
+[size] 2560 1418
+[pos] -1 -1
+*-8.154806 125 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_posit_encode.
+[sst_width] 193
+[signals_width] 251
+[sst_expanded] 1
+[sst_vpaned_height] 454
+@24
+tb_posit_encode.test_no[16:0]
+@200
+-
+@28
+tb_posit_encode.is_zero
+tb_posit_encode.is_inf
+@200
+-
+@28
+tb_posit_encode.sign
+@200
+-
+@28
+tb_posit_encode.reg_s
+@200
+-
+@28
+tb_posit_encode.exp
+@200
+-
+@22
+tb_posit_encode.mant[15:0]
+@200
+-
+@22
+tb_posit_encode.posit[15:0]
+tb_posit_encode.posit_expected[15:0]
+@28
+tb_posit_encode.err
+[pattern_trace] 1
+[pattern_trace] 0
