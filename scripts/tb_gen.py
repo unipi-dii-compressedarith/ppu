@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 ### sign
                 c += f"{'sign ='.ljust(LJUST)} {p.sign};\n"
                 ### regime
-                c += f"{'reg_s ='.ljust(LJUST)} {p.regime.reg_s.unwrap_or(X)};\n"
+                # c += f"{'reg_s ='.ljust(LJUST)} {p.regime.reg_s.unwrap_or(X)};\n"
                 c += f"{'reg_len ='.ljust(LJUST)} {p.regime.reg_len.unwrap_or(X)};\n"
                 c += f"{'k ='.ljust(LJUST)} {p.regime.k.unwrap_or(X)};\n"
                 # c += f"{'regime_bits ='.ljust(LJUST)} {N}'b{get_bin(p.regime.calc_reg_bits(), N, prefix=False)};\n"
@@ -122,6 +122,11 @@ if __name__ == "__main__":
             p2 = from_bits(b, N, ES)
 
             pout = p1 * p2
+
+            if not not (p1.is_special or p2.is_special):
+                continue
+            
+            if counter > 50:break
 
             c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
 
@@ -154,7 +159,7 @@ if __name__ == "__main__":
             c += f"{'pout_is_zero_expected ='.ljust(LJUST)} {pout.is_zero.real};\n\t"
             c += f"{'pout_is_inf_expected ='.ljust(LJUST)} {pout.is_inf.real};\n\t"
             c += f"{'pout_sign_expected ='.ljust(LJUST)} {pout.sign};\n\t"
-            c += f"{'pout_reg_s_expected ='.ljust(LJUST)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
+            # c += f"{'pout_reg_s_expected ='.ljust(LJUST)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
             c += f"{'pout_reg_len_expected ='.ljust(LJUST)} {pout.regime.reg_len.unwrap_or(X)};\n\t"
             c += f"{'pout_k_expected ='.ljust(LJUST)} {pout.regime.k.unwrap_or(X)};\n\t"
             if ES > 0:
@@ -172,8 +177,8 @@ if __name__ == "__main__":
 
             c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
 
-            c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=False)} {p1.eval()};\n\t"
-            c += f"{'p1 ='.ljust(LJUST)} {N}'h{get_hex(p1.bit_repr(), N//4)};\n\t"
+            c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
+            c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
             # c += f"{'p1_is_zero ='.ljust(LJUST)} {p1.is_zero.real};\n\t"
             # c += f"{'p1_is_inf ='.ljust(LJUST)} {p1.is_inf.real};\n\t"
             # c += f"{'p1_sign ='.ljust(LJUST)} {p1.sign};\n\t"
@@ -185,8 +190,8 @@ if __name__ == "__main__":
             #     c += f"{'p1_exp ='.ljust(LJUST)} {p1.exp};\n\t"
             # c += f"{'p1_mant ='.ljust(LJUST)} {N}'b{p1.to_bin(prefix=False)};\n\t"
 
-            c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=False)} {p2.eval()};\n\t"
-            c += f"{'p2 ='.ljust(LJUST)} {N}'h{get_hex(p2.bit_repr(), N//4)};\n\t"
+            c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
+            c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
             # c += f"{'p2_is_zero ='.ljust(LJUST)} {p2.is_zero.real};\n\t"
             # c += f"{'p2_is_inf ='.ljust(LJUST)} {p2.is_inf.real};\n\t"
             # c += f"{'p2_sign ='.ljust(LJUST)} {p2.sign};\n\t"
@@ -198,8 +203,8 @@ if __name__ == "__main__":
             #     c += f"{'p2_exp ='.ljust(LJUST)} {p2.exp};\n\t"
             # c += f"{'p2_mant ='.ljust(LJUST)} {N}'b{p2.to_bin(prefix=False)};\n\t"
 
-            c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=False)} {pout.eval()};\n\t"
-            c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{get_hex(pout.bit_repr(), N//4)};\n\t"
+            c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
+            c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
             # c += f"{'pout_is_zero_expected ='.ljust(LJUST)} {pout.is_zero.real};\n\t"
             # c += f"{'pout_is_inf_expected ='.ljust(LJUST)} {pout.is_inf.real};\n\t"
             # c += f"{'pout_sign_expected ='.ljust(LJUST)} {pout.sign};\n\t"

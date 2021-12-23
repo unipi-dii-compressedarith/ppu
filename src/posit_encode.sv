@@ -21,9 +21,8 @@ module posit_encode #(
         input          is_zero,
         input          is_inf,
         input          sign,
-        input          reg_s,
-        input [S:0]  reg_len,
-        input [S:0]  k,
+        input [S:0]    reg_len,
+        input [S:0]    k,
 `ifndef NO_ES_FIELD
         input [ES-1:0] exp,
 `endif
@@ -111,9 +110,8 @@ module tb_posit_encode;
     reg            is_zero;
     reg            is_inf;
     reg            sign;
-    reg            reg_s;
-    reg [S:0]    reg_len;
-    reg [S:0]    k;
+    reg [S:0]      reg_len;
+    reg [S:0]      k;
 `ifndef NO_ES_FIELD
     reg [ES-1:0]   exp;
 `endif
@@ -135,7 +133,6 @@ module tb_posit_encode;
         .is_zero        (is_zero),
         .is_inf         (is_inf),
         .sign           (sign),
-        .reg_s          (reg_s),
         .reg_len        (reg_len),
         .k              (k),
 `ifndef NO_ES_FIELD

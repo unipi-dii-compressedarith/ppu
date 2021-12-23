@@ -47,9 +47,8 @@ module mul #(
     wire            p1_is_zero, p2_is_zero;
     wire            p1_is_inf, p2_is_inf;
     wire            p1_reg_s, p2_reg_s;
-    wire [S-1:0]    p1_reg_len, p2_reg_len;
-    wire [N-1:0]    p1_reg_bits, p2_reg_bits;
-    wire [N-1:0]    p1_k, p2_k;
+    wire [S:0]    p1_reg_len, p2_reg_len;
+    wire [S:0]    p1_k, p2_k;
 `ifndef NO_ES_FIELD
     wire [ES-1:0]   p1_exp, p2_exp;
 `endif
@@ -57,9 +56,8 @@ module mul #(
 
     wire            pout_sign;
     wire            pout_reg_s;
-    wire [N-1:0]    pout_regime_bits;
-    wire [S-1:0]    pout_reg_len;
-    wire [N-1:0]    pout_k;
+    wire [S:0]    pout_reg_len;
+    wire [S:0]    pout_k;
     wire [ES-1:0]   pout_exp;
     wire [N-1:0]    pout_mant;
     wire            pout_is_zero, pout_is_inf;
@@ -75,7 +73,6 @@ module mul #(
         .is_inf         (p1_is_inf),
         .sign           (p1_sign),
         .reg_s          (p1_reg_s),
-        .regime_bits    (p1_reg_bits),
         .reg_len        (p1_reg_len),
         .k              (p1_k),
 `ifndef NO_ES_FIELD
@@ -94,7 +91,6 @@ module mul #(
         .is_inf         (p2_is_inf),
         .sign           (p2_sign),
         .reg_s          (p2_reg_s),
-        .regime_bits    (p2_reg_bits),
         .reg_len        (p2_reg_len),
         .k              (p2_k),
 `ifndef NO_ES_FIELD
@@ -112,7 +108,6 @@ module mul #(
         .p1_is_inf          (p1_is_inf),
         .p1_sign            (p1_sign), 
         .p1_reg_s           (p1_reg_s),
-        .p1_regime_bits     (p1_reg_bits),
         .p1_reg_len         (p1_reg_len),
         .p1_k               (p1_k),
 `ifndef NO_ES_FIELD
@@ -124,7 +119,6 @@ module mul #(
         .p2_is_inf          (p2_is_inf),
         .p2_sign            (p2_sign),
         .p2_reg_s           (p2_reg_s),
-        .p2_regime_bits     (p2_reg_bits),
         .p2_reg_len         (p2_reg_len),
         .p2_k               (p2_k),
 `ifndef NO_ES_FIELD    
@@ -136,7 +130,6 @@ module mul #(
         .pout_is_inf        (pout_is_inf),
         .pout_sign          (pout_sign),
         .pout_reg_s         (pout_reg_s),
-        .pout_regime_bits   (pout_regime_bits),
         .pout_reg_len       (pout_reg_len),
         .pout_k             (pout_k),
 `ifndef NO_ES_FIELD
@@ -154,7 +147,6 @@ module mul #(
         .is_inf         (pout_is_inf),
         .sign           (pout_sign),
         .reg_s          (pout_reg_s),
-        .regime_bits    (pout_regime_bits),
         .reg_len        (pout_reg_len),
         .k              (pout_k),
 `ifndef NO_ES_FIELD

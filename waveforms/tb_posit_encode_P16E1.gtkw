@@ -1,13 +1,13 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Dec 21 13:25:36 2021
+[*] Tue Dec 21 18:54:13 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P16E1.vcd"
-[dumpfile_mtime] "Tue Dec 21 13:24:45 2021"
-[dumpfile_size] 63592
+[dumpfile_mtime] "Tue Dec 21 18:53:59 2021"
+[dumpfile_size] 63146
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_encode_P16E1.gtkw"
 [timestart] 0
-[size] 2560 1418
+[size] 2560 855
 [pos] -1 -1
 *-8.154806 125 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_posit_encode.
@@ -28,8 +28,10 @@ tb_posit_encode.is_inf
 tb_posit_encode.sign
 @200
 -
-@28
-tb_posit_encode.reg_s
+@22
+tb_posit_encode.k[4:0]
+@23
+tb_posit_encode.posit_encode_inst.reg_len[4:0]
 @200
 -
 @28
