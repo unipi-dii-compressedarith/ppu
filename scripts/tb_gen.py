@@ -3,7 +3,7 @@
 # e.g.:
 #   python tb_gen.py --operation decode -n 16 -es 1
 
-import argparse, random, datetime, enum
+import argparse, random, datetime, enum, pathlib
 from posit_playground import from_bits
 from posit_playground.utils import get_bin, get_hex
 
@@ -62,10 +62,14 @@ if __name__ == "__main__":
     list_a = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
     list_b = random.sample(range(0, 2 ** N - 1), min(NUM_RANDOM_TEST_CASES, 2 ** N - 1))
     # force 0 and inf to be somewhere
-    list_a[0] = 0                # list_a[random.randint(0, N)] = 0
-    list_a[1] = 1 << (N-1)               # list_a[random.randint(0, N)] = 1 << (N-1)
-    list_b[0] = 0                # list_b[random.randint(0, N)] = 0
-    list_b[1] = 1 << (N-1)               # list_b[random.randint(0, N)] = 1 << (N-1)
+    # list_a[random.randint(0, N)] = 0
+    # list_a[random.randint(0, N)] = 1 << (N-1)
+    # list_b[random.randint(0, N)] = 0
+    # list_b[random.randint(0, N)] = 1 << (N-1)
+    
+    list_a[0] = 0             
+    list_a[1] = 1 << (N-1)    
+    list_a[2], list_b[2] = 0, 1 << (N-1)
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
@@ -172,49 +176,16 @@ if __name__ == "__main__":
             pout = p1 * p2
 
             c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-
             c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
             c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
-            # c += f"{'p1_is_zero ='.ljust(LJUST)} {p1.is_zero.real};\n\t"
-            # c += f"{'p1_is_inf ='.ljust(LJUST)} {p1.is_inf.real};\n\t"
-            # c += f"{'p1_sign ='.ljust(LJUST)} {p1.sign};\n\t"
-            # c += f"{'p1_reg_s ='.ljust(LJUST)} {p1.regime.reg_s.unwrap_or(X)};\n\t"
-            # c += f"{'p1_reg_len ='.ljust(LJUST)} {p1.regime.reg_len.unwrap_or(X)};\n\t"
-            # c += f"{'p1_k ='.ljust(LJUST)} {p1.regime.k.unwrap_or(X)};\n\t"
-            # c += f"{'p1_regime_bits ='.ljust(LJUST)} {p1.regime.calc_reg_bits()};\n\t"
-            # if ES > 0:
-            #     c += f"{'p1_exp ='.ljust(LJUST)} {p1.exp};\n\t"
-            # c += f"{'p1_mant ='.ljust(LJUST)} {N}'b{p1.to_bin(prefix=False)};\n\t"
-
             c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
             c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
-            # c += f"{'p2_is_zero ='.ljust(LJUST)} {p2.is_zero.real};\n\t"
-            # c += f"{'p2_is_inf ='.ljust(LJUST)} {p2.is_inf.real};\n\t"
-            # c += f"{'p2_sign ='.ljust(LJUST)} {p2.sign};\n\t"
-            # c += f"{'p2_reg_s ='.ljust(LJUST)} {p2.regime.reg_s.unwrap_or(X)};\n\t"
-            # c += f"{'p2_reg_len ='.ljust(LJUST)} {p2.regime.reg_len.unwrap_or(X)};\n\t"
-            # c += f"{'p2_k ='.ljust(LJUST)} {p2.regime.k.unwrap_or(X)};\n\t"
-            # c += f"{'p2_regime_bits ='.ljust(LJUST)} {p2.regime.calc_reg_bits()};\n\t"
-            # if ES > 0:
-            #     c += f"{'p2_exp ='.ljust(LJUST)} {p2.exp};\n\t"
-            # c += f"{'p2_mant ='.ljust(LJUST)} {N}'b{p2.to_bin(prefix=False)};\n\t"
-
             c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
             c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
-            # c += f"{'pout_is_zero_expected ='.ljust(LJUST)} {pout.is_zero.real};\n\t"
-            # c += f"{'pout_is_inf_expected ='.ljust(LJUST)} {pout.is_inf.real};\n\t"
-            # c += f"{'pout_sign_expected ='.ljust(LJUST)} {pout.sign};\n\t"
-            # c += f"{'pout_reg_s_expected ='.ljust(LJUST)} {pout.regime.reg_s.unwrap_or(X)};\n\t"
-            # c += f"{'pout_reg_len_expected ='.ljust(LJUST)} {pout.regime.reg_len.unwrap_or(X)};\n\t"
-            # c += f"{'pout_k_expected ='.ljust(LJUST)} {pout.regime.k.unwrap_or(X)};\n\t"
-            # c += f"{'pout_regime_bits_expected ='.ljust(LJUST)} {pout.regime.calc_reg_bits()};\n\t"
-            # if ES > 0:
-            #     c += f"{'pout_exp_expected ='.ljust(LJUST)} {pout.exp};\n\t"
-            # c += f"{'pout_mant_expected ='.ljust(LJUST)} {N}'b{pout.to_bin(prefix=False)};\n\t"
+            c += f"#10;\n\t"
+            c += f'assert (pout === pout_expected) else $error("{p1.to_hex()} * {p2.to_hex()} failed");\n\n'
 
-            c += f"#10;\n\n"
-
-    filename = f"../src/tb_posit_{args.operation}_P{N}E{ES}.sv"
+    filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")
     with open(filename, "w") as f:
         f.write(c)
-        print(f"Wrote {filename}")
+        print(f"Wrote {filename.resolve()}")

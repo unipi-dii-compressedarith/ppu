@@ -67,7 +67,7 @@ module mul_core #(
     parameter MSB = 1 << (N - 1);
 
     assign pout_is_zero = p1_is_zero || p2_is_zero;
-    assign pout_is_inf = (!p1_is_zero && p2_is_inf) || (p1_is_inf && !p2_is_zero);      // ...missing something?
+    assign pout_is_inf = (p2_is_inf) || (p1_is_inf);
 
     wire [S:0] _k_1, _k_2, _k_3, _k_4;
     assign _k_1 = p1_k + p2_k;
@@ -323,15 +323,15 @@ module tb_mul_core;
         $dumpvars(0, tb_mul_core);                        
             
         if (N == 8 && ES == 0) begin
-            `include "../src/tb_posit_mul_core_P8E0.sv"
+            `include "../test_vectors/tv_posit_mul_core_P8E0.sv"
         end
 
         if (N == 16 && ES == 1) begin
-            `include "../src/tb_posit_mul_core_P16E1.sv"
+            `include "../test_vectors/tv_posit_mul_core_P16E1.sv"
         end
 
         if (N == 32 && ES == 2) begin
-            `include "../src/tb_posit_mul_core_P32E2.sv"
+            `include "../test_vectors/tv_posit_mul_core_P32E2.sv"
         end
 
 

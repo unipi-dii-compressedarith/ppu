@@ -162,11 +162,11 @@ module tb_posit_encode;
 	    $dumpvars(0, tb_posit_encode);                        
             
         if (N == 8 && ES == 0) begin
-            `include "../src/tb_posit_encode_P8E0.sv"
+            `include "../test_vectors/tv_posit_encode_P8E0.sv"
         end
 
         if (N == 16 && ES == 1) begin
-            `include "../src/tb_posit_encode_P16E1.sv"
+            `include "../test_vectors/tv_posit_encode_P16E1.sv"
         end
        
 

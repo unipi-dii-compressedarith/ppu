@@ -214,19 +214,19 @@ module tb_posit_decode;
 	    $dumpvars(0, tb_posit_decode);                        
             
         if (N == 8 && ES == 0) begin
-            `include "../src/tb_posit_decode_P8E0.sv"
+            `include "../test_vectors/tv_posit_decode_P8E0.sv"
         end
 
         if (N == 5 && ES == 1) begin
-            `include "../src/tb_posit_decode_P5E1.sv"
+            `include "../test_vectors/tv_posit_decode_P5E1.sv"
         end
 
         if (N == 16 && ES == 1) begin
-            `include "../src/tb_posit_decode_P16E1.sv"
+            `include "../test_vectors/tv_posit_decode_P16E1.sv"
         end
 
         if (N == 32 && ES == 2) begin
-            `include "../src/tb_posit_decode_P32E2.sv"
+            `include "../test_vectors/tv_posit_decode_P32E2.sv"
         end
 
 
