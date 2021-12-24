@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Dec 24 08:50:02 2021
+[*] Fri Dec 24 10:22:30 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P32E2.vcd"
-[dumpfile_mtime] "Fri Dec 24 08:48:47 2021"
-[dumpfile_size] 558502
+[dumpfile_mtime] "Fri Dec 24 10:22:08 2021"
+[dumpfile_size] 558446
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P32E2.gtkw"
 [timestart] 0
 [size] 2560 1418
-[pos] 840 -1643
+[pos] -1 -1
 *-8.148674 108 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul.
 [treeopen] tb_mul.mul_inst.
 [sst_width] 193
 [signals_width] 249
 [sst_expanded] 1
-[sst_vpaned_height] 454
+[sst_vpaned_height] 805
 @22
 tb_mul.mul_inst.p1[31:0]
 @28
@@ -54,7 +54,7 @@ tb_mul.mul_inst.pout_mant[31:0]
 tb_mul.mul_inst.pout_reg_len[5:0]
 @28
 tb_mul.mul_inst.pout_sign
-@201
+@200
 -
 @28
 tb_mul.diff_pout

@@ -1,9 +1,9 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Dec 24 08:51:54 2021
+[*] Fri Dec 24 10:19:12 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P16E1.vcd"
-[dumpfile_mtime] "Fri Dec 24 08:51:33 2021"
+[dumpfile_mtime] "Fri Dec 24 10:18:41 2021"
 [dumpfile_size] 341714
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P16E1.gtkw"
 [timestart] 0
@@ -63,9 +63,7 @@ tb_mul.diff_pout
 @22
 tb_mul.p1[15:0]
 tb_mul.p2[15:0]
-@23
 tb_mul.pout[15:0]
-@22
 tb_mul.pout_expected[15:0]
 tb_mul.test_no[16:0]
 [pattern_trace] 1

@@ -131,7 +131,7 @@ if __name__ == "__main__":
             c += f"{'p1_is_zero ='.ljust(LJUST)} {p1.is_zero.real};\n\t"
             c += f"{'p1_is_inf ='.ljust(LJUST)} {p1.is_inf.real};\n\t"
             c += f"{'p1_sign ='.ljust(LJUST)} {p1.sign};\n\t"
-            c += f"{'p1_reg_s ='.ljust(LJUST)} {p1.regime.reg_s.unwrap_or(Z)};\n\t"
+            # c += f"{'p1_reg_s ='.ljust(LJUST)} {p1.regime.reg_s.unwrap_or(Z)};\n\t"
             c += f"{'p1_reg_len ='.ljust(LJUST)} {p1.regime.reg_len.unwrap_or(Z)};\n\t"
             c += f"{'p1_k ='.ljust(LJUST)} {p1.regime.k.unwrap_or(Z)};\n\t"
             if ES > 0:
@@ -143,7 +143,7 @@ if __name__ == "__main__":
             c += f"{'p2_is_zero ='.ljust(LJUST)} {p2.is_zero.real};\n\t"
             c += f"{'p2_is_inf ='.ljust(LJUST)} {p2.is_inf.real};\n\t"
             c += f"{'p2_sign ='.ljust(LJUST)} {p2.sign};\n\t"
-            c += f"{'p2_reg_s ='.ljust(LJUST)} {p2.regime.reg_s.unwrap_or(Z)};\n\t"
+            # c += f"{'p2_reg_s ='.ljust(LJUST)} {p2.regime.reg_s.unwrap_or(Z)};\n\t"
             c += f"{'p2_reg_len ='.ljust(LJUST)} {p2.regime.reg_len.unwrap_or(Z)};\n\t"
             c += f"{'p2_k ='.ljust(LJUST)} {p2.regime.k.unwrap_or(Z)};\n\t"
             if ES > 0:

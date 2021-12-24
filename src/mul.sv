@@ -28,20 +28,31 @@ iverilog -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 ../src/highest_set.sv \
 && ./mul.out
 
+
+
+sv2v -DN=16 -DES=1 \
+../src/mul.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv > mul.v
+
+
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
 
 */
 
 
 `ifdef ALTERA_RESERVED_QIS
-//`define NO_ES_FIELD
+`define NO_ES_FIELD
 `endif
 
 module mul #(
 `ifdef ALTERA_RESERVED_QIS
-        parameter N = 16,
+        parameter N = 8,
         parameter S = $clog2(N),
-        parameter ES = 1
+        parameter ES = 0
 `else
         parameter N = 8,
         parameter S = $clog2(N),
@@ -114,7 +125,6 @@ module mul #(
         .p1_is_zero         (p1_is_zero),
         .p1_is_inf          (p1_is_inf),
         .p1_sign            (p1_sign), 
-        .p1_reg_s           (p1_reg_s),
         .p1_reg_len         (p1_reg_len),
         .p1_k               (p1_k),
 `ifndef NO_ES_FIELD
@@ -125,7 +135,6 @@ module mul #(
         .p2_is_zero         (p2_is_zero), 
         .p2_is_inf          (p2_is_inf),
         .p2_sign            (p2_sign),
-        .p2_reg_s           (p2_reg_s),
         .p2_reg_len         (p2_reg_len),
         .p2_k               (p2_k),
 `ifndef NO_ES_FIELD    
@@ -220,7 +229,7 @@ module tb_mul;
         $dumpvars(0, tb_mul);                        
             
         if (N == 8 && ES == 0) begin
-            `include "../src/tb_posit_mul_P16E1.sv"
+            `include "../src/tb_posit_mul_P8E0.sv"
         end
 
         if (N == 16 && ES == 1) begin

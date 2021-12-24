@@ -1,5 +1,5 @@
 $date
-	Fri Dec 24 09:48:47 2021
+	Fri Dec 24 11:22:08 2021
 $end
 $version
 	Icarus Verilog
@@ -52,7 +52,6 @@ $var wire 1 ) pout_sign $end
 $var wire 6 E reg_len [5:0] $end
 $var wire 2 F pout_exp [1:0] $end
 $var wire 1 1 p2_sign $end
-$var wire 1 2 p2_reg_s $end
 $var wire 6 G p2_reg_len [5:0] $end
 $var wire 32 H p2_mant [31:0] $end
 $var wire 6 I p2_k [5:0] $end
@@ -60,7 +59,6 @@ $var wire 1 6 p2_is_zero $end
 $var wire 1 7 p2_is_inf $end
 $var wire 2 J p2_exp [1:0] $end
 $var wire 1 9 p1_sign $end
-$var wire 1 : p1_reg_s $end
 $var wire 6 K p1_reg_len [5:0] $end
 $var wire 32 L p1_mant [31:0] $end
 $var wire 6 M p1_k [5:0] $end

@@ -19,7 +19,6 @@ module mul_core #(
         input           p1_is_zero,
         input           p1_is_inf,
         input           p1_sign,
-        input           p1_reg_s,
         input  [S:0]    p1_reg_len,
         input  [S:0]    p1_k,
 `ifndef NO_ES_FIELD
@@ -30,7 +29,6 @@ module mul_core #(
         input           p2_is_zero,
         input           p2_is_inf,
         input           p2_sign,
-        input           p2_reg_s,
         input  [S:0]    p2_reg_len,
         input  [S:0]    p2_k,
 `ifndef NO_ES_FIELD        
@@ -204,7 +202,6 @@ module tb_mul_core;
     reg            p1_is_zero;
     reg            p1_is_inf;
     reg            p1_sign;
-    reg            p1_reg_s;
     reg   [S:0]    p1_reg_len;
     reg   [S:0]    p1_k;
 `ifndef NO_ES_FIELD        
@@ -215,7 +212,6 @@ module tb_mul_core;
     reg            p2_is_zero;
     reg            p2_is_inf;
     reg            p2_sign;
-    reg            p2_reg_s;
     reg   [N-1:0]  p2_regime_bits;
     reg   [S:0]    p2_reg_len;
     reg   [S:0]    p2_k;
@@ -269,7 +265,6 @@ module tb_mul_core;
         .p1_is_zero         (p1_is_zero),   
         .p1_is_inf          (p1_is_inf), 
         .p1_sign            (p1_sign), 
-        .p1_reg_s           (p1_reg_s),
         .p1_reg_len         (p1_reg_len),
         .p1_k               (p1_k),
 `ifndef NO_ES_FIELD    
@@ -281,7 +276,6 @@ module tb_mul_core;
         .p2_is_zero         (p2_is_zero), 
         .p2_is_inf          (p2_is_inf),   
         .p2_sign            (p2_sign),   
-        .p2_reg_s           (p2_reg_s),
         .p2_reg_len         (p2_reg_len),
         .p2_k               (p2_k),
 `ifndef NO_ES_FIELD    
