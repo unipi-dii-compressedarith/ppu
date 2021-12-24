@@ -65,8 +65,7 @@ module mul #(
 
     localparam S = $clog2(N);
 
-    wire            p1_is_zero, p2_is_zero;
-    wire            p1_is_inf, p2_is_inf;
+    wire [1:0]      p1_is_special, p2_is_special;
     wire            p1_reg_s, p2_reg_s;
     wire [S:0]      p1_reg_len, p2_reg_len;
     wire [S:0]      p1_k, p2_k;
@@ -88,8 +87,6 @@ module mul #(
         .ES(ES)
     ) posit_decode_p1 (
         .bits           (p1),
-        .is_zero        (p1_is_zero),
-        .is_inf         (p1_is_inf),
         .sign           (p1_sign),
         .reg_s          (p1_reg_s),
         .reg_len        (p1_reg_len),
@@ -97,7 +94,8 @@ module mul #(
 `ifndef NO_ES_FIELD
         .exp            (p1_exp),
 `endif
-        .mant           (p1_mant)
+        .mant           (p1_mant),
+        .is_special     (p1_is_special)
     );
 
     posit_decode #(
@@ -105,8 +103,6 @@ module mul #(
         .ES(ES)
     ) posit_decode_p2 (
         .bits           (p2),
-        .is_zero        (p2_is_zero),
-        .is_inf         (p2_is_inf),
         .sign           (p2_sign),
         .reg_s          (p2_reg_s),
         .reg_len        (p2_reg_len),
@@ -114,7 +110,8 @@ module mul #(
 `ifndef NO_ES_FIELD
         .exp            (p2_exp),
 `endif
-        .mant           (p2_mant)
+        .mant           (p2_mant),
+        .is_special     (p2_is_special)
     );
 
     mul_core #(

@@ -3,7 +3,7 @@
 # e.g.:
 #   python tb_gen.py --operation decode -n 16 -es 1
 
-import argparse, random, datetime, enum, pathlib
+import argparse, random, datetime, enum, pathlib, math
 from posit_playground import from_bits
 from posit_playground.utils import get_bin, get_hex
 
@@ -14,6 +14,9 @@ Z = "'bz" # high impedance
 
 NUM_RANDOM_TEST_CASES = 300
 
+
+def clog2(x):
+    return math.ceil(math.log2(x))
 
 class Tb(enum.Enum):
     MUL = "mul"
@@ -46,7 +49,7 @@ args = parser.parse_args()
 
 
 N, ES = args.num_bits, args.es_size
-
+S = clog2(N)
 
 if args.shuffle_random == False:
     random.seed(4)
@@ -99,8 +102,7 @@ if __name__ == "__main__":
                 else:
                     c += f"{'mant_len_expected ='.ljust(LJUST)} 1'bx;\n"
                 
-                c += f"{'is_zero_expected ='.ljust(LJUST)} {p.is_zero.real};\n"
-                c += f"{'is_inf_expected ='.ljust(LJUST)} {p.is_inf.real};\n"
+                c += f"{'is_special_expected ='.ljust(LJUST)} {(p.is_zero or p.is_inf).real};\n"
             elif args.operation == Tb.ENCODE:
                 c += (
                     f"{'posit_expected ='.ljust(LJUST)} {N}'h{p.to_hex(prefix=False)};\n"

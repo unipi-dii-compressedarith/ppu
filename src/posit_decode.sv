@@ -35,29 +35,39 @@ module posit_decode #(
         parameter ES = 0
     )(
         input [N-1:0]   bits,
-        output          is_zero,
-        output          is_inf,
-        output          sign,
-        
-        output          reg_s,
-        output [$clog2(N):0]    reg_len,
-        
-        output [$clog2(N):0]    k,
+        output [(
+                  1             // sign
+                + 1             // reg_s
+                + $clog2(N)     // reg_len
+                + $clog2(N)     // k
 `ifndef NO_ES_FIELD
-        output [ES-1:0] exp,
+                +ES             // exponent
 `endif
-        output [N-1:0]  mant
+                +N              // mantissa
+            ) - 1:0]    decode_out,
+
+        output [1:0]    is_special
     );
+
+    wire is_zero, is_inf;
+    assign is_special = {is_zero, is_inf};
+
+    assign decode_out = {
+        sign, 
+        reg_s, 
+        reg_len, 
+        k,
+`ifndef NO_ES_FIELD
+        exponent,
+`endif
+        mantissa
+    };
 
     localparam S = $clog2(N);
 
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
-
-    // function [N-1:0] min(input [N-1:0] a, b);
-    //     min = a < b ? a : b;
-    // endfunction
 
     assign is_zero = bits == {N{1'b0}};
     assign is_inf = bits == {1'b1, {N-1{1'b0}}};
@@ -75,7 +85,6 @@ module posit_decode #(
     
     assign reg_len = reg_s == 1 ? k + 2 : c2(k) + 1;
 
-    // // not useful but anyway
 
 `ifndef NO_ES_FIELD
     assign exp = (u_bits << (1 + reg_len)) >> (N - ES);
@@ -132,20 +141,22 @@ module tb_posit_decode;
 `else
     parameter ES = 0;
 `endif  
-
-    /* input */
+    
+    // input
     reg [N-1:0]     bits;
-    /* outputs */
-    wire            is_zero;
-    wire            is_inf;
-    wire            sign;
-    wire            reg_s;
-    wire [S  :0]    reg_len;
-    wire [S  :0]    k;
+    
+    // outputs
+    wire [(
+          1             // sign
+        + 1             // reg_s
+        + $clog2(N)     // reg_len
+        + $clog2(N)     // k
 `ifndef NO_ES_FIELD
-    wire [ES-1:0]   exp;
+        +ES             // exponent
 `endif
-    wire [N-1:0]    mant;
+        +N              // mantissa
+    ) - 1:0]          decode_out,
+    wire [1:0]      is_special;
     /*************************/
 
     reg sign_expected, reg_s_expected;
@@ -153,7 +164,7 @@ module tb_posit_decode;
     reg [ES-1:0] exp_expected;
     reg [N-1:0] mant_expected;
     reg [S-1:0] mant_len_expected;
-    reg is_zero_expected, is_inf_expected;
+    reg is_special_expected;
     reg err;
 
     reg [N:0] test_no;
@@ -161,7 +172,7 @@ module tb_posit_decode;
 `ifndef NO_ES_FIELD
     reg diff_exp;
 `endif    
-    reg diff_k, diff_mant, diff_is_zero, diff_is_inf;
+    reg diff_k, diff_mant, diff_is_special;
     
     reg k_is_pos;
     
@@ -171,8 +182,7 @@ module tb_posit_decode;
 `endif
         diff_mant = (mant === mant_expected ? 0 : 'bx);
         diff_k = (k === k_expected ? 0 : 'bx);
-        diff_is_zero = (is_zero === is_zero_expected ? 0 : 'bx);
-        diff_is_inf = (is_inf === is_inf_expected ? 0 : 'bx);
+        diff_is_special = (is_special === is_special_expected ? 0 : 'bx);
         
         if (
             diff_mant == 0
@@ -180,8 +190,7 @@ module tb_posit_decode;
             && diff_exp == 0 
 `endif
             && diff_k == 0 
-            && diff_is_zero == 0 
-            && diff_is_inf == 0
+            && diff_is_special == 0 
         ) err = 0;
         else err = 1'bx;
     end
@@ -191,17 +200,8 @@ module tb_posit_decode;
         .ES(ES)
     ) posit_decode_inst (
         .bits           (bits),
-        .is_zero        (is_zero),
-        .is_inf         (is_inf),
-        .sign           (sign),
-        .reg_s          (reg_s),
-
-        .reg_len        (reg_len),
-        .k              (k),
-`ifndef NO_ES_FIELD
-        .exp            (exp),
-`endif
-        .mant           (mant)
+        .decode_out     (decode_out),
+        .is_special     (is_special)
     );
 
     initial begin

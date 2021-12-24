@@ -17,23 +17,32 @@ module mul_core #(
     )(
         input           p1_is_zero,
         input           p1_is_inf,
-        input           p1_sign,
-        input  [$clog2(N):0]    p1_reg_len,
-        input  [$clog2(N):0]    p1_k,
+        
+        input [(
+              1             // sign
+            + 1             // reg_s
+            + $clog2(N)     // reg_len
+            + $clog2(N)     // k
 `ifndef NO_ES_FIELD
-        input  [ES-1:0] p1_exp,
+            +ES             // exponent
 `endif
-        input  [N-1:0]  p1_mant,
+            +N              // mantissa
+        ) - 1:0]        p1_decode_out,
+
 
         input           p2_is_zero,
         input           p2_is_inf,
-        input           p2_sign,
-        input  [$clog2(N):0]    p2_reg_len,
-        input  [$clog2(N):0]    p2_k,
-`ifndef NO_ES_FIELD        
-        input  [ES-1:0] p2_exp,
+        input [(
+              1             // sign
+            + 1             // reg_s
+            + $clog2(N)     // reg_len
+            + $clog2(N)     // k
+`ifndef NO_ES_FIELD
+            +ES             // exponent
 `endif
-        input  [N-1:0]  p2_mant,
+            +N              // mantissa
+        ) - 1:0]        p2_decode_out,
+
 
         output          pout_is_zero,
         output          pout_is_inf,
@@ -47,6 +56,37 @@ module mul_core #(
     );
 
     localparam S = $clog2(N);
+
+    wire            p1_sign, p2_sign;
+    wire            p1_reg_s, p2_reg_s;
+    wire [S:0]      p1_reg_len, p2_reg_len;
+    wire [S:0]      p1_k, p2_k;
+`ifndef NO_ES_FIELD
+    wire [ES-1:0]   p1_exp, p2_exp;
+`endif
+    wire [N-1:0]    p1_mant, p2_mant;
+
+    assign {
+        p1_sign,
+        p1_reg_s,
+        p1_reg_len,
+        p1_k,
+`ifndef NO_ES_FIELD
+        p1_exp,
+`endif
+        p1_mant
+    } = p1_decode_out;
+    assign {
+        p2_sign,
+        p2_reg_s,
+        p2_reg_len,
+        p2_k,
+`ifndef NO_ES_FIELD
+        p2_exp,
+`endif
+        p2_mant
+    } = p2_decode_out;
+
 
     function [N-1:0] min(
             input [N-1:0] a, b
@@ -193,6 +233,7 @@ module tb_mul_core;
 `endif
 
     parameter S = $clog2(N);
+    // parameter S2 = 1 + 1 + S + S + ES + N;
 
 `ifdef ES
     parameter ES = `ES;
@@ -200,26 +241,40 @@ module tb_mul_core;
     parameter ES = 0;
 `endif  
 
-    reg            p1_is_zero;
-    reg            p1_is_inf;
-    reg            p1_sign;
-    reg   [S:0]    p1_reg_len;
-    reg   [S:0]    p1_k;
-`ifndef NO_ES_FIELD        
-    reg   [ES-1:0] p1_exp;
+    reg             p1_is_zero;
+    reg             p1_is_inf;
+
+    reg             p1_sign, p2_sign;
+    reg [S:0]       p1_reg_len, p2_reg_len;
+    reg [S:0]       p1_k, p2_k;
+`ifndef NO_ES_FIELD
+    reg [ES-1:0]    p1_exp, p2_exp;
 `endif
-    reg   [N-1:0]  p1_mant;
+    reg [N-1:0]     p1_mant, p2_mant;
+
+    reg [(
+          1             // sign
+        + 1             // reg_s
+        + $clog2(N)     // reg_len
+        + $clog2(N)     // reg_len
+`ifndef NO_ES_FIELD
+        +ES             // exponent
+`endif
+        +N              // mantissa
+    ) - 1:0]   p1_decode_out;
 
     reg            p2_is_zero;
     reg            p2_is_inf;
-    reg            p2_sign;
-    reg   [N-1:0]  p2_regime_bits;
-    reg   [S:0]    p2_reg_len;
-    reg   [S:0]    p2_k;
-`ifndef NO_ES_FIELD    
-    reg   [ES-1:0] p2_exp;
+    reg [(
+          1             // sign
+        + 1             // reg_s
+        + $clog2(N)     // reg_len
+        + $clog2(N)     // reg_len
+`ifndef NO_ES_FIELD
+        +ES             // exponent
 `endif
-    reg   [N-1:0]  p2_mant;
+        +N              // mantissa
+    ) - 1:0]   p2_decode_out;
 
     wire           pout_is_zero;
     wire           pout_is_inf;
@@ -264,24 +319,12 @@ module tb_mul_core;
         /************ inputs ************/
         .p1_is_zero         (p1_is_zero),   
         .p1_is_inf          (p1_is_inf), 
-        .p1_sign            (p1_sign), 
-        .p1_reg_len         (p1_reg_len),
-        .p1_k               (p1_k),
-`ifndef NO_ES_FIELD    
-        .p1_exp             (p1_exp),
-`endif
-        .p1_mant            (p1_mant),
+        .p1_decode_out   (p1_decode_out),
     
 
         .p2_is_zero         (p2_is_zero), 
         .p2_is_inf          (p2_is_inf),   
-        .p2_sign            (p2_sign),   
-        .p2_reg_len         (p2_reg_len),
-        .p2_k               (p2_k),
-`ifndef NO_ES_FIELD    
-        .p2_exp             (p2_exp),
-`endif
-        .p2_mant            (p2_mant),
+        .p2_decode_out   (p2_decode_out),
         
         /************ outputs ************/
         .pout_is_zero       (pout_is_zero),
@@ -295,7 +338,29 @@ module tb_mul_core;
         .pout_mant          (pout_mant)
     );
 
+    always @(*) begin
+        p1_decode_out = {
+            p1_sign,
+            p1_reg_len,
+            p1_k,
+`ifndef NO_ES_FIELD
+            p1_exp,
+`endif
+            p1_mant
+        };
 
+        p2_decode_out = {
+            p2_sign,
+            p2_reg_len,
+            p2_k,
+`ifndef NO_ES_FIELD
+            p2_exp,
+`endif
+            p2_mant
+        };
+    end
+
+    
     always @(*) begin
         diff_pout_is_zero = pout_is_zero === pout_is_zero_expected ? 0 : 1'bx;
         diff_pout_is_inf = pout_is_inf === pout_is_inf_expected ? 0 : 1'bx;
