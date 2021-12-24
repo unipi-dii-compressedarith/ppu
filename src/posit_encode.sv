@@ -15,14 +15,13 @@ Usage:
 */
 module posit_encode #(
         parameter N = 8,
-        parameter S = $clog2(N),
         parameter ES = 0
     )(
         input          is_zero,
         input          is_inf,
         input          sign,
-        input [S:0]    reg_len,
-        input [S:0]    k,
+        input [$clog2(N):0]    reg_len,
+        input [$clog2(N):0]    k,
 `ifndef NO_ES_FIELD
         input [ES-1:0] exp,
 `endif
@@ -30,6 +29,8 @@ module posit_encode #(
         output [N-1:0] posit
     );
     
+    localparam S = $clog2(N);
+
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
@@ -134,7 +135,6 @@ module tb_posit_encode;
 
     posit_encode #(
         .N(N),
-        .S(S),
         .ES(ES)
     ) posit_encode_inst (
         .is_zero        (is_zero),

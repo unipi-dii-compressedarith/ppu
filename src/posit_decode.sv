@@ -32,7 +32,6 @@ Usage:
 */
 module posit_decode #(
         parameter N = 8,
-        parameter S = $clog2(N),
         parameter ES = 0
     )(
         input [N-1:0]   bits,
@@ -41,14 +40,16 @@ module posit_decode #(
         output          sign,
         
         output          reg_s,
-        output [S:0]    reg_len,
+        output [$clog2(N):0]    reg_len,
         
-        output [S:0]    k,
+        output [$clog2(N):0]    k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] exp,
 `endif
         output [N-1:0]  mant
     );
+
+    localparam S = $clog2(N);
 
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
@@ -187,7 +188,6 @@ module tb_posit_decode;
 
     posit_decode #(
         .N(N),
-        .S(S),
         .ES(ES)
     ) posit_decode_inst (
         .bits           (bits),

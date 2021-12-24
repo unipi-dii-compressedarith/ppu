@@ -13,14 +13,13 @@ TODO: get rid of unnecessary flags
 */
 module mul_core #(
         parameter N = 8,
-        parameter S = $clog2(N),
         parameter ES = 0
     )(
         input           p1_is_zero,
         input           p1_is_inf,
         input           p1_sign,
-        input  [S:0]    p1_reg_len,
-        input  [S:0]    p1_k,
+        input  [$clog2(N):0]    p1_reg_len,
+        input  [$clog2(N):0]    p1_k,
 `ifndef NO_ES_FIELD
         input  [ES-1:0] p1_exp,
 `endif
@@ -29,8 +28,8 @@ module mul_core #(
         input           p2_is_zero,
         input           p2_is_inf,
         input           p2_sign,
-        input  [S:0]    p2_reg_len,
-        input  [S:0]    p2_k,
+        input  [$clog2(N):0]    p2_reg_len,
+        input  [$clog2(N):0]    p2_k,
 `ifndef NO_ES_FIELD        
         input  [ES-1:0] p2_exp,
 `endif
@@ -39,13 +38,15 @@ module mul_core #(
         output          pout_is_zero,
         output          pout_is_inf,
         output          pout_sign,
-        output [S:0]    pout_reg_len,
-        output [S:0]    pout_k,
+        output [$clog2(N):0]    pout_reg_len,
+        output [$clog2(N):0]    pout_k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] pout_exp,
 `endif
         output [N-1:0]  pout_mant
     );
+
+    localparam S = $clog2(N);
 
     function [N-1:0] min(
             input [N-1:0] a, b
@@ -258,7 +259,6 @@ module tb_mul_core;
 
     mul_core #(
         .N                  (N),
-        .S                  (S),
         .ES                 (ES)
     ) mul_core_inst (
         /************ inputs ************/

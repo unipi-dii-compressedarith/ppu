@@ -1,5 +1,6 @@
 /*
 
+# from within the `waveforms` folder
 iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 ../src/mul.sv \
 ../src/mul_core.sv \
@@ -30,6 +31,7 @@ iverilog -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 
 
 
+# from within the `quartus` folder
 sv2v -DN=16 -DES=1 \
 ../src/mul.sv \
 ../src/mul_core.sv \
@@ -51,11 +53,9 @@ yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv po
 module mul #(
 `ifdef ALTERA_RESERVED_QIS
         parameter N = 8,
-        parameter S = $clog2(N),
         parameter ES = 0
 `else
         parameter N = 8,
-        parameter S = $clog2(N),
         parameter ES = 0
 `endif
     )(
@@ -63,19 +63,21 @@ module mul #(
         output [N-1:0] pout
     );
 
+    localparam S = $clog2(N);
+
     wire            p1_is_zero, p2_is_zero;
     wire            p1_is_inf, p2_is_inf;
     wire            p1_reg_s, p2_reg_s;
-    wire [S:0]    p1_reg_len, p2_reg_len;
-    wire [S:0]    p1_k, p2_k;
+    wire [S:0]      p1_reg_len, p2_reg_len;
+    wire [S:0]      p1_k, p2_k;
 `ifndef NO_ES_FIELD
     wire [ES-1:0]   p1_exp, p2_exp;
 `endif
     wire [N-1:0]    p1_mant, p2_mant;
 
     wire            pout_sign;
-    wire [S:0]    pout_reg_len;
-    wire [S:0]    pout_k;
+    wire [S:0]      pout_reg_len;
+    wire [S:0]      pout_k;
     wire [ES-1:0]   pout_exp;
     wire [N-1:0]    pout_mant;
     wire            pout_is_zero, pout_is_inf;
@@ -83,7 +85,6 @@ module mul #(
 
     posit_decode #(
         .N(N),
-        .S(S),
         .ES(ES)
     ) posit_decode_p1 (
         .bits           (p1),
@@ -101,7 +102,6 @@ module mul #(
 
     posit_decode #(
         .N(N),
-        .S(S),
         .ES(ES)
     ) posit_decode_p2 (
         .bits           (p2),
@@ -119,7 +119,6 @@ module mul #(
 
     mul_core #(
         .N                  (N),
-        .S                  (S),
         .ES                 (ES)
     ) mul_core_inst (  
         .p1_is_zero         (p1_is_zero),
@@ -155,7 +154,6 @@ module mul #(
 
     posit_encode #(
         .N(N),
-        .S(S),
         .ES(ES)
     ) posit_encode_inst (
         .is_zero        (pout_is_zero),
@@ -205,7 +203,6 @@ module tb_mul;
 
     mul #(
         .N      (N),
-        .S      (S),
         .ES     (ES)
     ) mul_inst (  
         .p1     (p1),
