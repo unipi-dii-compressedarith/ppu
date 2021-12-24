@@ -52,12 +52,19 @@ module posit_encode #(
     
     assign regime_bits = is_negative(k) ? 1 : (shl(1, (k + 1)) - 1) << 1;
 
+
+`ifndef NO_ES_FIELD
+`else
+    wire exp;
+    assign exp = 0;
+`endif
+
     assign bits_assembled = ( 
           shl(sign, N-1)
         + shl(regime_bits, N-1-reg_len)
-`ifndef NO_ES_FIELD
+
         + shl(exp, N-1-reg_len-ES)
-`endif
+
         + mant
     );
 

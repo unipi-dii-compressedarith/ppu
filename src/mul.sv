@@ -19,6 +19,14 @@ iverilog -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 ../src/highest_set.sv \
 && ./mul.out
 
+iverilog -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
+../src/mul.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv \
+&& ./mul.out
 
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
 
@@ -55,7 +63,6 @@ module mul #(
     wire [N-1:0]    p1_mant, p2_mant;
 
     wire            pout_sign;
-    wire            pout_reg_s;
     wire [S:0]    pout_reg_len;
     wire [S:0]    pout_k;
     wire [ES-1:0]   pout_exp;
@@ -129,7 +136,6 @@ module mul #(
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
         .pout_sign          (pout_sign),
-        .pout_reg_s         (pout_reg_s),
         .pout_reg_len       (pout_reg_len),
         .pout_k             (pout_k),
 `ifndef NO_ES_FIELD
@@ -146,7 +152,6 @@ module mul #(
         .is_zero        (pout_is_zero),
         .is_inf         (pout_is_inf),
         .sign           (pout_sign),
-        .reg_s          (pout_reg_s),
         .reg_len        (pout_reg_len),
         .k              (pout_k),
 `ifndef NO_ES_FIELD
@@ -209,6 +214,7 @@ module tb_mul;
              if (N == 8 && ES == 0) $dumpfile("tb_mul_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_mul_P5E1.vcd");
         else if (N == 16 && ES == 1)$dumpfile("tb_mul_P16E1.vcd");
+        else if (N == 32 && ES == 2)$dumpfile("tb_mul_P32E2.vcd");
         else                        $dumpfile("tb_mul.vcd");
 
         $dumpvars(0, tb_mul);                        
@@ -219,6 +225,10 @@ module tb_mul;
 
         if (N == 16 && ES == 1) begin
             `include "../src/tb_posit_mul_P16E1.sv"
+        end
+
+        if (N == 32 && ES == 2) begin
+            `include "../src/tb_posit_mul_P32E2.sv"
         end
 
 

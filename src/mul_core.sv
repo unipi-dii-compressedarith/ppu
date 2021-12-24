@@ -73,9 +73,12 @@ module mul_core #(
     wire [S:0] _k_1, _k_2, _k_3, _k_4;
     assign _k_1 = p1_k + p2_k;
 
-`ifndef NO_ES_FIELD
+
     wire [ES:0] _exp_1, _exp_2, _exp_3, _exp_4;
+`ifndef NO_ES_FIELD
     assign _exp_1 = p1_exp + p2_exp;
+`else
+    assign _exp_1 = 0;
 `endif
 
     
@@ -94,13 +97,20 @@ module mul_core #(
     wire mant_carry;
     assign mant_carry = _mant_1[2*N - 1];
 
+
     wire _exp_carry_1, _exp_carry_2;
     assign _exp_carry_1 = _exp_1[ES];
 
 
     assign _k_2 = _exp_carry_1 == 1 ? _k_1 + 1 : _k_1;
 
-    assign _exp_2 = _exp_carry_1 == 1 ? _exp_1 & {ES{1'b1}} : _exp_1;
+    assign _exp_2 = 
+`ifndef NO_ES_FIELD
+        _exp_carry_1 == 1 ? _exp_1 & {ES{1'b1}} : _exp_1;
+`else
+        _exp_1;
+`endif
+
 
     assign _exp_3 = mant_carry == 1 ? _exp_2 + 1 : _exp_2;
     
@@ -111,7 +121,12 @@ module mul_core #(
         (_exp_carry_2 == 1 ? _k_2 + 1 : _k_2) : _k_2;
 
 
-    assign _exp_4 = _exp_carry_2 == 1 ? _exp_3 & {ES{1'b1}} : _exp_3;
+    assign _exp_4 = 
+`ifndef NO_ES_FIELD
+    _exp_carry_2 == 1 ? _exp_3 & {ES{1'b1}} : _exp_3;
+`else
+    _exp_3;
+`endif
 
 
     assign _mant_2 = mant_carry == 1 ? _mant_1 >> 1 : _mant_1;
@@ -129,7 +144,7 @@ module mul_core #(
         ($signed(_k_3) >  $signed(  N - 2)) ? N - 2 : 
         ($signed(_k_3) >= $signed(-(N - 2)) && ($signed(_k_3) <= $signed(N - 2))) ? _k_3 : 
         ($signed(_k_3) <  $signed(-(N - 2))) ? -(N - 2) : 
-        'bx;
+        'bz;
 
     
     wire [S:0] reg_len;
@@ -150,7 +165,9 @@ module mul_core #(
     
     assign pout_k = _k_4;
 
+`ifndef NO_ES_FIELD
     assign pout_exp = _exp_4;
+`endif
 
     assign pout_mant = mant_fractional_part_left;
 
