@@ -51,14 +51,4 @@ sv2v -DN=16 -DES=1 \
 ../src/cls.sv \
 ../src/highest_set.sv > mul.v
 
-
-sv2v -DNO_ES_FIELD -DN=8 -DES=0 \
-../src/mul.sv \
-../src/mul_core.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/highest_set.sv > mul.v
-
-
 cd ..

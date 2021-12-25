@@ -11,7 +11,7 @@ iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 && ./mul.out
 
 
-iverilog -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
+iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 ../src/mul.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
@@ -40,45 +40,60 @@ sv2v -DN=16 -DES=1 \
 ../src/cls.sv \
 ../src/highest_set.sv > mul.v
 
+sv2v -DN=16 -DES=1 \
+../src/mul.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv > mul.v
 
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
 
 */
 
 
-`ifdef ALTERA_RESERVED_QIS
-`define NO_ES_FIELD
-`endif
+// `ifdef ALTERA_RESERVED_QIS
+// `define NO_ES_FIELD
+// `endif
 
 module mul #(
-`ifdef ALTERA_RESERVED_QIS
-        parameter N = 8,
-        parameter ES = 0
-`else
-        parameter N = 8,
-        parameter ES = 0
-`endif
+// `ifdef ALTERA_RESERVED_QIS
+//         parameter N = 16,
+//         parameter ES = 1
+// `else
+        parameter N = 16,
+        parameter ES = 1
+// `endif
     )(
         input [N-1:0] p1, p2,
         output [N-1:0] pout
     );
 
     localparam S = $clog2(N);
-
-    wire [1:0]      p1_is_special, p2_is_special;
-    wire            p1_reg_s, p2_reg_s;
-    wire [S:0]      p1_reg_len, p2_reg_len;
-    wire [S:0]      p1_k, p2_k;
+    localparam DECODE_OUTPUT_SIZE = (
+          1             // sign
+        + 1             // reg_s
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-    wire [ES-1:0]   p1_exp, p2_exp;
+        + ES            // exp
 `endif
-    wire [N-1:0]    p1_mant, p2_mant;
+        + N             // mant
+    );
 
-    wire            pout_sign;
-    wire [S:0]      pout_reg_len;
-    wire [S:0]      pout_k;
-    wire [ES-1:0]   pout_exp;
-    wire [N-1:0]    pout_mant;
+    wire [1:0]                    p1_is_special, p2_is_special;
+    wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out; 
+
+    wire [(
+          1             // sign
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
+`ifndef NO_ES_FIELD
+        + ES            // exp
+`endif
+        + N             // mant
+    ) - 1:0]        encode_in;
     wire            pout_is_zero, pout_is_inf;
 
 
@@ -87,14 +102,7 @@ module mul #(
         .ES(ES)
     ) posit_decode_p1 (
         .bits           (p1),
-        .sign           (p1_sign),
-        .reg_s          (p1_reg_s),
-        .reg_len        (p1_reg_len),
-        .k              (p1_k),
-`ifndef NO_ES_FIELD
-        .exp            (p1_exp),
-`endif
-        .mant           (p1_mant),
+        .decode_out     (p1_decode_out),
         .is_special     (p1_is_special)
     );
 
@@ -103,14 +111,7 @@ module mul #(
         .ES(ES)
     ) posit_decode_p2 (
         .bits           (p2),
-        .sign           (p2_sign),
-        .reg_s          (p2_reg_s),
-        .reg_len        (p2_reg_len),
-        .k              (p2_k),
-`ifndef NO_ES_FIELD
-        .exp            (p2_exp),
-`endif
-        .mant           (p2_mant),
+        .decode_out     (p2_decode_out),
         .is_special     (p2_is_special)
     );
 
@@ -118,35 +119,14 @@ module mul #(
         .N                  (N),
         .ES                 (ES)
     ) mul_core_inst (  
-        .p1_is_zero         (p1_is_zero),
-        .p1_is_inf          (p1_is_inf),
-        .p1_sign            (p1_sign), 
-        .p1_reg_len         (p1_reg_len),
-        .p1_k               (p1_k),
-`ifndef NO_ES_FIELD
-        .p1_exp             (p1_exp),
-`endif
-        .p1_mant            (p1_mant),
-    
-        .p2_is_zero         (p2_is_zero), 
-        .p2_is_inf          (p2_is_inf),
-        .p2_sign            (p2_sign),
-        .p2_reg_len         (p2_reg_len),
-        .p2_k               (p2_k),
-`ifndef NO_ES_FIELD    
-        .p2_exp             (p2_exp),
-`endif
-        .p2_mant            (p2_mant),
+        .p1_is_special      (p1_is_special),
+        .p1_decode_out      (p1_decode_out),
+        .p2_is_special      (p2_is_special),
+        .p2_decode_out      (p2_decode_out),
 
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
-        .pout_sign          (pout_sign),
-        .pout_reg_len       (pout_reg_len),
-        .pout_k             (pout_k),
-`ifndef NO_ES_FIELD
-        .pout_exp           (pout_exp),
-`endif
-        .pout_mant          (pout_mant)
+        .encode_in          (encode_in)
     );
 
     posit_encode #(
@@ -155,16 +135,9 @@ module mul #(
     ) posit_encode_inst (
         .is_zero        (pout_is_zero),
         .is_inf         (pout_is_inf),
-        .sign           (pout_sign),
-        .reg_len        (pout_reg_len),
-        .k              (pout_k),
-`ifndef NO_ES_FIELD
-        .exp            (pout_exp),
-`endif
-        .mant           (pout_mant),
+        .encode_in      (encode_in),
         .posit          (pout)
     );
-
 
 endmodule
 

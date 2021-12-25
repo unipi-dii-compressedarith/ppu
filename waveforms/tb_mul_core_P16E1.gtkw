@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Dec 24 16:45:02 2021
+[*] Sat Dec 25 16:32:55 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P16E1.vcd"
-[dumpfile_mtime] "Fri Dec 24 16:44:31 2021"
-[dumpfile_size] 193934
+[dumpfile_mtime] "Sat Dec 25 16:32:27 2021"
+[dumpfile_size] 181372
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_core_P16E1.gtkw"
 [timestart] 0
-[size] 1440 855
+[size] 2560 1418
 [pos] -1 -1
 *-7.494251 18 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul_core.
 [sst_width] 193
 [signals_width] 360
 [sst_expanded] 1
-[sst_vpaned_height] 294
+[sst_vpaned_height] 521
 @22
 tb_mul_core.mul_core_inst.F1[4:0]
 tb_mul_core.mul_core_inst.F2[4:0]
@@ -41,16 +41,12 @@ tb_mul_core.mul_core_inst.mant_carry
 @22
 tb_mul_core.mul_core_inst.mant_fractional_part_left[15:0]
 tb_mul_core.mul_core_inst.mant_len[4:0]
-tb_mul_core.mul_core_inst.p1_decode_out[26:0]
 @28
 tb_mul_core.mul_core_inst.p1_exp
 tb_mul_core.mul_core_inst.p1_is_inf
 tb_mul_core.mul_core_inst.p1_is_zero
 tb_mul_core.mul_core_inst.p1_reg_s
 tb_mul_core.mul_core_inst.p1_sign
-@22
-tb_mul_core.mul_core_inst.p2_decode_out[26:0]
-@28
 tb_mul_core.mul_core_inst.p2_exp
 tb_mul_core.mul_core_inst.p2_is_inf
 tb_mul_core.mul_core_inst.p2_is_zero
@@ -69,6 +65,5 @@ tb_mul_core.mul_core_inst.pout_reg_len[4:0]
 tb_mul_core.mul_core_inst.pout_sign
 @22
 tb_mul_core.mul_core_inst.reg_len[4:0]
-tb_mul_core.mul_core_inst.p1_decode_out[26:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -9,50 +9,51 @@ iverilog -DTEST_BENCH_MUL_CORE               -DN=32 -DES=2 -o mul_core.out ../sr
 yosys -p "synth_intel -family max10 -top mul_core -vqm mul_core.vqm" \
     ../src/mul_core.sv > yosys_mul_core.out
 
-TODO: get rid of unnecessary flags
+
+sv2v -DN=16 -DES=1 ../src/mul_core.sv > mul_core.v
+
 */
 module mul_core #(
         parameter N = 8,
         parameter ES = 0
     )(
-        input           p1_is_zero,
-        input           p1_is_inf,
-        
+        input [1:0]     p1_is_special,
         input [(
               1             // sign
             + 1             // reg_s
-            + $clog2(N)     // reg_len
-            + $clog2(N)     // k
+            + $clog2(N) + 1 // reg_len
+            + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-            +ES             // exponent
+            + ES            // exp
 `endif
-            +N              // mantissa
+            + N             // mant
         ) - 1:0]        p1_decode_out,
 
 
-        input           p2_is_zero,
-        input           p2_is_inf,
+        input [1:0]     p2_is_special,
         input [(
               1             // sign
             + 1             // reg_s
-            + $clog2(N)     // reg_len
-            + $clog2(N)     // k
+            + $clog2(N) + 1 // reg_len
+            + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-            +ES             // exponent
+            + ES            // exp
 `endif
-            +N              // mantissa
+            + N             // mant
         ) - 1:0]        p2_decode_out,
 
 
         output          pout_is_zero,
         output          pout_is_inf,
-        output          pout_sign,
-        output [$clog2(N):0]    pout_reg_len,
-        output [$clog2(N):0]    pout_k,
+        output [(
+              1             // sign
+            + $clog2(N) + 1 // reg_len
+            + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-        output [ES-1:0] pout_exp,
+            + ES            // exp
 `endif
-        output [N-1:0]  pout_mant
+            + N             // mant
+        ) - 1:0]        encode_in
     );
 
     localparam S = $clog2(N);
@@ -66,6 +67,15 @@ module mul_core #(
 `endif
     wire [N-1:0]    p1_mant, p2_mant;
 
+
+    wire          pout_sign;
+    wire [$clog2(N):0]    pout_reg_len;
+    wire [$clog2(N):0]    pout_k;
+`ifndef NO_ES_FIELD
+    wire [ES-1:0] pout_exp;
+`endif
+    wire [N-1:0]  pout_mant;
+
     assign {
         p1_sign,
         p1_reg_s,
@@ -76,6 +86,7 @@ module mul_core #(
 `endif
         p1_mant
     } = p1_decode_out;
+    
     assign {
         p2_sign,
         p2_reg_s,
@@ -87,6 +98,22 @@ module mul_core #(
         p2_mant
     } = p2_decode_out;
 
+    assign encode_in = {
+        pout_sign,
+        pout_reg_len,
+        pout_k,
+`ifndef NO_ES_FIELD
+        pout_exp,
+`endif
+        pout_mant
+    };
+
+    wire p1_is_zero, p1_is_inf;
+    wire p2_is_zero, p2_is_inf;
+
+    assign {p1_is_zero, p1_is_inf} = p1_is_special;
+
+    assign {p2_is_zero, p2_is_inf} = p2_is_special;
 
     function [N-1:0] min(
             input [N-1:0] a, b
@@ -106,8 +133,14 @@ module mul_core #(
 
     parameter MSB = 1 << (N - 1);
 
-    assign pout_is_zero = p1_is_zero || p2_is_zero;
-    assign pout_is_inf = (p2_is_inf) || (p1_is_inf);
+    assign pout_is_zero = 
+           (p1_is_zero && !p2_is_inf) 
+        || (p2_is_zero && !p1_is_inf);
+    assign pout_is_inf = 
+           (p2_is_inf) 
+        || (p1_is_inf) 
+        || (p1_is_inf && p2_is_zero)
+        || (p2_is_inf && p1_is_zero);
 
     wire [S:0] _k_1, _k_2, _k_3, _k_4;
     assign _k_1 = p1_k + p2_k;
@@ -243,6 +276,7 @@ module tb_mul_core;
 
     reg             p1_is_zero;
     reg             p1_is_inf;
+    reg [1:0]       p1_is_special;
 
     reg             p1_sign, p2_sign;
     reg [S:0]       p1_reg_len, p2_reg_len;
@@ -255,26 +289,40 @@ module tb_mul_core;
     reg [(
           1             // sign
         + 1             // reg_s
-        + $clog2(N)     // reg_len
-        + $clog2(N)     // reg_len
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-        +ES             // exponent
+        + ES            // exp
 `endif
-        +N              // mantissa
+        + N             // mant
     ) - 1:0]   p1_decode_out;
 
     reg            p2_is_zero;
     reg            p2_is_inf;
+    reg [1:0]      p2_is_special;
     reg [(
           1             // sign
         + 1             // reg_s
-        + $clog2(N)     // reg_len
-        + $clog2(N)     // reg_len
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-        +ES             // exponent
+        + ES            // exp
 `endif
-        +N              // mantissa
+        + N             // mant
     ) - 1:0]   p2_decode_out;
+
+
+
+    reg [(
+          1             // sign
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
+`ifndef NO_ES_FIELD
+        + ES            // exp
+`endif
+        + N             // mant
+    ) - 1:0]       encode_in;
+
 
     wire           pout_is_zero;
     wire           pout_is_inf;
@@ -317,25 +365,14 @@ module tb_mul_core;
         .ES                 (ES)
     ) mul_core_inst (
         /************ inputs ************/
-        .p1_is_zero         (p1_is_zero),   
-        .p1_is_inf          (p1_is_inf), 
-        .p1_decode_out   (p1_decode_out),
-    
-
-        .p2_is_zero         (p2_is_zero), 
-        .p2_is_inf          (p2_is_inf),   
-        .p2_decode_out   (p2_decode_out),
-        
+        .p1_is_special      (p1_is_special),   
+        .p1_decode_out      (p1_decode_out),
+        .p2_is_special      (p2_is_special),   
+        .p2_decode_out      (p2_decode_out),
         /************ outputs ************/
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
-        .pout_sign          (pout_sign),
-        .pout_reg_len       (pout_reg_len),
-        .pout_k             (pout_k),
-`ifndef NO_ES_FIELD
-        .pout_exp           (pout_exp),
-`endif
-        .pout_mant          (pout_mant)
+        .encode_in          (encode_in)
     );
 
     always @(*) begin
@@ -358,6 +395,9 @@ module tb_mul_core;
 `endif
             p2_mant
         };
+
+        p1_is_special = {p1_is_zero, p1_is_inf};
+        p2_is_special = {p2_is_zero, p2_is_inf};
     end
 
     

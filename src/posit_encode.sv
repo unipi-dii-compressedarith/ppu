@@ -19,33 +19,52 @@ module posit_encode #(
     )(
         input          is_zero,
         input          is_inf,
-        input          sign,
-        input [$clog2(N):0]    reg_len,
-        input [$clog2(N):0]    k,
+        input [(
+              1             // sign
+            + $clog2(N) + 1 // reg_len
+            + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-        input [ES-1:0] exp,
+            + ES            // exp
 `endif
-        input [N-1:0]  mant,
+            + N             // mant
+        ) - 1:0]        encode_in,
         output [N-1:0] posit
     );
     
     localparam S = $clog2(N);
 
+
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
-
     function is_negative(input [S:0] k);
         is_negative = k[S];
     endfunction
-
-    
     function [N-1:0] shl (
             input [N-1:0] bits,
             input [N-1:0] rhs
         );
         shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
     endfunction
+
+    wire          sign;
+    wire [$clog2(N):0]    reg_len;
+    wire [$clog2(N):0]    k;
+`ifndef NO_ES_FIELD
+    wire [ES-1:0] exp;
+`endif
+    wire [N-1:0]  mant;
+
+    assign {
+        sign, 
+        reg_len, 
+        k, 
+`ifndef NO_ES_FIELD
+        exp,
+`endif
+        mant
+    } = encode_in;
+
 
     wire [N-1:0] bits_assembled;
 
@@ -117,15 +136,26 @@ module tb_posit_encode;
     /* inputs */
     reg            is_zero;
     reg            is_inf;
-    reg            sign;
-    reg [S:0]      reg_len;
-    reg [S:0]      k;
+
+    reg [(
+          1             // sign
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
 `ifndef NO_ES_FIELD
-    reg [ES-1:0]   exp;
+        + ES            // exp
 `endif
-    reg [N-1:0]    mant;
+        + N             // mant
+    ) - 1:0]        encode_in;
+
+    reg             sign;
+    reg [S:0]       reg_len;
+    reg [S:0]       k;
+`ifndef NO_ES_FIELD
+    reg [ES-1:0]    exp;
+`endif
+    reg [N-1:0]     mant;
     /* output */
-    wire [N-1:0]   posit;
+    wire [N-1:0]    posit;
     /*************************/
 
     reg [N-1:0]   posit_expected;
@@ -139,15 +169,21 @@ module tb_posit_encode;
     ) posit_encode_inst (
         .is_zero        (is_zero),
         .is_inf         (is_inf),
-        .sign           (sign),
-        .reg_len        (reg_len),
-        .k              (k),
-`ifndef NO_ES_FIELD
-        .exp            (exp),
-`endif
-        .mant           (mant),
+        .encode_in      (encode_in),
         .posit          (posit)
     );
+
+    always @(*) begin
+        encode_in = {
+            sign, 
+            reg_len, 
+            k, 
+`ifndef NO_ES_FIELD
+            exp,
+`endif
+            mant
+        };
+    end
 
     always @(*) begin
         err = posit == posit_expected ? 0 : 1'bx;

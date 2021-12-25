@@ -11,7 +11,7 @@ Usage:
     ../src/cls.sv \
     && ./posit_decode.out
 
-    iverilog -DTEST_BENCH_DECODE               -DN=16 -DES=1 -o posit_decode.out \
+    iverilog -g2012 -DTEST_BENCH_DECODE               -DN=16 -DES=1 -o posit_decode.out \
     ../src/posit_decode.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
@@ -23,6 +23,10 @@ Usage:
     ../src/cls.sv \
     && ./posit_decode.out
 
+    sv2v -DN=16 -DES=1 \
+    ../src/posit_decode.sv \
+    ../src/highest_set.sv \
+    ../src/cls.sv > posit_decode.v
 
     yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" \
     ../src/posit_decode.sv \
@@ -31,20 +35,20 @@ Usage:
 
 */
 module posit_decode #(
-        parameter N = 8,
-        parameter ES = 0
+        parameter N = 16,
+        parameter ES = 1
     )(
         input [N-1:0]   bits,
         output [(
-                  1             // sign
-                + 1             // reg_s
-                + $clog2(N)     // reg_len
-                + $clog2(N)     // k
-`ifndef NO_ES_FIELD
-                +ES             // exponent
-`endif
-                +N              // mantissa
-            ) - 1:0]    decode_out,
+              1             // sign
+            + 1             // reg_s
+            + $clog2(N) + 1 // reg_len
+            + $clog2(N) + 1 // k
+    `ifndef NO_ES_FIELD
+            + ES            // exp
+    `endif
+            + N             // mant
+        ) - 1:0]    decode_out,
 
         output [1:0]    is_special
     );
@@ -52,15 +56,22 @@ module posit_decode #(
     wire is_zero, is_inf;
     assign is_special = {is_zero, is_inf};
 
+    wire sign, reg_s;
+    wire [S:0] reg_len, k;
+`ifndef NO_ES_FIELD
+    wire [ES-1:0] exp;
+`endif
+    wire [N-1:0] mant;
+
     assign decode_out = {
         sign, 
         reg_s, 
         reg_len, 
         k,
 `ifndef NO_ES_FIELD
-        exponent,
+        exp,
 `endif
-        mantissa
+        mant
     };
 
     localparam S = $clog2(N);
@@ -134,40 +145,54 @@ module tb_posit_decode;
     parameter N = 8;
 `endif
 
-    parameter S = $clog2(N);
-
 `ifdef ES
     parameter ES = `ES;
 `else
     parameter ES = 0;
 `endif  
     
+    localparam S = $clog2(N);
+    localparam DECODE_OUTPUT_SIZE = (
+          1             // sign
+        + 1             // reg_s
+        + $clog2(N) + 1 // reg_len
+        + $clog2(N) + 1 // k
+`ifndef NO_ES_FIELD
+        + ES            // exp
+`endif
+        + N             // mant
+    );
+
+
     // input
     reg [N-1:0]     bits;
     
     // outputs
-    wire [(
-          1             // sign
-        + 1             // reg_s
-        + $clog2(N)     // reg_len
-        + $clog2(N)     // k
-`ifndef NO_ES_FIELD
-        +ES             // exponent
-`endif
-        +N              // mantissa
-    ) - 1:0]          decode_out,
+    reg [DECODE_OUTPUT_SIZE-1:0] decode_out;
     wire [1:0]      is_special;
     /*************************/
 
-    reg sign_expected, reg_s_expected;
-    reg [S  :0] reg_len_expected, k_expected;
-    reg [ES-1:0] exp_expected;
-    reg [N-1:0] mant_expected;
-    reg [S-1:0] mant_len_expected;
-    reg is_special_expected;
-    reg err;
+    reg sign;
+    reg reg_s;
+    reg [S:0] reg_len, k;
+`ifndef NO_ES_FIELD
+    reg [ES-1:0] exp;
+`endif
+    reg [N-1:0] mant;
 
+    reg             sign_expected;
+    reg             reg_s_expected;
+    reg [S:0]       reg_len_expected, k_expected;
+`ifndef NO_ES_FIELD
+    reg [ES-1:0]    exp_expected;
+`endif
+    reg [N-1:0]     mant_expected;
+    reg [S-1:0]     mant_len_expected;
+    reg             is_special_expected;
+    
+    reg err;
     reg [N:0] test_no;
+
 
 `ifndef NO_ES_FIELD
     reg diff_exp;
@@ -175,6 +200,22 @@ module tb_posit_decode;
     reg diff_k, diff_mant, diff_is_special;
     
     reg k_is_pos;
+
+    // unpacking `decode_out` into its fundamental signals in order to be compared with the expected values.
+    always @(*) begin
+        {
+            sign,
+            reg_s,
+            reg_len,
+            k,
+`ifndef NO_ES_FIELD
+            exp,
+`endif
+            mant
+        } = decode_out;
+    end
+
+
     
     always @(*) begin
 `ifndef NO_ES_FIELD
