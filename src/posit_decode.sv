@@ -7,49 +7,44 @@ Usage:
 
     iverilog -DTEST_BENCH_DECODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_decode.out \
     ../src/posit_decode.sv \
+    ../src/utils.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
     && ./posit_decode.out
 
     iverilog -g2012 -DTEST_BENCH_DECODE               -DN=16 -DES=1 -o posit_decode.out \
     ../src/posit_decode.sv \
+    ../src/utils.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
     && ./posit_decode.out
 
-    iverilog -DTEST_BENCH_DECODE               -DN=32 -DES=2 -o posit_decode.out \
+    iverilog -g2012 -DTEST_BENCH_DECODE               -DN=32 -DES=2 -o posit_decode.out \
     ../src/posit_decode.sv \
+    ../src/utils.sv \
     ../src/highest_set.sv \
     ../src/cls.sv \
     && ./posit_decode.out
 
     sv2v -DN=16 -DES=1 \
     ../src/posit_decode.sv \
+    ../src/utils.sv \
     ../src/highest_set.sv \
     ../src/cls.sv > posit_decode.v
 
     yosys -p "synth_intel -family max10 -top posit_decode -vqm posit_decode.vqm" \
     ../src/posit_decode.sv \
+    ../src/utils.sv \
     ../src/highest_set.sv \
     ../src/cls.sv > yosys_posit_decode.out
 
 */
 module posit_decode #(
-        parameter N = 16,
-        parameter ES = 1
+        parameter N = `N,    // specified in `utils.sv`
+        parameter ES = `ES   // specified in `utils.sv`
     )(
         input [N-1:0]   bits,
-        output [(
-              1             // sign
-            + 1             // reg_s
-            + $clog2(N) + 1 // reg_len
-            + $clog2(N) + 1 // k
-    `ifndef NO_ES_FIELD
-            + ES            // exp
-    `endif
-            + N             // mant
-        ) - 1:0]    decode_out,
-
+        output [DECODE_OUTPUT_SIZE-1:0] decode_out,
         output [1:0]    is_special
     );
 
@@ -74,8 +69,6 @@ module posit_decode #(
         mant
     };
 
-    localparam S = $clog2(N);
-
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
@@ -84,6 +77,7 @@ module posit_decode #(
     assign is_inf = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
     
+    // u_bits = abs(bits)  
     wire [N-1:0] u_bits;
     assign u_bits = sign == 0 ? bits : c2(bits);
 
@@ -142,26 +136,15 @@ module tb_posit_decode;
 `ifdef N
     parameter N = `N;
 `else
-    parameter N = 8;
+    $display("missing N");
 `endif
 
 `ifdef ES
     parameter ES = `ES;
 `else
-    parameter ES = 0;
+    $display("missing ES");
 `endif  
     
-    localparam S = $clog2(N);
-    localparam DECODE_OUTPUT_SIZE = (
-          1             // sign
-        + 1             // reg_s
-        + $clog2(N) + 1 // reg_len
-        + $clog2(N) + 1 // k
-`ifndef NO_ES_FIELD
-        + ES            // exp
-`endif
-        + N             // mant
-    );
 
 
     // input
@@ -197,7 +180,7 @@ module tb_posit_decode;
 `ifndef NO_ES_FIELD
     reg diff_exp;
 `endif    
-    reg diff_k, diff_mant, diff_is_special;
+    reg diff_k, diff_mant, diff_is_special, diff_sign;
     
     reg k_is_pos;
 
@@ -224,12 +207,14 @@ module tb_posit_decode;
         diff_mant = (mant === mant_expected ? 0 : 'bx);
         diff_k = (k === k_expected ? 0 : 'bx);
         diff_is_special = (is_special === is_special_expected ? 0 : 'bx);
+        diff_sign = (sign === sign_expected ? 0 : 'bx);
         
         if (
             diff_mant == 0
 `ifndef NO_ES_FIELD
             && diff_exp == 0 
 `endif
+            && diff_sign == 0
             && diff_k == 0 
             && diff_is_special == 0 
         ) err = 0;

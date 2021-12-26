@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Dec 25 16:37:14 2021
+[*] Sun Dec 26 10:26:15 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P16E1.vcd"
-[dumpfile_mtime] "Sat Dec 25 16:36:58 2021"
+[dumpfile_mtime] "Sun Dec 26 10:25:41 2021"
 [dumpfile_size] 411085
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P16E1.gtkw"
-[timestart] 6
+[timestart] 173
 [size] 2560 1418
-[pos] -1 -85
-*-5.267668 192 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] 840 -1464
+*-2.267668 192 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul.
 [treeopen] tb_mul.mul_inst.
 [treeopen] tb_mul.mul_inst.mul_core_inst.
@@ -20,7 +20,9 @@
 [sst_width] 193
 [signals_width] 361
 [sst_expanded] 1
-[sst_vpaned_height] 814
+[sst_vpaned_height] 1092
+@25
+tb_mul.test_no[16:0]
 @22
 tb_mul.mul_inst.p1[15:0]
 tb_mul.mul_inst.p2[15:0]
@@ -34,8 +36,6 @@ tb_mul.p1[15:0]
 tb_mul.p2[15:0]
 tb_mul.pout[15:0]
 tb_mul.pout_expected[15:0]
-tb_mul.test_no[16:0]
-@23
 tb_mul.mul_inst.encode_in[27:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -3,6 +3,7 @@
 # from within the `waveforms` folder
 iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 ../src/mul.sv \
+../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
@@ -13,6 +14,7 @@ iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 
 iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 ../src/mul.sv \
+../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
@@ -20,8 +22,9 @@ iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 ../src/highest_set.sv \
 && ./mul.out
 
-iverilog -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
+iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 ../src/mul.sv \
+../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
@@ -34,6 +37,7 @@ iverilog -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 # from within the `quartus` folder
 sv2v -DN=16 -DES=1 \
 ../src/mul.sv \
+../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
@@ -42,6 +46,7 @@ sv2v -DN=16 -DES=1 \
 
 sv2v -DN=16 -DES=1 \
 ../src/mul.sv \
+../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
@@ -62,8 +67,8 @@ module mul #(
 //         parameter N = 16,
 //         parameter ES = 1
 // `else
-        parameter N = 16,
-        parameter ES = 1
+        parameter N = `N,
+        parameter ES = `ES
 // `endif
     )(
         input [N-1:0] p1, p2,
@@ -71,29 +76,11 @@ module mul #(
     );
 
     localparam S = $clog2(N);
-    localparam DECODE_OUTPUT_SIZE = (
-          1             // sign
-        + 1             // reg_s
-        + $clog2(N) + 1 // reg_len
-        + $clog2(N) + 1 // k
-`ifndef NO_ES_FIELD
-        + ES            // exp
-`endif
-        + N             // mant
-    );
 
     wire [1:0]                    p1_is_special, p2_is_special;
     wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out; 
 
-    wire [(
-          1             // sign
-        + $clog2(N) + 1 // reg_len
-        + $clog2(N) + 1 // k
-`ifndef NO_ES_FIELD
-        + ES            // exp
-`endif
-        + N             // mant
-    ) - 1:0]        encode_in;
+    wire [ENCODE_INPUT_SIZE-1:0]        encode_in;
     wire            pout_is_zero, pout_is_inf;
 
 
