@@ -1,10 +1,10 @@
 /*
 
-iverilog -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD -DN=8 -DES=0  -o mul_core.out ../src/mul_core.sv && ./mul_core.out
+iverilog -g2012 -DTEST_BENCH_MUL_CORE -DNO_ES_FIELD -DN=8 -DES=0  -o mul_core.out ../src/mul_core.sv ../src/utils.sv && ./mul_core.out
 
-iverilog -DTEST_BENCH_MUL_CORE               -DN=16 -DES=1 -o mul_core.out ../src/mul_core.sv && ./mul_core.out
+iverilog -g2012 -DTEST_BENCH_MUL_CORE               -DN=16 -DES=1 -o mul_core.out ../src/mul_core.sv ../src/utils.sv && ./mul_core.out
 
-iverilog -DTEST_BENCH_MUL_CORE               -DN=32 -DES=2 -o mul_core.out ../src/mul_core.sv && ./mul_core.out
+iverilog -g2012 -DTEST_BENCH_MUL_CORE               -DN=32 -DES=2 -o mul_core.out ../src/mul_core.sv ../src/utils.sv && ./mul_core.out
 
 yosys -p "synth_intel -family max10 -top mul_core -vqm mul_core.vqm" \
     ../src/mul_core.sv > yosys_mul_core.out
@@ -14,8 +14,8 @@ sv2v -DN=16 -DES=1 ../src/mul_core.sv > mul_core.v
 
 */
 module mul_core #(
-        parameter N = 8,
-        parameter ES = 0
+        parameter N = `N,
+        parameter ES = `ES
     )(
         input [1:0]     p1_is_special,
         input [(
@@ -264,9 +264,6 @@ module tb_mul_core;
 `else
     parameter N = 8;
 `endif
-
-    parameter S = $clog2(N);
-    // parameter S2 = 1 + 1 + S + S + ES + N;
 
 `ifdef ES
     parameter ES = `ES;

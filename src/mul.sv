@@ -1,7 +1,7 @@
 /*
 
 # from within the `waveforms` folder
-iverilog -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
+iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -53,7 +53,14 @@ sv2v -DN=16 -DES=1 \
 ../src/cls.sv \
 ../src/highest_set.sv > mul.v
 
-yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" mul.sv mul_core.sv posit_decode.sv posit_encode.sv cls.sv highest_set.sv > mul_yosys_intel.out
+yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" \
+../src/mul.sv \
+../src/utils.sv \
+../src/mul_core.sv \
+../src/posit_decode.sv \
+../src/posit_encode.sv \
+../src/cls.sv \
+../src/highest_set.sv > mul_yosys_intel.out
 
 */
 
@@ -74,8 +81,6 @@ module mul #(
         input [N-1:0] p1, p2,
         output [N-1:0] pout
     );
-
-    localparam S = $clog2(N);
 
     wire [1:0]                    p1_is_special, p2_is_special;
     wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out; 
@@ -142,7 +147,6 @@ module tb_mul;
     parameter N = 8;
 `endif
 
-    parameter S = $clog2(N);
 
 `ifdef ES
     parameter ES = `ES;
@@ -161,13 +165,13 @@ module tb_mul;
     mul #(
         .N      (N),
         .ES     (ES)
-    ) mul_inst (  
+    ) mul_inst (
         .p1     (p1),
         .p2     (p2),
         .pout   (pout)
     );
 
-
+    
     always @(*) begin
         diff_pout = pout === pout_expected ? 0 : 1'bx;
     end
@@ -196,6 +200,7 @@ module tb_mul;
 
 
         #10;
+        $finish;
     end
 
 endmodule

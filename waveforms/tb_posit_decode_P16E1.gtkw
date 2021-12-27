@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Mon Dec 20 18:39:25 2021
+[*] Sun Dec 26 17:01:30 2021
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P16E1.vcd"
-[dumpfile_mtime] "Mon Dec 20 18:38:29 2021"
-[dumpfile_size] 95756
+[dumpfile_mtime] "Sun Dec 26 17:01:24 2021"
+[dumpfile_size] 104603
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P16E1.gtkw"
 [timestart] 0
 [size] 1440 855
 [pos] -1 -1
-*-9.320300 310 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.505526 310 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_posit_decode.
 [treeopen] tb_posit_decode.posit_decode_inst.
 [sst_width] 193
@@ -20,16 +20,10 @@
 tb_posit_decode.bits[15:0]
 @28
 tb_posit_decode.diff_exp
-tb_posit_decode.diff_is_inf
-tb_posit_decode.diff_is_zero
 tb_posit_decode.diff_k
 tb_posit_decode.diff_mant
 tb_posit_decode.exp
 tb_posit_decode.exp_expected
-tb_posit_decode.is_inf
-tb_posit_decode.is_inf_expected
-tb_posit_decode.is_zero
-tb_posit_decode.is_zero_expected
 tb_posit_decode.k_is_pos
 @22
 tb_posit_decode.mant[15:0]
@@ -42,7 +36,11 @@ tb_posit_decode.sign
 tb_posit_decode.sign_expected
 @22
 tb_posit_decode.test_no[16:0]
-@29
+@28
 tb_posit_decode.err
+@22
+tb_posit_decode.posit_decode_inst.bits_cls_in[15:0]
+@23
+tb_posit_decode.posit_decode_inst.leading_set[3:0]
 [pattern_trace] 1
 [pattern_trace] 0

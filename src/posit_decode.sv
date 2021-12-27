@@ -5,7 +5,7 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
 
-    iverilog -DTEST_BENCH_DECODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_decode.out \
+    iverilog -g2012 -DTEST_BENCH_DECODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_decode.out \
     ../src/posit_decode.sv \
     ../src/utils.sv \
     ../src/highest_set.sv \
@@ -58,17 +58,6 @@ module posit_decode #(
 `endif
     wire [N-1:0] mant;
 
-    assign decode_out = {
-        sign, 
-        reg_s, 
-        reg_len, 
-        k,
-`ifndef NO_ES_FIELD
-        exp,
-`endif
-        mant
-    };
-
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
@@ -81,12 +70,12 @@ module posit_decode #(
     wire [N-1:0] u_bits;
     assign u_bits = sign == 0 ? bits : c2(bits);
 
-    wire [S-1:0] leading_ones, leading_zeros;
+    wire [S-1:0] leading_set;
 
     // regime sign
     assign reg_s = u_bits[N-2];
 
-    assign k = reg_s == 1 ? leading_ones - 1 : c2(leading_zeros);
+    assign k = reg_s == 1 ? leading_set - 1 : c2(leading_set);
     
     assign reg_len = reg_s == 1 ? k + 2 : c2(k) + 1;
 
@@ -101,27 +90,64 @@ module posit_decode #(
 
     assign mant = (u_bits << (N - mant_len)) >> (N - mant_len);
     
+    wire [N-1:0] bits_cls_in = sign == 0 ? u_bits : ~u_bits;
     
+    wire val = bits_cls_in[N-2];
+
     // count leading X
     cls #(
-        .N(N),
-        .S(S)
-    ) clo_inst_o (
-        .bits               (u_bits << 1), // strip sign bit and count ones from the left
-        .leading_ones       (leading_ones),
+        .N(N)
+    ) clo_inst (
+        .posit              (bits_cls_in), // strip sign bit and count ones from the left
+        .val                (val),
+        .leading_set        (leading_set),
         .index_highest_set  ()
     );
-    cls #(
-        .N(N),
-        .S(S)
-    ) clo_inst_z (
-        .bits               (~u_bits << 1), // flip bits, strip sign bit and count zeros from the left
-        .leading_ones       (leading_zeros),
-        .index_highest_set  ()
+
+    // cls #(
+    //     .N(N)
+    // ) clo_inst_z (
+    //     .bits               (~u_bits << 1), // flip bits, strip sign bit and count zeros from the left
+    //     .leading_ones       (leading_zeros),
+    //     .index_highest_set  ()
+    // );
+
+    decode_out decode_out_inst (
+        .sign(sign),
+        .reg_s(reg_s),
+        .reg_len(reg_len),
+        .k(k),
+`ifndef NO_ES_FIELD
+        .exp(exp),
+`endif
+        .mant(mant),
+        .decode_out(decode_out)
     );
 
 endmodule
 
+module decode_out (
+        input sign,
+        input reg_s,
+        input [S:0] reg_len,
+        input [S:0] k,
+`ifndef NO_ES_FIELD
+        input [ES-1:0] exp,
+`endif
+        input [N-1:0] mant,
+        output [DECODE_OUTPUT_SIZE-1:0] decode_out
+    );
+    assign decode_out = {
+        sign, 
+        reg_s, 
+        reg_len, 
+        k, 
+`ifndef NO_ES_FIELD 
+        exp, 
+`endif        
+        mant
+    };
+endmodule
 
 
 `ifdef TEST_BENCH_DECODE
