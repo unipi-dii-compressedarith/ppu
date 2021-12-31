@@ -140,6 +140,12 @@ endmodule
 `ifdef TEST_BENCH_MUL
 module tb_mul;
 
+    function [N-1:0] c2(input [N-1:0] a);
+        c2 = ~a + 1'b1;
+    endfunction
+    function [N-1:0] abs(input [N-1:0] in);
+        abs = in[N-1] == 0 ? in : c2(in);
+    endfunction
 
 `ifdef N
     parameter N = `N;
@@ -159,7 +165,7 @@ module tb_mul;
 
     reg [N-1:0] pout_expected;
 
-    reg diff_pout;
+    reg diff_pout, pout_off_by_1;
     reg [N:0] test_no;
 
     mul #(
@@ -174,6 +180,7 @@ module tb_mul;
     
     always @(*) begin
         diff_pout = pout === pout_expected ? 0 : 1'bx;
+        pout_off_by_1 = abs(pout - pout_expected) == 0 ? 0 : abs(pout - pout_expected) == 1 ? 1 : 'bx;
     end
 
     initial begin
