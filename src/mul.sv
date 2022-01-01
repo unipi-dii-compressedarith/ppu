@@ -2,6 +2,7 @@
 
 # from within the `waveforms` folder
 iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
+../src/round_mul.sv \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -13,6 +14,7 @@ iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 
 
 iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
+../src/round_mul.sv \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -23,6 +25,7 @@ iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 && ./mul.out
 
 iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
+../src/round_mul.sv \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -37,21 +40,14 @@ iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 # from within the `quartus` folder
 sv2v -DN=16 -DES=1 \
 ../src/mul.sv \
-../src/utils.sv \
 ../src/mul_core.sv \
+../src/round_mul.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
+../src/utils.sv \
 ../src/cls.sv \
 ../src/highest_set.sv > mul.v
 
-sv2v -DN=16 -DES=1 \
-../src/mul.sv \
-../src/utils.sv \
-../src/mul_core.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/highest_set.sv > mul.v
 
 yosys -p "synth_intel -family max10 -top mul -vqm mul.vqm" \
 ../src/mul.sv \
@@ -88,6 +84,7 @@ module mul #(
     wire [ENCODE_INPUT_SIZE-1:0]        encode_in;
     wire            pout_is_zero, pout_is_inf;
 
+    wire [N-1:0] pout_not_rounded;
 
     posit_decode #(
         .N(N),
@@ -118,17 +115,31 @@ module mul #(
 
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
-        .encode_in          (encode_in)
+        .encode_in          (encode_in),
+        .rounding_signals   (rounding_signals)
     );
 
     posit_encode #(
         .N(N),
         .ES(ES)
     ) posit_encode_inst (
-        .is_zero        (pout_is_zero),
-        .is_inf         (pout_is_inf),
-        .encode_in      (encode_in),
-        .posit          (pout)
+        .is_zero            (pout_is_zero),
+        .is_inf             (pout_is_inf),
+        .encode_in          (encode_in),
+        .posit              (pout_not_rounded)
+    );
+
+
+    wire [(3)-1:0] rounding_signals;
+    wire k_is_oob, bit_n_plus_one, bits_more;
+    assign {k_is_oob, bit_n_plus_one, bits_more} = rounding_signals;
+
+    round_mul #(
+        .N(N)
+    ) round_mul_inst (
+        .posit_in           (pout_not_rounded),
+        .rounding_signals   (rounding_signals),
+        .posit_rounded_out  (pout)
     );
 
 endmodule

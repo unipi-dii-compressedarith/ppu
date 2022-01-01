@@ -53,10 +53,16 @@ module mul_core #(
             + ES            // exp
 `endif
             + N             // mant
-        ) - 1:0]        encode_in
+        ) - 1:0]        encode_in,
+
+        output [(3)-1:0]rounding_signals    // 3:   `k_is_oob`, 
+                                            //      `bit_n_plus_one`, 
+                                            //      `bits_more`
     );
 
     localparam S = $clog2(N);
+
+    assign rounding_signals = {k_is_oob, bit_n_plus_one, bits_more};
 
     wire            p1_sign, p2_sign;
     wire            p1_reg_s, p2_reg_s;
@@ -242,6 +248,20 @@ module mul_core #(
 `endif
 
     assign pout_mant = mant_fractional_part_left;
+
+    wire bit_n_plus_one, bits_more;
+    assign bit_n_plus_one = mant_fractional_part_discarded >> (len_mant_fractional_part_discarded - 1);
+
+    assign bits_more = (mant_fractional_part_discarded & ((1 << (len_mant_fractional_part_discarded - 1)) - 1)) != 0;
+
+    wire [(2*N)-1:0] mant_fractional_part;
+    assign mant_fractional_part = _mant_2 & ((1 << (2*N - 2)) - 1);
+
+    wire [(2*N)-1:0] mant_fractional_part_discarded;
+    assign mant_fractional_part_discarded = mant_fractional_part & ((1 << len_mant_fractional_part_discarded) - 1);
+
+    wire [S+1:0] len_mant_fractional_part_discarded;
+    assign len_mant_fractional_part_discarded = 2*N - 2 - mant_len;
 
 endmodule
 
