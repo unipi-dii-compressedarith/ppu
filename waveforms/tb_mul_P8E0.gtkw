@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Dec 24 10:32:01 2021
+[*] Sat Jan  1 15:30:17 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P8E0.vcd"
-[dumpfile_mtime] "Fri Dec 24 10:31:53 2021"
-[dumpfile_size] 195234
+[dumpfile_mtime] "Sat Jan  1 15:29:12 2022"
+[dumpfile_size] 290400
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_P8E0.gtkw"
-[timestart] 3
+[timestart] 0
 [size] 2560 1418
 [pos] -1 -1
-*-7.998401 1445 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.998401 1084 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_mul.
 [sst_width] 193
 [signals_width] 312
@@ -17,39 +17,11 @@
 [sst_vpaned_height] 454
 @22
 tb_mul.mul_inst.p1[7:0]
-@28
-tb_mul.mul_inst.p1_is_inf
-tb_mul.mul_inst.p1_is_zero
-@22
-tb_mul.mul_inst.p1_k[3:0]
-tb_mul.mul_inst.p1_mant[7:0]
-tb_mul.mul_inst.p1_reg_len[3:0]
-@28
-tb_mul.mul_inst.p1_reg_s
-tb_mul.mul_inst.p1_sign
-@22
 tb_mul.mul_inst.p2[7:0]
-@28
-tb_mul.mul_inst.p2_is_inf
-tb_mul.mul_inst.p2_is_zero
-@22
-tb_mul.mul_inst.p2_k[3:0]
-tb_mul.mul_inst.p2_mant[7:0]
-tb_mul.mul_inst.p2_reg_len[3:0]
-@28
-tb_mul.mul_inst.p2_reg_s
-tb_mul.mul_inst.p2_sign
-@22
 tb_mul.mul_inst.pout[7:0]
 @28
 tb_mul.mul_inst.pout_is_inf
 tb_mul.mul_inst.pout_is_zero
-@22
-tb_mul.mul_inst.pout_k[3:0]
-tb_mul.mul_inst.pout_mant[7:0]
-tb_mul.mul_inst.pout_reg_len[3:0]
-@28
-tb_mul.mul_inst.pout_sign
 tb_mul.diff_pout
 @23
 tb_mul.p1[7:0]

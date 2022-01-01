@@ -10,6 +10,13 @@
 ```
 
 
+#### known bugs:
+
+- [ ] fails at interpreting `posit8(bits = 0x81)` -> use a wider size for k ($clog2(N) + 2?)
+
+
+
+
 ### cli tools
 
 |   |linux (*)             |macOS                        |                |

@@ -4,6 +4,8 @@
 iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 ../src/round_mul.sv \
 ../src/mul.sv \
+../src/mul_special.sv \
+../src/either_is_special.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
 ../src/posit_decode.sv \
@@ -15,6 +17,8 @@ iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
 
 iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 ../src/round_mul.sv \
+../src/mul_special.sv \
+../src/either_is_special.sv \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -26,6 +30,8 @@ iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
 
 iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 ../src/round_mul.sv \
+../src/mul_special.sv \
+../src/either_is_special.sv \
 ../src/mul.sv \
 ../src/utils.sv \
 ../src/mul_core.sv \
@@ -42,6 +48,8 @@ sv2v -DN=16 -DES=1 \
 ../src/mul.sv \
 ../src/mul_core.sv \
 ../src/round_mul.sv \
+../src/mul_special.sv \
+../src/either_is_special.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
 ../src/utils.sv \
@@ -79,12 +87,12 @@ module mul #(
     );
 
     wire [1:0]                    p1_is_special, p2_is_special;
-    wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out; 
+    wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out, p1_broken_down, p2_broken_down;
 
     wire [ENCODE_INPUT_SIZE-1:0]        encode_in;
     wire            pout_is_zero, pout_is_inf;
 
-    wire [N-1:0] pout_not_rounded;
+    wire [N-1:0] pout_not_rounded, posit_rounded_out;
 
     posit_decode #(
         .N(N),
@@ -108,10 +116,10 @@ module mul #(
         .N                  (N),
         .ES                 (ES)
     ) mul_core_inst (  
-        .p1_is_special      (p1_is_special),
-        .p1_decode_out      (p1_decode_out),
-        .p2_is_special      (p2_is_special),
-        .p2_decode_out      (p2_decode_out),
+        .p1_is_special      (),
+        .p1_decode_out      (p1_broken_down),
+        .p2_is_special      (),
+        .p2_decode_out      (p2_broken_down),
 
         .pout_is_zero       (pout_is_zero),
         .pout_is_inf        (pout_is_inf),
@@ -139,8 +147,34 @@ module mul #(
     ) round_mul_inst (
         .posit_in           (pout_not_rounded),
         .rounding_signals   (rounding_signals),
-        .posit_rounded_out  (pout)
+        .posit_rounded_out  (posit_rounded_out)
     );
+
+
+    wire either_is_special_flag;
+
+    either_is_special #(
+        .N(N)
+    ) either_is_special (
+        .p1_is_special      (p1_is_special),
+        .p2_is_special      (p2_is_special),
+        .either_is_special  (either_is_special_flag)
+    );
+
+    assign p1_broken_down = either_is_special_flag == 1 ? 0 : p1_decode_out;
+    assign p2_broken_down = either_is_special_flag == 1 ? 0 : p2_decode_out;
+
+
+    wire [N-1:0] pout_special;
+    mul_special #(
+        .N(N)
+    ) mul_special_inst (
+        .p1_is_special  (p1_is_special),
+        .p2_is_special  (p2_is_special),
+        .pout_special   (pout_special)
+    );
+
+    assign pout = either_is_special_flag == 1 ? pout_special : posit_rounded_out;
 
 endmodule
 
