@@ -72,6 +72,7 @@ if __name__ == "__main__":
     list_a[0] = 0
     list_a[1] = 1 << (N - 1)
     list_a[2], list_b[2] = 0, 1 << (N - 1)
+    list_a[3] = (1 << (N-1)) + 1 # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):

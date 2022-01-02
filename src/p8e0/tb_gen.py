@@ -63,9 +63,10 @@ _hex8 = lambda val: f"8'h{val:02x}"
 _bin8 = lambda val: f"8'b{val:08b}"
 
 
-# force add a few special testcases first
-list_a = [0b01111010, 0x00, 0x80] + list_a
-list_b = [0b01011000, 0x03, 0x90] + list_b
+if not TEST_ALL_COMBINATIONS:
+    # force add a few special testcases first
+    list_a = [0b01111010, 0x00, 0x80] + list_a
+    list_b = [0b01011000, 0x03, 0x90] + list_b
 
 
 PLACEHOLDER = "/*{add stuff here}*/"
