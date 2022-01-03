@@ -18,7 +18,7 @@ module posit_encode #(
         parameter ES = 0
     )(
         input          is_zero,
-        input          is_inf,
+        input          is_nan,
         input [(
               1             // sign
             + $clog2(N) + 1 // reg_len
@@ -99,10 +99,10 @@ module posit_encode #(
 
     assign posit = 
         is_zero === 1 ? 0 : 
-        is_inf  === 1 ? (1 << (N-1)) :
+        is_nan  === 1 ? (1 << (N-1)) :
                         bits;
             /*  ^^^ 3 equal signs needed to compare against 1'bx, 
-                otherwise if `is_zero` or `is_inf` == 1'bx, also 
+                otherwise if `is_zero` or `is_nan` == 1'bx, also 
                 `posit` would be 'bX, regardless. */
 endmodule
 
@@ -135,7 +135,7 @@ module tb_posit_encode;
 
     /* inputs */
     reg            is_zero;
-    reg            is_inf;
+    reg            is_nan;
 
     reg [(
           1             // sign
@@ -168,7 +168,7 @@ module tb_posit_encode;
         .ES(ES)
     ) posit_encode_inst (
         .is_zero        (is_zero),
-        .is_inf         (is_inf),
+        .is_nan         (is_nan),
         .encode_in      (encode_in),
         .posit          (posit)
     );

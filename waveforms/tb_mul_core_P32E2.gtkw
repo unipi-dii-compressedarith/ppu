@@ -43,7 +43,7 @@ tb_mul_core.mul_core_inst.mant_fractional_part_left[31:0]
 tb_mul_core.mul_core_inst.mant_len[5:0]
 @28
 tb_mul_core.mul_core_inst.p1_exp[1:0]
-tb_mul_core.mul_core_inst.p1_is_inf
+tb_mul_core.mul_core_inst.p1_is_nan
 tb_mul_core.mul_core_inst.p1_is_zero
 @22
 tb_mul_core.mul_core_inst.p1_k[5:0]
@@ -53,7 +53,7 @@ tb_mul_core.mul_core_inst.p1_reg_len[5:0]
 tb_mul_core.mul_core_inst.p1_reg_s
 tb_mul_core.mul_core_inst.p1_sign
 tb_mul_core.mul_core_inst.p2_exp[1:0]
-tb_mul_core.mul_core_inst.p2_is_inf
+tb_mul_core.mul_core_inst.p2_is_nan
 tb_mul_core.mul_core_inst.p2_is_zero
 @22
 tb_mul_core.mul_core_inst.p2_k[5:0]
@@ -63,7 +63,7 @@ tb_mul_core.mul_core_inst.p2_reg_len[5:0]
 tb_mul_core.mul_core_inst.p2_reg_s
 tb_mul_core.mul_core_inst.p2_sign
 tb_mul_core.mul_core_inst.pout_exp[1:0]
-tb_mul_core.mul_core_inst.pout_is_inf
+tb_mul_core.mul_core_inst.pout_is_nan
 tb_mul_core.mul_core_inst.pout_is_zero
 @22
 tb_mul_core.mul_core_inst.pout_k[5:0]

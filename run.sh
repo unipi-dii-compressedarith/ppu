@@ -2,7 +2,7 @@ cd scripts
 python tb_gen.py --operation mul -n 8  -es 0
 python tb_gen.py --operation mul -n 16 -es 1
 python tb_gen.py --operation mul -n 32 -es 2
-# python tb_gen.py --operation mul -n 5 -es 1 # to be fixed in posit_playground
+python tb_gen.py --operation mul -n 5 -es 1 # to be fixed in posit_playground
 
 
 

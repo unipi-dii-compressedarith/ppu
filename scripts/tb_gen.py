@@ -111,7 +111,7 @@ if __name__ == "__main__":
                     c += f"{'mant_len_expected ='.ljust(LJUST)} {mant_len};\n"
                 else:
                     pass
-                c += f"{'is_special_expected ='.ljust(LJUST)} {(p.is_zero or p.is_inf).real};\n"
+                c += f"{'is_special_expected ='.ljust(LJUST)} {(p.is_zero or p.is_nan).real};\n"
             elif args.operation == Tb.ENCODE:
                 c += f"{'posit_expected ='.ljust(LJUST)} {N}'h{p.to_hex(prefix=False)};\n"
                 ### sign
@@ -126,7 +126,7 @@ if __name__ == "__main__":
                     ### mantissa
                     c += f"{'mant ='.ljust(LJUST)} {N}'b{get_bin(mant, N, prefix=False)};\n"
                 c += f"{'is_zero ='.ljust(LJUST)} {p.is_zero.real};\n"
-                c += f"{'is_inf ='.ljust(LJUST)} {p.is_inf.real};\n"
+                c += f"{'is_nan ='.ljust(LJUST)} {p.is_nan.real};\n"
             c += f"#10;\n\n"
 
     if args.operation == Tb.MUL_CORE:
@@ -141,7 +141,7 @@ if __name__ == "__main__":
             c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=False)} {p1.eval()};\n\t"
             c += f"{'p1_hex ='.ljust(LJUST)} {N}'h{get_hex(p1.bit_repr(), N//4, prefix=False)};\n\t"
             c += f"{'p1_is_zero ='.ljust(LJUST)} {p1.is_zero.real};\n\t"
-            c += f"{'p1_is_inf ='.ljust(LJUST)} {p1.is_inf.real};\n\t"
+            c += f"{'p1_is_nan ='.ljust(LJUST)} {p1.is_nan.real};\n\t"
             c += f"{'p1_sign ='.ljust(LJUST)} {p1.sign};\n\t"
             if pout.fields.is_some:
                 c += f"{'p1_reg_len ='.ljust(LJUST)} {p1.fields.unwrap().regime.reg_len};\n\t"
@@ -153,7 +153,7 @@ if __name__ == "__main__":
             c += f"{'// p2:'.ljust(LJUST)} {get_bin(p2.bit_repr(), N, prefix=False)} {p2.eval()};\n\t"
             c += f"{'p2_hex ='.ljust(LJUST)} {N}'h{get_hex(p2.bit_repr(), N//4, prefix=False)};\n\t"
             c += f"{'p2_is_zero ='.ljust(LJUST)} {p2.is_zero.real};\n\t"
-            c += f"{'p2_is_inf ='.ljust(LJUST)} {p2.is_inf.real};\n\t"
+            c += f"{'p2_is_nan ='.ljust(LJUST)} {p2.is_nan.real};\n\t"
             c += f"{'p2_sign ='.ljust(LJUST)} {p2.sign};\n\t"
             if pout.fields.is_some:
                 c += f"{'p2_reg_len ='.ljust(LJUST)} {p2.fields.unwrap().regime.reg_len};\n\t"
@@ -165,7 +165,7 @@ if __name__ == "__main__":
             c += f"{'// pout:'.ljust(LJUST)} {get_bin(pout.bit_repr(), N)} {pout.eval()};\n\t"
             c += f"{'pout_hex ='.ljust(LJUST)} {N}'h{get_hex(pout.bit_repr(), N//4, prefix=False)};\n\t"
             c += f"{'pout_is_zero_expected ='.ljust(LJUST)} {pout.is_zero.real};\n\t"
-            c += f"{'pout_is_inf_expected ='.ljust(LJUST)} {pout.is_inf.real};\n\t"
+            c += f"{'pout_is_nan_expected ='.ljust(LJUST)} {pout.is_nan.real};\n\t"
             c += f"{'pout_sign_expected ='.ljust(LJUST)} {pout.sign};\n\t"
             if pout.fields.is_some:
                 c += f"{'pout_reg_len_expected ='.ljust(LJUST)} {pout.fields.unwrap().regime.reg_len};\n\t"

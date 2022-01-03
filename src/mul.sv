@@ -90,7 +90,7 @@ module mul #(
     wire [DECODE_OUTPUT_SIZE-1:0] p1_decode_out, p2_decode_out, p1_broken_down, p2_broken_down;
 
     wire [ENCODE_INPUT_SIZE-1:0]        encode_in;
-    wire            pout_is_zero, pout_is_inf;
+    wire            pout_is_zero, pout_is_nan;
 
     wire [N-1:0] pout_not_rounded, posit_rounded_out;
 
@@ -122,7 +122,7 @@ module mul #(
         .p2_decode_out      (p2_broken_down),
 
         .pout_is_zero       (pout_is_zero),
-        .pout_is_inf        (pout_is_inf),
+        .pout_is_nan        (pout_is_nan),
         .encode_in          (encode_in),
         .rounding_signals   (rounding_signals)
     );
@@ -132,7 +132,7 @@ module mul #(
         .ES(ES)
     ) posit_encode_inst (
         .is_zero            (pout_is_zero),
-        .is_inf             (pout_is_inf),
+        .is_nan             (pout_is_nan),
         .encode_in          (encode_in),
         .posit              (pout_not_rounded)
     );

@@ -20,7 +20,7 @@ tb_mul.mul_inst.p1[7:0]
 tb_mul.mul_inst.p2[7:0]
 tb_mul.mul_inst.pout[7:0]
 @28
-tb_mul.mul_inst.pout_is_inf
+tb_mul.mul_inst.pout_is_nan
 tb_mul.mul_inst.pout_is_zero
 tb_mul.diff_pout
 @23

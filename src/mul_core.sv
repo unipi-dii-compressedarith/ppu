@@ -44,7 +44,7 @@ module mul_core #(
 
 
         output          pout_is_zero,
-        output          pout_is_inf,
+        output          pout_is_nan,
         output [(
               1             // sign
             + $clog2(N) + 1 // reg_len
@@ -114,12 +114,12 @@ module mul_core #(
         pout_mant
     };
 
-    wire p1_is_zero, p1_is_inf;
-    wire p2_is_zero, p2_is_inf;
+    wire p1_is_zero, p1_is_nan;
+    wire p2_is_zero, p2_is_nan;
 
-    assign {p1_is_zero, p1_is_inf} = p1_is_special;
+    assign {p1_is_zero, p1_is_nan} = p1_is_special;
 
-    assign {p2_is_zero, p2_is_inf} = p2_is_special;
+    assign {p2_is_zero, p2_is_nan} = p2_is_special;
 
     function [N-1:0] min(
             input [N-1:0] a, b
@@ -140,13 +140,13 @@ module mul_core #(
     parameter MSB = 1 << (N - 1);
 
     assign pout_is_zero = 
-           (p1_is_zero && !p2_is_inf) 
-        || (p2_is_zero && !p1_is_inf);
-    assign pout_is_inf = 
-           (p2_is_inf) 
-        || (p1_is_inf) 
-        || (p1_is_inf && p2_is_zero)
-        || (p2_is_inf && p1_is_zero);
+           (p1_is_zero && !p2_is_nan) 
+        || (p2_is_zero && !p1_is_nan);
+    assign pout_is_nan = 
+           (p2_is_nan) 
+        || (p1_is_nan) 
+        || (p1_is_nan && p2_is_zero)
+        || (p2_is_nan && p1_is_zero);
 
     wire [S:0] _k_1, _k_2, _k_3, _k_4;
     assign _k_1 = p1_k + p2_k;
@@ -292,7 +292,7 @@ module tb_mul_core;
 `endif  
 
     reg             p1_is_zero;
-    reg             p1_is_inf;
+    reg             p1_is_nan;
     reg [1:0]       p1_is_special;
 
     reg             p1_sign, p2_sign;
@@ -315,7 +315,7 @@ module tb_mul_core;
     ) - 1:0]   p1_decode_out;
 
     reg            p2_is_zero;
-    reg            p2_is_inf;
+    reg            p2_is_nan;
     reg [1:0]      p2_is_special;
     reg [(
           1             // sign
@@ -342,7 +342,7 @@ module tb_mul_core;
 
 
     wire           pout_is_zero;
-    wire           pout_is_inf;
+    wire           pout_is_nan;
     wire           pout_sign;
     wire  [S:0]    pout_reg_len;
     wire  [S:0]    pout_k;
@@ -352,7 +352,7 @@ module tb_mul_core;
     wire  [N-1:0]  pout_mant;
 
     reg            pout_is_zero_expected;
-    reg            pout_is_inf_expected;
+    reg            pout_is_nan_expected;
     reg            pout_sign_expected;
     reg   [S:0]    pout_reg_len_expected;
     reg   [S:0]    pout_k_expected;
@@ -366,7 +366,7 @@ module tb_mul_core;
     reg [N-1:0] p1_hex, p2_hex, pout_hex;
 
     reg diff_pout_is_zero;
-    reg diff_pout_is_inf;
+    reg diff_pout_is_nan;
     reg diff_pout_sign;
     reg diff_pout_reg_len;
     reg diff_pout_k;
@@ -388,7 +388,7 @@ module tb_mul_core;
         .p2_decode_out      (p2_decode_out),
         /************ outputs ************/
         .pout_is_zero       (pout_is_zero),
-        .pout_is_inf        (pout_is_inf),
+        .pout_is_nan        (pout_is_nan),
         .encode_in          (encode_in)
     );
 
@@ -413,14 +413,14 @@ module tb_mul_core;
             p2_mant
         };
 
-        p1_is_special = {p1_is_zero, p1_is_inf};
-        p2_is_special = {p2_is_zero, p2_is_inf};
+        p1_is_special = {p1_is_zero, p1_is_nan};
+        p2_is_special = {p2_is_zero, p2_is_nan};
     end
 
     
     always @(*) begin
         diff_pout_is_zero = pout_is_zero === pout_is_zero_expected ? 0 : 1'bx;
-        diff_pout_is_inf = pout_is_inf === pout_is_inf_expected ? 0 : 1'bx;
+        diff_pout_is_nan = pout_is_nan === pout_is_nan_expected ? 0 : 1'bx;
         diff_pout_sign = pout_sign === pout_sign_expected ? 0 : 1'bx;
         diff_pout_reg_len = pout_reg_len === pout_reg_len_expected ? 0 : 1'bx;
         diff_pout_k = pout_k === pout_k_expected ? 0 : 1'bx;

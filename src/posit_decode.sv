@@ -48,8 +48,8 @@ module posit_decode #(
         output [1:0]    is_special
     );
 
-    wire is_zero, is_inf;
-    assign is_special = {is_zero, is_inf};
+    wire is_zero, is_nan;
+    assign is_special = {is_zero, is_nan};
 
     wire sign, reg_s;
     wire [S:0] reg_len, k;
@@ -63,7 +63,7 @@ module posit_decode #(
     endfunction
 
     assign is_zero = bits == {N{1'b0}};
-    assign is_inf = bits == {1'b1, {N-1{1'b0}}};
+    assign is_nan = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
     
     // u_bits = abs(bits)  

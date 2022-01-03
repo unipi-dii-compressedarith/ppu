@@ -45,9 +45,9 @@ tb_posit_decode.reg_len_expected[3:0]
 @200
 -
 @28
-tb_posit_decode.posit_decode_inst.is_inf
+tb_posit_decode.posit_decode_inst.is_nan
 tb_posit_decode.posit_decode_inst.is_zero
-tb_posit_decode.diff_is_inf
+tb_posit_decode.diff_is_nan
 tb_posit_decode.diff_is_zero
 @200
 -

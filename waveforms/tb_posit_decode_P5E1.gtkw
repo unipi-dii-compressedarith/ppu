@@ -33,7 +33,7 @@ tb_posit_decode.posit_decode_inst.leading_zeros[2:0]
 -
 @28
 tb_posit_decode.reg_s
-tb_posit_decode.is_inf
+tb_posit_decode.is_nan
 tb_posit_decode.is_zero
 @25
 tb_posit_decode.reg_len[2:0]
