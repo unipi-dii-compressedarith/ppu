@@ -3,16 +3,23 @@
 
 
 
+### usage:
 
-#### file org:
+- install prerequisites:
+    
+    - [cli tools](#cli_tools)
+    - [`posit_playground`](https://github.com/urbanij/posit-playground) (dependency of [`scripts/tb_gen.py`](./scripts/tb_gen.py)).
+
+- generate all the waveforms
+
+```sh
+./run.sh
 ```
-!todo
-```
 
 
-#### known bugs:
 
-- [ ] fails at interpreting `posit8(bits = 0x81)` -> use a wider size for k ($clog2(N) + 2?)
+### known bugs:
+
 
 
 
