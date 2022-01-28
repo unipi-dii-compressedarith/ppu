@@ -137,6 +137,13 @@ module mul_core #(
         c2 = ~a + 1'b1;
     endfunction
 
+    function [N-1:0] shl (
+            input [N-1:0] bits,
+            input [N-1:0] rhs
+        );
+        shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
+    endfunction
+
     parameter MSB = 1 << (N - 1);
 
     assign pout_is_zero = 
@@ -159,14 +166,18 @@ module mul_core #(
     assign _exp_1 = 0;
 `endif
 
+    localparam MANT_FIELD_SIZE = S + 1;
     
-    wire [S:0] F1, F2; // mantissae field size
+    wire [MANT_FIELD_SIZE-1:0] F1, F2; // mantissae field size
     assign F1 = N - 1 - p1_reg_len - ES;
     assign F2 = N - 1 - p2_reg_len - ES;
     
     wire [N-1:0] f1, f2; // mantissae fields, left aligned (N bits)
-    assign f1 = MSB | p1_mant << (N - 1 - F1);
-    assign f2 = MSB | p2_mant << (N - 1 - F2);
+    // assign f1 = MSB | p1_mant << (N - 1 - F1);
+    // assign f2 = MSB | p2_mant << (N - 1 - F2);
+
+    assign f1 = MSB | shl(p1_mant, (N - 1 - $signed(F1)));
+    assign f2 = MSB | shl(p2_mant, (N - 1 - $signed(F2)));
 
 
     wire [2*N-1:0] _mant_1, _mant_2;

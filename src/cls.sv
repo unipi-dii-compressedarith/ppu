@@ -12,12 +12,9 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
     
-    iverilog -g2012 -DTEST_BENCH_CLS \
-    -DN=8 \
-    -o cls.out \
-    ../src/cls.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv && ./cls.out
+
+    iverilog -g2012 -DN=16 -DTEST_BENCH_CLS -o cls.out ../src/cls.sv ../src/highest_set.sv ../src/utils.sv && ./cls.out
+
 */
 
 
@@ -102,6 +99,7 @@ module tb_cls;
         #10     posit = 8'b0101_0101; val = 1; // expected = 1;
         #10     posit = 8'b1100_0000; val = 1; // expected = 1;
         #10     posit = 8'b1111_1110; val = 1; // expected = 0;
+        #10     posit = 8'b1000_0001; val = 1; // expected = 0;
         #10;
 
 
@@ -112,6 +110,7 @@ module tb_cls;
         #10     posit = 8'b0101_0101; val = 0; // expected = 1;
         #10     posit = 8'b1100_0000; val = 0; // expected = 1;
         #10     posit = 8'b1111_1110; val = 0; // expected = 0;
+        #10     posit = 8'b1000_0001; val = 0; // expected = 0;
 
 
         #10;

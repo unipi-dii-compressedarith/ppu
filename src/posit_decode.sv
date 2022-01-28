@@ -19,13 +19,6 @@ Usage:
     ../src/cls.sv \
     && ./posit_decode.out
 
-    iverilog -g2012 -DTEST_BENCH_DECODE               -DN=32 -DES=2 -o posit_decode.out \
-    ../src/posit_decode.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv \
-    ../src/cls.sv \
-    && ./posit_decode.out
-
     sv2v -DN=16 -DES=1 \
     ../src/posit_decode.sv \
     ../src/utils.sv \
@@ -44,19 +37,30 @@ module posit_decode #(
         parameter ES = `ES   // specified in `utils.sv`
     )(
         input [N-1:0]   bits,
-        output [DECODE_OUTPUT_SIZE-1:0] decode_out,
+
+/////////////
+        output sign,
+        output reg_s,
+        output [REG_LEN_SIZE-1:0] reg_len,
+        output [K_SIZE-1:0] k,
+`ifndef NO_ES_FIELD
+        output [ES-1:0] exp,
+`endif
+        output [MANT_SIZE-1:0] mant,
+/////////////
         output [1:0]    is_special
     );
 
     wire is_zero, is_nan;
     assign is_special = {is_zero, is_nan};
 
-    wire sign, reg_s;
-    wire [S:0] reg_len, k;
-`ifndef NO_ES_FIELD
-    wire [ES-1:0] exp;
-`endif
-    wire [N-1:0] mant;
+//     wire sign, reg_s;
+//     wire [REG_LEN_SIZE-1:0] reg_len;
+//     wire [K_SIZE-1:0] k;
+// `ifndef NO_ES_FIELD
+//     wire [ES-1:0] exp;
+// `endif
+//     wire [N-1:0] mant;
 
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
@@ -70,12 +74,30 @@ module posit_decode #(
     wire [N-1:0] u_bits;
     assign u_bits = sign == 0 ? bits : c2(bits);
 
-    wire [S-1:0] leading_set;
+    wire [S-1:0] leading_set,
+                 leading_set_2;
 
     // regime sign
     assign reg_s = u_bits[N-2];
 
-    assign k = reg_s == 1 ? leading_set - 1 : c2(leading_set);
+
+
+        /*
+            * Mon Jan  3 17:29:23 CET 2022
+            * added this line to handle the only case in which the multiplier used to fail
+            * (and other operations too since they depend on this module).
+            * This is the case where the posit is of the type `0b1(zeroes)1`
+        **/
+        wire is_special_case;
+        assign is_special_case = bits == { {1{1'b1}}, {N-2{1'b0}}, {1{1'b1}} };
+
+
+        assign leading_set_2 = is_special_case ? (N-1) : leading_set; // temporary fix until you have 
+                                                                    // the time to embed this in the 
+                                                                    // general case (perhaps fixing clks.sv)
+
+    assign k = reg_s == 1 ? leading_set_2 - 1 : c2(leading_set_2);
+    
     
     assign reg_len = reg_s == 1 ? k + 2 : c2(k) + 1;
 
@@ -84,7 +106,7 @@ module posit_decode #(
     assign exp = (u_bits << (1 + reg_len)) >> (N - ES);
 `endif
 
-    wire [S:0] mant_len;
+    wire [(S+1)-1:0] mant_len;
     assign mant_len = N - 1 - reg_len - ES;
 
 
@@ -97,7 +119,7 @@ module posit_decode #(
     // count leading X
     cls #(
         .N(N)
-    ) clo_inst (
+    ) cls_inst (
         .posit              (bits_cls_in), // strip sign bit and count ones from the left
         .val                (val),
         .leading_set        (leading_set),
@@ -112,42 +134,9 @@ module posit_decode #(
     //     .index_highest_set  ()
     // );
 
-    decode_out decode_out_inst (
-        .sign(sign),
-        .reg_s(reg_s),
-        .reg_len(reg_len),
-        .k(k),
-`ifndef NO_ES_FIELD
-        .exp(exp),
-`endif
-        .mant(mant),
-        .decode_out(decode_out)
-    );
 
 endmodule
 
-module decode_out (
-        input sign,
-        input reg_s,
-        input [S:0] reg_len,
-        input [S:0] k,
-`ifndef NO_ES_FIELD
-        input [ES-1:0] exp,
-`endif
-        input [N-1:0] mant,
-        output [DECODE_OUTPUT_SIZE-1:0] decode_out
-    );
-    assign decode_out = {
-        sign, 
-        reg_s, 
-        reg_len, 
-        k, 
-`ifndef NO_ES_FIELD 
-        exp, 
-`endif        
-        mant
-    };
-endmodule
 
 
 `ifdef TEST_BENCH_DECODE
@@ -177,13 +166,15 @@ module tb_posit_decode;
     reg [N-1:0]     bits;
     
     // outputs
-    reg [DECODE_OUTPUT_SIZE-1:0] decode_out;
+    
+
     wire [1:0]      is_special;
     /*************************/
 
     reg sign;
     reg reg_s;
-    reg [S:0] reg_len, k;
+    reg [REG_LEN_SIZE-1:0] reg_len;
+    reg [K_SIZE-1:0] k;
 `ifndef NO_ES_FIELD
     reg [ES-1:0] exp;
 `endif
@@ -191,7 +182,8 @@ module tb_posit_decode;
 
     reg             sign_expected;
     reg             reg_s_expected;
-    reg [S:0]       reg_len_expected, k_expected;
+    reg [REG_LEN_SIZE-1:0] reg_len_expected;
+    reg [K_SIZE-1:0] k_expected;
 `ifndef NO_ES_FIELD
     reg [ES-1:0]    exp_expected;
 `endif
@@ -210,19 +202,6 @@ module tb_posit_decode;
     
     reg k_is_pos;
 
-    // unpacking `decode_out` into its fundamental signals in order to be compared with the expected values.
-    always @(*) begin
-        {
-            sign,
-            reg_s,
-            reg_len,
-            k,
-`ifndef NO_ES_FIELD
-            exp,
-`endif
-            mant
-        } = decode_out;
-    end
 
 
     
@@ -252,7 +231,15 @@ module tb_posit_decode;
         .ES(ES)
     ) posit_decode_inst (
         .bits           (bits),
-        .decode_out     (decode_out),
+        
+        .sign           (sign),
+        .reg_s          (reg_s),
+        .reg_len        (reg_len),
+        .k              (k),
+`ifndef NO_ES_FIELD
+        .exp            (exp),
+`endif
+        .mant           (mant),
         .is_special     (is_special)
     );
 

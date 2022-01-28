@@ -23,18 +23,16 @@ module unsigned_reciprocal_approx #(
 
     reg [N-1:0] a, b;
     reg [2*N-1:0] c, d;
-    reg [3*N-1:0] e;
+    reg [3*N-1:0] e, out;
 
     assign a = i_data;
     assign b = 16'd48038 - a;
     assign c = $signed(a) * $signed(b);
     assign d = 32'd1075030314 - c;
     assign e = $signed(d) * $signed(b);
-
-    reg [3*N-1:0] out;
     assign out = e << 2;
+    
     assign o_data = out[3*N-1: 3*N-1-N];  // (out << 1) >> (2 * N)
-
 endmodule
 
 
