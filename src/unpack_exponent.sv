@@ -3,9 +3,8 @@ module unpack_exponent #(
         parameter N = `N,
         parameter ES = `ES
     )(  
-        input [TE_SIZE-1 :0] total_exp
-        
-        output [($clog2(N)+1)-1:0] k,
+        input [TE_SIZE-1 :0] total_exp,
+        output [K_SIZE-1:0] k,
         output [ES-1:0] exp
     );
 

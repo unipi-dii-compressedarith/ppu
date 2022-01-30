@@ -11,14 +11,14 @@ sv2v -DN=16 -DES=1 \
 module core_op #(
         parameter N = `N
     )(
-        input [1:0] op,
+        input [OP_SIZE-1:0] op,
         
         input [TE_SIZE-1:0] te1, te2,
         input [MANT_SIZE-1:0] mant1, mant2,
         input have_opposite_sign,
 
         output [TE_SIZE-1:0] te_out,
-        output [2*MANT_SIZE-1:0] mant_out,
+        output [2*MANT_SIZE-1:0] mant_out
     );
 
 
@@ -61,5 +61,9 @@ module core_op #(
     // );
 
 
+
+
+    assign mant_out = mant_out_mul;
+    assign te_out = te_out_mul;
 
 endmodule

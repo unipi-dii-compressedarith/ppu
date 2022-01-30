@@ -1,20 +1,32 @@
-module shift_fields #(
-        parameter N = 16,
-        parameter ES = 1
-    )(
-        input mant,
-        input total_exp,
-        input mant_non_factional_size,
-        
-        output k,
-        output next_exp,
-        output mant_downshifted,
+/*
 
+iverilog -g2012 -DN=16 -DES=1 -o shift_fields.out \
+../src/shift_fields.sv \
+../src/unpack_exponent.sv \
+../src/utils.sv \
+../src/compute_rounding.sv && ./shift_fields.out
+
+*/
+module shift_fields #(
+        parameter N = `N,
+        parameter ES = `ES
+    )(
+        input [2*MANT_SIZE-1:0] mant,
+        input [TE_SIZE-1:0] total_exp,
+        input [(2)-1:0] mant_non_factional_size,
+        
+        output [K_SIZE-1:0] k,
+        output [ES-1:0] next_exp,
+        output [MANT_SIZE-1:0] mant_downshifted,
+
+        // flags
         output round_bit,
         output sticky_bit,
         output k_is_oob,
         output non_zero_mant_field_size
     );
+
+
     function [N-1:0] min(
             input [N-1:0] a, b
         );
@@ -27,39 +39,50 @@ module shift_fields #(
         max = a >= b ? a : b;
     endfunction
 
+    
+    wire [K_SIZE-1:0] k_unpacked;
+    wire [ES-1:0] exp_unpacked;
     unpack_exponent #(
         .N(N),
         .ES(ES)
     ) unpack_exponent_inst (
         .total_exp(total_exp),
-        .k(k),
-        .exp(exp)
+        .k(k_unpacked),
+        .exp(exp_unpacked)
     );
 
 
-    wire regime_k;
-    assign regime_k = (k <= (N-2) && k >= -(N-2)) ? k : (
-        k >= 0 ? N -2 : -(N-2)
+    wire [K_SIZE-1:0] regime_k;
+    assign regime_k = ($signed(k_unpacked) <= (N-2) && $signed(k_unpacked) >= -(N-2)) ? $signed(k_unpacked) : (
+        $signed(k_unpacked) >= 0 ? N -2 : -(N-2)
     );
 
-    assign k_is_oob = k != regime_k;
+    assign k_is_oob = k_unpacked != regime_k;
 
-    wire reg_len;
-    assign reg_len = regime_k >= 0 ? regime_k + 2 : -regime_k + 1;
+    wire [REG_LEN_SIZE-1:0] reg_len;
+    assign reg_len = $signed(regime_k) >= 0 ? regime_k + 2 : -$signed(regime_k) + 1;
 
+    
+    wire [MANT_LEN_SIZE-1:0] mant_len;
     assign mant_len = N - 1 - ES - reg_len;
 
+    wire [ES-1:0] es_actual_len;
     assign es_actual_len = min(ES, N - 1 - reg_len);
 
 
-    wire exp_1, exp_2;
+    wire [ES-1:0] exp_1;
+    assign exp_1 = exp_unpacked >> max(0, ES - es_actual_len);
 
-    assign exp_1 = exp >> max(0, ES - es_actual_len);
 
-    assign shift_mant_up = 2 * N;
+    wire [(S+2)-1:0] shift_mant_up;
+    assign shift_mant_up = (N << 1); //2 * N;
+    
+    wire [(S+2)-1:0] mant_len_diff;
     assign mant_len_diff = shift_mant_up - mant_len;
 
-    assign mant_up_shifted = (mant << mant_non_factional_size); //& mask(shift_mant_up);
+    wire [(2*MANT_SIZE+2)-1:0] mant_up_shifted; // +2 because `mant_non_factional_size` can be at most 2.
+    assign mant_up_shifted = 
+        (mant << mant_non_factional_size) & ((1 << shift_mant_up) - 1); //& mask(shift_mant_up);
 
     compute_rouding #(
         .N(N),
@@ -68,17 +91,21 @@ module shift_fields #(
         .mant_len(mant_len),
         .mant_up_shifted(mant_up_shifted),
         .mant_len_diff(mant_len_diff),
-        .k(k),
-        .exp(exp),
+        .k(regime_k),
+        .exp(exp_unpacked),
         .round_bit(round_bit),
         .sticky_bit(sticky_bit)
     );
 
+    assign k = k_unpacked;
 
+    wire [ES-1:0] exp_2;
     assign exp_2 = exp_1 << (ES - es_actual_len);
 
-    assign mant_down_shifted = mant_up_shifted >> mant_len_diff;
+    assign mant_downshifted = mant_up_shifted >> mant_len_diff;
 
     assign non_zero_mant_field_size = mant_len >= 0;
+
+    assign next_exp = exp_2;
 
 endmodule

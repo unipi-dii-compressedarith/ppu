@@ -50,6 +50,11 @@ parameter ES = `ES;
 // parameter ES = 1;
 `endif
 
+`ifndef OP_SIZE
+parameter OP_SIZE = 2;
+`endif
+
+
 `ifndef S
 parameter S = $clog2(N);
 `endif
@@ -60,6 +65,10 @@ parameter TE_SIZE = (ES + 1) + (S + 1);
 
 `ifndef REG_LEN_SIZE
 parameter REG_LEN_SIZE = S + 1;
+`endif
+
+`ifndef MANT_LEN_SIZE
+parameter MANT_LEN_SIZE = S + 1;
 `endif
 
 `ifndef K_SIZE

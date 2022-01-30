@@ -23,7 +23,7 @@ module core_mul #(
     wire mant_carry;
     assign mant_carry = mant_mul[2*MANT_SIZE-1];
 
-    assign te_out = mant_carry == 1'b1 ? te_sum + 1 : te_sum;
+    assign te_out = mant_carry == 1'b1 ? te_sum + 1'b1 : te_sum;
     assign mant_out = mant_carry == 1'b1 ? mant_mul >> 1 : mant_mul;
 
 endmodule

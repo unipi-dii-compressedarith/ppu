@@ -54,13 +54,6 @@ module posit_decode #(
     wire is_zero, is_nan;
     assign is_special = {is_zero, is_nan};
 
-//     wire sign, reg_s;
-//     wire [REG_LEN_SIZE-1:0] reg_len;
-//     wire [K_SIZE-1:0] k;
-// `ifndef NO_ES_FIELD
-//     wire [ES-1:0] exp;
-// `endif
-//     wire [N-1:0] mant;
 
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
@@ -94,7 +87,7 @@ module posit_decode #(
 
         assign leading_set_2 = is_special_case ? (N-1) : leading_set; // temporary fix until you have 
                                                                     // the time to embed this in the 
-                                                                    // general case (perhaps fixing clks.sv)
+                                                                    // general case (perhaps fixing cls.sv)
 
     assign k = reg_s == 1 ? leading_set_2 - 1 : c2(leading_set_2);
     
@@ -109,8 +102,14 @@ module posit_decode #(
     wire [(S+1)-1:0] mant_len;
     assign mant_len = N - 1 - reg_len - ES;
 
+    wire [FRAC_SIZE-1:0] frac;
+    assign frac = (u_bits << (N - mant_len)) >> (N - mant_len);
 
-    assign mant = (u_bits << (N - mant_len)) >> (N - mant_len);
+
+    parameter MSB = 1 << (N - 1);
+    // assign mant = frac; // before
+    assign mant = MSB | (frac << (N-mant_len-1)); // after -> 1.frac
+
     
     wire [N-1:0] bits_cls_in = sign == 0 ? u_bits : ~u_bits;
     

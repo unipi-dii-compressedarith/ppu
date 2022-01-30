@@ -1,6 +1,5 @@
 module round #(
         parameter N = `N
-
     )(
         input [N-1:0] posit,
         input round_bit,

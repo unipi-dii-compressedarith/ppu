@@ -25,13 +25,13 @@ module unpack_posit #(
         parameter ES = `ES
     )(
         input [N-1:0] bits,
+        output sign,
         output [K_SIZE-1:0] k,
         output [ES-1:0] exp,
         output [MANT_SIZE-1:0] mant // 1.frac
     );
 
     wire [1:0] is_special;
-    wire sign;
 
     posit_decode #(
         .N(N),
@@ -52,10 +52,9 @@ module unpack_posit #(
 endmodule
 
 
+
+
 `ifdef TEST_BENCH_UNPACK_POSIT
-
 module tb_unpack_posit;
-
 endmodule
-
 `endif

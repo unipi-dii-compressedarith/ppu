@@ -6,40 +6,41 @@ Description:
 Usage:
     cd $PROJECT_ROOT/waveforms
     
-    iverilog -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
+    iverilog -g2012 -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encode.out \
+    ../src/utils.sv \
+    ../src/posit_encode.sv && ./posit_encode.out
 
-    iverilog -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encode.out ../src/posit_encode.sv && ./posit_encode.out
+    iverilog -g2012 -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encode.out \
+    ../src/utils.sv \
+    ../src/posit_encode.sv && ./posit_encode.out
 
-    yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" ../src/posit_encode.sv > yosys_posit_encode.out
+    yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" \
+    ../src/utils.sv \
+    ../src/posit_encode.sv > yosys_posit_encode.out
 
 */
 module posit_encode #(
-        parameter N = 8,
-        parameter ES = 0
+        parameter N = `N,
+        parameter ES = `ES
     )(
         input          is_zero,
         input          is_nan,
-        input [(
-              1             // sign
-            + $clog2(N) + 1 // reg_len
-            + $clog2(N) + 1 // k
-`ifndef NO_ES_FIELD
-            + ES            // exp
-`endif
-            + N             // mant
-        ) - 1:0]        encode_in,
+
+        input sign,
+        input [K_SIZE-1:0] k,
+        input [ES-1:0] exp,
+        input [MANT_SIZE-1:0] mant,
         output [N-1:0] posit
     );
-    
-    localparam S = $clog2(N);
-
 
     function [N-1:0] c2(input [N-1:0] a);
         c2 = ~a + 1'b1;
     endfunction
+
     function is_negative(input [S:0] k);
         is_negative = k[S];
     endfunction
+
     function [N-1:0] shl (
             input [N-1:0] bits,
             input [N-1:0] rhs
@@ -47,23 +48,10 @@ module posit_encode #(
         shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
     endfunction
 
-    wire          sign;
-    wire [$clog2(N):0]    reg_len;
-    wire [$clog2(N):0]    k;
-`ifndef NO_ES_FIELD
-    wire [ES-1:0] exp;
-`endif
-    wire [N-1:0]  mant;
 
-    assign {
-        sign, 
-        reg_len, 
-        k, 
-`ifndef NO_ES_FIELD
-        exp,
-`endif
-        mant
-    } = encode_in;
+    wire [REG_LEN_SIZE-1:0] reg_len;
+    assign reg_len = $signed(k) >= 0 ? k + 2 : -$signed(k) + 1;
+
 
 
     wire [N-1:0] bits_assembled;
@@ -81,9 +69,9 @@ module posit_encode #(
 
     assign bits_assembled = ( 
           shl(sign, N-1)
-        + shl(regime_bits, N-1-reg_len)
+        + shl(regime_bits, N - 1 - reg_len)
 
-        + shl(exp, N-1-reg_len-ES)
+        + shl(exp, N - 1 - reg_len - ES)
 
         + mant
     );
@@ -91,7 +79,7 @@ module posit_encode #(
     wire [N-1:0] bits;
     assign bits = 
         sign == 0 ? bits_assembled : 
-                    c2(bits_assembled & ~(1 << (N-1)));
+                    c2(bits_assembled & ~(1 << (N - 1)));
 
     /*
     ~(1'b1 << (N-1)) === {1'b0, {N-1{1'b1}}}
@@ -119,41 +107,19 @@ module tb_posit_encode;
         abs = in[N-1] == 0 ? in : c2(in);
     endfunction
 
-`ifdef N
     parameter N = `N;
-`else
-    parameter N = 8;
-`endif
-
-    parameter S = $clog2(N);
-
-`ifdef ES
     parameter ES = `ES;
-`else
-    parameter ES = 0;
-`endif
 
     /* inputs */
     reg            is_zero;
     reg            is_nan;
 
-    reg [(
-          1             // sign
-        + $clog2(N) + 1 // reg_len
-        + $clog2(N) + 1 // k
-`ifndef NO_ES_FIELD
-        + ES            // exp
-`endif
-        + N             // mant
-    ) - 1:0]        encode_in;
-
-    reg             sign;
-    reg [S:0]       reg_len;
-    reg [S:0]       k;
-`ifndef NO_ES_FIELD
-    reg [ES-1:0]    exp;
-`endif
-    reg [N-1:0]     mant;
+    reg sign;
+    reg [REG_LEN_SIZE-1:0] reg_len;
+    reg [K_SIZE-1:0] k;
+    reg [ES-1:0] exp;
+    reg [MANT_SIZE-1:0] mant;
+    
     /* output */
     wire [N-1:0]    posit;
     /*************************/
@@ -167,23 +133,18 @@ module tb_posit_encode;
         .N(N),
         .ES(ES)
     ) posit_encode_inst (
-        .is_zero        (is_zero),
-        .is_nan         (is_nan),
-        .encode_in      (encode_in),
-        .posit          (posit)
+        .is_zero(is_zero),
+        .is_nan(is_nan),
+
+        .sign(sign),
+        .reg_len(reg_len),
+        .k(k),
+        .exp(exp),
+        .mant(mant),
+        .posit(posit)
     );
 
-    always @(*) begin
-        encode_in = {
-            sign, 
-            reg_len, 
-            k, 
-`ifndef NO_ES_FIELD
-            exp,
-`endif
-            mant
-        };
-    end
+    
 
     always @(*) begin
         err = posit == posit_expected ? 0 : 1'bx;
