@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Jan 29 17:15:13 2022
+[*] Sun Jan 30 17:44:59 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sat Jan 29 17:14:42 2022"
-[dumpfile_size] 536211
+[dumpfile_mtime] "Sun Jan 30 17:44:49 2022"
+[dumpfile_size] 608661
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
 [size] 1440 855
 [pos] -1 -1
-*-9.450014 630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-9.450014 26 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [treeopen] tb_not_ppu.not_ppu_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.
@@ -18,6 +18,8 @@
 [signals_width] 334
 [sst_expanded] 1
 [sst_vpaned_height] 256
+@25
+tb_not_ppu.test_no[16:0]
 @28
 tb_not_ppu.not_ppu_inst.op[1:0]
 @22
@@ -38,31 +40,34 @@ tb_not_ppu.not_ppu_inst.mant2[15:0]
 @420
 tb_not_ppu.not_ppu_inst.te1[6:0]
 tb_not_ppu.not_ppu_inst.te2[6:0]
-tb_not_ppu.not_ppu_inst.total_exponent_1.k[4:0]
+tb_not_ppu.not_ppu_inst.k[4:0]
 @28
-tb_not_ppu.not_ppu_inst.k_is_oob
+tb_not_ppu.not_ppu_inst.non_zero_mant_field_size
 @22
+tb_not_ppu.not_ppu_inst.posit_encode_inst.bits_assembled[15:0]
+@28
+tb_not_ppu.not_ppu_inst.next_exp
+tb_not_ppu.not_ppu_inst.k_is_oob
+@24
 tb_not_ppu.not_ppu_inst.mant_downshifted[15:0]
 @28
 tb_not_ppu.not_ppu_inst.mant_non_factional_size[1:0]
-@22
+@24
 tb_not_ppu.not_ppu_inst.mant_out_core_op[31:0]
+@420
+tb_not_ppu.not_ppu_inst.te_out_core_op[6:0]
 @28
-tb_not_ppu.not_ppu_inst.next_exp
 tb_not_ppu.not_ppu_inst.non_zero_mant_field_size
 tb_not_ppu.not_ppu_inst.round_bit
 tb_not_ppu.not_ppu_inst.sticky_bit
-@420
-tb_not_ppu.not_ppu_inst.te_out_core_op[6:0]
 @22
 tb_not_ppu.not_ppu_inst.posit[15:0]
 tb_not_ppu.not_ppu_inst.posit_rounded[15:0]
 @28
 tb_not_ppu.not_ppu_inst.sign
-@22
 tb_not_ppu.not_ppu_inst.pout[15:0]
-tb_not_ppu.pout_expected[15:0]
-@28
 tb_not_ppu.diff_pout
+@22
+tb_not_ppu.pout_expected[15:0]
 [pattern_trace] 1
 [pattern_trace] 0

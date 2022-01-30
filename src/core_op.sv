@@ -26,17 +26,17 @@ module core_op #(
     wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;
 
 
-    // core_add_sub #(
-    //     .N(N)
-    // ) core_add_sub_inst (
-    //     .te1(te1),
-    //     .te2(te2),
-    //     .mant1(mant1),
-    //     .mant2(mant2),
-    //     .have_opposite_sign(have_opposite_sign),
-    //     .mant_out(mant_out_add_sub),
-    //     .te_out(te_out_add_sub)
-    // );
+    core_add_sub #(
+        .N(N)
+    ) core_add_sub_inst (
+        .te1(te1),
+        .te2(te2),
+        .mant1(mant1),
+        .mant2(mant2),
+        .have_opposite_sign(have_opposite_sign),
+        .mant_out(mant_out_add_sub),
+        .te_out(te_out_add_sub)
+    );
 
     core_mul #(
         .N(N)
@@ -59,9 +59,6 @@ module core_op #(
     //     .mant_out(mant_out_div),
     //     .te_out(te_out_div)
     // );
-
-
-
 
     assign mant_out = mant_out_mul;
     assign te_out = te_out_mul;

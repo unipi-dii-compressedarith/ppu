@@ -9,11 +9,11 @@ module core_sub #(
 
     wire leading_zeros;
 
-    cls (
+    // cls (
 
-    ) clz (
+    // ) clz (
 
-    );
+    // );
 
     assign new_te_diff = te_diff - leading_zeros;
     assign new_mant = mant << leading_zeros;

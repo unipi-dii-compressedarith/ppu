@@ -65,7 +65,13 @@ if __name__ == "__main__":
     +-------------------------------------*/\n"""
 
     ##### only positive for now
-    _max = (1 << (N - 1)) - 1
+    
+    positive_only = False
+    if positive_only:
+        _max = (1 << (N - 1)) - 1
+    else:
+        _max = (1 << (N)) - 1
+
     list_a = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
     list_b = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
 

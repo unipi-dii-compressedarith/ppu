@@ -1,11 +1,15 @@
 /*
 
-
 iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 ../src/not_ppu.sv \
 ../src/unpack_posit.sv \
+../src/check_special.sv \
+../src/handle_special.sv \
 ../src/total_exponent.sv \
 ../src/core_op.sv \
+../src/core_add_sub.sv \
+../src/core_add.sv \
+../src/core_sub.sv \
 ../src/core_mul.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
@@ -24,8 +28,13 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 sv2v             -DN=16 -DES=1  \
 ../src/not_ppu.sv \
 ../src/unpack_posit.sv \
+../src/check_special.sv \
+../src/handle_special.sv \
 ../src/total_exponent.sv \
 ../src/core_op.sv \
+../src/core_add_sub.sv \
+../src/core_add.sv \
+../src/core_sub.sv \
 ../src/core_mul.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
@@ -67,6 +76,43 @@ module not_ppu #(
     wire [TE_SIZE-1:0] te1, te2, te_out_core_op;
 
     wire sign1, sign2;
+
+
+    wire p1_is_special, p2_is_special;
+    wire p1_is_zero, p2_is_zero;
+    wire p1_is_nan, p2_is_nan;
+
+    check_special #(
+        .N(N)   
+    ) check_special_1 (
+        .bits_in(p1),
+        .is_special(p1_is_special),
+        .is_zero(p1_is_zero),
+        .is_nan(p1_is_nan)
+    );
+
+    check_special #(
+        .N(N)   
+    ) check_special_2 (
+        .bits_in(p2),
+        .is_special(p2_is_special),
+        .is_zero(p2_is_zero),
+        .is_nan(p2_is_nan)
+    );
+
+    wire [N-1:0] pout_special;
+    handle_special #(
+        .N(N)
+    ) handle_special_inst (
+        .p1(p1),
+        .p2(p2),
+        .op(op),
+        .p1_is_zero(p1_is_zero),
+        .p2_is_zero(p2_is_zero),
+        .p1_is_nan(p1_is_nan),
+        .p2_is_nan(p2_is_nan),
+        .pout(pout_special)
+    );
 
     unpack_posit #(
         .N(N),
@@ -112,12 +158,12 @@ module not_ppu #(
     core_op #(
         .N(N)
     ) core_op_inst (
-        .op(),
+        .op(op),
         .te1(te1),
         .te2(te2),
         .mant1(mant1),
         .mant2(mant2),      
-        .have_opposite_sign(),
+        .have_opposite_sign(sign1 ^ sign2),
         .te_out(te_out_core_op),
         .mant_out(mant_out_core_op)
     );
@@ -194,13 +240,17 @@ module not_ppu #(
         .sign(sign)
     );
 
+
+    wire [N-1:0] pout_normal;
     set_sign #(
         .N(N)
     ) set_sign_inst (
         .posit_in(posit_rounded),
         .sign(sign),
-        .posit_out(pout)
+        .posit_out(pout_normal)
     );
+
+    assign pout = (p1_is_special || p2_is_special) ? pout_special : pout_normal;
 
 endmodule
 
