@@ -15,6 +15,7 @@ module core_op #(
         
         input [TE_SIZE-1:0] te1, te2,
         input [MANT_SIZE-1:0] mant1, mant2,
+        input swap_posits,
         input have_opposite_sign,
 
         output [TE_SIZE-1:0] te_out,
@@ -29,10 +30,11 @@ module core_op #(
     core_add_sub #(
         .N(N)
     ) core_add_sub_inst (
-        .te1(te1),
-        .te2(te2),
-        .mant1(mant1),
-        .mant2(mant2),
+        .te1_in(te1),
+        .te2_in(te2),
+        .mant1_in(mant1),
+        .mant2_in(mant2),
+        .swap_posits(swap_posits),
         .have_opposite_sign(have_opposite_sign),
         .mant_out(mant_out_add_sub),
         .te_out(te_out_add_sub)
@@ -60,7 +62,10 @@ module core_op #(
     //     .te_out(te_out_div)
     // );
 
-    assign mant_out = mant_out_mul;
-    assign te_out = te_out_mul;
+    assign mant_out = op == ADD || op == SUB ? mant_out_add_sub :
+                      op == MUL ? mant_out_mul : mant_out_div;
+    
+    assign te_out   = op == ADD || op == SUB ? te_out_add_sub :
+                      op == MUL ? te_out_mul : te_out_div;
 
 endmodule

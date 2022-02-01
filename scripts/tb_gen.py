@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     ##### only positive for now
     
-    positive_only = False
+    positive_only = True
     if positive_only:
         _max = (1 << (N - 1)) - 1
     else:
@@ -206,7 +206,7 @@ if __name__ == "__main__":
             p1 = from_bits(a, N, ES)
             p2 = from_bits(b, N, ES)
 
-            pout = p1 * p2
+            pout = p1 + p2
 
             c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
             c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"

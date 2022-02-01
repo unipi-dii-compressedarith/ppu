@@ -1,11 +1,13 @@
 /*
 
 iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
+../src/utils.sv \
 ../src/not_ppu.sv \
 ../src/unpack_posit.sv \
 ../src/check_special.sv \
 ../src/handle_special.sv \
 ../src/total_exponent.sv \
+../src/compare_posits_mag.sv \
 ../src/core_op.sv \
 ../src/core_add_sub.sv \
 ../src/core_add.sv \
@@ -14,7 +16,6 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
 ../src/compute_rounding.sv \
-../src/utils.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
 ../src/cls.sv \
@@ -26,11 +27,13 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 
 
 sv2v             -DN=16 -DES=1  \
+../src/utils.sv \
 ../src/not_ppu.sv \
 ../src/unpack_posit.sv \
 ../src/check_special.sv \
 ../src/handle_special.sv \
 ../src/total_exponent.sv \
+../src/compare_posits_mag.sv \
 ../src/core_op.sv \
 ../src/core_add_sub.sv \
 ../src/core_add.sv \
@@ -39,7 +42,6 @@ sv2v             -DN=16 -DES=1  \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
 ../src/compute_rounding.sv \
-../src/utils.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
 ../src/cls.sv \
@@ -154,6 +156,16 @@ module not_ppu #(
         .total_exp(te2)
     );
 
+    wire swap_posits;
+    compare_posits_mag #(
+        .N(N)
+    ) compare_posits_mag_inst (
+        .p1(p1),
+        .sign1(sign1),
+        .p2(p2),
+        .sign2(sign2),
+        .swap_posits(swap_posits)
+    );
 
     core_op #(
         .N(N)
@@ -162,7 +174,8 @@ module not_ppu #(
         .te1(te1),
         .te2(te2),
         .mant1(mant1),
-        .mant2(mant2),      
+        .mant2(mant2),
+        .swap_posits(swap_posits),
         .have_opposite_sign(sign1 ^ sign2),
         .te_out(te_out_core_op),
         .mant_out(mant_out_core_op)
@@ -170,7 +183,7 @@ module not_ppu #(
 
 
     wire [(2)-1:0]mant_non_factional_size;
-    assign mant_non_factional_size = op == 2'b11 ? 2 : 1; // only mul has value 2.
+    assign mant_non_factional_size = op == MUL ? 2 : 1; // only mul has value 2.
 
 
     wire [K_SIZE-1:0] k;
@@ -296,7 +309,7 @@ module tb_not_ppu;
 
     initial begin
         
-        op = 3;
+        op = ADD;
 
              if (N == 8 && ES == 0) $dumpfile("tb_ppu_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_ppu_P5E1.vcd");

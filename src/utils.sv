@@ -84,6 +84,12 @@ parameter MANT_SIZE = N;
 `endif
 
 
+
+parameter ADD = 2'b00;
+parameter SUB = 2'b01;
+parameter MUL = 2'b10;
+parameter DIV = 2'b11;
+
 // `ifndef DECODE_OUTPUT_SIZE
 // parameter DECODE_OUTPUT_SIZE = (
 //       1                 // sign 

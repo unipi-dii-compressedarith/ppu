@@ -1,13 +1,13 @@
 module core_sub #(
-        parameter N = 16
+        parameter N = `N
     )(
-        input mant,
-        input te_diff,
-        output new_mant,
-        output new_te_diff
+        input [(2*MANT_SIZE+1)-1:0] mant,
+        input [TE_SIZE-1:0] te_diff,
+        output [(2*MANT_SIZE)-1:0] new_mant,
+        output [TE_SIZE-1:0] new_te_diff
     );
 
-    wire leading_zeros;
+    wire [TE_SIZE-1:0] leading_zeros;
 
     // cls (
 
