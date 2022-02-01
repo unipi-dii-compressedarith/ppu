@@ -16,7 +16,7 @@ module handle_special #(
 
     always @(*) begin
         case (op)
-        2'b00: begin // +
+        ADD: begin // +
             if (p1_is_nan || p2_is_nan) begin
                 pout = nan;
             end else if (p1_is_zero) begin
@@ -27,7 +27,7 @@ module handle_special #(
                 pout = 'bX; // 
             end
         end 
-        2'b01: begin // - 
+        SUB: begin // - 
             if (p1_is_nan || p2_is_nan) begin
                 pout = nan;
             end else if (p1_is_zero && p2_is_zero) begin
@@ -40,7 +40,7 @@ module handle_special #(
                 pout = 'bX; // 
             end
         end
-        2'b10: begin // *
+        MUL: begin // *
             if (p1_is_nan || p2_is_nan) begin
                 pout = nan;
             end else if (p1_is_zero || p2_is_zero) begin
@@ -49,7 +49,7 @@ module handle_special #(
                 pout = 'bX; // 
             end
         end
-        2'b11: begin // /
+        DIV: begin // /
             if (p1_is_nan || p2_is_nan || p2_is_zero) begin
                 pout = nan;
             end else if (p1_is_zero) begin

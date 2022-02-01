@@ -21,8 +21,10 @@ def clog2(x):
 
 class Tb(enum.Enum):
     MUL = "mul"
-    MUL_CORE = "mul_core"
     ADD = "add"
+    SUB = "sub"
+    DIV = "div"
+    MUL_CORE = "mul_core"
     DECODE = "decode"
     ENCODE = "encode"
     PPU = "ppu"
@@ -30,6 +32,7 @@ class Tb(enum.Enum):
     def __str__(self):
         return self.value
 
+operations = {Tb.MUL: '*', Tb.ADD: '+', Tb.SUB: '-', Tb.DIV: '/'}
 
 parser = argparse.ArgumentParser(description="Generate test benches")
 parser.add_argument(
@@ -55,6 +58,37 @@ S = clog2(N)
 
 if args.shuffle_random == False:
     random.seed(4)
+
+
+
+
+
+def func(c, op, list_a, list_b):
+    c += f"op = {op.name};\n\n"
+    for counter, (a, b) in enumerate(zip(list_a, list_b)):
+        p1 = from_bits(a, N, ES)
+        p2 = from_bits(b, N, ES)
+
+        if op == Tb.MUL:
+            pout = p1 * p2
+        if op == Tb.ADD:
+            pout = p1 + p2
+        if op == Tb.SUB:
+            pout = p1 - p2
+        if op == Tb.DIV:
+            pout = p1 / p2
+        
+        c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
+        c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
+        c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
+        c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
+        c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
+        c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
+        c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        c += f"#10;\n\t"
+        c += f'assert (pout === pout_expected) else $error("{p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} failed");\n\n'
+    return c
+
 
 
 if __name__ == "__main__":
@@ -137,86 +171,20 @@ if __name__ == "__main__":
                 c += f"{'is_nan ='.ljust(LJUST)} {p.is_nan.real};\n"
             c += f"#10;\n\n"
 
-    if args.operation == Tb.MUL_CORE:
-        for counter, (a, b) in enumerate(zip(list_a, list_b)):
-            p1 = from_bits(a, N, ES)
-            p2 = from_bits(b, N, ES)
-
-            pout = p1 * p2
-
-            c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-
-            c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=False)} {p1.eval()};\n\t"
-            c += f"{'p1_hex ='.ljust(LJUST)} {N}'h{get_hex(p1.bit_repr(), N//4, prefix=False)};\n\t"
-            c += f"{'p1_is_zero ='.ljust(LJUST)} {p1.is_zero.real};\n\t"
-            c += f"{'p1_is_nan ='.ljust(LJUST)} {p1.is_nan.real};\n\t"
-            c += f"{'p1_sign ='.ljust(LJUST)} {p1.sign};\n\t"
-            if pout.fields.is_some:
-                c += f"{'p1_reg_len ='.ljust(LJUST)} {p1.fields.unwrap().regime.reg_len};\n\t"
-                c += f"{'p1_k ='.ljust(LJUST)} {p1.fields.unwrap().regime.k};\n\t"
-                if ES > 0:
-                    c += f"{'p1_exp ='.ljust(LJUST)} {p1.fields.unwrap().exp};\n\t"
-                c += f"{'p1_mant ='.ljust(LJUST)} {N}'b{get_bin(p1.fields.unwrap().mant, N, prefix=False)};\n\t"
-
-            c += f"{'// p2:'.ljust(LJUST)} {get_bin(p2.bit_repr(), N, prefix=False)} {p2.eval()};\n\t"
-            c += f"{'p2_hex ='.ljust(LJUST)} {N}'h{get_hex(p2.bit_repr(), N//4, prefix=False)};\n\t"
-            c += f"{'p2_is_zero ='.ljust(LJUST)} {p2.is_zero.real};\n\t"
-            c += f"{'p2_is_nan ='.ljust(LJUST)} {p2.is_nan.real};\n\t"
-            c += f"{'p2_sign ='.ljust(LJUST)} {p2.sign};\n\t"
-            if pout.fields.is_some:
-                c += f"{'p2_reg_len ='.ljust(LJUST)} {p2.fields.unwrap().regime.reg_len};\n\t"
-                c += f"{'p2_k ='.ljust(LJUST)} {p2.fields.unwrap().regime.k};\n\t"
-                if ES > 0:
-                    c += f"{'p2_exp ='.ljust(LJUST)} {p2.fields.unwrap().exp};\n\t"
-                c += f"{'p2_mant ='.ljust(LJUST)} {N}'b{get_bin(p2.fields.unwrap().mant, N, prefix=False)};\n\t"
-
-            c += f"{'// pout:'.ljust(LJUST)} {get_bin(pout.bit_repr(), N)} {pout.eval()};\n\t"
-            c += f"{'pout_hex ='.ljust(LJUST)} {N}'h{get_hex(pout.bit_repr(), N//4, prefix=False)};\n\t"
-            c += f"{'pout_is_zero_expected ='.ljust(LJUST)} {pout.is_zero.real};\n\t"
-            c += f"{'pout_is_nan_expected ='.ljust(LJUST)} {pout.is_nan.real};\n\t"
-            c += f"{'pout_sign_expected ='.ljust(LJUST)} {pout.sign};\n\t"
-            if pout.fields.is_some:
-                c += f"{'pout_reg_len_expected ='.ljust(LJUST)} {pout.fields.unwrap().regime.reg_len};\n\t"
-                c += f"{'pout_k_expected ='.ljust(LJUST)} {pout.fields.unwrap().regime.k};\n\t"
-                if ES > 0:
-                    c += f"{'pout_exp_expected ='.ljust(LJUST)} {pout.fields.unwrap().exp};\n\t"
-                c += f"{'pout_mant_expected ='.ljust(LJUST)} {N}'b{get_bin(pout.fields.unwrap().mant, N, prefix=False)};\n\t"
-
-            c += f"#10;\n\n"
-
     elif args.operation == Tb.MUL:
-        for counter, (a, b) in enumerate(zip(list_a, list_b)):
-            p1 = from_bits(a, N, ES)
-            p2 = from_bits(b, N, ES)
-
-            pout = p1 * p2
-
-            c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-            c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
-            c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
-            c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
-            c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
-            c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
-            c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
-            c += f"#10;\n\t"
-            c += f'assert (pout === pout_expected) else $error("{p1.to_hex()} * {p2.to_hex()} failed");\n\n'
-
+        c = func(c, Tb.MUL, list_a, list_b)
+    
+    elif args.operation == Tb.ADD:
+        c = func(c, Tb.ADD, list_a, list_b)
+    
+    elif args.operation == Tb.SUB:
+        c = func(c, Tb.SUB, list_a, list_b)
+        
     elif args.operation == Tb.PPU:
-        for counter, (a, b) in enumerate(zip(list_a, list_b)):
-            p1 = from_bits(a, N, ES)
-            p2 = from_bits(b, N, ES)
+        c = func(c, Tb.MUL, list_a, list_b)
+        c = func(c, Tb.ADD, list_a, list_b)
+        c = func(c, Tb.SUB, list_a, list_b)
 
-            pout = p1 + p2
-
-            c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-            c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
-            c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
-            c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
-            c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
-            c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
-            c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
-            c += f"#10;\n\t"
-            c += f'assert (pout === pout_expected) else $error("{p1.to_hex(prefix=True)} * {p2.to_hex(prefix=True)} failed");\n\n'
 
     filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")
     with open(filename, "w") as f:

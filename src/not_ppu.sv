@@ -3,11 +3,11 @@
 iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 ../src/utils.sv \
 ../src/not_ppu.sv \
+../src/input_conditioning.sv \
 ../src/unpack_posit.sv \
 ../src/check_special.sv \
 ../src/handle_special.sv \
 ../src/total_exponent.sv \
-../src/compare_posits_mag.sv \
 ../src/core_op.sv \
 ../src/core_add_sub.sv \
 ../src/core_add.sv \
@@ -29,11 +29,11 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 sv2v             -DN=16 -DES=1  \
 ../src/utils.sv \
 ../src/not_ppu.sv \
+../src/input_conditioning.sv \
 ../src/unpack_posit.sv \
 ../src/check_special.sv \
 ../src/handle_special.sv \
 ../src/total_exponent.sv \
-../src/compare_posits_mag.sv \
 ../src/core_op.sv \
 ../src/core_add_sub.sv \
 ../src/core_add.sv \
@@ -70,6 +70,10 @@ module not_ppu #(
         */
         output [N-1:0] pout
     );
+    
+    function [N-1:0] c2(input [N-1:0] a);
+        c2 = ~a + 1'b1;
+    endfunction
 
     wire [K_SIZE-1:0] k1, k2;
     wire [ES-1:0] exp1, exp2;
@@ -116,11 +120,22 @@ module not_ppu #(
         .pout(pout_special)
     );
 
+    wire [N-1:0] p1_out_cond, p2_out_cond;
+    input_conditioning #(
+        .N(N)
+    ) input_conditioning_inst (
+        .p1_in(p1),
+        .p2_in(p2),
+        .op(op),
+        .p1_out(p1_out_cond),
+        .p2_out(p2_out_cond)
+    );
+
     unpack_posit #(
         .N(N),
         .ES(ES)
     ) unpack_posit_1 (
-        .bits(p1),
+        .bits(p1_out_cond),
         .sign(sign1),
         .k(k1),
         .exp(exp1),
@@ -131,7 +146,7 @@ module not_ppu #(
         .N(N),
         .ES(ES)
     ) unpack_posit_2 (
-        .bits(p2),
+        .bits(p2_out_cond),
         .sign(sign2),
         .k(k2),
         .exp(exp2),
@@ -156,17 +171,7 @@ module not_ppu #(
         .total_exp(te2)
     );
 
-    wire swap_posits;
-    compare_posits_mag #(
-        .N(N)
-    ) compare_posits_mag_inst (
-        .p1(p1),
-        .sign1(sign1),
-        .p2(p2),
-        .sign2(sign2),
-        .swap_posits(swap_posits)
-    );
-
+    
     core_op #(
         .N(N)
     ) core_op_inst (
@@ -175,7 +180,6 @@ module not_ppu #(
         .te2(te2),
         .mant1(mant1),
         .mant2(mant2),
-        .swap_posits(swap_posits),
         .have_opposite_sign(sign1 ^ sign2),
         .te_out(te_out_core_op),
         .mant_out(mant_out_core_op)
@@ -308,8 +312,6 @@ module tb_not_ppu;
     end
 
     initial begin
-        
-        op = ADD;
 
              if (N == 8 && ES == 0) $dumpfile("tb_ppu_P8E0.vcd");
         else if (N == 5 && ES == 1) $dumpfile("tb_ppu_P5E1.vcd");

@@ -15,7 +15,6 @@ module core_op #(
         
         input [TE_SIZE-1:0] te1, te2,
         input [MANT_SIZE-1:0] mant1, mant2,
-        input swap_posits,
         input have_opposite_sign,
 
         output [TE_SIZE-1:0] te_out,
@@ -34,7 +33,6 @@ module core_op #(
         .te2_in(te2),
         .mant1_in(mant1),
         .mant2_in(mant2),
-        .swap_posits(swap_posits),
         .have_opposite_sign(have_opposite_sign),
         .mant_out(mant_out_add_sub),
         .te_out(te_out_add_sub)

@@ -26,7 +26,7 @@ module highest_set_v1 #(
         parameter VAL = 1
     )(
         input logic[N-1:0] bits,
-        output wire [S-1:0] index
+        output wire [$clog2(N)-1:0] index
     );
     
     wire [S-1:0] out_stage [0:N];
@@ -42,23 +42,23 @@ module highest_set_v1 #(
 endmodule
 
 module highest_set_v1b #(
-        parameter N = `N
+        parameter SIZE = 2
     )(
-        input logic[N-1:0] bits,
+        input logic[SIZE-1:0] bits,
         input val,
-        output wire [S-1:0] index
+        output wire [$clog2(SIZE)-1:0] index
     );
     
-    wire [S-1:0] out_stage [0:N];
+    wire [$clog2(SIZE)-1:0] out_stage [0:SIZE];
     assign out_stage[0] = ~0; // desired default output if no bits set
 
     generate genvar i;
-        for (i=0; i<N; i=i+1) begin: _gen
+        for (i=0; i<SIZE; i=i+1) begin: _gen
             assign out_stage[i+1] = (bits[i] == val) ? i : out_stage[i]; 
         end
     endgenerate
 
-    assign index = out_stage[N];
+    assign index = out_stage[SIZE];
 endmodule
 
 

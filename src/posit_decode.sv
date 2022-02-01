@@ -117,9 +117,9 @@ module posit_decode #(
 
     // count leading X
     cls #(
-        .N(N)
+        .NUM_BITS(N)
     ) cls_inst (
-        .posit              (bits_cls_in), // strip sign bit and count ones from the left
+        .bits               (bits_cls_in << 1), // strip sign bit and count ones from the left
         .val                (val),
         .leading_set        (leading_set),
         .index_highest_set  ()

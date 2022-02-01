@@ -1,19 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Feb  1 11:20:20 2022
+[*] Tue Feb  1 20:56:27 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Tue Feb  1 11:19:51 2022"
-[dumpfile_size] 739072
+[dumpfile_mtime] "Tue Feb  1 20:55:50 2022"
+[dumpfile_size] 2487407
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
 [size] 1440 855
 [pos] -1 -1
-*-5.450014 33 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-11.031458 6787 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [treeopen] tb_not_ppu.not_ppu_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.
+[treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.core_sub_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.shift_fields_inst.
 [sst_width] 193
 [signals_width] 334
@@ -48,6 +49,7 @@ tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.mant1[15:0]
 tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.mant1_upshifted[31:0]
 @28
 tb_not_ppu.pout[15:0]
+@22
 tb_not_ppu.pout_expected[15:0]
 @24
 tb_not_ppu.not_ppu_inst.posit_encode_inst.bits[15:0]
@@ -65,7 +67,5 @@ tb_not_ppu.not_ppu_inst.shift_fields_inst.mant_non_factional_size[1:0]
 tb_not_ppu.not_ppu_inst.shift_fields_inst.shift_mant_up[5:0]
 @28
 tb_not_ppu.diff_pout
-@29
-tb_not_ppu.not_ppu_inst.compare_posits_mag_inst.swap_posits
 [pattern_trace] 1
 [pattern_trace] 0
