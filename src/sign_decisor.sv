@@ -17,6 +17,7 @@ module sign_decisor #(
         11: /
     */
 
-    assign sign = op[1] == 0 ? sign1 : sign1 ^ sign2;
+    assign sign = 
+        (op == ADD || op == SUB) ? sign1 : sign1 ^ sign2;
 
 endmodule

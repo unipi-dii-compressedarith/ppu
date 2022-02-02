@@ -64,7 +64,9 @@ if args.shuffle_random == False:
 
 
 def func(c, op, list_a, list_b):
-    c += f"op = {op.name};\n\n"
+    c += f"op = {op.name};\n"
+    c += f"op_ascii = \"{op.name}\";\n\n"
+
     for counter, (a, b) in enumerate(zip(list_a, list_b)):
         p1 = from_bits(a, N, ES)
         p2 = from_bits(b, N, ES)
@@ -100,7 +102,7 @@ if __name__ == "__main__":
 
     ##### only positive for now
     
-    positive_only = True
+    positive_only = False
     if positive_only:
         _max = (1 << (N - 1)) - 1
     else:
@@ -110,11 +112,25 @@ if __name__ == "__main__":
     list_b = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
 
     ### enforce special cases to be at the beginning
+    # 0 vs any
     list_a[0] = 0
+    # nan vs any
     list_a[1] = 1 << (N - 1)
+    # 0 vs nan
     list_a[2], list_b[2] = 0, 1 << (N - 1)
+    
+    # any vs 0
+    list_b[3] = 0
+    # any vs nan
+    list_b[4] = 1 << (N - 1)
+    # nan vs 0
+    list_a[5], list_b[5] = 1 << (N - 1), 0
+    # 0 vs 0
+    list_a[6], list_b[6] = 0, 0
+    # x vs -x
+    list_b[7] = (~list_a[7] + 1) & ((1 << N) - 1)
     # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
-    list_a[3] = (1 << (N - 1)) + 1 
+    list_a[8] = (1 << (N - 1)) + 1 
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
@@ -184,6 +200,7 @@ if __name__ == "__main__":
         c = func(c, Tb.MUL, list_a, list_b)
         c = func(c, Tb.ADD, list_a, list_b)
         c = func(c, Tb.SUB, list_a, list_b)
+        c = func(c, Tb.DIV, list_a, list_b)
 
 
     filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")

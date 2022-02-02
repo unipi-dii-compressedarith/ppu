@@ -10,6 +10,6 @@ module check_special #(
     assign is_zero = bits_in == { N{1'b0} };
     assign is_nan  = bits_in == { {1{1'b1}}, {N-1{1'b0}} };
 
-    assign is_special = is_zero == 1'b1 || is_nan == 1'b1;
+    assign is_special = is_zero || is_nan;
 
 endmodule

@@ -49,16 +49,16 @@ module core_op #(
         .te_out(te_out_mul)
     );
 
-    // core_div #(
-    //     .N(N)
-    // ) core_div_inst (
-    //     .te1(te1),
-    //     .te2(te2),
-    //     .mant1(mant1),
-    //     .mant2(mant2),
-    //     .mant_out(mant_out_div),
-    //     .te_out(te_out_div)
-    // );
+    core_div #(
+        .N(N)
+    ) core_div_inst (
+        .te1(te1),
+        .te2(te2),
+        .mant1(mant1),
+        .mant2(mant2),
+        .mant_out(mant_out_div),
+        .te_out(te_out_div)
+    );
 
     assign mant_out = op == ADD || op == SUB ? mant_out_add_sub :
                       op == MUL ? mant_out_mul : mant_out_div;

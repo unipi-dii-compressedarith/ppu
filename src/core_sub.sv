@@ -7,7 +7,7 @@ module core_sub #(
         output [TE_SIZE-1:0] new_te_diff
     );
 
-    wire [$clog2(2*MANT_SIZE+1)-1:0] leading_zeros;
+    wire [$clog2(2*MANT_SIZE)-1:0] leading_zeros;
 
     cls #(
         .NUM_BITS(2*MANT_SIZE)

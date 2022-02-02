@@ -13,6 +13,9 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 ../src/core_add.sv \
 ../src/core_sub.sv \
 ../src/core_mul.sv \
+../src/core_div.sv \
+../src/unsigned_reciprocal_approx.sv \
+../src/newton_raphson.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
 ../src/compute_rounding.sv \
@@ -39,6 +42,9 @@ sv2v             -DN=16 -DES=1  \
 ../src/core_add.sv \
 ../src/core_sub.sv \
 ../src/core_mul.sv \
+../src/core_div.sv \
+../src/unsigned_reciprocal_approx.sv \
+../src/newton_raphson.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
 ../src/compute_rounding.sv \
@@ -54,6 +60,11 @@ sv2v             -DN=16 -DES=1  \
 
 // `define N (16)
 // `define ES (1)
+
+// `ifdef ALTERA_RESERVED_QIS
+// `define NO_ES_FIELD
+// `endif
+
 
 module not_ppu #(
         parameter N = `N,
@@ -288,11 +299,13 @@ module tb_not_ppu;
 
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
+    reg [100:0] op_ascii;
     wire [N-1:0] pout;
 
     
     reg [N-1:0] pout_expected;
     reg diff_pout, pout_off_by_1;
+    reg [9:0] pout_diff_analog;
     reg [N:0] test_no;
 
     not_ppu #(
@@ -309,6 +322,8 @@ module tb_not_ppu;
     always @(*) begin
         diff_pout = pout === pout_expected ? 0 : 1'bx;
         pout_off_by_1 = abs(pout - pout_expected) == 0 ? 0 : abs(pout - pout_expected) == 1 ? 1 : 'bx;
+
+        pout_diff_analog = abs(pout - pout_expected);
     end
 
     initial begin
@@ -323,6 +338,10 @@ module tb_not_ppu;
             
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
+        end
+
+        if (N == 5 && ES == 1) begin
+            `include "../test_vectors/tv_posit_ppu_P5E1.sv"
         end
 
         if (N == 16 && ES == 1) begin
