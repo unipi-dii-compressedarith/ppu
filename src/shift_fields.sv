@@ -25,20 +25,6 @@ module shift_fields #(
         output k_is_oob,
         output non_zero_mant_field_size
     );
-
-
-    function [N-1:0] min(
-            input [N-1:0] a, b
-        );
-        min = a <= b ? a : b;
-    endfunction
-
-    function [N-1:0] max(
-            input [N-1:0] a, b
-        );
-        max = a >= b ? a : b;
-    endfunction
-
     
     wire [K_SIZE-1:0] k_unpacked;
     wire [ES-1:0] exp_unpacked;

@@ -2,6 +2,7 @@
 
 iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 ../src/utils.sv \
+../src/common.sv \
 ../src/not_ppu.sv \
 ../src/input_conditioning.sv \
 ../src/unpack_posit.sv \
@@ -32,6 +33,7 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 
 sv2v             -DN=16 -DES=1  \
 ../src/utils.sv \
+../src/common.sv \
 ../src/not_ppu.sv \
 ../src/input_conditioning.sv \
 ../src/unpack_posit.sv \

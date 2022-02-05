@@ -11,16 +11,6 @@ module core_add_sub #(
         output [TE_SIZE-1:0] te_out
     );
 
-    function [N-1:0] max(input [N-1:0] a, b);
-        max = a >= b ? a : b;
-    endfunction
-
-    function [(2*MANT_SIZE)-1:0] c2(input [(2*MANT_SIZE)-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-
-
-
     wire [TE_SIZE-1:0] te1, te2;
     wire [MANT_SIZE-1:0] mant1, mant2;
     assign {te1, te2} = {te1_in, te2_in};
@@ -35,9 +25,9 @@ module core_add_sub #(
     assign mant2_upshifted = (mant2 << N) >> max(0, te_diff);
 
     wire [(2*MANT_SIZE+1)-1:0] mant_sum;
-    assign mant_sum = mant1_upshifted
+    assign mant_sum = mant1_upshifted 
         + (have_opposite_sign ? 
-            c2(mant2_upshifted) : mant2_upshifted
+            -$signed(mant2_upshifted) : mant2_upshifted
         );
     
 

@@ -13,6 +13,6 @@ module round #(
     assign guard_bit = posit[0];
 
     assign posit_rounded = !k_is_oob && round_bit && (!mant_field_size_not_null || (guard_bit || sticky_bit)) ?
-        posit + 1 : posit;
+        posit + 1'b1 : posit;
 
 endmodule

@@ -152,10 +152,6 @@ module highest_set_v3 #(
         output wire [$clog2(N)-1:0] index
     );
 
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-
     wire [N-1:0] bits_reversed;
     wire [N-1:0] _index_bit_tmp;
 

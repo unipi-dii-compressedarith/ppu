@@ -33,26 +33,8 @@ module posit_encode #(
         output [N-1:0] posit
     );
 
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-
-    function is_negative(input [S:0] k);
-        is_negative = k[S];
-    endfunction
-
-    function [N-1:0] shl (
-            input [N-1:0] bits,
-            input [N-1:0] rhs
-        );
-        shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
-    endfunction
-
-
     wire [REG_LEN_SIZE-1:0] reg_len;
     assign reg_len = $signed(k) >= 0 ? k + 2 : -$signed(k) + 1;
-
-
 
     wire [N-1:0] bits_assembled;
 
@@ -86,9 +68,8 @@ module posit_encode #(
     */
 
     assign posit = 
-        is_zero === 1 ? 0 : 
-        is_nan  === 1 ? (1 << (N-1)) :
-                        bits;
+        is_zero === 1'b1 ? 1'b0 : 
+        is_nan  === 1'b1 ? (1 << (N-1)) : bits;
             /*  ^^^ 3 equal signs needed to compare against 1'bx, 
                 otherwise if `is_zero` or `is_nan` == 1'bx, also 
                 `posit` would be 'bX, regardless. */
@@ -100,13 +81,6 @@ endmodule
 // defaulted to P<8,0> unless specified via some `-D`efine.
 
 module tb_posit_encode;
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-    function [N-1:0] abs(input [N-1:0] in);
-        abs = in[N-1] == 0 ? in : c2(in);
-    endfunction
-
     parameter N = `N;
     parameter ES = `ES;
 
