@@ -19,12 +19,12 @@ module core_div #(
 
     wire [MANT_SIZE-1:0] mant2_reciprocal;
 
-    unsigned_reciprocal_approx #(
-    ) unsigned_reciprocal_approx_inst (
-        .i_data(mant2),
-        .o_data(mant2_reciprocal)
+    fast_reciprocal #(
+        .SIZE(MANT_SIZE)
+    ) fast_reciprocal_inst (
+        .fraction(mant2),
+        .one_over_fraction(mant2_reciprocal)
     );
-
 
 
     wire [MANT_SIZE-1:0] x1;
@@ -40,8 +40,13 @@ module core_div #(
     assign mant_div = mant1 * x1;
 
 
+    wire mant_div_less_than_one;
+    assign mant_div_less_than_one = 
+        (mant_div & (1 << (2*N-3))) == 0;
     
-    assign mant_out = mant1 < mant2 ? mant_div << 1 : mant_div;
-    assign te_out = mant1 < mant2 ? te_diff - 1 : te_diff;
+    assign mant_out = 
+        mant_div_less_than_one ? mant_div << 1 : mant_div;
+    assign te_out = 
+        mant_div_less_than_one ? te_diff - 1 : te_diff;
 
 endmodule

@@ -4,8 +4,8 @@ Sat Jan 22 16:55:07 CET 2022
 
 cd waveforms
 
-iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o unsigned_reciprocal_approx.out \
-../src/unsigned_reciprocal_approx.sv \
+iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o reciprocal_approx.out \
+../src/reciprocal_approx.sv \
 && ./unsigned_reciprocal_approx.out
 
 /// WARNING: two numbers are hardcoded and only work in this case with N = 16.
@@ -14,7 +14,7 @@ iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o unsigned_reciprocal_approx.ou
 
 
 
-module unsigned_reciprocal_approx #(
+module reciprocal_approx #(
         parameter N = 16
     )(
         input [N-1:0] i_data,
@@ -38,7 +38,7 @@ endmodule
 
 
 `ifdef TB_UNSIGNED_RECIPROCAL_APPROX
-module tb_unsigned_reciprocal_approx;
+module tb_reciprocal_approx;
 
     parameter N = 16;
 
@@ -46,15 +46,15 @@ module tb_unsigned_reciprocal_approx;
     wire[N-1:0] o_data;
 
 
-    unsigned_reciprocal_approx unsigned_reciprocal_approx_inst (
+    reciprocal_approx reciprocal_approx_inst (
         .i_data(i_data),
         .o_data(o_data)
     );
 
 
     initial begin
-        $dumpfile("tb_unsigned_reciprocal_approx.vcd");
-        $dumpvars(0, tb_unsigned_reciprocal_approx);
+        $dumpfile("tb_reciprocal_approx.vcd");
+        $dumpvars(0, tb_reciprocal_approx);
     end
 
     // python -c "for i in range(0, 1<<16): print(f\"#10;   i_data = 16'h{hex(i)[2:]};\")" | pbcopy 

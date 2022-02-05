@@ -14,7 +14,8 @@ iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out 
 ../src/core_sub.sv \
 ../src/core_mul.sv \
 ../src/core_div.sv \
-../src/unsigned_reciprocal_approx.sv \
+../src/fast_reciprocal.sv \
+../src/reciprocal_approx.sv \
 ../src/newton_raphson.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
@@ -43,7 +44,8 @@ sv2v             -DN=16 -DES=1  \
 ../src/core_sub.sv \
 ../src/core_mul.sv \
 ../src/core_div.sv \
-../src/unsigned_reciprocal_approx.sv \
+../src/fast_reciprocal.sv \
+../src/reciprocal_approx.sv \
 ../src/newton_raphson.sv \
 ../src/shift_fields.sv \
 ../src/unpack_exponent.sv \
@@ -198,7 +200,7 @@ module not_ppu #(
 
 
     wire [(2)-1:0]mant_non_factional_size;
-    assign mant_non_factional_size = op == MUL ? 2 : 1; // only mul has value 2.
+    assign mant_non_factional_size = op == MUL ? 2 : op == DIV ? 3 : 1; // only mul has value 2.
 
 
     wire [K_SIZE-1:0] k;

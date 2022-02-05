@@ -24,7 +24,8 @@ module input_conditioning #(
     assign op_is_add_or_sub = (op == ADD || op == SUB);
 
     assign {p1_out, p2_out} = 
-        abs(_p2) > abs(_p1) ? {_p2, _p1} : {_p1, _p2};
+            (op_is_add_or_sub && abs(_p2) > abs(_p1)) ? 
+            {_p2, _p1} : {_p1, _p2};
 
 
 

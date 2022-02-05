@@ -12,18 +12,18 @@ module newton_raphson #(
     );
 
 
-    // hardcoded for SIZE = 16 bits.
-    // python -c 'from fixed2float import *; two = to_fixed(2.0, 3, 2*16 - 3); print(two.val)'
+    /*
+    hardcoded for SIZE = 16 bits.
+    
+    $ python -c 'from fixed2float import *; two = to_fixed(2.0, 3, 2*16 - 3); print(two.val)'
+    */
+
     wire [2*SIZE-1:0] two = 1073741824; 
 
     wire [3*SIZE-1:0] _x1;
     assign _x1 = x0 * (two - num * x0);
 
-    wire round_bit;
-    // one if any of the bits afterwards is 1.
-    assign round_bit = |_x1[(3*SIZE-3-(SIZE))-1:0];
-
-    assign x1 = _x1[(3*SIZE-3)-1-:(SIZE)] + round_bit;
+    assign x1 = _x1[(3*SIZE-3)-1-:(SIZE)];
 
 endmodule
 
