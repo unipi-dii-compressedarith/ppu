@@ -32,7 +32,7 @@ parameter MANT_LEN_SIZE = S + 1;
 `endif
 
 `ifndef K_SIZE
-parameter K_SIZE = S + 1;
+parameter K_SIZE = S + 2; // prev. S + 1 (leads to bug when te too large)
 `endif
 
 `ifndef FRAC_SIZE

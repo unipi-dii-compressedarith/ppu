@@ -9,46 +9,64 @@ python tb_gen.py --operation mul -n 5 -es 1 # to be fixed in posit_playground
 cd ..
 cd waveforms
 
-
-iverilog -g2012 -DTEST_BENCH_MUL -DNO_ES_FIELD -DN=8 -DES=0  -o mul.out \
-../src/round_mul.sv \
-../src/mul.sv \
-../src/mul_special.sv \
-../src/either_is_special.sv \
+iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 ../src/utils.sv \
-../src/mul_core.sv \
+../src/common.sv \
+../src/not_ppu.sv \
+../src/input_conditioning.sv \
+../src/unpack_posit.sv \
+../src/check_special.sv \
+../src/handle_special.sv \
+../src/total_exponent.sv \
+../src/core_op.sv \
+../src/core_add_sub.sv \
+../src/core_add.sv \
+../src/core_sub.sv \
+../src/core_mul.sv \
+../src/core_div.sv \
+../src/fast_reciprocal.sv \
+../src/reciprocal_approx.sv \
+../src/newton_raphson.sv \
+../src/shift_fields.sv \
+../src/unpack_exponent.sv \
+../src/compute_rounding.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
 ../src/cls.sv \
+../src/round.sv \
+../src/sign_decisor.sv \
+../src/set_sign.sv \
 ../src/highest_set.sv \
-&& ./mul.out
+&& ./not_ppu.out
 
-
-iverilog -g2012 -DTEST_BENCH_MUL              -DN=16 -DES=1  -o mul.out \
-../src/round_mul.sv \
-../src/mul_special.sv \
-../src/either_is_special.sv \
-../src/mul.sv \
+yosys -DN=16 -DES=1 -p "synth_intel -family max10 -top not_ppu -vqm not_ppu.vqm" \
+../src/common.sv \
 ../src/utils.sv \
-../src/mul_core.sv \
+../src/not_ppu.sv \
+../src/input_conditioning.sv \
+../src/unpack_posit.sv \
+../src/check_special.sv \
+../src/handle_special.sv \
+../src/total_exponent.sv \
+../src/core_op.sv \
+../src/core_add_sub.sv \
+../src/core_add.sv \
+../src/core_sub.sv \
+../src/core_mul.sv \
+../src/core_div.sv \
+../src/fast_reciprocal.sv \
+../src/reciprocal_approx.sv \
+../src/newton_raphson.sv \
+../src/shift_fields.sv \
+../src/unpack_exponent.sv \
+../src/compute_rounding.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
 ../src/cls.sv \
-../src/highest_set.sv \
-&& ./mul.out
-
-iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
-../src/round_mul.sv \
-../src/mul_special.sv \
-../src/either_is_special.sv \
-../src/mul.sv \
-../src/utils.sv \
-../src/mul_core.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/highest_set.sv \
-&& ./mul.out
+../src/round.sv \
+../src/sign_decisor.sv \
+../src/set_sign.sv \
+../src/highest_set.sv > yosys_not_ppu.out
 
 
 
@@ -56,14 +74,34 @@ iverilog -g2012 -DTEST_BENCH_MUL              -DN=32 -DES=2  -o mul.out \
 cd ..
 cd quartus
 
-sv2v -DN=16 -DES=1 \
-../src/mul.sv \
-../src/mul_core.sv \
-../src/round_mul.sv \
+sv2v             -DN=16 -DES=1  \
+../src/utils.sv \
+../src/common.sv \
+../src/not_ppu.sv \
+../src/input_conditioning.sv \
+../src/unpack_posit.sv \
+../src/check_special.sv \
+../src/handle_special.sv \
+../src/total_exponent.sv \
+../src/core_op.sv \
+../src/core_add_sub.sv \
+../src/core_add.sv \
+../src/core_sub.sv \
+../src/core_mul.sv \
+../src/core_div.sv \
+../src/fast_reciprocal.sv \
+../src/reciprocal_approx.sv \
+../src/newton_raphson.sv \
+../src/shift_fields.sv \
+../src/unpack_exponent.sv \
+../src/compute_rounding.sv \
 ../src/posit_decode.sv \
 ../src/posit_encode.sv \
-../src/utils.sv \
 ../src/cls.sv \
-../src/highest_set.sv > mul.v
+../src/round.sv \
+../src/sign_decisor.sv \
+../src/set_sign.sv \
+../src/highest_set.sv > ./not_ppu.v && iverilog not_ppu.v
+
 
 cd ..

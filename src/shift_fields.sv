@@ -83,7 +83,7 @@ module shift_fields #(
         .sticky_bit(sticky_bit)
     );
 
-    assign k = k_unpacked;
+    assign k = regime_k; // prev. k_unpacked which is wrong;
 
     wire [ES-1:0] exp_2;
     assign exp_2 = exp_1 << (ES - es_actual_len);
