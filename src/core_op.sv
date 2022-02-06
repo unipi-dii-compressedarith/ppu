@@ -22,7 +22,8 @@ module core_op #(
     );
 
 
-    wire [2*MANT_SIZE-1:0] mant_out_add_sub, mant_out_mul, mant_out_div;
+    wire [(2*MANT_SIZE+2)-1:0] mant_out_add_sub;
+    wire [(2*MANT_SIZE)-1:0] mant_out_mul, mant_out_div;
     wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;
 
 

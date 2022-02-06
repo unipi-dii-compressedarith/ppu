@@ -1,24 +1,24 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Feb  5 16:00:50 2022
+[*] Sun Feb  6 09:37:12 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sat Feb  5 15:56:34 2022"
-[dumpfile_size] 3950603
+[dumpfile_mtime] "Sun Feb  6 09:36:25 2022"
+[dumpfile_size] 3990072
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
 [size] 1440 855
 [pos] -1 -1
-*-11.456144 9690 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.456144 80 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [treeopen] tb_not_ppu.not_ppu_inst.
-[treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.
-[treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.core_sub_inst.
+[treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.core_sub_inst.clz.
 [treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.core_div_inst.
+[treeopen] tb_not_ppu.not_ppu_inst.shift_fields_inst.
 [sst_width] 199
 [signals_width] 334
 [sst_expanded] 1
-[sst_vpaned_height] 482
+[sst_vpaned_height] 246
 @24
 tb_not_ppu.test_no[16:0]
 @28
@@ -49,6 +49,10 @@ tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.have_opposite_sign
 tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.mant1[15:0]
 tb_not_ppu.not_ppu_inst.core_op_inst.core_add_sub_inst.mant1_upshifted[31:0]
 tb_not_ppu.pout[15:0]
+tb_not_ppu.not_ppu_inst.core_op_inst.te2[6:0]
+@24
+tb_not_ppu.not_ppu_inst.core_op_inst.te_out[6:0]
+@22
 tb_not_ppu.pout_expected[15:0]
 @24
 tb_not_ppu.not_ppu_inst.posit_encode_inst.bits[15:0]
@@ -66,8 +70,6 @@ tb_not_ppu.not_ppu_inst.shift_fields_inst.mant_non_factional_size[1:0]
 tb_not_ppu.not_ppu_inst.shift_fields_inst.shift_mant_up[5:0]
 @28
 tb_not_ppu.diff_pout
-@8024
-[color] 1
-tb_not_ppu.pout_diff_analog[9:0]
+tb_not_ppu.pout_off_by_1
 [pattern_trace] 1
 [pattern_trace] 0

@@ -312,6 +312,8 @@ module tb_not_ppu;
     reg [9:0] pout_diff_analog;
     reg [N:0] test_no;
 
+    reg [100:0] count_errors;
+
     not_ppu #(
         .N      (N),
         .ES     (ES)

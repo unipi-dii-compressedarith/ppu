@@ -7,9 +7,13 @@ module core_add_sub #(
         input [MANT_SIZE-1:0] mant2_in,
         input have_opposite_sign,
         
-        output [2*MANT_SIZE-1:0] mant_out,
+        output [(2*MANT_SIZE+2)-1:0] mant_out,
         output [TE_SIZE-1:0] te_out
     );
+
+    function [(2*MANT_SIZE)-1:0] _c2(input [(2*MANT_SIZE)-1:0] a);
+        _c2 = ~a + 1'b1;
+    endfunction
 
     wire [TE_SIZE-1:0] te1, te2;
     wire [MANT_SIZE-1:0] mant1, mant2;
@@ -27,7 +31,7 @@ module core_add_sub #(
     wire [(2*MANT_SIZE+1)-1:0] mant_sum;
     assign mant_sum = mant1_upshifted 
         + (have_opposite_sign ? 
-            -$signed(mant2_upshifted) : mant2_upshifted
+            _c2(mant2_upshifted) : mant2_upshifted
         );
     
 
@@ -43,12 +47,12 @@ module core_add_sub #(
     );
 
     
-    wire [(2*MANT_SIZE)-1:0] mant_out_core_sub;
+    wire [(2*MANT_SIZE+2)-1:0] mant_out_core_sub;
     wire [TE_SIZE-1:0] te_diff_out_core_sub;
     core_sub #(
         .N(N)
     ) core_sub_inst (
-        .mant(mant_sum[(2*MANT_SIZE)-1:0]),
+        .mant(mant_sum),
         .te_diff(te_diff),
         .new_mant(mant_out_core_sub),
         .new_te_diff(te_diff_out_core_sub)

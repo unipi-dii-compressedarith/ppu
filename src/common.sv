@@ -12,7 +12,7 @@ endfunction
 function [N-1:0] min(
         input [N-1:0] a, b
     );
-    min = a <= b ? a : b;
+    min = $signed(a) <= $signed(b) ? a : b;
 endfunction
 
 function [N-1:0] max(

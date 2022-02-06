@@ -20,7 +20,7 @@ module compute_rouding #(
         _tmp1 != 0 :
         (
             $signed(k) == N - 2 - ES ? 
-                $signed(exp) > 0 && $signed(mant_up_shifted) > 0 :
+                exp > 0 && $signed(mant_up_shifted) > 0 :
                 $signed(k) == -(N - 2) ? 
                     $signed(exp) > 0 : 
                     1'b0

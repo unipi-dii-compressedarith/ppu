@@ -52,7 +52,7 @@ module shift_fields #(
     wire [MANT_LEN_SIZE-1:0] mant_len;
     assign mant_len = N - 1 - ES - reg_len;
 
-    wire [ES-1:0] es_actual_len;
+    wire [(ES+1)-1:0] es_actual_len; // ES + 1 because it can become -1.
     assign es_actual_len = min(ES, N - 1 - reg_len);
 
 
@@ -64,7 +64,7 @@ module shift_fields #(
     assign shift_mant_up = (N << 1); //2 * N;
     
     wire [(S+2)-1:0] mant_len_diff;
-    assign mant_len_diff = shift_mant_up - mant_len;
+    assign mant_len_diff = $signed(shift_mant_up) - $signed(mant_len);
 
     wire [(2*MANT_SIZE+2)-1:0] mant_up_shifted; // +2 because `mant_non_factional_size` can be at most 2.
     assign mant_up_shifted = 
@@ -90,7 +90,7 @@ module shift_fields #(
 
     assign mant_downshifted = mant_up_shifted >> mant_len_diff;
 
-    assign non_zero_mant_field_size = mant_len >= 0;
+    assign non_zero_mant_field_size = $signed(mant_len) >= 0;
 
     assign next_exp = exp_2;
 
