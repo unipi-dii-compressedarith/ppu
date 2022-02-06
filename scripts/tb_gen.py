@@ -11,7 +11,7 @@ from hardposit import from_bits
 from posit_playground.utils import get_bin, get_hex
 
 LJUST = 25
-NUM_RANDOM_TEST_CASES = 300
+NUM_RANDOM_TEST_CASES = 500
 X = "'bX"
 
 
@@ -195,6 +195,9 @@ if __name__ == "__main__":
     
     elif args.operation == Tb.SUB:
         c = func(c, Tb.SUB, list_a, list_b)
+    
+    elif args.operation == Tb.DIV:
+        c = func(c, Tb.DIV, list_a, list_b)
         
     elif args.operation == Tb.PPU:
         c = func(c, Tb.MUL, list_a, list_b)

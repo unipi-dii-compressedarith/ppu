@@ -1,6 +1,7 @@
 /*
 sv2v             -DN=16 -DES=1  \
 ../src/utils.sv \
+../src/common.sv \
 ../src/ppu.sv \
 ../src/not_ppu.sv \
 ../src/input_conditioning.sv \
