@@ -31,7 +31,7 @@ iverilog -g2012 -DN=16 -DES=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pa
 ../src/highest_set.sv \
 ../../PACoGen/common.v \
 ../../PACoGen/div/posit_div.v \
-&& ./comparison_against_pacogen.out
+&& ./comparison_against_pacogen.out > comparison_against_pacogen.log
 
 
 
@@ -46,9 +46,10 @@ module comparison_against_pacogen #(
         input [N-1:0] p1,
         input [N-1:0] p2,
         input [OP_SIZE-1:0] op,
-        output [N-1:0] pout_mine,
+        output [N-1:0] pout_not_ppu,
         output [N-1:0] pout_pacogen
     );
+
 
     not_ppu #(
         .N(N),
@@ -57,22 +58,25 @@ module comparison_against_pacogen #(
         .p1(p1),
         .p2(p2),
         .op(op),
-        .pout(pout_mine)
+        .pout(pout_not_ppu)
     );
 
+
+    wire [N-1:0] pout;
     posit_div #(
         .N(N),
         .es(ES)
     ) uut (
         .in1(p1), 
         .in2(p2), 
-        .start(1), 
-        .out(pout_pacogen), 
+        .start(1'b1), 
+        .out(pout), // pout_pacogen
         .inf(), 
         .zero(), 
         .done()
     );
 
+    assign pout_pacogen = pout;
 
 endmodule
 
@@ -84,12 +88,11 @@ module tb_comparison_against_pacogen;
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
     reg [100:0] op_ascii;
-    wire [N-1:0] pout, pout_mine, pout_pacogen;
+    wire [N-1:0] pout, pout_not_ppu;
 
     
     reg [N-1:0] pout_expected;
-    reg diff_pout_mine, diff_pout_pacogen, pout_off_by_1;
-    reg [9:0] pout_diff_analog;
+    reg diff_pout_not_ppu, diff_pout_pacogen, pout_off_by_1;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
@@ -101,17 +104,15 @@ module tb_comparison_against_pacogen;
         .p1     (p1),
         .p2     (p2),
         .op     (op),
-        .pout_mine   (pout_mine),
-        .pout_pacogen   (pout_pacogen)
+        .pout_not_ppu   (pout_not_ppu),
+        .pout_pacogen   (pout)
     );
 
     
     always @(*) begin
-        diff_pout_mine = pout_mine === pout_expected ? 0 : 1'bx;
-        diff_pout_pacogen = pout_pacogen === pout_expected ? 0 : 1'bx;
-        pout_off_by_1 = abs(pout_mine - pout_expected) == 0 ? 0 : abs(pout_mine - pout_expected) == 1 ? 1 : 'bx;
-
-        pout_diff_analog = abs(pout_mine - pout_expected);
+        diff_pout_not_ppu = pout_not_ppu === pout_expected ? 0 : 1'bx;
+        diff_pout_pacogen = pout === pout_expected ? 0 : 1'bx;
+        pout_off_by_1 = abs(pout_not_ppu - pout_expected) == 0 ? 0 : abs(pout_not_ppu - pout_expected) == 1 ? 1 : 'bx;
     end
 
     initial begin

@@ -11,7 +11,6 @@ from hardposit import from_bits
 from posit_playground.utils import get_bin, get_hex
 
 LJUST = 25
-NUM_RANDOM_TEST_CASES = 500
 X = "'bX"
 
 
@@ -32,7 +31,8 @@ class Tb(enum.Enum):
     def __str__(self):
         return self.value
 
-operations = {Tb.MUL: '*', Tb.ADD: '+', Tb.SUB: '-', Tb.DIV: '/'}
+
+operations = {Tb.MUL: "*", Tb.ADD: "+", Tb.SUB: "-", Tb.DIV: "/"}
 
 parser = argparse.ArgumentParser(description="Generate test benches")
 parser.add_argument(
@@ -46,6 +46,10 @@ parser.add_argument(
     "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
 )
 
+parser.add_argument(
+    "--num-tests", "-nt", type=int, required=True, help="Num test cases"
+)
+
 parser.add_argument("--num-bits", "-n", type=int, required=True, help="Num posit bits")
 
 parser.add_argument("--es-size", "-es", type=int, required=True, help="Num posit bits")
@@ -54,18 +58,16 @@ args = parser.parse_args()
 
 
 N, ES = args.num_bits, args.es_size
+NUM_RANDOM_TEST_CASES = args.num_tests
 S = clog2(N)
 
 if args.shuffle_random == False:
     random.seed(4)
 
 
-
-
-
 def func(c, op, list_a, list_b):
     c += f"op = {op.name};\n"
-    c += f"op_ascii = \"{op.name}\";\n\n"
+    c += f'op_ascii = "{op.name}";\n\n'
 
     for counter, (a, b) in enumerate(zip(list_a, list_b)):
         p1 = from_bits(a, N, ES)
@@ -79,7 +81,7 @@ def func(c, op, list_a, list_b):
             pout = p1 - p2
         if op == Tb.DIV:
             pout = p1 / p2
-        
+
         c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
         c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
         c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
@@ -88,9 +90,9 @@ def func(c, op, list_a, list_b):
         c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
         c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
         c += f"#10;\n\t"
-        c += f'assert (pout === pout_expected) else $error("{p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} failed");\n\n'
+        c += f'assert (pout === pout_expected) else $error("{p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
+    c += f'$display("Total tests cases: {NUM_RANDOM_TEST_CASES}");'
     return c
-
 
 
 if __name__ == "__main__":
@@ -101,7 +103,7 @@ if __name__ == "__main__":
     +-------------------------------------*/\n"""
 
     ##### only positive for now
-    
+
     positive_only = False
     if positive_only:
         _max = (1 << (N - 1)) - 1
@@ -118,7 +120,7 @@ if __name__ == "__main__":
     list_a[1] = 1 << (N - 1)
     # 0 vs nan
     list_a[2], list_b[2] = 0, 1 << (N - 1)
-    
+
     # any vs 0
     list_b[3] = 0
     # any vs nan
@@ -130,7 +132,7 @@ if __name__ == "__main__":
     # x vs -x
     list_b[7] = (~list_a[7] + 1) & ((1 << N) - 1)
     # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
-    list_a[8] = (1 << (N - 1)) + 1 
+    list_a[8] = (1 << (N - 1)) + 1
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
@@ -142,7 +144,7 @@ if __name__ == "__main__":
                 regime = p.fields.unwrap().regime
                 reg_s, reg_len, k = regime.reg_s, regime.reg_len, regime.k
                 exp = p.fields.unwrap().exp
-                mant = p.mant_repr().unwrap() # p.fields.unwrap().mant
+                mant = p.mant_repr().unwrap()  # p.fields.unwrap().mant
                 mant_len = p.mant_len.unwrap()
             else:
                 reg_s, reg_len, k = X, X, X
@@ -189,22 +191,21 @@ if __name__ == "__main__":
 
     elif args.operation == Tb.MUL:
         c = func(c, Tb.MUL, list_a, list_b)
-    
+
     elif args.operation == Tb.ADD:
         c = func(c, Tb.ADD, list_a, list_b)
-    
+
     elif args.operation == Tb.SUB:
         c = func(c, Tb.SUB, list_a, list_b)
-    
+
     elif args.operation == Tb.DIV:
         c = func(c, Tb.DIV, list_a, list_b)
-        
+
     elif args.operation == Tb.PPU:
         c = func(c, Tb.MUL, list_a, list_b)
         c = func(c, Tb.ADD, list_a, list_b)
         c = func(c, Tb.SUB, list_a, list_b)
         c = func(c, Tb.DIV, list_a, list_b)
-
 
     filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")
     with open(filename, "w") as f:
