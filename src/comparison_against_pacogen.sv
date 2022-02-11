@@ -33,10 +33,7 @@ iverilog -g2012 -DN=16 -DES=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pa
 ../../PACoGen/div/posit_div.v \
 && ./comparison_against_pacogen.out > comparison_against_pacogen.log
 
-
-
 */
-
 
 
 module comparison_against_pacogen #(
@@ -62,7 +59,6 @@ module comparison_against_pacogen #(
     );
 
 
-    wire [N-1:0] pout;
     posit_div #(
         .N(N),
         .es(ES)
@@ -70,13 +66,11 @@ module comparison_against_pacogen #(
         .in1(p1), 
         .in2(p2), 
         .start(1'b1), 
-        .out(pout), // pout_pacogen
+        .out(pout_pacogen), // pout_pacogen
         .inf(), 
         .zero(), 
         .done()
     );
-
-    assign pout_pacogen = pout;
 
 endmodule
 
@@ -88,11 +82,11 @@ module tb_comparison_against_pacogen;
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
     reg [100:0] op_ascii;
-    wire [N-1:0] pout, pout_not_ppu;
+    wire [N-1:0] pout_pacogen, pout_not_ppu;
 
     
-    reg [N-1:0] pout_expected;
-    reg diff_pout_not_ppu, diff_pout_pacogen, pout_off_by_1;
+    reg [N-1:0] pout_ground_truth;
+    reg diff_pout_not_ppu, diff_pout_pacogen, not_ppu_off_by_1, pacogen_off_by_1;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
@@ -105,14 +99,15 @@ module tb_comparison_against_pacogen;
         .p2     (p2),
         .op     (op),
         .pout_not_ppu   (pout_not_ppu),
-        .pout_pacogen   (pout)
+        .pout_pacogen   (pout_pacogen)
     );
 
     
     always @(*) begin
-        diff_pout_not_ppu = pout_not_ppu === pout_expected ? 0 : 1'bx;
-        diff_pout_pacogen = pout === pout_expected ? 0 : 1'bx;
-        pout_off_by_1 = abs(pout_not_ppu - pout_expected) == 0 ? 0 : abs(pout_not_ppu - pout_expected) == 1 ? 1 : 'bx;
+        diff_pout_not_ppu = pout_not_ppu === pout_ground_truth ? 0 : 1'bx;
+        diff_pout_pacogen = pout_pacogen === pout_ground_truth ? 0 : 1'bx;
+        not_ppu_off_by_1 = abs(pout_not_ppu - pout_ground_truth) == 0 ? 0 : abs(pout_not_ppu - pout_ground_truth) == 1 ? 1 : 'bx;
+        pacogen_off_by_1 = abs(pout_pacogen - pout_ground_truth) == 0 ? 0 : abs(pout_pacogen - pout_ground_truth) == 1 ? 1 : 'bx;
     end
 
     initial begin
@@ -123,7 +118,7 @@ module tb_comparison_against_pacogen;
             
         
         if (N == 16 && ES == 1) begin
-            `include "../test_vectors/tv_posit_div_P16E1.sv"
+            `include "../test_vectors/tv_posit_pacogen_P16E1.sv"
         end
 
         
@@ -131,8 +126,5 @@ module tb_comparison_against_pacogen;
         $finish;
     end
 
-
-
 endmodule
 `endif
-

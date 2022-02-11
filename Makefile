@@ -3,10 +3,13 @@ gen-test-vectors:
 	python tb_gen.py --num-tests 1000 --operation mul -n 8  -es 0 && \
 	python tb_gen.py --num-tests 1000 --operation mul -n 16 -es 1 && \
 	python tb_gen.py --num-tests 1000 --operation mul -n 32 -es 2 && \
-	python tb_gen.py --num-tests 1000 --operation mul -n 5 -es 1 # to be fixed in posit_playground
+	python tb_gen.py --num-tests 1000 --operation ppu -n 5  -es 1 && \
+	python tb_gen.py --num-tests 1000 --operation ppu -n 8  -es 0 && \
+	python tb_gen.py --num-tests 1000 --operation ppu -n 16 -es 1 && \
+	python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
 
 
-not-ppu:
+not-ppu16:
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 	../src/utils.sv \
@@ -104,7 +107,7 @@ verilog-quartus:
 
 
 div-against-pacogen:
-	cd scripts && python tb_gen.py --operation div -n 16 -es 1 --num-tests 2000 --shuffle-random true
+	cd scripts && python tb_gen.py --operation pacogen -n 16 -es 1 --num-tests 3000 --shuffle-random true
 	cd waveforms && iverilog -g2012 -DN=16 -DES=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen.out \
 	../src/utils.sv \
 	../src/common.sv \

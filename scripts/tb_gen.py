@@ -27,12 +27,13 @@ class Tb(enum.Enum):
     DECODE = "decode"
     ENCODE = "encode"
     PPU = "ppu"
+    PACOGEN = "pacogen"
 
     def __str__(self):
         return self.value
 
 
-operations = {Tb.MUL: "*", Tb.ADD: "+", Tb.SUB: "-", Tb.DIV: "/"}
+operations = {Tb.MUL: "*", Tb.ADD: "+", Tb.SUB: "-", Tb.DIV: "/", Tb.PACOGEN: "/"}
 
 parser = argparse.ArgumentParser(description="Generate test benches")
 parser.add_argument(
@@ -66,8 +67,11 @@ if args.shuffle_random == False:
 
 
 def func(c, op, list_a, list_b):
-    c += f"op = {op.name};\n"
-    c += f'op_ascii = "{op.name}";\n\n'
+    if op != Tb.PACOGEN:
+        c += f"op = {op.name};\n"
+        c += f'op_ascii = "{op.name}";\n\n'
+    else:
+        c += f"op = DIV;\n"
 
     for counter, (a, b) in enumerate(zip(list_a, list_b)):
         p1 = from_bits(a, N, ES)
@@ -75,12 +79,16 @@ def func(c, op, list_a, list_b):
 
         if op == Tb.MUL:
             pout = p1 * p2
-        if op == Tb.ADD:
+        elif op == Tb.ADD:
             pout = p1 + p2
-        if op == Tb.SUB:
+        elif op == Tb.SUB:
             pout = p1 - p2
-        if op == Tb.DIV:
+        elif op == Tb.DIV:
             pout = p1 / p2
+        elif op == Tb.PACOGEN:
+            pout = p1 / p2
+        else:
+            raise Exception("wrong op?")
 
         c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
         c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
@@ -88,9 +96,13 @@ def func(c, op, list_a, list_b):
         c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
         c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
         c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
-        c += f"{'pout_expected ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        c += f"{'pout_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
         c += f"#10;\n\t"
-        c += f'assert (pout === pout_expected) else $error("{p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
+        if op == Tb.PACOGEN:
+            c += f'assert (pout_pacogen === pout_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
+            c += f'assert (pout_not_ppu === pout_ground_truth) else $display("NOT_PPU_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_not_ppu);\n\n'
+        else:
+            c += f'assert (pout === pout_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
     c += f'$display("Total tests cases: {NUM_RANDOM_TEST_CASES}");'
     return c
 
@@ -206,6 +218,9 @@ if __name__ == "__main__":
         c = func(c, Tb.ADD, list_a, list_b)
         c = func(c, Tb.SUB, list_a, list_b)
         c = func(c, Tb.DIV, list_a, list_b)
+
+    elif args.operation == Tb.PACOGEN:
+        c = func(c, Tb.PACOGEN, list_a, list_b)
 
     filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")
     with open(filename, "w") as f:
