@@ -307,7 +307,7 @@ module tb_not_ppu;
     wire [N-1:0] pout;
 
     
-    reg [N-1:0] pout_expected;
+    reg [N-1:0] pout_ground_truth;
     reg diff_pout, pout_off_by_1;
     reg [9:0] pout_diff_analog;
     reg [N:0] test_no;
@@ -326,10 +326,10 @@ module tb_not_ppu;
 
     
     always @(*) begin
-        diff_pout = pout === pout_expected ? 0 : 1'bx;
-        pout_off_by_1 = abs(pout - pout_expected) == 0 ? 0 : abs(pout - pout_expected) == 1 ? 1 : 'bx;
+        diff_pout = pout === pout_ground_truth ? 0 : 1'bx;
+        pout_off_by_1 = abs(pout - pout_ground_truth) == 0 ? 0 : abs(pout - pout_ground_truth) == 1 ? 1 : 'bx;
 
-        pout_diff_analog = abs(pout - pout_expected);
+        pout_diff_analog = abs(pout - pout_ground_truth);
     end
 
     initial begin
