@@ -7,23 +7,24 @@ module newton_raphson #(
         parameter SIZE = 10
     )(
         input [SIZE-1:0] num,
-        input [SIZE-1:0] x0,
-        output [SIZE-1:0] x1
+        input [(3*SIZE)-1:0] x0,
+        output [(SIZE)-1:0] x1
     );
 
+    wire [(3*SIZE+SIZE)-1:0] num_times_x0; // 4N
+    assign num_times_x0 = (num * x0) << 1'd1;
 
     /*
     hardcoded for SIZE = 16 bits.
-    
-    $ python -c 'from fixed2float import *; two = to_fixed(2.0, 3, 2*16 - 3); print(two.val)'
+    $ python -c 'from fixed2float import to_Fx; N = 16; two = to_Fx(2.0, 2, 4*N); print(two.val)'
     */
+    wire [(3*SIZE+SIZE)-1:0] two = 9223372036854775808; // 4N
 
-    wire [2*SIZE-1:0] two = 1073741824; 
+    
+    wire [((3*SIZE+SIZE) + 3*SIZE)-1:0] _x1; // 7N
+    assign _x1 = (x0 * (two - num_times_x0)) << 2'd3;
 
-    wire [3*SIZE-1:0] _x1;
-    assign _x1 = x0 * (two - num * x0);
-
-    assign x1 = _x1[(3*SIZE-3)-1-:(SIZE)];
+    assign x1 = _x1[(7*SIZE-1):(6*SIZE-1)+1];
 
 endmodule
 

@@ -1,12 +1,12 @@
 gen-test-vectors:
 	cd scripts && \
-	python tb_gen.py --operation mul -n 8  -es 0 \
-	python tb_gen.py --operation mul -n 16 -es 1 \
-	python tb_gen.py --operation mul -n 32 -es 2 \
-	python tb_gen.py --operation mul -n 5 -es 1 # to be fixed in posit_playground
+	python tb_gen.py --num-tests 1000 --operation mul -n 8  -es 0 && \
+	python tb_gen.py --num-tests 1000 --operation mul -n 16 -es 1 && \
+	python tb_gen.py --num-tests 1000 --operation mul -n 32 -es 2 && \
+	python tb_gen.py --num-tests 1000 --operation mul -n 5 -es 1 # to be fixed in posit_playground
 
 
-waveforms:
+not-ppu:
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 	../src/utils.sv \
@@ -35,8 +35,9 @@ waveforms:
 	../src/round.sv \
 	../src/sign_decisor.sv \
 	../src/set_sign.sv \
-	../src/highest_set.sv \
-	&& ./not_ppu.out
+	../src/highest_set.sv && \
+	sleep 1 && \
+	./not_ppu.out
 
 yosys:
 	cd waveforms && \
@@ -98,7 +99,8 @@ verilog-quartus:
 	../src/round.sv \
 	../src/sign_decisor.sv \
 	../src/set_sign.sv \
-	../src/highest_set.sv > ./not_ppu.v && iverilog not_ppu.v
+	../src/highest_set.sv > ./not_ppu.v && \
+	iverilog not_ppu.v
 
 
 div-against-pacogen:

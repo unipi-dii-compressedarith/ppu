@@ -202,7 +202,7 @@ module not_ppu #(
 
 
     wire [(2)-1:0]mant_non_factional_size;
-    assign mant_non_factional_size = op == MUL ? 2 : op == DIV ? 3 : 1; // only mul has value 2.
+    assign mant_non_factional_size = op == MUL ? 2 : op == DIV ? 2 : 1; // only mul has value 2.
 
 
     wire [K_SIZE-1:0] k;

@@ -17,7 +17,7 @@ module core_div #(
     //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
 
 
-    wire [MANT_SIZE-1:0] mant2_reciprocal;
+    wire [(3*MANT_SIZE)-1:0] mant2_reciprocal;
 
     fast_reciprocal #(
         .SIZE(MANT_SIZE)
@@ -27,7 +27,7 @@ module core_div #(
     );
 
 
-    wire [MANT_SIZE-1:0] x1;
+    wire [(MANT_SIZE)-1:0] x1;
 
     newton_raphson #(
         .SIZE(MANT_SIZE)
@@ -42,7 +42,7 @@ module core_div #(
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = 
-        (mant_div & (1 << (2*N-3))) == 0;
+        (mant_div & (1 << (2*N-2))) == 0;
     
     assign mant_out = 
         mant_div_less_than_one ? mant_div << 1 : mant_div;

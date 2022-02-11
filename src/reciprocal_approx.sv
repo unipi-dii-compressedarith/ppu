@@ -18,21 +18,35 @@ module reciprocal_approx #(
         parameter N = 16
     )(
         input [N-1:0] i_data,
-        output [N-1:0] o_data
+        output [(3*N)-1:0] o_data
     );
 
     reg [N-1:0] a, b;
-    reg [2*N-1:0] c, d;
-    reg [3*N-1:0] e, out;
+    reg [(2*N)-1:0] c, d;
+    reg [(3*N)-1:0] e, out;
 
     assign a = i_data;
-    assign b = 16'd48038 - a;
-    assign c = $signed(a) * $signed(b);
-    assign d = 32'd1075030314 - c;
+
+    /*
+    hardcoded for SIZE = 16 bits.
+    $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_466  = to_Fx(1.466,  1,   N); print(fp_1_466.val)'
+    $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_0012 = to_Fx(1.0012, 1, 2*N); print(fp_1_0012.val)'
+    */
+    wire [N-1:0] fp_1_466 = 48038;
+    wire [(2*N)-1:0] fp_1_0012 = 2150060628;
+
+
+    assign b = fp_1_466 - a;
+    assign c = ($signed(a) * $signed(b)) << 1;
+    assign d = fp_1_0012 - c;
     assign e = $signed(d) * $signed(b);
     assign out = e << 2;
     
-    assign o_data = out[3*N-1: 3*N-1-N];  // (out << 1) >> (2 * N)
+    /// full width output:
+    assign o_data = out;
+
+    /// same width output:
+    // assign o_data = out[3*N-1: 3*N-1-N];  // (out << 1) >> (2 * N)
 endmodule
 
 
