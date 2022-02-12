@@ -3,7 +3,7 @@ module compute_rouding #(
         parameter ES = `ES
     )(
         input [MANT_LEN_SIZE-1:0] mant_len,
-        input [(2*MANT_SIZE+2)-1:0] mant_up_shifted,
+        input [(3*MANT_SIZE+2)-1:0] mant_up_shifted,
         input [(S+2)-1:0] mant_len_diff,
         input [K_SIZE-1:0] k,
         input [ES-1:0] exp,
@@ -11,7 +11,7 @@ module compute_rouding #(
         output sticky_bit
     );
     
-    wire [(2*MANT_SIZE+2)-1:0] _tmp0, _tmp1, _tmp2, _tmp3;
+    wire [(3*MANT_SIZE+2)-1:0] _tmp0, _tmp1, _tmp2, _tmp3;
     
     assign _tmp0 = (1 << (mant_len_diff - 1));
     assign _tmp1 = mant_up_shifted & _tmp0;

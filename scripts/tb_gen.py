@@ -67,11 +67,12 @@ if args.shuffle_random == False:
 
 
 def func(c, op, list_a, list_b):
-    if op != Tb.PACOGEN:
+    if op == Tb.PACOGEN:
+        c += f"op = DIV;\n"
+        c += f'op_ascii = "DIV";\n\n'
+    else:
         c += f"op = {op.name};\n"
         c += f'op_ascii = "{op.name}";\n\n'
-    else:
-        c += f"op = DIV;\n"
 
     for counter, (a, b) in enumerate(zip(list_a, list_b)):
         p1 = from_bits(a, N, ES)
@@ -91,12 +92,16 @@ def func(c, op, list_a, list_b):
             raise Exception("wrong op?")
 
         c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-        c += f"{'// p1:'.ljust(LJUST)} {p1.to_bin(prefix=True)} {p1.eval()};\n\t"
         c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
-        c += f"{'// p2:'.ljust(LJUST)} {p2.to_bin(prefix=True)} {p2.eval()};\n\t"
+        c += f"""{'p1_ascii ='.ljust(LJUST)} "{p1.eval()}";\n\t"""
         c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
-        c += f"{'// pout:'.ljust(LJUST)} {pout.to_bin(prefix=True)} {pout.eval()};\n\t"
+        c += f"""{'p2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
+        c += f"""{'pout_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
         c += f"{'pout_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        if op != Tb.DIV and op != Tb.PACOGEN:
+            c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
+        else:
+            c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'h{(p1.__hwdiv__(p2)).to_hex(prefix=False)};\n\t"
         c += f"#10;\n\t"
         if op == Tb.PACOGEN:
             c += f'assert (pout_pacogen === pout_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'

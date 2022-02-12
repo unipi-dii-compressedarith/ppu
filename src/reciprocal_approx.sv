@@ -15,7 +15,7 @@ iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o reciprocal_approx.out \
 
 
 module reciprocal_approx #(
-        parameter N = 16
+        parameter N = 10
     )(
         input [N-1:0] i_data,
         output [(3*N)-1:0] o_data
@@ -32,8 +32,8 @@ module reciprocal_approx #(
     $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_466  = to_Fx(1.466,  1,   N); print(fp_1_466.val)'
     $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_0012 = to_Fx(1.0012, 1, 2*N); print(fp_1_0012.val)'
     */
-    wire [N-1:0] fp_1_466 = 48038;
-    wire [(2*N)-1:0] fp_1_0012 = 2150060628;
+    wire [(N)-1:0]      fp_1_466  = 16'd48038;
+    wire [(2*N)-1:0]    fp_1_0012 = 32'd2150060628;
 
 
     assign b = fp_1_466 - a;

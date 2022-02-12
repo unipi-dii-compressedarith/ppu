@@ -11,10 +11,10 @@ module shift_fields #(
         parameter N = `N,
         parameter ES = `ES
     )(
-        input [2*MANT_SIZE-1:0] mant,
+        input [(3*MANT_SIZE)-1:0] mant,
         input [TE_SIZE-1:0] total_exp,
-        input [(2)-1:0] mant_non_factional_size,
-        
+        input [OP_SIZE-1:0] op,
+
         output [K_SIZE-1:0] k,
         output [ES-1:0] next_exp,
         output [MANT_SIZE-1:0] mant_downshifted,
@@ -36,6 +36,12 @@ module shift_fields #(
         .k(k_unpacked),
         .exp(exp_unpacked)
     );
+
+    wire hwdiv;
+    assign hwdiv = op == DIV ? 1'b1 : 1'b0;
+
+    wire [(2)-1:0] mant_non_factional_size;
+    assign mant_non_factional_size = (op == MUL || op == DIV) ? 2 : 1; // only MUL and DIV have value 2.
 
 
     wire [K_SIZE-1:0] regime_k;
@@ -61,12 +67,12 @@ module shift_fields #(
 
 
     wire [(S+2)-1:0] shift_mant_up;
-    assign shift_mant_up = (N << 1); //2 * N;
+    assign shift_mant_up = hwdiv ? 3*N : 2*N;
     
     wire [(S+2)-1:0] mant_len_diff;
     assign mant_len_diff = $signed(shift_mant_up) - $signed(mant_len);
 
-    wire [(2*MANT_SIZE+2)-1:0] mant_up_shifted; // +2 because `mant_non_factional_size` can be at most 2.
+    wire [(3*MANT_SIZE+2)-1:0] mant_up_shifted; // +2 because `mant_non_factional_size` can be at most 2.
     assign mant_up_shifted = 
         (mant << mant_non_factional_size) & ((1 << shift_mant_up) - 1); //& mask(shift_mant_up);
 

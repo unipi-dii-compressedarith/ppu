@@ -8,7 +8,7 @@ module newton_raphson #(
     )(
         input [SIZE-1:0] num,
         input [(3*SIZE)-1:0] x0,
-        output [(SIZE)-1:0] x1
+        output [(2*SIZE)-1:0] x1
     );
 
     wire [(3*SIZE+SIZE)-1:0] num_times_x0; // 4N
@@ -18,13 +18,13 @@ module newton_raphson #(
     hardcoded for SIZE = 16 bits.
     $ python -c 'from fixed2float import to_Fx; N = 16; two = to_Fx(2.0, 2, 4*N); print(two.val)'
     */
-    wire [(3*SIZE+SIZE)-1:0] two = 9223372036854775808; // 4N
+    wire [(3*SIZE+SIZE)-1:0] two = 64'd9223372036854775808; // 4N
 
     
     wire [((3*SIZE+SIZE) + 3*SIZE)-1:0] _x1; // 7N
     assign _x1 = (x0 * (two - num_times_x0)) << 2'd3;
 
-    assign x1 = _x1[(7*SIZE-1):(6*SIZE-1)+1];
+    assign x1 = _x1[(7*SIZE-1):(5*SIZE-1)+1];
 
 endmodule
 

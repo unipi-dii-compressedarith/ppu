@@ -10,7 +10,7 @@ module core_mul #(
     )(
         input [TE_SIZE-1:0] te1, te2,
         input [MANT_SIZE-1:0] mant1, mant2,
-        output [2*MANT_SIZE-1:0] mant_out,
+        output [(3*MANT_SIZE)-1:0] mant_out,
         output [TE_SIZE-1:0] te_out
     );
     

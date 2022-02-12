@@ -5,14 +5,14 @@ module core_div #(
         input [TE_SIZE-1:0] te2,
         input [MANT_SIZE-1:0] mant1,
         input [MANT_SIZE-1:0] mant2,
-        output [(2*MANT_SIZE)-1:0] mant_out,
+        output [(3*MANT_SIZE)-1:0] mant_out,
         output [TE_SIZE-1:0] te_out
     );
 
     wire [TE_SIZE-1:0] te_diff;
     assign te_diff = te1 - te2;
 
-    wire [(2*MANT_SIZE)-1:0] mant_div;
+    wire [(3*MANT_SIZE)-1:0] mant_div;
     
     //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
 
@@ -27,7 +27,7 @@ module core_div #(
     );
 
 
-    wire [(MANT_SIZE)-1:0] x1;
+    wire [(2*MANT_SIZE)-1:0] x1;
 
     newton_raphson #(
         .SIZE(MANT_SIZE)
@@ -42,7 +42,7 @@ module core_div #(
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = 
-        (mant_div & (1 << (2*N-2))) == 0;
+        (mant_div & (1 << (3*N-2))) == 0;
     
     assign mant_out = 
         mant_div_less_than_one ? mant_div << 1 : mant_div;

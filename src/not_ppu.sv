@@ -93,7 +93,7 @@ module not_ppu #(
     wire [K_SIZE-1:0] k1, k2;
     wire [ES-1:0] exp1, exp2;
     wire [MANT_SIZE-1:0] mant1, mant2;
-    wire [2*MANT_SIZE-1:0] mant_out_core_op;
+    wire [(3*MANT_SIZE)-1:0] mant_out_core_op;
     wire [TE_SIZE-1:0] te1, te2, te_out_core_op;
 
     wire sign1, sign2;
@@ -201,9 +201,6 @@ module not_ppu #(
     );
 
 
-    wire [(2)-1:0]mant_non_factional_size;
-    assign mant_non_factional_size = op == MUL ? 2 : op == DIV ? 2 : 1; // only mul has value 2.
-
 
     wire [K_SIZE-1:0] k;
     wire [ES-1:0] next_exp;
@@ -219,8 +216,8 @@ module not_ppu #(
     ) shift_fields_inst (
         .mant(mant_out_core_op),
         .total_exp(te_out_core_op),
-        .mant_non_factional_size(mant_non_factional_size),
-        
+        .op(op),
+
         .k(k),
         .next_exp(next_exp),
         .mant_downshifted(mant_downshifted),
@@ -306,10 +303,11 @@ module tb_not_ppu;
     reg [100:0] op_ascii;
     wire [N-1:0] pout;
 
+    reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
+
     
-    reg [N-1:0] pout_ground_truth;
-    reg diff_pout, pout_off_by_1;
-    reg [9:0] pout_diff_analog;
+    reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
+    reg diff_pout_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
@@ -326,10 +324,9 @@ module tb_not_ppu;
 
     
     always @(*) begin
-        diff_pout = pout === pout_ground_truth ? 0 : 1'bx;
+        diff_pout_ground_truth = pout === pout_ground_truth ? 0 : 1'bx;
         pout_off_by_1 = abs(pout - pout_ground_truth) == 0 ? 0 : abs(pout - pout_ground_truth) == 1 ? 1 : 'bx;
-
-        pout_diff_analog = abs(pout - pout_ground_truth);
+        diff_pout_hwdiv_exp = (op != DIV) ? 'hz : pout === pout_hwdiv_expected ? 0 : 1'bx;
     end
 
     initial begin

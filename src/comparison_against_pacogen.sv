@@ -84,8 +84,9 @@ module tb_comparison_against_pacogen;
     reg [100:0] op_ascii;
     wire [N-1:0] pout_pacogen, pout_not_ppu;
 
+    reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
     
-    reg [N-1:0] pout_ground_truth;
+    reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
     reg diff_pout_not_ppu, diff_pout_pacogen, not_ppu_off_by_1, pacogen_off_by_1;
     reg [N:0] test_no;
 

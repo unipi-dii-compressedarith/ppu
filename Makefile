@@ -10,6 +10,7 @@ gen-test-vectors:
 
 
 not-ppu16:
+	cd scripts && python tb_gen.py --num-tests 500 --operation ppu -n 16 -es 1 --shuffle-random true && cd ..
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
 	../src/utils.sv \
@@ -40,7 +41,7 @@ not-ppu16:
 	../src/set_sign.sv \
 	../src/highest_set.sv && \
 	sleep 1 && \
-	./not_ppu.out
+	./not_ppu.out # https://github.com/steveicarus/iverilog 
 
 yosys:
 	cd waveforms && \
@@ -71,13 +72,14 @@ yosys:
 	../src/round.sv \
 	../src/sign_decisor.sv \
 	../src/set_sign.sv \
-	../src/highest_set.sv > yosys_not_ppu.out
+	../src/highest_set.sv > yosys_not_ppu.out # https://github.com/YosysHQ/yosys
 
 verilog-quartus:
 	cd quartus && \
 	sv2v             -DN=16 -DES=1  \
 	../src/utils.sv \
 	../src/common.sv \
+	../src/ppu.sv \
 	../src/not_ppu.sv \
 	../src/input_conditioning.sv \
 	../src/unpack_posit.sv \
@@ -102,9 +104,11 @@ verilog-quartus:
 	../src/round.sv \
 	../src/sign_decisor.sv \
 	../src/set_sign.sv \
-	../src/highest_set.sv > ./not_ppu.v && \
-	iverilog not_ppu.v
+	../src/highest_set.sv > ./ppu.v # https://github.com/zachjs/sv2v && \
+	iverilog ppu.v
 
+lint:
+	slang quartus/not_ppu.v # https://github.com/MikePopoloski/slang
 
 div-against-pacogen:
 	cd scripts && python tb_gen.py --operation pacogen -n 16 -es 1 --num-tests 3000 --shuffle-random true
