@@ -8,12 +8,12 @@
 - install prerequisites:
     
     - [cli tools](#cli_tools)
-    - [`posit_playground`](https://github.com/urbanij/posit-playground) (dependency of [`scripts/tb_gen.py`](./scripts/tb_gen.py)).
+    - [`hardposit`](https://github.com/urbanij/hardposit) (dependency of [`scripts/tb_gen.py`](./scripts/tb_gen.py)).
 
 - generate all the waveforms
 
 ```sh
-./run.sh
+make 
 ```
 
 

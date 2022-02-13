@@ -101,7 +101,10 @@ def func(c, op, list_a, list_b):
         if op != Tb.DIV and op != Tb.PACOGEN:
             c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         else:
-            c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'h{(p1.__hwdiv__(p2)).to_hex(prefix=False)};\n\t"
+            if N <= 16:  # to be lifted later on when __hwdiv__ will support P32
+                c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'h{(p1.__hwdiv__(p2)).to_hex(prefix=False)};\n\t"
+            else:
+                c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         c += f"#10;\n\t"
         if op == Tb.PACOGEN:
             c += f'assert (pout_pacogen === pout_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
