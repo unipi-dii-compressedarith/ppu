@@ -108,7 +108,7 @@ def func(c, op, list_a, list_b):
             c += f'assert (pout_not_ppu === pout_ground_truth) else $display("NOT_PPU_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_not_ppu);\n\n'
         else:
             c += f'assert (pout === pout_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
-    c += f'$display("Total tests cases: {NUM_RANDOM_TEST_CASES}");'
+    c += f'$display("Total tests cases: {len(list_a)}");'
     return c
 
 

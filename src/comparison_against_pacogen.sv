@@ -37,7 +37,7 @@ iverilog -g2012 -DN=16 -DES=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pa
 
 
 module comparison_against_pacogen #(
-        parameter N = 16,
+        parameter N = 4,
         parameter ES = 1
     )(
         input [N-1:0] p1,
@@ -78,6 +78,8 @@ endmodule
 `ifdef TEST_BENCH_COMP_PACOGEN
 module tb_comparison_against_pacogen;
 
+    parameter N = `N;
+    parameter ES = `ES;
 
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
@@ -113,11 +115,14 @@ module tb_comparison_against_pacogen;
 
     initial begin
 
-        if (N == 16 && ES == 1)$dumpfile("tb_comparison_against_pacogen.vcd");
-        
+        $dumpfile({"tb_comparison_against_pacogenP",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
+
         $dumpvars(0, tb_comparison_against_pacogen);                        
             
-        
+        if (N == 8 && ES == 0) begin
+            `include "../test_vectors/tv_posit_pacogen_P8E0.sv"
+        end
+
         if (N == 16 && ES == 1) begin
             `include "../test_vectors/tv_posit_pacogen_P16E1.sv"
         end

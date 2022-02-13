@@ -50,3 +50,5 @@ parameter SUB = 2'b01;
 parameter MUL = 2'b10;
 parameter DIV = 2'b11;
 
+`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
+

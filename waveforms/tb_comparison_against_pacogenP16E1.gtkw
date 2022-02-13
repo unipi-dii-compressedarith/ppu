@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sun Feb 13 14:59:25 2022
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_comparison_against_pacogenP16E1.vcd"
+[dumpfile_mtime] "Sun Feb 13 14:58:39 2022"
+[dumpfile_size] 17651367
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_comparison_against_pacogenP16E1.gtkw"
+[timestart] 0
+[size] 1440 773
+[pos] -1 -1
+*-12.625277 7770 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_comparison_against_pacogen.
+[sst_width] 193
+[signals_width] 245
+[sst_expanded] 1
+[sst_vpaned_height] 228
+@28
+tb_comparison_against_pacogen.diff_pout_not_ppu
+tb_comparison_against_pacogen.diff_pout_pacogen
+tb_comparison_against_pacogen.not_ppu_off_by_1
+tb_comparison_against_pacogen.op[1:0]
+@22
+tb_comparison_against_pacogen.op_ascii[100:0]
+tb_comparison_against_pacogen.p1[15:0]
+tb_comparison_against_pacogen.p1_ascii[300:0]
+tb_comparison_against_pacogen.p2[15:0]
+tb_comparison_against_pacogen.p2_ascii[300:0]
+@28
+tb_comparison_against_pacogen.pacogen_off_by_1
+@22
+tb_comparison_against_pacogen.pout_ground_truth[15:0]
+tb_comparison_against_pacogen.pout_gt_ascii[300:0]
+tb_comparison_against_pacogen.pout_hwdiv_expected[15:0]
+tb_comparison_against_pacogen.pout_not_ppu[15:0]
+tb_comparison_against_pacogen.pout_pacogen[15:0]
+tb_comparison_against_pacogen.test_no[16:0]
+[pattern_trace] 1
+[pattern_trace] 0

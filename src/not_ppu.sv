@@ -3,8 +3,6 @@
 
 */
 
-`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
-
 // `define N (16)
 // `define ES (1)
 

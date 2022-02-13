@@ -2,8 +2,15 @@ import re
 import pathlib
 from typing import Tuple, List
 from hardposit import from_bits
+import argparse
 
-N, ES = 16, 1
+
+parser = argparse.ArgumentParser(description="Generate test benches")
+parser.add_argument("--num-bits", "-n", type=int, required=True, help="Num posit bits")
+parser.add_argument("--es-size", "-es", type=int, required=True, help="Num posit bits")
+args = parser.parse_args()
+
+N, ES = args.num_bits, args.es_size
 
 
 def compute_rms(arr: List[Tuple[int]]) -> float:
@@ -22,20 +29,23 @@ def compute_rms(arr: List[Tuple[int]]) -> float:
             rms += (pout_exp.eval() - pout_exp_file.eval()) ** 2
 
     print(f"{count_nans} nans")
-    rms /= len(arr) - count_nans
+    try:
+        rms /= len(arr) - count_nans
+    except ZeroDivisionError:
+        rms = 0.0
     rms = rms ** 0.5
     return rms
 
 
 def main():
-    LOG_FILE = pathlib.Path("../waveforms/comparison_against_pacogen.log")
+    LOG_FILE = pathlib.Path(f"../waveforms/comparison_against_pacogen{N}.log")
     with open(LOG_FILE, "r") as f:
         content = f.read()
 
     pacogen_tests_failed = content.count("PACOGEN_ERROR")
     not_ppu_tests_failed = content.count("NOT_PPU_ERROR")
 
-    REGEX_HEX_NUM = r"0x[0-9a-f]{4}"
+    REGEX_HEX_NUM = r"0x[0-9a-f]" + "{" + str(N // 4) + "}"
     REGEX_SEQUENCE = "({0}) / ({0}) = ({0}) != ({0})".format(REGEX_HEX_NUM)
 
     pacogen_tests = []

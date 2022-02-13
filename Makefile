@@ -182,9 +182,10 @@ verilog-quartus8:
 lint:
 	slang quartus/not_ppu.v # https://github.com/MikePopoloski/slang
 
-div-against-pacogen-p16:
+div-against-pacogen16:
 	cd scripts && python tb_gen.py --operation pacogen -n 16 -es 1 --num-tests 3000 --shuffle-random true
-	cd waveforms && iverilog -g2012 -DN=16 -DES=1 -DNR=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen.out \
+	cd waveforms && \
+	iverilog -g2012 -DN=16 -DES=1 -DNR=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen16.out \
 	../src/utils.sv \
 	../src/constants.sv \
 	../src/common.sv \
@@ -216,5 +217,44 @@ div-against-pacogen-p16:
 	../src/highest_set.sv \
 	../../PACoGen/common.v \
 	../../PACoGen/div/posit_div.v \
-	&& ./comparison_against_pacogen.out > comparison_against_pacogen.log
-	cd scripts && python pacogen_log_stats.py
+	&& ./comparison_against_pacogen16.out > comparison_against_pacogen16.log
+	cd scripts && python pacogen_log_stats.py -n 16 -es 1
+
+
+div-against-pacogen8:
+	cd scripts && python tb_gen.py --operation pacogen -n 8 -es 0 --num-tests 3000 --shuffle-random true
+	cd waveforms && \
+	iverilog -g2012 -DNO_ES_FIELD -DN=8 -DES=0 -DNR=0 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen8.out \
+	../src/utils.sv \
+	../src/constants.sv \
+	../src/common.sv \
+	../src/comparison_against_pacogen.sv \
+	../src/not_ppu.sv \
+	../src/input_conditioning.sv \
+	../src/unpack_posit.sv \
+	../src/check_special.sv \
+	../src/handle_special.sv \
+	../src/total_exponent.sv \
+	../src/core_op.sv \
+	../src/core_add_sub.sv \
+	../src/core_add.sv \
+	../src/core_sub.sv \
+	../src/core_mul.sv \
+	../src/core_div.sv \
+	../src/fast_reciprocal.sv \
+	../src/reciprocal_approx.sv \
+	../src/newton_raphson.sv \
+	../src/shift_fields.sv \
+	../src/unpack_exponent.sv \
+	../src/compute_rounding.sv \
+	../src/posit_decode.sv \
+	../src/posit_encode.sv \
+	../src/cls.sv \
+	../src/round.sv \
+	../src/sign_decisor.sv \
+	../src/set_sign.sv \
+	../src/highest_set.sv \
+	../../PACoGen/common.v \
+	../../PACoGen/div/posit_div.v \
+	&& ./comparison_against_pacogen8.out > comparison_against_pacogen8.log
+	cd scripts && python pacogen_log_stats.py -n 8 -es 0
