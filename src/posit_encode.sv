@@ -7,28 +7,29 @@ Usage:
     cd $PROJECT_ROOT/waveforms
     
     iverilog -g2012 -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encode.out \
+    ../src/common.sv \
     ../src/utils.sv \
     ../src/posit_encode.sv && ./posit_encode.out
 
     iverilog -g2012 -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encode.out \
+    ../src/common.sv \
     ../src/utils.sv \
     ../src/posit_encode.sv && ./posit_encode.out
 
-    yosys -p "synth_intel -family max10 -top posit_encode -vqm posit_encode.vqm" \
-    ../src/utils.sv \
-    ../src/posit_encode.sv > yosys_posit_encode.out
 
 */
 module posit_encode #(
-        parameter N = `N,
-        parameter ES = `ES
+        parameter N = 4,
+        parameter ES = 1
     )(
         input          is_zero,
         input          is_nan,
 
         input sign,
         input [K_SIZE-1:0] k,
+`ifndef NO_ES_FIELD
         input [ES-1:0] exp,
+`endif
         input [MANT_SIZE-1:0] mant,
         output [N-1:0] posit
     );
@@ -52,9 +53,9 @@ module posit_encode #(
     assign bits_assembled = ( 
           shl(sign, N-1)
         + shl(regime_bits, N - 1 - reg_len)
-
+`ifndef NO_ES_FIELD
         + shl(exp, N - 1 - reg_len - ES)
-
+`endif
         + mant
     );
 
@@ -91,7 +92,9 @@ module tb_posit_encode;
     reg sign;
     reg [REG_LEN_SIZE-1:0] reg_len;
     reg [K_SIZE-1:0] k;
+`ifndef NO_ES_FIELD
     reg [ES-1:0] exp;
+`endif
     reg [MANT_SIZE-1:0] mant;
     
     /* output */
@@ -111,9 +114,10 @@ module tb_posit_encode;
         .is_nan(is_nan),
 
         .sign(sign),
-        .reg_len(reg_len),
         .k(k),
+`ifndef NO_ES_FIELD
         .exp(exp),
+`endif
         .mant(mant),
         .posit(posit)
     );

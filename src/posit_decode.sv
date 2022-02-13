@@ -55,10 +55,6 @@ module posit_decode #(
     assign is_special = {is_zero, is_nan};
 
 
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-
     assign is_zero = bits == {N{1'b0}};
     assign is_nan = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
@@ -140,26 +136,9 @@ endmodule
 
 `ifdef TEST_BENCH_DECODE
 module tb_posit_decode;
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-    function [N-1:0] abs(input [N-1:0] in);
-        abs = in[N-1] == 0 ? in : c2(in);
-    endfunction
-
-`ifdef N
     parameter N = `N;
-`else
-    $display("missing N");
-`endif
-
-`ifdef ES
     parameter ES = `ES;
-`else
-    $display("missing ES");
-`endif  
     
-
 
     // input
     reg [N-1:0]     bits;
@@ -275,6 +254,4 @@ module tb_posit_decode;
 
 endmodule
 `endif
-
-
 

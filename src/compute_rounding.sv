@@ -6,7 +6,9 @@ module compute_rouding #(
         input [(3*MANT_SIZE+2)-1:0] mant_up_shifted,
         input [(S+2)-1:0] mant_len_diff,
         input [K_SIZE-1:0] k,
+`ifndef NO_ES_FIELD
         input [ES-1:0] exp,
+`endif
         output round_bit,
         output sticky_bit
     );
@@ -16,6 +18,7 @@ module compute_rouding #(
     assign _tmp0 = (1 << (mant_len_diff - 1));
     assign _tmp1 = mant_up_shifted & _tmp0;
 
+`ifndef NO_ES_FIELD
     assign round_bit = $signed(mant_len) >= 0 ?
         _tmp1 != 0 :
         (
@@ -25,7 +28,9 @@ module compute_rouding #(
                     $signed(exp) > 0 : 
                     1'b0
         );
-
+`else
+    assign round_bit = $signed(mant_len) >= 0 ? _tmp1 != 0 : 1'b0;
+`endif
 
     
     assign _tmp2 = ((1 << (mant_len_diff - 1)) - 1);

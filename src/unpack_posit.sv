@@ -27,7 +27,9 @@ module unpack_posit #(
         input [N-1:0] bits,
         output sign,
         output [K_SIZE-1:0] k,
+`ifndef NO_ES_FIELD
         output [ES-1:0] exp,
+`endif
         output [MANT_SIZE-1:0] mant // 1.frac
     );
 

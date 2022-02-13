@@ -1,66 +1,9 @@
 /*
 
-iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1  -o not_ppu.out \
-../src/utils.sv \
-../src/common.sv \
-../src/not_ppu.sv \
-../src/input_conditioning.sv \
-../src/unpack_posit.sv \
-../src/check_special.sv \
-../src/handle_special.sv \
-../src/total_exponent.sv \
-../src/core_op.sv \
-../src/core_add_sub.sv \
-../src/core_add.sv \
-../src/core_sub.sv \
-../src/core_mul.sv \
-../src/core_div.sv \
-../src/fast_reciprocal.sv \
-../src/reciprocal_approx.sv \
-../src/newton_raphson.sv \
-../src/shift_fields.sv \
-../src/unpack_exponent.sv \
-../src/compute_rounding.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/round.sv \
-../src/sign_decisor.sv \
-../src/set_sign.sv \
-../src/highest_set.sv \
-&& ./not_ppu.out
-
-
-sv2v             -DN=16 -DES=1  \
-../src/utils.sv \
-../src/common.sv \
-../src/not_ppu.sv \
-../src/input_conditioning.sv \
-../src/unpack_posit.sv \
-../src/check_special.sv \
-../src/handle_special.sv \
-../src/total_exponent.sv \
-../src/core_op.sv \
-../src/core_add_sub.sv \
-../src/core_add.sv \
-../src/core_sub.sv \
-../src/core_mul.sv \
-../src/core_div.sv \
-../src/fast_reciprocal.sv \
-../src/reciprocal_approx.sv \
-../src/newton_raphson.sv \
-../src/shift_fields.sv \
-../src/unpack_exponent.sv \
-../src/compute_rounding.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/round.sv \
-../src/sign_decisor.sv \
-../src/set_sign.sv \
-../src/highest_set.sv > ./not_ppu.v && iverilog not_ppu.v
 
 */
+
+`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 
 // `define N (16)
 // `define ES (1)
@@ -69,35 +12,27 @@ sv2v             -DN=16 -DES=1  \
 // `define NO_ES_FIELD
 // `endif
 
-
 module not_ppu #(
         parameter N = `N,
         parameter ES = `ES
     )(
-        input [N-1:0] p1,
-        input [N-1:0] p2,
-        input [OP_SIZE-1:0] op,
-        /*
-        00: +
-        01: -
-        10: *
-        11: /
-        */
-        output [N-1:0] pout
+        input   [N-1:0]         p1,
+        input   [N-1:0]         p2,
+        input   [OP_SIZE-1:0]   op,
+        output  [N-1:0]         pout
     );
     
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-
+    
     wire [K_SIZE-1:0] k1, k2;
+`ifndef NO_ES_FIELD
     wire [ES-1:0] exp1, exp2;
+`endif
+
     wire [MANT_SIZE-1:0] mant1, mant2;
     wire [(3*MANT_SIZE)-1:0] mant_out_core_op;
     wire [TE_SIZE-1:0] te1, te2, te_out_core_op;
 
     wire sign1, sign2;
-
 
     wire p1_is_special, p2_is_special;
     wire p1_is_zero, p2_is_zero;
@@ -153,7 +88,9 @@ module not_ppu #(
         .bits(p1_out_cond),
         .sign(sign1),
         .k(k1),
+`ifndef NO_ES_FIELD
         .exp(exp1),
+`endif
         .mant(mant1)
     );
 
@@ -164,7 +101,9 @@ module not_ppu #(
         .bits(p2_out_cond),
         .sign(sign2),
         .k(k2),
+`ifndef NO_ES_FIELD
         .exp(exp2),
+`endif
         .mant(mant2)
     );
 
@@ -173,7 +112,9 @@ module not_ppu #(
         .ES(ES)
     ) total_exponent_1 (
         .k(k1),
+`ifndef NO_ES_FIELD
         .exp(exp1),
+`endif
         .total_exp(te1)
     );
 
@@ -182,7 +123,9 @@ module not_ppu #(
         .ES(ES)
     ) total_exponent_2 (
         .k(k2),
+`ifndef NO_ES_FIELD
         .exp(exp2),
+`endif
         .total_exp(te2)
     );
 
@@ -203,7 +146,9 @@ module not_ppu #(
 
 
     wire [K_SIZE-1:0] k;
+`ifndef NO_ES_FIELD
     wire [ES-1:0] next_exp;
+`endif
     wire [MANT_SIZE-1:0] mant_downshifted;
     wire round_bit;
     wire sticky_bit;
@@ -219,7 +164,9 @@ module not_ppu #(
         .op(op),
 
         .k(k),
+`ifndef NO_ES_FIELD
         .next_exp(next_exp),
+`endif
         .mant_downshifted(mant_downshifted),
 
         .round_bit(round_bit),
@@ -239,7 +186,9 @@ module not_ppu #(
         .is_nan(),
         .sign(1'b0),
         .k(k),
+`ifndef NO_ES_FIELD
         .exp(next_exp),
+`endif
         .mant(mant_downshifted),
 
         .posit(posit)
@@ -288,13 +237,6 @@ endmodule
 `ifdef TEST_BENCH_NOT_PPU
 
 module tb_not_ppu;
-    function [N-1:0] c2(input [N-1:0] a);
-        c2 = ~a + 1'b1;
-    endfunction
-    function [N-1:0] abs(input [N-1:0] in);
-        abs = in[N-1] == 0 ? in : c2(in);
-    endfunction
-
     parameter N = `N;
     parameter ES = `ES;
 
@@ -329,16 +271,16 @@ module tb_not_ppu;
         diff_pout_hwdiv_exp = (op != DIV) ? 'hz : pout === pout_hwdiv_expected ? 0 : 1'bx;
     end
 
+
+
+
+    reg [10-1:0] nn, ee;
     initial begin
 
-             if (N == 8 && ES == 0) $dumpfile("tb_ppu_P8E0.vcd");
-        else if (N == 5 && ES == 1) $dumpfile("tb_ppu_P5E1.vcd");
-        else if (N == 16 && ES == 1)$dumpfile("tb_ppu_P16E1.vcd");
-        else if (N == 32 && ES == 2)$dumpfile("tb_ppu_P32E2.vcd");
-        else                        $dumpfile("tb_ppu.vcd");
-
+        $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
         $dumpvars(0, tb_not_ppu);                        
-            
+
+        
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
         end

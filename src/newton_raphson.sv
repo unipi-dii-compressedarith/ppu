@@ -14,15 +14,12 @@ module newton_raphson #(
     wire [(3*SIZE+SIZE)-1:0] num_times_x0; // 4N
     assign num_times_x0 = (num * x0) << 1'd1;
 
-    /*
-    hardcoded for SIZE = 16 bits.
-    $ python -c 'from fixed2float import to_Fx; N = 16; two = to_Fx(2.0, 2, 4*N); print(two.val)'
-    */
-    wire [(3*SIZE+SIZE)-1:0] two = 64'd9223372036854775808; // 4N
+    /// generated with `scripts/gen_fixed_point_values.py`
+    wire [(3*SIZE+SIZE)-1:0] fp_2 = fp_2___N`N; // 4N
 
     
     wire [((3*SIZE+SIZE) + 3*SIZE)-1:0] _x1; // 7N
-    assign _x1 = (x0 * (two - num_times_x0)) << 2'd3;
+    assign _x1 = (x0 * (fp_2 - num_times_x0)) << 2'd3;
 
     assign x1 = _x1[(7*SIZE-1):(5*SIZE-1)+1];
 
@@ -35,8 +32,8 @@ module tb_newton_raphson;
 
     parameter SIZE = 16;
     reg [SIZE-1:0] num;
-    reg [SIZE-1:0] x0;
-    wire [SIZE-1:0] x1;
+    reg [(3*SIZE)-1:0] x0;
+    wire [(2*SIZE)-1:0] x1;
 
     newton_raphson #(
         .SIZE(SIZE)

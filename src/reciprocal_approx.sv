@@ -27,15 +27,12 @@ module reciprocal_approx #(
 
     assign a = i_data;
 
-    /*
-    hardcoded for SIZE = 16 bits.
-    $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_466  = to_Fx(1.466,  1,   N); print(fp_1_466.val)'
-    $ python -c 'from fixed2float import to_Fx; N = 16; fp_1_0012 = to_Fx(1.0012, 1, 2*N); print(fp_1_0012.val)'
-    */
-    wire [(N)-1:0]      fp_1_466  = 16'd48038;
-    wire [(2*N)-1:0]    fp_1_0012 = 32'd2150060628;
+    
+    /// generated with `scripts/gen_fixed_point_values.py`
+    wire [(3*N+N)-1:0] fp_1_466 = fp_1_466___N`N; // N
+    wire [(3*N+N)-1:0] fp_1_0012 = fp_1_0012___N`N; // 2N
 
-
+    
     assign b = fp_1_466 - a;
     assign c = ($signed(a) * $signed(b)) << 1;
     assign d = fp_1_0012 - c;

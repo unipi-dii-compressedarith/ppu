@@ -16,7 +16,9 @@ module shift_fields #(
         input [OP_SIZE-1:0] op,
 
         output [K_SIZE-1:0] k,
+`ifndef NO_ES_FIELD
         output [ES-1:0] next_exp,
+`endif
         output [MANT_SIZE-1:0] mant_downshifted,
 
         // flags
@@ -27,19 +29,23 @@ module shift_fields #(
     );
     
     wire [K_SIZE-1:0] k_unpacked;
+
+`ifndef NO_ES_FIELD
     wire [ES-1:0] exp_unpacked;
+`endif
+
     unpack_exponent #(
         .N(N),
         .ES(ES)
     ) unpack_exponent_inst (
         .total_exp(total_exp),
-        .k(k_unpacked),
-        .exp(exp_unpacked)
+        .k(k_unpacked)
+`ifndef NO_ES_FIELD
+        ,.exp(exp_unpacked)
+`endif
     );
 
-    wire hwdiv;
-    assign hwdiv = op == DIV ? 1'b1 : 1'b0;
-
+    
     wire [(2)-1:0] mant_non_factional_size;
     assign mant_non_factional_size = (op == MUL || op == DIV) ? 2 : 1; // only MUL and DIV have value 2.
 
@@ -58,16 +64,17 @@ module shift_fields #(
     wire [MANT_LEN_SIZE-1:0] mant_len;
     assign mant_len = N - 1 - ES - reg_len;
 
+`ifndef NO_ES_FIELD
     wire [(ES+1)-1:0] es_actual_len; // ES + 1 because it can become -1.
     assign es_actual_len = min(ES, N - 1 - reg_len);
 
 
     wire [ES-1:0] exp_1;
     assign exp_1 = exp_unpacked >> max(0, ES - es_actual_len);
-
+`endif
 
     wire [(S+2)-1:0] shift_mant_up;
-    assign shift_mant_up = hwdiv ? 3*N : 2*N;
+    assign shift_mant_up = (op == DIV) ? 3*N : 2*N;
     
     wire [(S+2)-1:0] mant_len_diff;
     assign mant_len_diff = $signed(shift_mant_up) - $signed(mant_len);
@@ -84,20 +91,26 @@ module shift_fields #(
         .mant_up_shifted(mant_up_shifted),
         .mant_len_diff(mant_len_diff),
         .k(regime_k),
+`ifndef NO_ES_FIELD
         .exp(exp_unpacked),
+`endif
         .round_bit(round_bit),
         .sticky_bit(sticky_bit)
     );
 
     assign k = regime_k; // prev. k_unpacked which is wrong;
 
+`ifndef NO_ES_FIELD
     wire [ES-1:0] exp_2;
     assign exp_2 = exp_1 << (ES - es_actual_len);
+`endif
 
     assign mant_downshifted = mant_up_shifted >> mant_len_diff;
 
     assign non_zero_mant_field_size = $signed(mant_len) >= 0;
 
+`ifndef NO_ES_FIELD
     assign next_exp = exp_2;
+`endif
 
 endmodule
