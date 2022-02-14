@@ -6,7 +6,7 @@ and paste into src/constants.sv
 
 from fixed2float import to_Fx
 
-upper, lower = 5, 33
+lower, upper = 5, 33
 
 for n in range(lower, upper):
     fp_1_466 = to_Fx(1.466, 1, n)

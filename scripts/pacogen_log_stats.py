@@ -13,7 +13,8 @@ args = parser.parse_args()
 N, ES = args.num_bits, args.es_size
 
 
-def compute_rms(arr: List[Tuple[int]]) -> float:
+def _compute_rms(arr: List[Tuple[int]]) -> float:
+    """root mean square error"""
     rms = 0
     count_nans = 0
     for tuple in arr:
@@ -37,6 +38,45 @@ def compute_rms(arr: List[Tuple[int]]) -> float:
     return rms
 
 
+def compute_mad(arr: List[Tuple[int]]) -> float:
+    """maximum absolute difference value"""
+    mad = 0
+    pa_mad = None
+    pb_mad = None
+    pout_exp_mad = None
+    pout_exp_file_mad = None
+
+    count_nans = 0
+    for tuple in arr:
+        pa = from_bits(int(tuple[0], 16), N, ES)
+        pb = from_bits(int(tuple[1], 16), N, ES)
+        pout_exp = pa / pb
+        pout_exp_file = from_bits(int(tuple[2], 16), N, ES)
+        assert pout_exp.to_hex(prefix=True) == tuple[3]
+
+        if pout_exp.is_nan or pout_exp_file.is_nan:
+            count_nans += 1
+        else:
+            adv = abs(pout_exp.eval() - pout_exp_file.eval())
+            if adv > mad:
+                mad = adv
+                pa_mad = pa.eval()
+                pb_mad = pb.eval()
+                pout_exp_mad = pout_exp.eval()
+                pout_exp_file_mad = pout_exp_file.eval()
+    return (
+        mad,
+        pa_mad,
+        pb_mad,
+        pout_exp_mad,
+        pout_exp_file_mad,
+    )
+
+
+def mad_stats(mad_return_tuple):
+    return f"{mad_return_tuple[0]} @ a = {mad_return_tuple[1]}, b = {mad_return_tuple[2]} -> div_exp = {mad_return_tuple[3]}, div = {mad_return_tuple[4]}"
+
+
 def main():
     LOG_FILE = pathlib.Path(f"../waveforms/comparison_against_pacogen{N}.log")
     with open(LOG_FILE, "r") as f:
@@ -56,11 +96,19 @@ def main():
     for match in re.compile("NOT_PPU_ERROR: " + REGEX_SEQUENCE).finditer(content):
         not_ppu_tests.append(match.groups())
 
-    pacogen_rms = compute_rms(pacogen_tests)
-    print(f"pacogen_rms = {pacogen_rms}")
+    # pacogen_rms = compute_rms(pacogen_tests)
+    # print(f"pacogen_rms = {pacogen_rms}")
 
-    not_ppu_rms = compute_rms(not_ppu_tests)
-    print(f"not_ppu_rms = {not_ppu_rms}")
+    # not_ppu_rms = compute_rms(not_ppu_tests)
+    # print(f"not_ppu_rms = {not_ppu_rms}")
+
+    pacogen_mad = compute_mad(pacogen_tests)
+    print(f"pacogen_mad = ", end="")
+    print(mad_stats(pacogen_mad))
+
+    not_ppu_mad = compute_mad(not_ppu_tests)
+    print(f"not_ppu_mad = ", end="")
+    print(mad_stats(not_ppu_mad))
 
     REGEX_NUM_TESTS = r"Total tests cases: (\d+)"
     for match in re.compile(REGEX_NUM_TESTS).finditer(content):
