@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Feb 12 10:45:09 2022
+[*] Mon Feb 14 11:22:06 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sat Feb 12 09:54:01 2022"
-[dumpfile_size] 8141863
+[dumpfile_mtime] "Mon Feb 14 10:20:25 2022"
+[dumpfile_size] 8053147
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
-[size] 2560 1418
-[pos] -1 -1
-*-10.997197 7260 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 2292 1120
+[pos] 51 98
+*-11.209555 7260 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [treeopen] tb_not_ppu.not_ppu_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.core_op_inst.
@@ -19,7 +19,7 @@
 [sst_width] 199
 [signals_width] 351
 [sst_expanded] 1
-[sst_vpaned_height] 401
+[sst_vpaned_height] 309
 @24
 tb_not_ppu.test_no[16:0]
 @28

@@ -1,26 +1,27 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Feb 13 15:36:54 2022
+[*] Mon Feb 14 10:37:48 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_comparison_against_pacogenP8E0.vcd"
-[dumpfile_mtime] "Sun Feb 13 15:36:39 2022"
-[dumpfile_size] 911112
+[dumpfile_mtime] "Mon Feb 14 10:36:12 2022"
+[dumpfile_size] 911456
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_comparison_against_pacogenP8E0.gtkw"
 [timestart] 0
-[size] 1376 738
+[size] 2015 1029
 [pos] -1 -1
-*-9.160604 520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.572957 520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_comparison_against_pacogen.
 [sst_width] 193
 [signals_width] 236
 [sst_expanded] 1
-[sst_vpaned_height] 215
-@25
+[sst_vpaned_height] 317
+@24
 tb_comparison_against_pacogen.test_no[8:0]
 @28
 tb_comparison_against_pacogen.op[1:0]
-@22
+@821
 tb_comparison_against_pacogen.op_ascii[100:0]
+@22
 tb_comparison_against_pacogen.p1[7:0]
 tb_comparison_against_pacogen.p1_ascii[300:0]
 tb_comparison_against_pacogen.p2[7:0]

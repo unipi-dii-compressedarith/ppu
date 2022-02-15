@@ -6,12 +6,11 @@ to visualize what i mean try:
 
 >>> import fixed2float as f2f
 >>> a = f2f.Fx(3148211028, 1, 32) # e.g.: fp_1_466___N32
->>> a
->>> a.eval()
+>>> print(a, a.eval())
 
-This file exists because SV doesn't support proper cond. compilation.
+
+This file exists because SV doesn't support proper conditional compilation.
 */
-
 
 
 parameter fp_1_466___N5 = 5'd23;

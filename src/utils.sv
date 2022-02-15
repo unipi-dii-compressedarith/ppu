@@ -4,11 +4,12 @@ parameter N = `N;
 // parameter N = 16;
 `endif
 
+
+
 `ifdef ES
 parameter ES = `ES;
-// `else
-// parameter ES = 1;
 `endif
+
 
 `ifndef OP_SIZE
 parameter OP_SIZE = 2;

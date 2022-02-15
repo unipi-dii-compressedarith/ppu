@@ -3,12 +3,9 @@
 Sat Jan 22 16:55:07 CET 2022
 
 cd waveforms
-
 iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o reciprocal_approx.out \
 ../src/reciprocal_approx.sv \
 && ./unsigned_reciprocal_approx.out
-
-/// WARNING: two numbers are hardcoded and only work in this case with N = 16.
 
 */
 
@@ -29,10 +26,10 @@ module reciprocal_approx #(
 
     
     /// generated with `scripts/gen_fixed_point_values.py`
-    wire [(3*N+N)-1:0] fp_1_466 = fp_1_466___N`N; // N
+    wire [(3*N+N)-1:0] fp_1_466  = fp_1_466___N`N;  //  N
     wire [(3*N+N)-1:0] fp_1_0012 = fp_1_0012___N`N; // 2N
 
-    
+
     assign b = fp_1_466 - a;
     assign c = ($signed(a) * $signed(b)) << 1;
     assign d = fp_1_0012 - c;

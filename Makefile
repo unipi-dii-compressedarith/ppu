@@ -1,43 +1,55 @@
-all : gen-test-vectors not-ppu8 not-ppu16 not-ppu32
+all : gen-test-vectors not-ppu
 .PHONY : all
 
 
+ifeq ($(ES),0)
+ES_FIELD_PRESENCE_FLAG := -DNO_ES_FIELD
+endif
+
+
+NUM_TESTS_PPU := 500
+
+SRC_FOLDER := ../src
+SRC_PACOGEN := ../../PaCoGen
 SRC_NOT_PPU := \
-	../src/utils.sv \
-	../src/constants.sv \
-	../src/common.sv \
-	../src/not_ppu.sv \
-	../src/input_conditioning.sv \
-	../src/unpack_posit.sv \
-	../src/check_special.sv \
-	../src/handle_special.sv \
-	../src/total_exponent.sv \
-	../src/core_op.sv \
-	../src/core_add_sub.sv \
-	../src/core_add.sv \
-	../src/core_sub.sv \
-	../src/core_mul.sv \
-	../src/core_div.sv \
-	../src/fast_reciprocal.sv \
-	../src/reciprocal_approx.sv \
-	../src/newton_raphson.sv \
-	../src/shift_fields.sv \
-	../src/unpack_exponent.sv \
-	../src/compute_rounding.sv \
-	../src/posit_decode.sv \
-	../src/posit_encode.sv \
-	../src/cls.sv \
-	../src/round.sv \
-	../src/sign_decisor.sv \
-	../src/set_sign.sv \
-	../src/highest_set.sv
+	$(SRC_FOLDER)/utils.sv \
+	$(SRC_FOLDER)/constants.sv \
+	$(SRC_FOLDER)/common.sv \
+	$(SRC_FOLDER)/not_ppu.sv \
+	$(SRC_FOLDER)/input_conditioning.sv \
+	$(SRC_FOLDER)/unpack_posit.sv \
+	$(SRC_FOLDER)/check_special.sv \
+	$(SRC_FOLDER)/handle_special.sv \
+	$(SRC_FOLDER)/total_exponent.sv \
+	$(SRC_FOLDER)/core_op.sv \
+	$(SRC_FOLDER)/core_add_sub.sv \
+	$(SRC_FOLDER)/core_add.sv \
+	$(SRC_FOLDER)/core_sub.sv \
+	$(SRC_FOLDER)/core_mul.sv \
+	$(SRC_FOLDER)/core_div.sv \
+	$(SRC_FOLDER)/fast_reciprocal.sv \
+	$(SRC_FOLDER)/reciprocal_approx.sv \
+	$(SRC_FOLDER)/newton_raphson.sv \
+	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/unpack_exponent.sv \
+	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/posit_decode.sv \
+	$(SRC_FOLDER)/posit_encode.sv \
+	$(SRC_FOLDER)/cls.sv \
+	$(SRC_FOLDER)/round.sv \
+	$(SRC_FOLDER)/sign_decisor.sv \
+	$(SRC_FOLDER)/set_sign.sv \
+	$(SRC_FOLDER)/highest_set.sv
 
 SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_NOT_PPU) \
-	../src/comparison_against_pacogen.sv \
-	../../PACoGen/common.v \
-	../../PACoGen/div/posit_div.v
+	$(SRC_FOLDER)/comparison_against_pacogen.sv \
+	$(SRC_PACOGEN)/common.v \
+	$(SRC_PACOGEN)/div/posit_div.v
 
+
+action:
+	echo argument is $(argument)
 
 gen-test-vectors:
 	cd scripts && \
@@ -49,60 +61,38 @@ gen-test-vectors:
 	python tb_gen.py --num-tests 1000 --operation ppu -n 16 -es 1 
 	# python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
 
-not-ppu8:
-	cd scripts && python tb_gen.py --num-tests 500 --operation ppu -n 8 -es 0 --shuffle-random false && cd ..
+not-ppu:
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random true && cd ..
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU -DNO_ES_FIELD -DN=8 -DES=0 -o not_ppu.out \
+	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out -s tb_not_ppu \
 	$(SRC_NOT_PPU) && \
 	sleep 1 && \
-	./not_ppu.out
-
-not-ppu16:
-	cd scripts && python tb_gen.py --num-tests 500 --operation ppu -n 16 -es 1 --shuffle-random true && cd ..
-	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=16 -DES=1 -o not_ppu.out \
-	$(SRC_NOT_PPU) && \
-	sleep 1 && \
-	./not_ppu.out
-
-not-ppu32:
-	cd scripts && python tb_gen.py --num-tests 500 --operation ppu -n 32 -es 2 --shuffle-random true && cd ..
-	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU              -DN=32 -DES=2 -o not_ppu.out \
-	$(SRC_NOT_PPU) && \
-	sleep 1 && \
-	./not_ppu.out
-
+	./not_ppu_P$(N)E$(ES).out
 
 
 yosys:
 	cd waveforms && \
 	yosys -DN=16 -DES=1 -p "synth_intel -family max10 -top not_ppu -vqm not_ppu.vqm" \
-	$(SRC_NOT_PPU) > yosys_not_ppu.out # https://github.com/YosysHQ/yosys
+	$(SRC_NOT_PPU) > yosys_not_ppu.out
 
-verilog-quartus16:
+verilog-quartus:
 	cd quartus && \
-	sv2v             -DN=16 -DES=1  \
-	$(SRC_NOT_PPU) > ./ppu.v # https://github.com/zachjs/sv2v && \
-	iverilog ppu.v
+	sv2v $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES)  \
+	$(SRC_NOT_PPU) > ./not_ppu_P$(N)E$(ES).v && \
+	iverilog not_ppu_P$(N)E$(ES).v && ./a.out
 
-verilog-quartus8:
-	cd quartus && \
-	sv2v -DNO_ES_FIELD -DN=8 -DES=0  \
-	$(SRC_NOT_PPU) > ./ppu.v # https://github.com/zachjs/sv2v && \
-	iverilog ppu.v
 
 lint:
 	slang quartus/ppu.v --top not_ppu # https://github.com/MikePopoloski/slang
 
 
-div-against-pacogen8:
-	cd scripts && python tb_gen.py --operation pacogen -n 8 -es 0 --num-tests 3000 --shuffle-random true
+div-against-pacogen:
+	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random true
 	cd waveforms && \
-	iverilog -g2012 -DNO_ES_FIELD -DN=8 -DES=0 -DNR=0 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen8.out \
+	iverilog -g2012 -DN=$(N) -DES=$(ES) -DNR=$(ES) $(ES_FIELD_PRESENCE_FLAG) -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen$(N).out \
 	$(SRC_DIV_AGAINST_PACOGEN) \
-	&& ./comparison_against_pacogen8.out > comparison_against_pacogen8.log
-	cd scripts && python pacogen_log_stats.py -n 8 -es 0
+	&& ./comparison_against_pacogen$(N).out > comparison_against_pacogen$(N).log
+	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
 
 div-against-pacogen16:
 	cd scripts && python tb_gen.py --operation pacogen -n 16 -es 1 --num-tests 3000 --shuffle-random true
@@ -111,3 +101,8 @@ div-against-pacogen16:
 	$(SRC_DIV_AGAINST_PACOGEN) \
 	&& ./comparison_against_pacogen16.out > comparison_against_pacogen16.log
 	cd scripts && python pacogen_log_stats.py -n 16 -es 1
+
+
+clean:
+	rm waveforms/*.out
+	
