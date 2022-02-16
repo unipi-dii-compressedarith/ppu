@@ -111,16 +111,20 @@ def main():
     print(mad_stats(not_ppu_mad))
 
     REGEX_NUM_TESTS = r"Total tests cases: (\d+)"
+    num_total_tests = 0
     for match in re.compile(REGEX_NUM_TESTS).finditer(content):
         num_total_tests = int(match.group(1))
 
-    print(
-        f"pacogen wrong: {pacogen_tests_failed}/{num_total_tests} = {100*pacogen_tests_failed/num_total_tests:.5g}%"
-    )
+    if num_total_tests == 0:
+        print("           no test found")
+    else:
+        print(
+            f"pacogen wrong: {pacogen_tests_failed}/{num_total_tests} = {100*pacogen_tests_failed/num_total_tests:.5g}%"
+        )
 
-    print(
-        f"not_ppu wrong: {not_ppu_tests_failed}/{num_total_tests} = {100*not_ppu_tests_failed/num_total_tests:.5g}%"
-    )
+        print(
+            f"not_ppu wrong: {not_ppu_tests_failed}/{num_total_tests} = {100*not_ppu_tests_failed/num_total_tests:.5g}%"
+        )
 
 
 if __name__ == "__main__":

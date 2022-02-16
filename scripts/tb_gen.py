@@ -130,8 +130,10 @@ if __name__ == "__main__":
     else:
         _max = (1 << (N)) - 1
 
-    list_a = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
-    list_b = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
+    # list_a = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
+    # list_b = random.sample(range(0, _max), min(NUM_RANDOM_TEST_CASES, _max))
+    list_a = [random.randint(0, _max) for _ in range(NUM_RANDOM_TEST_CASES)]
+    list_b = [random.randint(0, _max) for _ in range(NUM_RANDOM_TEST_CASES)]
 
     ### enforce special cases to be at the beginning
     # 0 vs any

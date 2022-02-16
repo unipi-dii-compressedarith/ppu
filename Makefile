@@ -78,8 +78,7 @@ yosys:
 verilog-quartus:
 	cd quartus && \
 	sv2v $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES)  \
-	$(SRC_NOT_PPU) > ./not_ppu_P$(N)E$(ES).v && \
-	iverilog not_ppu_P$(N)E$(ES).v && ./a.out
+	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
 lint:

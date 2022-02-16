@@ -86,6 +86,8 @@ module tb_comparison_against_pacogen;
     reg [100:0] op_ascii;
     wire [N-1:0] pout_pacogen, pout_not_ppu;
 
+    reg [(10)-1:0] diff_pout_not_ppu_analog;
+
     reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
     
     reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
@@ -111,6 +113,8 @@ module tb_comparison_against_pacogen;
         diff_pout_pacogen = pout_pacogen === pout_ground_truth ? 0 : 1'bx;
         not_ppu_off_by_1 = abs(pout_not_ppu - pout_ground_truth) == 0 ? 0 : abs(pout_not_ppu - pout_ground_truth) == 1 ? 1 : 'bx;
         pacogen_off_by_1 = abs(pout_pacogen - pout_ground_truth) == 0 ? 0 : abs(pout_pacogen - pout_ground_truth) == 1 ? 1 : 'bx;
+
+        diff_pout_not_ppu_analog = abs(pout_not_ppu - pout_ground_truth);
     end
 
     initial begin
@@ -125,6 +129,10 @@ module tb_comparison_against_pacogen;
 
         if (N == 16 && ES == 1) begin
             `include "../test_vectors/tv_posit_pacogen_P16E1.sv"
+        end
+
+        if (N == 32 && ES == 2) begin
+            `include "../test_vectors/tv_posit_pacogen_P32E2.sv"
         end
 
         
