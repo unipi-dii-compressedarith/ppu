@@ -19,13 +19,23 @@ module core_div #(
 
     wire [(3*MANT_SIZE)-1:0] mant2_reciprocal;
 
+//`define USE_LUT
+`ifdef USE_LUT
+    reciprocate_lut #(
+        .LUT_WIDTH_IN(MANT_SIZE-1),
+        .LUT_WIDTH_OUT(3*MANT_SIZE - 1 - 2)
+    ) reciprocate_lut_inst (
+        .addr(mant2[MANT_SIZE-2:0]),
+        .out(mant2_reciprocal)
+    );
+`else
     fast_reciprocal #(
         .SIZE(MANT_SIZE)
     ) fast_reciprocal_inst (
         .fraction(mant2),
         .one_over_fraction(mant2_reciprocal)
-    );
-
+    );    
+`endif
 
     wire [(2*MANT_SIZE)-1:0] x1;
 

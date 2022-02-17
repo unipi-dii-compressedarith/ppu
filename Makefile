@@ -28,6 +28,7 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/core_mul.sv \
 	$(SRC_FOLDER)/core_div.sv \
 	$(SRC_FOLDER)/fast_reciprocal.sv \
+	$(SRC_FOLDER)/reciprocate_lut.sv \
 	$(SRC_FOLDER)/reciprocal_approx.sv \
 	$(SRC_FOLDER)/newton_raphson.sv \
 	$(SRC_FOLDER)/shift_fields.sv \
@@ -92,14 +93,6 @@ div-against-pacogen:
 	$(SRC_DIV_AGAINST_PACOGEN) \
 	&& ./comparison_against_pacogen$(N).out > comparison_against_pacogen$(N).log
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
-
-div-against-pacogen16:
-	cd scripts && python tb_gen.py --operation pacogen -n 16 -es 1 --num-tests 3000 --shuffle-random true
-	cd waveforms && \
-	iverilog -g2012 -DN=16 -DES=1 -DNR=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen16.out \
-	$(SRC_DIV_AGAINST_PACOGEN) \
-	&& ./comparison_against_pacogen16.out > comparison_against_pacogen16.log
-	cd scripts && python pacogen_log_stats.py -n 16 -es 1
 
 
 clean:
