@@ -12,11 +12,10 @@ module core_op #(
         parameter N = `N
     )(
         input [OP_SIZE-1:0] op,
-        
+        input sign1, sign2,
         input [TE_SIZE-1:0] te1, te2,
         input [MANT_SIZE-1:0] mant1, mant2,
-        input have_opposite_sign,
-
+        
         output [TE_SIZE-1:0] te_out,
         output [(3*MANT_SIZE)-1:0] mant_out
     );
@@ -34,7 +33,7 @@ module core_op #(
         .te2_in(te2),
         .mant1_in(mant1),
         .mant2_in(mant2),
-        .have_opposite_sign(have_opposite_sign),
+        .have_opposite_sign(sign1 ^ sign2),
         .mant_out(mant_out_add_sub),
         .te_out(te_out_add_sub)
     );

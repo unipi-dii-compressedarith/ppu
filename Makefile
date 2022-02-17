@@ -17,10 +17,9 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/not_ppu.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
-	$(SRC_FOLDER)/unpack_posit.sv \
-	$(SRC_FOLDER)/check_special.sv \
 	$(SRC_FOLDER)/handle_special.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
+	$(SRC_FOLDER)/ops.sv \
 	$(SRC_FOLDER)/core_op.sv \
 	$(SRC_FOLDER)/core_add_sub.sv \
 	$(SRC_FOLDER)/core_add.sv \
@@ -34,6 +33,7 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/shift_fields.sv \
 	$(SRC_FOLDER)/unpack_exponent.sv \
 	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/posit_unpack.sv \
 	$(SRC_FOLDER)/posit_decode.sv \
 	$(SRC_FOLDER)/posit_encode.sv \
 	$(SRC_FOLDER)/cls.sv \
@@ -79,6 +79,7 @@ yosys:
 verilog-quartus:
 	cd quartus && \
 	sv2v $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES)  \
+	$(SRC_FOLDER)/ppu.sv \
 	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
