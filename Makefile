@@ -1,4 +1,4 @@
-all : gen-test-vectors not-ppu
+all : gen-test-vectors not-ppu div-against-pacogen verilog-quartus lint
 .PHONY : all
 
 
@@ -49,9 +49,6 @@ SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_PACOGEN)/div/posit_div.v
 
 
-action:
-	echo argument is $(argument)
-
 gen-test-vectors:
 	cd scripts && \
 	python tb_gen.py --num-tests 1000 --operation mul -n 8  -es 0 && \
@@ -79,6 +76,7 @@ yosys:
 verilog-quartus:
 	cd quartus && \
 	sv2v $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES)  \
+	$(SRC_FOLDER)/ppu.sv \
 	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
