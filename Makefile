@@ -1,5 +1,5 @@
 all : gen-test-vectors not-ppu
-.PHONY : all
+.PHONY : all modelsim
 
 
 ifeq ($(ES),0)
@@ -63,9 +63,9 @@ gen-test-vectors:
 	# python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
 
 not-ppu:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random true && cd ..
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random && cd ..
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out -s tb_not_ppu \
+	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out \
 	$(SRC_NOT_PPU) && \
 	sleep 1 && \
 	./not_ppu_P$(N)E$(ES).out
@@ -88,7 +88,7 @@ lint:
 
 
 div-against-pacogen:
-	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random true
+	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random
 	cd waveforms && \
 	iverilog -g2012 -DN=$(N) -DES=$(ES) -DNR=$(ES) $(ES_FIELD_PRESENCE_FLAG) -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen$(N).out \
 	$(SRC_DIV_AGAINST_PACOGEN) \

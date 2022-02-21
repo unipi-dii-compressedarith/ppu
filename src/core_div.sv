@@ -17,7 +17,8 @@ module core_div #(
     //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
 
 
-    wire [(3*MANT_SIZE)-1:0] mant2_reciprocal;
+    wire [(3*MANT_SIZE-3)-1:0] mant2_reciprocal;
+
 
 //`define USE_LUT
 `ifdef USE_LUT
@@ -36,13 +37,14 @@ module core_div #(
         .one_over_fraction(mant2_reciprocal)
     );    
 `endif
+    
+    
 
     wire [(2*MANT_SIZE)-1:0] x1;
-
     newton_raphson #(
         .SIZE(MANT_SIZE)
     ) newton_raphson_inst (
-        .num(mant2),
+        .num(mant2[(MANT_SIZE)-1:2]),
         .x0(mant2_reciprocal),
         .x1(x1)
     );

@@ -3,7 +3,12 @@
 # e.g.:
 #   python tb_gen.py --operation decode -n 16 -es 1
 
-import argparse, random, datetime, enum, pathlib, math
+import argparse
+import random
+import datetime
+import enum
+import pathlib
+import math
 
 # from posit_playground import from_bits
 from hardposit import from_bits
@@ -43,9 +48,21 @@ parser.add_argument(
     required=True,
     help="Type of test bench: adder/multiplier/etc",
 )
+
 parser.add_argument(
-    "--shuffle-random", type=bool, default=False, required=False, help="Shuffle random"
+    "--shuffle-random",
+    dest="shuffle_random",
+    action="store_true",
+    help="Shuffle random",
 )
+parser.add_argument(
+    "--no-shuffle-random",
+    dest="shuffle_random",
+    action="store_false",
+    help="Shuffle random",
+)
+parser.set_defaults(shuffle_random=False)
+
 
 parser.add_argument(
     "--num-tests", "-nt", type=int, required=True, help="Num test cases"
@@ -67,9 +84,11 @@ if args.shuffle_random == False:
 
 
 def func(c, op, list_a, list_b):
+    # c += f"if (N == {N} && {ES} == 2) begin\n"
+
     if op == Tb.PACOGEN:
-        c += f"op = DIV;\n"
-        c += f'op_ascii = "DIV";\n\n'
+        c += f"\top = DIV;\n"
+        c += f'\top_ascii = "DIV";\n\n'
     else:
         c += f"op = {op.name};\n"
         c += f'op_ascii = "{op.name}";\n\n'
@@ -111,7 +130,8 @@ def func(c, op, list_a, list_b):
             c += f'assert (pout_not_ppu === pout_ground_truth) else $display("NOT_PPU_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_not_ppu);\n\n'
         else:
             c += f'assert (pout === pout_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
-    c += f'$display("Total tests cases: {len(list_a)}");'
+    c += f'$display("Total tests cases: {len(list_a)}");\n'
+    # c += "end\n"
     return c
 
 

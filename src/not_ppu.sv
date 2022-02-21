@@ -214,6 +214,10 @@ module tb_not_ppu;
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
         end
 
+        if (N == 8 && ES == 4) begin
+            `include "../test_vectors/tv_posit_ppu_P8E4.sv"
+        end
+
         if (N == 5 && ES == 1) begin
             `include "../test_vectors/tv_posit_ppu_P5E1.sv"
         end
