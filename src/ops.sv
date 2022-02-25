@@ -45,6 +45,8 @@ module ops #(
 
     // chopping off the two MSB representing the 
     // non-fractional components i.e. ones and tens.
-    assign frac_full = mant_out << 2; 
+    // except if it's a subtraction, in which case it's only 1 bit (due to how i set up thing earlier.)
+    assign frac_full = (op == SUB)
+        ? mant_out << 1 : mant_out << 2; 
 
 endmodule

@@ -65,7 +65,7 @@ module core_add_sub #(
 
     assign mant_out = 
         !have_opposite_sign ? 
-        mant_out_core_add : {mant_out_core_sub, 1'b0};
+        mant_out_core_add : {mant_out_core_sub /*, 1'b0 */};
     
     assign te_out = te2 + te_diff_updated;
 
