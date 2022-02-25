@@ -5,26 +5,26 @@ module core_div #(
         input [TE_SIZE-1:0] te2,
         input [MANT_SIZE-1:0] mant1,
         input [MANT_SIZE-1:0] mant2,
-        output [(3*MANT_SIZE)-1:0] mant_out,
+        output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
         output [TE_SIZE-1:0] te_out
     );
 
     wire [TE_SIZE-1:0] te_diff;
     assign te_diff = te1 - te2;
 
-    wire [(3*MANT_SIZE)-1:0] mant_div;
+    wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;
     
     //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
 
 
-    wire [(3*MANT_SIZE-3)-1:0] mant2_reciprocal;
+    wire [(MANT_DIV_RESULT_SIZE-3)-1:0] mant2_reciprocal;
 
 
 //`define USE_LUT
 `ifdef USE_LUT
     reciprocate_lut #(
         .LUT_WIDTH_IN(MANT_SIZE-1),
-        .LUT_WIDTH_OUT(3*MANT_SIZE - 1 - 2)
+        .LUT_WIDTH_OUT(MANT_DIV_RESULT_SIZE - 1 - 2)
     ) reciprocate_lut_inst (
         .addr(mant2[MANT_SIZE-2:0]),
         .out(mant2_reciprocal)

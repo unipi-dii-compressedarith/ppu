@@ -33,8 +33,8 @@ Usage:
 
 */
 module posit_unpack #(
-        parameter N = `N,    // specified in `utils.sv`
-        parameter ES = `ES   // specified in `utils.sv`
+        parameter N = 5,
+        parameter ES = 0
     )(
         input [N-1:0]   bits,
 
@@ -102,9 +102,9 @@ module posit_unpack #(
     assign frac = (u_bits << (N - mant_len)) >> (N - mant_len);
 
 
-    parameter MSB = 1 << (N - 1);
+    parameter MSB = 1 << (MANT_SIZE - 1);
     // assign mant = frac; // before
-    assign mant = MSB | (frac << (N-mant_len-1)); // after -> 1.frac
+    assign mant = MSB | (frac << (MANT_SIZE-mant_len-1)); // after -> 1.frac
 
     
     wire [N-1:0] bits_cls_in = sign == 0 ? u_bits : ~u_bits;

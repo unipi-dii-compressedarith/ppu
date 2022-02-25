@@ -30,7 +30,7 @@ module posit_encode #(
 `ifndef NO_ES_FIELD
         input [ES-1:0] exp,
 `endif
-        input [MANT_SIZE-1:0] mant,
+        input [MANT_SIZE-1:0] frac,
         output [N-1:0] posit
     );
 
@@ -56,7 +56,7 @@ module posit_encode #(
 `ifndef NO_ES_FIELD
         + shl(exp, N - 1 - reg_len - ES)
 `endif
-        + mant
+        + frac
     );
 
     wire [N-1:0] bits;
@@ -95,7 +95,7 @@ module tb_posit_encode;
 `ifndef NO_ES_FIELD
     reg [ES-1:0] exp;
 `endif
-    reg [MANT_SIZE-1:0] mant;
+    reg [MANT_SIZE-1:0] frac;
     
     /* output */
     wire [N-1:0]    posit;
@@ -118,7 +118,7 @@ module tb_posit_encode;
 `ifndef NO_ES_FIELD
         .exp(exp),
 `endif
-        .mant(mant),
+        .frac(frac),
         .posit(posit)
     );
 

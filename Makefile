@@ -13,9 +13,11 @@ SRC_FOLDER := ../src
 SRC_PACOGEN := ../../PaCoGen
 SRC_NOT_PPU := \
 	$(SRC_FOLDER)/utils.sv \
-	$(SRC_FOLDER)/constants.sv \
+	$(SRC_FOLDER)/constants.vh \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/not_ppu.sv \
+	$(SRC_FOLDER)/posit_to_pif.sv \
+	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
 	$(SRC_FOLDER)/handle_special.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
@@ -99,3 +101,8 @@ div-against-pacogen:
 clean:
 	rm waveforms/*.out
 	
+
+modelsim:
+	cd modelsim && \
+	vlog ../src/cls.sv ../src/utils.sv
+	#do not_ppu.do

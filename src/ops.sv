@@ -2,67 +2,49 @@ module ops #(
         parameter N = 4
     )(
         input [OP_SIZE-1:0] op,
-        input sign1, sign2,
-        input [TE_SIZE-1:0] te1, te2,
-        input [MANT_SIZE-1:0] mant1, mant2,
-        
+
+        input [PIF_SIZE-1:0] pif1,
+        input [PIF_SIZE-1:0] pif2,
+
         output sign_out,
         output [TE_SIZE-1:0] te_out,
-        output [(3*MANT_SIZE)-1:0] mant_out
+        output [FRAC_FULL_SIZE-1:0] frac_full
     );
 
 
+    wire sign1, sign2, sign_out;
+    wire [TE_SIZE-1:0] te1, te2;
+    wire [MANT_SIZE-1:0] mant1, mant2;
+    wire [FRAC_FULL_SIZE-1:0] mant_out;
 
-    wire sign1_cond;
-    wire sign2_cond;
-    wire [(TE_SIZE)-1:0] te1_cond;
-    wire [(TE_SIZE)-1:0] te2_cond;
-    wire [(MANT_SIZE)-1:0] mant1_cond;
-    wire [(MANT_SIZE)-1:0] mant2_cond;
-
-    wire p2_larger_than_p1;
-    input_conditioning #(
-        .N(N)
-    ) input_conditioning_inst (
-        .op(op),
-        .sign1_in(sign1), 
-        .sign2_in(sign2),
-        .te1_in(te1),
-        .te2_in(te2),
-        .mant1_in(mant1),
-        .mant2_in(mant2),
-
-        .p2_larger_than_p1(p2_larger_than_p1),
-        .sign1_out(sign1_cond), 
-        .sign2_out(sign2_cond),
-        .te1_out(te1_cond),
-        .te2_out(te2_cond),
-        .mant1_out(mant1_cond),
-        .mant2_out(mant2_cond)
-    );
-
-
+    assign {sign1, te1, mant1} = pif1;
+    assign {sign2, te2, mant2} = pif2;
 
     core_op #(
         .N(N)
     ) core_op_inst (
         .op(op),
-        .sign1(sign1_cond),
-        .sign2(sign2_cond),
-        .te1(te1_cond),
-        .te2(te2_cond),
-        .mant1(mant1_cond),
-        .mant2(mant2_cond),
-        .te_out(te_out),
-        .mant_out(mant_out)
+        .sign1(sign1),
+        .sign2(sign2),
+        .te1(te1),
+        .te2(te2),
+        .mant1(mant1),
+        .mant2(mant2),
+        .te_out_core_op(te_out),
+        .mant_out_core_op(mant_out)
     );
 
-    sign_decisor sign_decisor_inst (
-        .sign1(sign1_cond),
-        .sign2(sign2_cond),
+    sign_decisor # (
+    ) sign_decisor (
+        .sign1(sign1),
+        .sign2(sign2),
         .op(op),
         .sign(sign_out)
     );
 
+
+    // chopping off the two MSB representing the 
+    // non-fractional components i.e. ones and tens.
+    assign frac_full = mant_out << 2; 
 
 endmodule
