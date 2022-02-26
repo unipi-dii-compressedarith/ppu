@@ -43,10 +43,16 @@ module ops #(
     );
 
 
+
+    /*
+        include the part below in core_op.sv and change name of signal to frac_out or smth
+
+    */
     // chopping off the two MSB representing the 
     // non-fractional components i.e. ones and tens.
-    // except if it's a subtraction, in which case it's only 1 bit (due to how i set up thing earlier.)
     assign frac_full = (op == SUB)
-        ? mant_out << 1 : mant_out << 2; 
+        ? mant_out << 1 : (op == DIV)
+        ? mant_out : /* ADD and MUL */
+          mant_out << 2; 
 
 endmodule

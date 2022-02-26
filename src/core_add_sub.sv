@@ -29,9 +29,9 @@ module core_add_sub #(
     assign mant2_upshifted = (mant2 << MAX_TE_DIFF) >> max(0, te_diff);
 
     wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_sum;
-    assign mant_sum = mant1_upshifted 
-        + (have_opposite_sign ? 
-            _c2(mant2_upshifted) : mant2_upshifted
+    assign mant_sum = 
+        mant1_upshifted + (have_opposite_sign 
+            ? _c2(mant2_upshifted) : mant2_upshifted
         );
     
 
@@ -60,12 +60,12 @@ module core_add_sub #(
 
     wire [TE_SIZE-1:0] te_diff_updated;
     assign te_diff_updated = 
-        !have_opposite_sign ? 
-        te_diff_out_core_add : te_diff_out_core_sub;
+        have_opposite_sign 
+        ? te_diff_out_core_sub : te_diff_out_core_add;
 
     assign mant_out = 
-        !have_opposite_sign ? 
-        mant_out_core_add : {mant_out_core_sub /*, 1'b0 */};
+        have_opposite_sign 
+        ? {mant_out_core_sub, 1'b0} : mant_out_core_add;
     
     assign te_out = te2 + te_diff_updated;
 

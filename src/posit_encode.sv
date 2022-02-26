@@ -46,8 +46,7 @@ module posit_encode #(
 
 `ifndef NO_ES_FIELD
 `else
-    wire exp;
-    assign exp = 0;
+    wire exp = 0;
 `endif
 
     assign bits_assembled = ( 
@@ -61,19 +60,20 @@ module posit_encode #(
 
     wire [N-1:0] bits;
     assign bits = 
-        sign == 0 ? bits_assembled : 
-                    c2(bits_assembled & ~(1 << (N - 1)));
+        sign == 0 
+        ? bits_assembled : c2(bits_assembled & ~(1 << (N - 1)));
 
     /*
     ~(1'b1 << (N-1)) === {1'b0, {N-1{1'b1}}}
     */
 
     assign posit = 
-        is_zero === 1'b1 ? 1'b0 : 
-        is_nan  === 1'b1 ? (1 << (N-1)) : bits;
-            /*  ^^^ 3 equal signs needed to compare against 1'bx, 
-                otherwise if `is_zero` or `is_nan` == 1'bx, also 
-                `posit` would be 'bX, regardless. */
+        is_zero === 1'b1 
+        ? 1'b0 : is_nan === 1'b1 
+        ? (1 << (N-1)) : bits;
+            /* 3 equal signs needed to compare against 1'bx, 
+               otherwise if `is_zero` or `is_nan` == 1'bx, also 
+               `posit` would be 'bX, regardless. */
 endmodule
 
 

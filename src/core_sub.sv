@@ -1,5 +1,5 @@
 module core_sub #(
-        parameter N = `N
+        parameter N = 4
     )(
         input [MANT_SUB_RESULT_SIZE-1:0] mant,
         input [TE_SIZE-1:0] te_diff,

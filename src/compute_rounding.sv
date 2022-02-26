@@ -20,23 +20,25 @@ module compute_rouding #(
     assign _tmp1 = frac_full & _tmp0;
 
 `ifndef NO_ES_FIELD
-    assign round_bit = $signed(frac_len) >= 0 ?
-        _tmp1 != 0 :
-        (
-            $signed(k) == N - 2 - ES ? 
-                exp > 0 && $signed(frac_full) > 0 :
-                $signed(k) == -(N - 2) ? 
-                    $signed(exp) > 0 : 
-                    1'b0
+    assign round_bit = 
+        $signed(frac_len) >= 0 
+        ? _tmp1 != 0 : (
+            $signed(k) == N - 2 - ES 
+            ? exp > 0 && $signed(frac_full) > 0 : $signed(k) == -(N - 2) 
+            ? $signed(exp) > 0 : 1'b0
         );
 `else
-    assign round_bit = $signed(frac_len) >= 0 ? _tmp1 != 0 : 1'b0;
+    assign round_bit = 
+        $signed(frac_len) >= 0 
+        ? _tmp1 != 0 : 1'b0;
 `endif
 
     
     assign _tmp2 = ((1 << (frac_len_diff - 1)) - 1);
     assign _tmp3 = frac_full & _tmp2;
 
-    assign sticky_bit = $signed(frac_len) >= 0 ? (_tmp3 != 0) || frac_lsb_cut_off : 1'b0;
+    assign sticky_bit = 
+        $signed(frac_len) >= 0 
+        ? (_tmp3 != 0) || frac_lsb_cut_off : 1'b0;
 
 endmodule

@@ -27,22 +27,21 @@ module reciprocal_approx #(
 
     
     /// generated with `scripts/gen_fixed_point_values.py`
-    wire [(N)-1:0] fp_1_466  = fp_1_466___N`N;  //  N
-    wire [(2*N-1)-1:0] fp_1_0012 = fp_1_0012___N`N; // 2N
+    wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;  //  N
+    wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N; // 2N
 
 
-    assign b = fp_1_466 - a;
+    assign b = fx_1_466 - a;
     assign c = (($signed(a) * $signed(b)) << 1) >> 1;
-    assign d = fp_1_0012 - c;
+    assign d = fx_1_0012 - c;
     assign e = $signed(d) * $signed(b);
     assign out = e;
     
     /// full width output:
     assign o_data = out;
 
-    /// same width output:
-    // assign o_data = out[3*N-1: 3*N-1-N];  // (out << 1) >> (2 * N)
 endmodule
+
 
 
 

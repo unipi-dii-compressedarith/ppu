@@ -1,10 +1,5 @@
 /*
 
-iverilog -g2012 -DN=16 -DES=1 -o shift_fields.out \
-../src/shift_fields.sv \
-../src/unpack_exponent.sv \
-../src/utils.sv \
-../src/compute_rounding.sv && ./shift_fields.out
 
 */
 module shift_fields #(

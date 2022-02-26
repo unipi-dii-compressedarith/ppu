@@ -6,21 +6,32 @@ and paste into src/constants.sv
 
 from fixed2float import to_Fx
 
-lower, upper = 5, 33
+lower, upper = 5, 33 # N (posit size)
+round = True
 
+decimal = lambda fx_num, num_bits: f"{num_bits}'d{fx_num.val}"
+binary = lambda fx_num, num_bits: f"{num_bits}'b{bin(fx_num.val).replace('0b','')}"
+
+
+print()
 for n in range(lower, upper):
-    num_bits = n
-    fp_1_466 = to_Fx(1.466, 1, num_bits)
-    print(f"parameter fp_1_466___N{n} = {num_bits}'d{fp_1_466.val};")
+    mant_size = n-2
+    num_bits = mant_size
+    fx_1_466 = to_Fx(1.466, 1, num_bits, round=round)
+    print(f"parameter fx_1_466___N{n} = {decimal(fx_1_466, num_bits)};")
 
 
+print()
 for n in range(lower, upper):
-    num_bits = 2 * n - 1
-    fp_1_0012 = to_Fx(1.0012, 1, num_bits)
-    print(f"parameter fp_1_0012___N{n} = {num_bits}'d{fp_1_0012.val};")
+    mant_size = n-2
+    num_bits = 2 * mant_size - 1
+    fx_1_0012 = to_Fx(1.0012, 1, num_bits, round=round)
+    print(f"parameter fx_1_0012___N{n} = {decimal(fx_1_0012, num_bits)};")
 
 
+print()
 for n in range(lower, upper):
-    num_bits = 2 * n
-    fp_2 = to_Fx(2, 2, num_bits)
-    print(f"parameter fp_2___N{n} = {num_bits}'d{fp_2.val};")
+    mant_size = n-2
+    num_bits = 2 * mant_size
+    fx_2 = to_Fx(2, 2, num_bits, round=round)
+    print(f"parameter fx_2___N{n} = {decimal(fx_2, num_bits)};")

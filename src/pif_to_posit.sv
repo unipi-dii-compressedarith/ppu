@@ -52,9 +52,9 @@ module pif_to_posit #(
     );
 
 
-    round #(
+    round_posit #(
         .N(N)
-    ) round_inst (
+    ) round_posit_inst (
         .posit(posit_encoded),
         .round_bit(round_bit),
         .sticky_bit(sticky_bit),

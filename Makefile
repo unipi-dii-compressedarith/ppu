@@ -39,7 +39,7 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/posit_decode.sv \
 	$(SRC_FOLDER)/posit_encode.sv \
 	$(SRC_FOLDER)/cls.sv \
-	$(SRC_FOLDER)/round.sv \
+	$(SRC_FOLDER)/round_posit.sv \
 	$(SRC_FOLDER)/sign_decisor.sv \
 	$(SRC_FOLDER)/set_sign.sv \
 	$(SRC_FOLDER)/highest_set.sv

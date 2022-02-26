@@ -17,7 +17,7 @@ module core_div #(
     //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
 
 
-    wire [(MANT_DIV_RESULT_SIZE-3)-1:0] mant2_reciprocal;
+    wire [(3*MANT_SIZE-3)-1:0] mant2_reciprocal;
 
 
 //`define USE_LUT
@@ -42,10 +42,10 @@ module core_div #(
 
     wire [(2*MANT_SIZE)-1:0] x1;
     newton_raphson #(
-        .SIZE(MANT_SIZE)
+        .MS(MANT_SIZE)
     ) newton_raphson_inst (
-        .num(mant2[(MANT_SIZE)-1:2]),
-        .x0(mant2_reciprocal),
+        .num(mant2),
+        .x0(mant2_reciprocal << 1), // shifted up by one because i drop the "tens" digit in favor on an additional fractional bit
         .x1(x1)
     );
 
@@ -54,7 +54,7 @@ module core_div #(
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = 
-        (mant_div & (1 << (3*N-2))) == 0;
+        (mant_div & (1 << (3*MANT_SIZE-2))) == 0;
     
     assign mant_out = 
         mant_div_less_than_one ? mant_div << 1 : mant_div;
