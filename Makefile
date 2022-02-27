@@ -19,7 +19,7 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/posit_to_pif.sv \
 	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
-	$(SRC_FOLDER)/handle_special.sv \
+	$(SRC_FOLDER)/handle_special_or_trivial.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
 	$(SRC_FOLDER)/ops.sv \
 	$(SRC_FOLDER)/core_op.sv \

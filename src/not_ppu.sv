@@ -34,6 +34,8 @@ module not_ppu #(
 
 
     wire [N-1:0] p1_cond, p2_cond;
+    wire is_special_or_trivial;
+    wire [N-1:0] pout_special_or_trivial;
     input_conditioning #(
          .N(N)
     ) input_conditioning (
@@ -41,7 +43,9 @@ module not_ppu #(
         .p2_in(p2),
         .op(op),
         .p1_out(p1_cond),
-        .p2_out(p2_cond)
+        .p2_out(p2_cond),
+        .is_special_or_trivial(is_special_or_trivial),
+        .pout_special_or_trivial(pout_special_or_trivial)
     );
 
 
@@ -106,11 +110,7 @@ module not_ppu #(
     );
 
 
-    // TODO REMOVE
-    wire p1_is_special = 0;
-    wire p2_is_special = 0;
-    wire pout_special;
-    assign pout = (p1_is_special || p2_is_special) ? pout_special : pout_non_special;
+    assign pout = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
 
 endmodule
 

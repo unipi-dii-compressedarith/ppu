@@ -1,16 +1,16 @@
 module core_sub #(
         parameter N = 4
     )(
-        input [(MANT_ADD_RESULT_SIZE-1)-1:0] mant,
+        input [(MANT_SUB_RESULT_SIZE)-1:0] mant,
         input [TE_SIZE-1:0] te_diff,
-        output [(MANT_ADD_RESULT_SIZE)-1:0] new_mant,
+        output [(MANT_SUB_RESULT_SIZE)-1:0] new_mant,
         output [TE_SIZE-1:0] new_te_diff
     );
 
-    wire [($clog2(MANT_ADD_RESULT_SIZE-1))-1:0] leading_zeros;
+    wire [($clog2(MANT_SUB_RESULT_SIZE))-1:0] leading_zeros;
 
     cls #(
-        .NUM_BITS(MANT_ADD_RESULT_SIZE-1)
+        .NUM_BITS(MANT_SUB_RESULT_SIZE)
     ) clz (
         .bits               (mant),
         .val                (1'b0),

@@ -47,12 +47,12 @@ module core_add_sub #(
     );
 
     
-    wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_core_sub;
+    wire [(MANT_SUB_RESULT_SIZE)-1:0] mant_out_core_sub;
     wire [TE_SIZE-1:0] te_diff_out_core_sub;
     core_sub #(
         .N(N)
     ) core_sub_inst (
-        .mant(mant_sum[MANT_ADD_RESULT_SIZE-2:0]),
+        .mant(mant_sum[MANT_SUB_RESULT_SIZE-1:0]),
         .te_diff(te_diff),
         .new_mant(mant_out_core_sub),
         .new_te_diff(te_diff_out_core_sub)
