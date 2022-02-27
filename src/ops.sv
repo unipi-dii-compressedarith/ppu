@@ -50,9 +50,8 @@ module ops #(
     */
     // chopping off the two MSB representing the 
     // non-fractional components i.e. ones and tens.
-    assign frac_full = (op == SUB)
-        ? mant_out << 1 : (op == DIV)
-        ? mant_out : /* ADD and MUL */
+    assign frac_full = op == DIV
+        ? mant_out : /* ADD, SUB, and MUL */
           mant_out << 2; 
 
 endmodule

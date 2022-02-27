@@ -56,7 +56,7 @@ parameter RMS = RECIPROCATE_MANT_SIZE; // alias
 /****************************************/
 parameter MANT_MUL_RESULT_SIZE = 2 * MS;
 parameter MANT_ADD_RESULT_SIZE = MS + MTD + 1;
-parameter MANT_SUB_RESULT_SIZE = MS + MTD;
+parameter MANT_SUB_RESULT_SIZE = MS + MTD + 1;
 parameter MANT_DIV_RESULT_SIZE = MS + RMS;
 /****************************************/
 parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest among all the operation, most likely.

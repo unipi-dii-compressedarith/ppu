@@ -9,7 +9,7 @@ sv2v -DN=16 -DES=1 \
 */
 
 module core_op #(
-        parameter N = `N
+        parameter N = 10
     )(
         input [OP_SIZE-1:0] op,
         input sign1, sign2,
