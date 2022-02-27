@@ -70,8 +70,42 @@ not-ppu:
 	./not_ppu_P$(N)E$(ES).out
 
 conversions:
-	@echo "making conversions..."
-	
+	cd waveforms && \
+	iverilog -g2012 \
+	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	-DTB_FLOAT_TO_POSIT \
+	-o float_to_posit.out \
+	$(SRC_FOLDER)/utils.sv \
+	$(SRC_FOLDER)/common.sv \
+	$(SRC_FOLDER)/conversions/defines.vh \
+	$(SRC_FOLDER)/conversions/float_to_posit.sv \
+	$(SRC_FOLDER)/conversions/float_decoder.sv \
+	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/posit_encoder.sv \
+	$(SRC_FOLDER)/round_posit.sv \
+	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/unpack_exponent.sv \
+	$(SRC_FOLDER)/set_sign.sv && \
+	./float_to_posit.out
+
+
+conversions-verilog-quartus:
+	cd quartus && \
+	sv2v -DN=$(N) -DES=$(ES) -DF=$(F) \
+	$(SRC_FOLDER)/utils.sv \
+	$(SRC_FOLDER)/common.sv \
+	$(SRC_FOLDER)/conversions/defines.vh \
+	$(SRC_FOLDER)/conversions/float_to_posit.sv \
+	$(SRC_FOLDER)/conversions/float_decoder.sv \
+	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/posit_encoder.sv \
+	$(SRC_FOLDER)/round_posit.sv \
+	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/unpack_exponent.sv \
+	$(SRC_FOLDER)/set_sign.sv \
+	> float_to_posit.v && cp float_to_posit.v ppu.v
 
 yosys:
 	cd waveforms && \

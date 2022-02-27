@@ -25,7 +25,11 @@ module float_decoder #(
     parameter EXP_BIAS = (1 << (EXP_SIZE - 1)) - 1;
 
     assign sign = bits >> (FSIZE - 1) != 0;
-    assign exp = ((bits & ((1 << (FSIZE - 1)) - 1)) >> MANT_SIZE) & ((1 << MANT_SIZE) - 1);
+    
+    wire [EXP_SIZE-1:0] biased_exp;
+    assign biased_exp = ((bits & ((1 << (FSIZE - 1)) - 1)) >> MANT_SIZE) & ((1 << MANT_SIZE) - 1);
+
+    assign exp = /* unbiased exponent */ biased_exp - EXP_BIAS;
     assign frac = bits & ((1 << MANT_SIZE) - 1);
 
 endmodule
