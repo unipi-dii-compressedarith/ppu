@@ -27,8 +27,8 @@ module reciprocal_approx #(
 
     
     /// generated with `scripts/gen_fixed_point_values.py`
-    wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;  //  N
-    wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N; // 2N
+    wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;
+    wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N;
 
 
     assign b = fx_1_466 - a;
