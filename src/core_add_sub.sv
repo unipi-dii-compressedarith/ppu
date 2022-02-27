@@ -8,7 +8,8 @@ module core_add_sub #(
         input have_opposite_sign,
         
         output [(MANT_ADD_RESULT_SIZE)-1:0] mant_out,
-        output [TE_SIZE-1:0] te_out
+        output [TE_SIZE-1:0] te_out,
+        output frac_lsb_cut_off
     );
 
     function [(MANT_SIZE+MAX_TE_DIFF)-1:0] _c2(input [(MANT_SIZE+MAX_TE_DIFF)-1:0] a);
@@ -43,7 +44,8 @@ module core_add_sub #(
         .mant(mant_sum),
         .te_diff(te_diff),
         .new_mant(mant_out_core_add),
-        .new_te_diff(te_diff_out_core_add)
+        .new_te_diff(te_diff_out_core_add),
+        .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
     

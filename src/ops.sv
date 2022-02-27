@@ -8,7 +8,8 @@ module ops #(
 
         output sign_out,
         output [TE_SIZE-1:0] te_out,
-        output [FRAC_FULL_SIZE-1:0] frac_full
+        output [FRAC_FULL_SIZE-1:0] frac_full,
+        output frac_lsb_cut_off
     );
 
 
@@ -31,7 +32,8 @@ module ops #(
         .mant1(mant1),
         .mant2(mant2),
         .te_out_core_op(te_out),
-        .frac_out_core_op(frac_out)
+        .frac_out_core_op(frac_out),
+        .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
     sign_decisor # (

@@ -176,6 +176,11 @@ if __name__ == "__main__":
     # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
     list_a[8] = (1 << (N - 1)) + 1
 
+    if N == 16:
+        list_a[9] = 0x7fff
+        list_b[9] = 0x9a65
+
+
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
             p = from_bits(a, N, ES)

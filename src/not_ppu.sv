@@ -82,10 +82,12 @@ module not_ppu #(
         .pif2(pif2),
         .sign_out(sign_out_ops),
         .te_out(ops_te_out),
-        .frac_full(ops_frac_full)
+        .frac_full(ops_frac_full),
+        .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
 
+    wire frac_lsb_cut_off;
     pif_to_posit #(
         .N(N),
         .ES(ES)
@@ -93,7 +95,7 @@ module not_ppu #(
         .te(ops_te_out),
         .frac_full(ops_frac_full),
 
-        .frac_lsb_cut_off(0), // frac_lsb_cut_off
+        .frac_lsb_cut_off(frac_lsb_cut_off),
         .posit(pout_non_special_pre_sign)
     );
 

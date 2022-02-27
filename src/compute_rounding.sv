@@ -24,7 +24,7 @@ module compute_rouding #(
         $signed(frac_len) >= 0 
         ? _tmp1 != 0 : (
             $signed(k) == N - 2 - ES 
-            ? exp > 0 && $signed(frac_full) > 0 : $signed(k) == -(N - 2) 
+            ? exp > 0 && $unsigned(frac_full) > 0 : $signed(k) == -(N - 2) 
             ? $signed(exp) > 0 : 1'b0
         );
 `else
