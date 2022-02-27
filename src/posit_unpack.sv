@@ -46,17 +46,10 @@ module posit_unpack #(
 `ifndef NO_ES_FIELD
         output [ES-1:0] exp,
 `endif
-        output [MANT_SIZE-1:0] mant,
+        output [MANT_SIZE-1:0] mant
 /////////////
-        output [1:0]    is_special
     );
 
-    wire is_zero, is_nan;
-    assign is_special = {is_zero, is_nan};
-
-
-    assign is_zero = bits == {N{1'b0}};
-    assign is_nan = bits == {1'b1, {N-1{1'b0}}};
     assign sign = bits[N-1];
     
     // u_bits = abs(bits)  
@@ -121,14 +114,6 @@ module posit_unpack #(
         .index_highest_set  ()
     );
 
-    // cls #(
-    //     .N(N)
-    // ) clo_inst_z (
-    //     .bits               (~u_bits << 1), // flip bits, strip sign bit and count zeros from the left
-    //     .leading_ones       (leading_zeros),
-    //     .index_highest_set  ()
-    // );
-
 
 endmodule
 
@@ -167,7 +152,6 @@ module tb_posit_unpack;
 `endif
     reg [N-1:0]     mant_expected;
     reg [S-1:0]     mant_len_expected;
-    reg             is_special_expected;
     
     reg err;
     reg [N:0] test_no;
@@ -189,7 +173,6 @@ module tb_posit_unpack;
 `endif
         diff_mant = (mant === mant_expected ? 0 : 'bx);
         diff_k = (k === k_expected ? 0 : 'bx);
-        diff_is_special = (is_special === is_special_expected ? 0 : 'bx);
         diff_sign = (sign === sign_expected ? 0 : 'bx);
         
         if (
@@ -199,7 +182,6 @@ module tb_posit_unpack;
 `endif
             && diff_sign == 0
             && diff_k == 0 
-            && diff_is_special == 0 
         ) err = 0;
         else err = 1'bx;
     end
@@ -217,8 +199,7 @@ module tb_posit_unpack;
 `ifndef NO_ES_FIELD
         .exp            (exp),
 `endif
-        .mant           (mant),
-        .is_special     (is_special)
+        .mant           (mant)
     );
 
     initial begin

@@ -65,7 +65,7 @@ gen-test-vectors:
 	# python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
 
 not-ppu:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random && cd ..
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random && cd ..
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out \
 	$(SRC_NOT_PPU) && \

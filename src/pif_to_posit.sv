@@ -39,15 +39,12 @@ module pif_to_posit #(
         .N(N),
         .ES(ES)
     ) posit_encode_inst (
-        .is_zero(),
-        .is_nan(),
         .sign(1'b0),
         .k(k),
 `ifndef NO_ES_FIELD
         .exp(next_exp),
 `endif
         .frac(frac),
-
         .posit(posit_encoded)
     );
 

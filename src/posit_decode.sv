@@ -6,9 +6,7 @@ module posit_decode #(
 /////////////
         output sign,
         output [TE_SIZE-1:0] te,
-        output [MANT_SIZE-1:0] mant,
-/////////////
-        output [1:0]    is_special
+        output [MANT_SIZE-1:0] mant
     );
 
     posit_unpack #(
@@ -24,8 +22,7 @@ module posit_decode #(
 `ifndef NO_ES_FIELD
         .exp            (exp),
 `endif
-        .mant           (mant),
-        .is_special     (is_special)
+        .mant           (mant)
     );
 
 

@@ -1,22 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Thu Feb 17 18:55:07 2022
+[*] Sun Feb 27 13:52:32 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Thu Feb 17 18:54:26 2022"
-[dumpfile_size] 8146947
+[dumpfile_mtime] "Sun Feb 27 13:52:21 2022"
+[dumpfile_size] 8929625
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
-[size] 2292 1120
+[size] 2560 1418
 [pos] -1 -1
-*-11.209555 6760 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.997197 5085 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [treeopen] tb_not_ppu.not_ppu_inst.
-[treeopen] tb_not_ppu.not_ppu_inst.shift_fields_inst.
+[treeopen] tb_not_ppu.not_ppu_inst.input_conditioning.
+[treeopen] tb_not_ppu.not_ppu_inst.input_conditioning.handle_special_or_trivial_inst.
 [sst_width] 199
 [signals_width] 351
 [sst_expanded] 1
-[sst_vpaned_height] 309
+[sst_vpaned_height] 402
 @24
 tb_not_ppu.test_no[16:0]
 @28
@@ -36,17 +37,9 @@ tb_not_ppu.p1_ascii[300:0]
 tb_not_ppu.p2_ascii[300:0]
 @200
 -
-@24
-tb_not_ppu.not_ppu_inst.mant1[15:0]
-tb_not_ppu.not_ppu_inst.mant2[15:0]
-@420
-tb_not_ppu.not_ppu_inst.te1[6:0]
-tb_not_ppu.not_ppu_inst.te2[6:0]
 @22
 tb_not_ppu.pout[15:0]
 @24
-tb_not_ppu.not_ppu_inst.posit_encode_inst.bits[15:0]
-tb_not_ppu.not_ppu_inst.round_inst.posit_rounded[15:0]
 tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
 @28
 tb_not_ppu.not_ppu_inst.set_sign_inst.sign
@@ -58,9 +51,8 @@ tb_not_ppu.pout_ground_truth[15:0]
 @820
 [color] 2
 tb_not_ppu.pout_gt_ascii[300:0]
-@29
-tb_not_ppu.diff_pout_ground_truth
 @28
+tb_not_ppu.diff_pout_ground_truth
 tb_not_ppu.pout_off_by_1
 tb_not_ppu.diff_pout_hwdiv_exp
 [pattern_trace] 1

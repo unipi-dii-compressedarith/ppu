@@ -36,7 +36,9 @@ module input_conditioning #(
            p1_in == ZERO 
         || p1_in == NAN 
         || p2_in == ZERO 
-        || p2_in == NAN;
-
+        || p2_in == NAN
+        || (op == SUB && p1_in == p2_in)
+        || (op == ADD && p1_in == c2(p2_in));
+        
 
 endmodule

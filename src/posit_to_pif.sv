@@ -19,9 +19,7 @@ module posit_to_pif #(
 /////////////
         .sign(sign),
         .te(te),
-        .mant(mant),
-/////////////
-        .is_special()
+        .mant(mant)
     );
    
     assign pif = {sign, te, mant};

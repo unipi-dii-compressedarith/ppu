@@ -22,9 +22,6 @@ module posit_encode #(
         parameter N = 4,
         parameter ES = 1
     )(
-        input          is_zero,
-        input          is_nan,
-
         input sign,
         input [K_SIZE-1:0] k,
 `ifndef NO_ES_FIELD
@@ -58,8 +55,7 @@ module posit_encode #(
         + frac
     );
 
-    wire [N-1:0] bits;
-    assign bits = 
+    assign posit = 
         sign == 0 
         ? bits_assembled : c2(bits_assembled & ~(1 << (N - 1)));
 
@@ -67,13 +63,6 @@ module posit_encode #(
     ~(1'b1 << (N-1)) === {1'b0, {N-1{1'b1}}}
     */
 
-    assign posit = 
-        is_zero === 1'b1 
-        ? 1'b0 : is_nan === 1'b1 
-        ? (1 << (N-1)) : bits;
-            /* 3 equal signs needed to compare against 1'bx, 
-               otherwise if `is_zero` or `is_nan` == 1'bx, also 
-               `posit` would be 'bX, regardless. */
 endmodule
 
 

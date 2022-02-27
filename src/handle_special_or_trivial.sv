@@ -60,14 +60,12 @@ module lut_mul #(
         output reg [(N)-1:0] p_out   
     );
 
-    reg [(N)-1:0] rom [(4)-1:0];
-
     wire [(2*N)-1:0] addr;
     assign addr = {p1, p2};
 
     always @(*) begin 
         case (p1) 
-            ZERO:       p_out = p2 == NAN ? NAN : p2;
+            ZERO:       p_out = p2 == NAN || p2 == ZERO ? p2 : ZERO;
             NAN:        p_out = NAN;
             default:    p_out = p2;
         endcase
@@ -82,13 +80,13 @@ module lut_add #(
         output reg [(N)-1:0] p_out   
     );
 
-    reg [(N)-1:0] rom [(4)-1:0];
-
     always @(*) begin 
         case (p1) 
             ZERO:       p_out = p2;
             NAN:        p_out = NAN;
-            default:    p_out = p2 == 0 ? p1 : NAN;
+            default:    p_out = p2 == c2(p1) 
+                                ? ZERO : p2 == ZERO
+                                ? p1 : NAN;
         endcase
     end
 
@@ -102,16 +100,13 @@ module lut_sub #(
         output reg [(N)-1:0] p_out   
     );
 
-    reg [(N)-1:0] rom [(4)-1:0];
-
-    wire [(2*N)-1:0] addr;
-    assign addr = {p1, p2};
-
     always @(*) begin 
         case (p1) 
             ZERO:       p_out = (p2 == ZERO) || (p2 == NAN) ? p2 : c2(p2);
             NAN:        p_out = NAN;
-            default:    p_out = p2 == NAN ? NAN : p1;
+            default:    p_out = p2 == p1
+                                ? ZERO : p2 == ZERO
+                                ? p1 : NAN;
         endcase
     end
 endmodule
@@ -123,11 +118,6 @@ module lut_div #(
         input [(N)-1:0] p2,
         output reg [(N)-1:0] p_out   
     );
-
-    reg [(N)-1:0] rom [(4)-1:0];
-
-    wire [(2*N)-1:0] addr;
-    assign addr = {p1, p2};
 
     always @(*) begin 
         case (p1) 
