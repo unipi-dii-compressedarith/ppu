@@ -1,4 +1,4 @@
-module posit_decode #(
+module posit_decoder #(
         parameter N = 4,  // dummy
         parameter ES = 0  // dummy
     )(

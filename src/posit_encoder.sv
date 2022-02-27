@@ -1,24 +1,24 @@
 /*
 
 Description:
-    Posit encoder.
+    Posit encoderr.
 
 Usage:
     cd $PROJECT_ROOT/waveforms
     
-    iverilog -g2012 -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encode.out \
+    iverilog -g2012 -DTEST_BENCH_ENCODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_encoder.out \
     ../src/common.sv \
     ../src/utils.sv \
-    ../src/posit_encode.sv && ./posit_encode.out
+    ../src/posit_encoder.sv && ./posit_encoder.out
 
-    iverilog -g2012 -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encode.out \
+    iverilog -g2012 -DTEST_BENCH_ENCODE               -DN=16 -DES=1 -o posit_encoder.out \
     ../src/common.sv \
     ../src/utils.sv \
-    ../src/posit_encode.sv && ./posit_encode.out
+    ../src/posit_encoder.sv && ./posit_encoder.out
 
 
 */
-module posit_encode #(
+module posit_encoder #(
         parameter N = 4,
         parameter ES = 1
     )(
@@ -70,7 +70,7 @@ endmodule
 
 // defaulted to P<8,0> unless specified via some `-D`efine.
 
-module tb_posit_encode;
+module tb_posit_encoder;
     parameter N = `N;
     parameter ES = `ES;
 
@@ -95,10 +95,10 @@ module tb_posit_encode;
     
     reg [N:0] test_no;
 
-    posit_encode #(
+    posit_encoder #(
         .N(N),
         .ES(ES)
-    ) posit_encode_inst (
+    ) posit_encoder_inst (
         .is_zero(is_zero),
         .is_nan(is_nan),
 
@@ -118,19 +118,19 @@ module tb_posit_encode;
     end
 
     initial begin
-             if (N == 8 && ES == 0) $dumpfile("tb_posit_encode_P8E0.vcd");
-        else if (N == 5 && ES == 1) $dumpfile("tb_posit_encode_P5E1.vcd");
-        else if (N == 16 && ES == 1) $dumpfile("tb_posit_encode_P16E1.vcd");
-        else                        $dumpfile("tb_posit_encode.vcd");
+             if (N == 8 && ES == 0) $dumpfile("tb_posit_encoder_P8E0.vcd");
+        else if (N == 5 && ES == 1) $dumpfile("tb_posit_encoder_P5E1.vcd");
+        else if (N == 16 && ES == 1) $dumpfile("tb_posit_encoder_P16E1.vcd");
+        else                        $dumpfile("tb_posit_encoder.vcd");
 
-	    $dumpvars(0, tb_posit_encode);                        
+	    $dumpvars(0, tb_posit_encoder);                        
             
         if (N == 8 && ES == 0) begin
-            `include "../test_vectors/tv_posit_encode_P8E0.sv"
+            `include "../test_vectors/tv_posit_encoder_P8E0.sv"
         end
 
         if (N == 16 && ES == 1) begin
-            `include "../test_vectors/tv_posit_encode_P16E1.sv"
+            `include "../test_vectors/tv_posit_encoder_P16E1.sv"
         end
        
 

@@ -35,10 +35,10 @@ module pif_to_posit #(
 
 
     wire [N-1:0] posit_encoded;    
-    posit_encode #(
+    posit_encoder #(
         .N(N),
         .ES(ES)
-    ) posit_encode_inst (
+    ) posit_encoder_inst (
         .sign(1'b0),
         .k(k),
 `ifndef NO_ES_FIELD

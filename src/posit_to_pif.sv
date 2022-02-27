@@ -11,10 +11,10 @@ module posit_to_pif #(
     wire [TE_SIZE-1:0]   te;
     wire [MANT_SIZE-1:0] mant;
 
-    posit_decode #(
+    posit_decoder #(
         .N(N),
         .ES(ES)
-    ) posit_decode_inst (
+    ) posit_decoder_inst (
         .bits(p_cond),
 /////////////
         .sign(sign),
