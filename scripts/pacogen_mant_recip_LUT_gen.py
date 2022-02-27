@@ -21,9 +21,9 @@ M = args.size_out
 def compute_frac_recip_val(frac_val):
     mant = (1 << N) + frac_val  # 1.frac
 
-    fp_mant = f2f.Fx(mant, 1, N + 1)
+    fx_mant = f2f.Fx(mant, 1, N + 1)
 
-    mant_recip = f2f.to_Fx(1.0 / fp_mant.eval(), 1, 1 + M)
+    mant_recip = f2f.to_Fx(1.0 / fx_mant.eval(), 1, 1 + M)
 
     frac_recip_val = mant_recip.val & ~(1 << M)
     return frac_recip_val

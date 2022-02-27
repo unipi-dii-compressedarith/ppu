@@ -1,5 +1,5 @@
 module set_sign #(
-        parameter N = `N
+        parameter N = 9
     )(
         input   [N-1:0]     posit_in,
         input               sign,

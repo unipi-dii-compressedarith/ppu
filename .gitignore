@@ -26,6 +26,8 @@ __pycache__
 *.edif
 verif_post
 
+# modelsim folder
 modelsim
+
 
 experimental

@@ -13,14 +13,15 @@ SRC_FOLDER := ../src
 SRC_PACOGEN := ../../PaCoGen
 SRC_NOT_PPU := \
 	$(SRC_FOLDER)/utils.sv \
-	$(SRC_FOLDER)/constants.sv \
+	$(SRC_FOLDER)/constants.vh \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/not_ppu.sv \
+	$(SRC_FOLDER)/posit_to_pif.sv \
+	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
-	$(SRC_FOLDER)/unpack_posit.sv \
-	$(SRC_FOLDER)/check_special.sv \
-	$(SRC_FOLDER)/handle_special.sv \
+	$(SRC_FOLDER)/handle_special_or_trivial.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
+	$(SRC_FOLDER)/ops.sv \
 	$(SRC_FOLDER)/core_op.sv \
 	$(SRC_FOLDER)/core_add_sub.sv \
 	$(SRC_FOLDER)/core_add.sv \
@@ -34,10 +35,11 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/shift_fields.sv \
 	$(SRC_FOLDER)/unpack_exponent.sv \
 	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/posit_unpack.sv \
 	$(SRC_FOLDER)/posit_decode.sv \
 	$(SRC_FOLDER)/posit_encode.sv \
 	$(SRC_FOLDER)/cls.sv \
-	$(SRC_FOLDER)/round.sv \
+	$(SRC_FOLDER)/round_posit.sv \
 	$(SRC_FOLDER)/sign_decisor.sv \
 	$(SRC_FOLDER)/set_sign.sv \
 	$(SRC_FOLDER)/highest_set.sv
@@ -60,9 +62,9 @@ gen-test-vectors:
 	# python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
 
 not-ppu:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random true && cd ..
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random && cd ..
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out -s tb_not_ppu \
+	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out \
 	$(SRC_NOT_PPU) && \
 	sleep 1 && \
 	./not_ppu_P$(N)E$(ES).out
@@ -85,7 +87,7 @@ lint:
 
 
 div-against-pacogen:
-	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random true
+	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random
 	cd waveforms && \
 	iverilog -g2012 -DN=$(N) -DES=$(ES) -DNR=$(ES) $(ES_FIELD_PRESENCE_FLAG) -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen$(N).out \
 	$(SRC_DIV_AGAINST_PACOGEN) \
@@ -96,3 +98,8 @@ div-against-pacogen:
 clean:
 	rm waveforms/*.out
 	
+
+modelsim:
+	cd modelsim && \
+	vlog ../src/cls.sv ../src/utils.sv
+	#do not_ppu.do

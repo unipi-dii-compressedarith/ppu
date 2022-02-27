@@ -1,31 +1,26 @@
 /*
 
-iverilog -g2012 -DN=16 -DES=1 -o shift_fields.out \
-../src/shift_fields.sv \
-../src/unpack_exponent.sv \
-../src/utils.sv \
-../src/compute_rounding.sv && ./shift_fields.out
 
 */
 module shift_fields #(
-        parameter N = `N,
-        parameter ES = `ES
+        parameter N = 4,
+        parameter ES = 0
     )(
-        input [(3*MANT_SIZE)-1:0] mant,
-        input [TE_SIZE-1:0] total_exp,
-        input [OP_SIZE-1:0] op,
+        input [FRAC_FULL_SIZE-1:0] frac_full,
+        input [TE_SIZE-1:0] total_exp, 
+        input frac_lsb_cut_off, // new flag
 
         output [K_SIZE-1:0] k,
 `ifndef NO_ES_FIELD
         output [ES-1:0] next_exp,
 `endif
-        output [MANT_SIZE-1:0] mant_downshifted,
+        output [MANT_SIZE-1:0] frac,
 
         // flags
         output round_bit,
         output sticky_bit,
         output k_is_oob,
-        output non_zero_mant_field_size
+        output non_zero_frac_field_size
     );
     
     wire [K_SIZE-1:0] k_unpacked;
@@ -46,10 +41,6 @@ module shift_fields #(
     );
 
     
-    wire [(2)-1:0] mant_non_factional_size;
-    assign mant_non_factional_size = (op == MUL || op == DIV) ? 2 : 1; // only MUL and DIV have value 2.
-
-
     wire [K_SIZE-1:0] regime_k;
     assign regime_k = ($signed(k_unpacked) <= (N-2) && $signed(k_unpacked) >= -(N-2)) ? $signed(k_unpacked) : (
         $signed(k_unpacked) >= 0 ? N -2 : -(N-2)
@@ -61,39 +52,36 @@ module shift_fields #(
     assign reg_len = $signed(regime_k) >= 0 ? regime_k + 2 : -$signed(regime_k) + 1;
 
     
-    wire [MANT_LEN_SIZE-1:0] mant_len;
-    assign mant_len = N - 1 - ES - reg_len;
+    wire [MANT_LEN_SIZE-1:0] frac_len; // fix size
+    assign frac_len = N - 1 - ES - reg_len;
 
 `ifndef NO_ES_FIELD
-    wire [(ES+1)-1:0] es_actual_len; // ES + 1 because it can become -1.
+    wire [(ES+1)-1:0] es_actual_len; // ES + 1 because it may potentially be negative.
     assign es_actual_len = min(ES, N - 1 - reg_len);
 
 
-    wire [ES-1:0] exp_1;
-    assign exp_1 = exp_unpacked >> max(0, ES - es_actual_len);
+    wire [ES-1:0] exp1;
+    assign exp1 = exp_unpacked >> max(0, ES - es_actual_len);
 `endif
 
-    wire [(S+2)-1:0] shift_mant_up;
-    assign shift_mant_up = (op == DIV) ? 3*N : 2*N;
     
-    wire [(S+2)-1:0] mant_len_diff;
-    assign mant_len_diff = $signed(shift_mant_up) - $signed(mant_len);
+    wire [(S+2)-1:0] frac_len_diff;
+    assign frac_len_diff = FRAC_FULL_SIZE - $signed(frac_len);
 
-    wire [(3*MANT_SIZE+2)-1:0] mant_up_shifted; // +2 because `mant_non_factional_size` can be at most 2.
-    assign mant_up_shifted = 
-        (mant << mant_non_factional_size) & ((1 << shift_mant_up) - 1); //& mask(shift_mant_up);
-
+    
     compute_rouding #(
         .N(N),
         .ES(ES)
     ) compute_rouding_inst (
-        .mant_len(mant_len),
-        .mant_up_shifted(mant_up_shifted),
-        .mant_len_diff(mant_len_diff),
+        .frac_len(frac_len),
+        .frac_full(frac_full),
+        .frac_len_diff(frac_len_diff),
         .k(regime_k),
 `ifndef NO_ES_FIELD
         .exp(exp_unpacked),
 `endif
+        .frac_lsb_cut_off(frac_lsb_cut_off),
+
         .round_bit(round_bit),
         .sticky_bit(sticky_bit)
     );
@@ -101,16 +89,16 @@ module shift_fields #(
     assign k = regime_k; // prev. k_unpacked which is wrong;
 
 `ifndef NO_ES_FIELD
-    wire [ES-1:0] exp_2;
-    assign exp_2 = exp_1 << (ES - es_actual_len);
+    wire [ES-1:0] exp2;
+    assign exp2 = exp1 << (ES - es_actual_len);
 `endif
 
-    assign mant_downshifted = mant_up_shifted >> mant_len_diff;
+    assign frac = frac_full >> frac_len_diff;
 
-    assign non_zero_mant_field_size = $signed(mant_len) >= 0;
+    assign non_zero_frac_field_size = $signed(frac_len) >= 0;
 
 `ifndef NO_ES_FIELD
-    assign next_exp = exp_2;
+    assign next_exp = exp2;
 `endif
 
 endmodule

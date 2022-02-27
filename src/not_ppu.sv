@@ -27,206 +27,92 @@ module not_ppu #(
 `endif
 
     wire [MANT_SIZE-1:0] mant1, mant2;
-    wire [(3*MANT_SIZE)-1:0] mant_out_core_op;
-    wire [TE_SIZE-1:0] te1, te2, te_out_core_op;
+    wire [(3*MANT_SIZE)-1:0] mant_out_ops;
+    wire [TE_SIZE-1:0] te1, te2, te_out_ops;
 
     wire sign1, sign2;
 
-    wire p1_is_special, p2_is_special;
-    wire p1_is_zero, p2_is_zero;
-    wire p1_is_nan, p2_is_nan;
 
-    check_special #(
-        .N(N)   
-    ) check_special_1 (
-        .bits_in(p1),
-        .is_special(p1_is_special),
-        .is_zero(p1_is_zero),
-        .is_nan(p1_is_nan)
-    );
-
-    check_special #(
-        .N(N)   
-    ) check_special_2 (
-        .bits_in(p2),
-        .is_special(p2_is_special),
-        .is_zero(p2_is_zero),
-        .is_nan(p2_is_nan)
-    );
-
-    wire [N-1:0] pout_special;
-    handle_special #(
-        .N(N)
-    ) handle_special_inst (
-        .p1(p1),
-        .p2(p2),
-        .op(op),
-        .p1_is_zero(p1_is_zero),
-        .p2_is_zero(p2_is_zero),
-        .p1_is_nan(p1_is_nan),
-        .p2_is_nan(p2_is_nan),
-        .pout(pout_special)
-    );
-
-    wire [N-1:0] p1_out_cond, p2_out_cond;
+    wire [N-1:0] p1_cond, p2_cond;
+    wire is_special_or_trivial;
+    wire [N-1:0] pout_special_or_trivial;
     input_conditioning #(
-        .N(N)
-    ) input_conditioning_inst (
+         .N(N)
+    ) input_conditioning (
         .p1_in(p1),
         .p2_in(p2),
         .op(op),
-        .p1_out(p1_out_cond),
-        .p2_out(p2_out_cond)
+        .p1_out(p1_cond),
+        .p2_out(p2_cond),
+        .is_special_or_trivial(is_special_or_trivial),
+        .pout_special_or_trivial(pout_special_or_trivial)
     );
 
-    unpack_posit #(
+
+    wire [PIF_SIZE-1:0] pif1, pif2;
+
+    posit_to_pif #(
         .N(N),
         .ES(ES)
-    ) unpack_posit_1 (
-        .bits(p1_out_cond),
-        .sign(sign1),
-        .k(k1),
-`ifndef NO_ES_FIELD
-        .exp(exp1),
-`endif
-        .mant(mant1)
+    ) posit_to_pif1 (
+        .p_cond(p1_cond),
+        .pif(pif1)
     );
 
-    unpack_posit #(
+
+    posit_to_pif #(
         .N(N),
         .ES(ES)
-    ) unpack_posit_2 (
-        .bits(p2_out_cond),
-        .sign(sign2),
-        .k(k2),
-`ifndef NO_ES_FIELD
-        .exp(exp2),
-`endif
-        .mant(mant2)
+    ) posit_to_pif2 (
+        .p_cond(p2_cond),
+        .pif(pif2)
     );
 
-    total_exponent #(
-        .N(N),
-        .ES(ES)
-    ) total_exponent_1 (
-        .k(k1),
-`ifndef NO_ES_FIELD
-        .exp(exp1),
-`endif
-        .total_exp(te1)
-    );
 
-    total_exponent #(
-        .N(N),
-        .ES(ES)
-    ) total_exponent_2 (
-        .k(k2),
-`ifndef NO_ES_FIELD
-        .exp(exp2),
-`endif
-        .total_exp(te2)
-    );
+    wire [TE_SIZE-1:0] ops_te_out;
+    wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
-    
-    core_op #(
+    wire sign_out_ops;
+    ops #(
         .N(N)
-    ) core_op_inst (
+    ) ops_inst (
         .op(op),
-        .te1(te1),
-        .te2(te2),
-        .mant1(mant1),
-        .mant2(mant2),
-        .have_opposite_sign(sign1 ^ sign2),
-        .te_out(te_out_core_op),
-        .mant_out(mant_out_core_op)
-    );
-
-
-
-    wire [K_SIZE-1:0] k;
-`ifndef NO_ES_FIELD
-    wire [ES-1:0] next_exp;
-`endif
-    wire [MANT_SIZE-1:0] mant_downshifted;
-    wire round_bit;
-    wire sticky_bit;
-    wire k_is_oob;
-    wire non_zero_mant_field_size;
-
-    shift_fields #(
-        .N(N),
-        .ES(ES)
-    ) shift_fields_inst (
-        .mant(mant_out_core_op),
-        .total_exp(te_out_core_op),
-        .op(op),
-
-        .k(k),
-`ifndef NO_ES_FIELD
-        .next_exp(next_exp),
-`endif
-        .mant_downshifted(mant_downshifted),
-
-        .round_bit(round_bit),
-        .sticky_bit(sticky_bit),
-        .k_is_oob(k_is_oob),
-        .non_zero_mant_field_size(non_zero_mant_field_size)
-    );
-
-
-    wire [N-1:0] posit;
-    
-    posit_encode #(
-        .N(N),
-        .ES(ES)
-    ) posit_encode_inst (
-        .is_zero(),
-        .is_nan(),
-        .sign(1'b0),
-        .k(k),
-`ifndef NO_ES_FIELD
-        .exp(next_exp),
-`endif
-        .mant(mant_downshifted),
-
-        .posit(posit)
-    );
-
-
-    wire [N-1:0] posit_rounded;
-    round #(
-        .N(N)
-    ) round_inst (
-        .posit(posit),
-        .round_bit(round_bit),
-        .sticky_bit(sticky_bit),
-        .k_is_oob(k_is_oob),
-        .mant_field_size_not_null(non_zero_mant_field_size),
         
-        .posit_rounded(posit_rounded)
+        .pif1(pif1),
+        .pif2(pif2),
+        .sign_out(sign_out_ops),
+        .te_out(ops_te_out),
+        .frac_full(ops_frac_full),
+        .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
 
-    sign_decisor #(
-        .N(N)
-    ) sign_decisor_inst (
-        .sign1(sign1),
-        .sign2(sign2),
-        .op(op),
-        .sign(sign)
+    wire frac_lsb_cut_off;
+    pif_to_posit #(
+        .N(N),
+        .ES(ES)
+    ) pif_to_posit_inst (
+        .te(ops_te_out),
+        .frac_full(ops_frac_full),
+
+        .frac_lsb_cut_off(frac_lsb_cut_off),
+        .posit(pout_non_special_pre_sign)
     );
 
 
-    wire [N-1:0] pout_normal;
+
+
+    wire [N-1:0] pout_non_special_pre_sign, pout_non_special;
     set_sign #(
         .N(N)
     ) set_sign_inst (
-        .posit_in(posit_rounded),
-        .sign(sign),
-        .posit_out(pout_normal)
+        .posit_in(pout_non_special_pre_sign),
+        .sign(sign_out_ops),
+        .posit_out(pout_non_special)
     );
 
-    assign pout = (p1_is_special || p2_is_special) ? pout_special : pout_normal;
+
+    assign pout = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
 
 endmodule
 
@@ -281,6 +167,10 @@ module tb_not_ppu;
         
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
+        end
+
+        if (N == 8 && ES == 4) begin
+            `include "../test_vectors/tv_posit_ppu_P8E4.sv"
         end
 
         if (N == 5 && ES == 1) begin

@@ -22,15 +22,12 @@ module posit_encode #(
         parameter N = 4,
         parameter ES = 1
     )(
-        input          is_zero,
-        input          is_nan,
-
         input sign,
         input [K_SIZE-1:0] k,
 `ifndef NO_ES_FIELD
         input [ES-1:0] exp,
 `endif
-        input [MANT_SIZE-1:0] mant,
+        input [MANT_SIZE-1:0] frac,
         output [N-1:0] posit
     );
 
@@ -46,8 +43,7 @@ module posit_encode #(
 
 `ifndef NO_ES_FIELD
 `else
-    wire exp;
-    assign exp = 0;
+    wire exp = 0;
 `endif
 
     assign bits_assembled = ( 
@@ -56,24 +52,17 @@ module posit_encode #(
 `ifndef NO_ES_FIELD
         + shl(exp, N - 1 - reg_len - ES)
 `endif
-        + mant
+        + frac
     );
 
-    wire [N-1:0] bits;
-    assign bits = 
-        sign == 0 ? bits_assembled : 
-                    c2(bits_assembled & ~(1 << (N - 1)));
+    assign posit = 
+        sign == 0 
+        ? bits_assembled : c2(bits_assembled & ~(1 << (N - 1)));
 
     /*
     ~(1'b1 << (N-1)) === {1'b0, {N-1{1'b1}}}
     */
 
-    assign posit = 
-        is_zero === 1'b1 ? 1'b0 : 
-        is_nan  === 1'b1 ? (1 << (N-1)) : bits;
-            /*  ^^^ 3 equal signs needed to compare against 1'bx, 
-                otherwise if `is_zero` or `is_nan` == 1'bx, also 
-                `posit` would be 'bX, regardless. */
 endmodule
 
 
@@ -95,7 +84,7 @@ module tb_posit_encode;
 `ifndef NO_ES_FIELD
     reg [ES-1:0] exp;
 `endif
-    reg [MANT_SIZE-1:0] mant;
+    reg [MANT_SIZE-1:0] frac;
     
     /* output */
     wire [N-1:0]    posit;
@@ -118,7 +107,7 @@ module tb_posit_encode;
 `ifndef NO_ES_FIELD
         .exp(exp),
 `endif
-        .mant(mant),
+        .frac(frac),
         .posit(posit)
     );
 

@@ -1,40 +1,6 @@
 /*
 
-iverilog -g2012 -DN=16 -DES=1 -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen.out \
-../src/utils.sv \
-../src/common.sv \
-../src/comparison_against_pacogen.sv \
-../src/not_ppu.sv \
-../src/input_conditioning.sv \
-../src/unpack_posit.sv \
-../src/check_special.sv \
-../src/handle_special.sv \
-../src/total_exponent.sv \
-../src/core_op.sv \
-../src/core_add_sub.sv \
-../src/core_add.sv \
-../src/core_sub.sv \
-../src/core_mul.sv \
-../src/core_div.sv \
-../src/fast_reciprocal.sv \
-../src/reciprocal_approx.sv \
-../src/newton_raphson.sv \
-../src/shift_fields.sv \
-../src/unpack_exponent.sv \
-../src/compute_rounding.sv \
-../src/posit_decode.sv \
-../src/posit_encode.sv \
-../src/cls.sv \
-../src/round.sv \
-../src/sign_decisor.sv \
-../src/set_sign.sv \
-../src/highest_set.sv \
-../../PACoGen/common.v \
-../../PACoGen/div/posit_div.v \
-&& ./comparison_against_pacogen.out > comparison_against_pacogen.log
-
 */
-
 
 module comparison_against_pacogen #(
         parameter N = 4,

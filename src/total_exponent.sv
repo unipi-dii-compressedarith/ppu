@@ -15,9 +15,9 @@ module total_exponent #(
 
 
 `ifndef NO_ES_FIELD
-    assign total_exp = $signed(k) >= 0 ? 
-        ( (k << ES) + exp ) : 
-        ( -($signed(-k) << ES) + exp );
+    assign total_exp = 
+        $signed(k) >= 0 
+        ? (k << ES) + exp : (-($signed(-k) << ES) + exp);
 
     // assign total_exp = (1 << ES) * k + exp;
 `else
@@ -25,4 +25,3 @@ module total_exponent #(
 `endif
 
 endmodule
-

@@ -1,4 +1,3 @@
-
 module unpack_exponent #(
         parameter N = 4,
         parameter ES = 1
