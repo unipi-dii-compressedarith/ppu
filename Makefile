@@ -1,4 +1,14 @@
-all : gen-test-vectors not-ppu div-against-pacogen verilog-quartus lint
+all: \
+	gen-test-vectors \
+	not-ppu8 \
+	not-ppu16 \
+	not-ppu32 \
+	div-against-pacogen8 \
+	div-against-pacogen16 \
+	div-against-pacogen32 \
+	verilog-quartus16 \
+	lint 
+
 .PHONY : all
 
 
@@ -53,13 +63,10 @@ SRC_DIV_AGAINST_PACOGEN := \
 
 gen-test-vectors:
 	cd scripts && \
-	python tb_gen.py --num-tests 1000 --operation mul -n 8  -es 0 && \
-	python tb_gen.py --num-tests 1000 --operation mul -n 16 -es 1 && \
-	python tb_gen.py --num-tests 1000 --operation mul -n 32 -es 2 && \
-	python tb_gen.py --num-tests 1000 --operation ppu -n 5  -es 1 && \
-	python tb_gen.py --num-tests 1000 --operation ppu -n 8  -es 0 && \
-	python tb_gen.py --num-tests 1000 --operation ppu -n 16 -es 1 
-	# python tb_gen.py --num-tests 1000 --operation ppu -n 32 -es 2
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
 not-ppu:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random && cd ..
@@ -68,6 +75,16 @@ not-ppu:
 	$(SRC_NOT_PPU) && \
 	sleep 1 && \
 	./not_ppu_P$(N)E$(ES).out
+
+not-ppu8:
+	make not-ppu N=8 ES=0
+
+not-ppu16:
+	make not-ppu N=16 ES=1
+
+not-ppu32:
+	make not-ppu N=32 ES=2
+
 
 conversions:
 	cd waveforms && \
@@ -119,6 +136,10 @@ verilog-quartus:
 	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
+verilog-quartus16:
+	make verilog-quartus N=16 ES=0
+
+
 lint:
 	slang quartus/ppu.v --top not_ppu # https://github.com/MikePopoloski/slang
 
@@ -131,10 +152,25 @@ div-against-pacogen:
 	&& ./comparison_against_pacogen$(N).out > comparison_against_pacogen$(N).log
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
 
+div-against-pacogen8:
+	make div-against-pacogen N=8 ES=0
+
+div-against-pacogen16:
+	make div-against-pacogen N=16 ES=1
+
+div-against-pacogen32:
+	make div-against-pacogen N=32 ES=2
 
 clean:
 	rm waveforms/*.out
 	
+open-waveforms:
+	gtkwave waveforms/tb_ppu_P8E0.gtkw &
+	gtkwave waveforms/tb_ppu_P16E1.gtkw &
+	gtkwave waveforms/tb_ppu_P32E2.gtkw &
+	gtkwave waveforms/tb_comparison_against_pacogenP8E0.gtkw &
+	gtkwave waveforms/tb_comparison_against_pacogenP16E1.gtkw &
+	gtkwave waveforms/tb_comparison_against_pacogenP32E2.gtkw &
 
 modelsim:
 	cd modelsim && \

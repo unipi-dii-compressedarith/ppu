@@ -12,7 +12,10 @@ module pif_to_posit #(
 
     wire [MANT_SIZE-1:0] frac;
     wire [K_SIZE-1:0] k;
-    
+`ifndef NO_ES_FIELD
+    wire [ES-1:0] next_exp;
+`endif
+
     shift_fields #(
         .N(N),
         .ES(ES)

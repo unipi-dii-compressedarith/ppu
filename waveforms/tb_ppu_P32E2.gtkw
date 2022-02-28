@@ -1,61 +1,26 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Feb 15 19:02:42 2022
+[*] Mon Feb 28 09:22:00 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P32E2.vcd"
-[dumpfile_mtime] "Tue Feb 15 19:01:53 2022"
-[dumpfile_size] 13816236
+[dumpfile_mtime] "Mon Feb 28 09:20:47 2022"
+[dumpfile_size] 15908923
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P32E2.gtkw"
 [timestart] 0
-[size] 1440 855
+[size] 2560 1418
 [pos] -1 -1
-*-12.120185 5920 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.952936 9474 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_not_ppu.
 [sst_width] 193
 [signals_width] 296
 [sst_expanded] 1
-[sst_vpaned_height] 329
+[sst_vpaned_height] 583
 @28
-tb_not_ppu.not_ppu_inst.exp1[1:0]
-tb_not_ppu.not_ppu_inst.exp2[1:0]
-@22
-tb_not_ppu.not_ppu_inst.k1[6:0]
-tb_not_ppu.not_ppu_inst.k2[6:0]
-tb_not_ppu.not_ppu_inst.k[6:0]
-@28
-tb_not_ppu.not_ppu_inst.k_is_oob
-@22
-tb_not_ppu.not_ppu_inst.mant1[31:0]
-tb_not_ppu.not_ppu_inst.mant2[31:0]
-tb_not_ppu.not_ppu_inst.mant_downshifted[31:0]
-tb_not_ppu.not_ppu_inst.mant_out_core_op[95:0]
-@28
-tb_not_ppu.not_ppu_inst.next_exp[1:0]
-tb_not_ppu.not_ppu_inst.non_zero_mant_field_size
 tb_not_ppu.not_ppu_inst.op[1:0]
 @22
 tb_not_ppu.not_ppu_inst.p1[31:0]
-@28
-tb_not_ppu.not_ppu_inst.p1_is_nan
-tb_not_ppu.not_ppu_inst.p1_is_special
-tb_not_ppu.not_ppu_inst.p1_is_zero
-@22
-tb_not_ppu.not_ppu_inst.p1_out_cond[31:0]
 tb_not_ppu.not_ppu_inst.p2[31:0]
-@28
-tb_not_ppu.not_ppu_inst.p2_is_nan
-tb_not_ppu.not_ppu_inst.p2_is_special
-tb_not_ppu.not_ppu_inst.p2_is_zero
-@22
-tb_not_ppu.not_ppu_inst.p2_out_cond[31:0]
-tb_not_ppu.not_ppu_inst.posit[31:0]
-tb_not_ppu.not_ppu_inst.posit_rounded[31:0]
 tb_not_ppu.not_ppu_inst.pout[31:0]
-tb_not_ppu.not_ppu_inst.pout_normal[31:0]
-@28
-tb_not_ppu.not_ppu_inst.round_bit
-@22
-tb_not_ppu.not_ppu_inst.te_out_core_op[8:0]
 @28
 tb_not_ppu.diff_pout_ground_truth
 tb_not_ppu.pout_off_by_1
