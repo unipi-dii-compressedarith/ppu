@@ -1,13 +1,17 @@
 module pif_to_posit #(
         parameter N = 4,
-        parameter ES = 0
+        parameter ES = 0,
+        parameter PIF_TOTAL_SIZE = 20
     )(
-        
-        input [TE_SIZE-1:0] te,
-        input [FRAC_FULL_SIZE-1:0] frac_full,    
+        input [PIF_TOTAL_SIZE-1:0] pif,
         input frac_lsb_cut_off, // flag
         output [N-1:0] posit
     );
+
+    wire sign;
+    wire [TE_SIZE-1:0] te;
+    wire [FRAC_FULL_SIZE-1:0] frac_full;
+    assign {sign, te, frac_full} = pif;
 
 
     wire [MANT_SIZE-1:0] frac;
@@ -52,6 +56,8 @@ module pif_to_posit #(
     );
 
 
+    wire [N-1:0] posit_pre_sign;
+
     round_posit #(
         .N(N)
     ) round_posit_inst (
@@ -61,7 +67,16 @@ module pif_to_posit #(
         .k_is_oob(k_is_oob),
         .non_zero_frac_field_size(non_zero_frac_field_size),
         
-        .posit_rounded(posit)
+        .posit_rounded(posit_pre_sign)
+    );
+
+
+    set_sign #(
+        .N(N)
+    ) set_sign_inst (
+        .posit_in(posit_pre_sign),
+        .sign(sign),
+        .posit_out(posit)
     );
 
 

@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Mar  1 10:36:05 2022
+[*] Tue Mar  1 16:19:05 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Tue Mar  1 10:35:07 2022"
-[dumpfile_size] 9297509
+[dumpfile_mtime] "Tue Mar  1 16:16:21 2022"
+[dumpfile_size] 9297435
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
 [size] 2560 1418
@@ -18,11 +18,10 @@
 [treeopen] tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.pif_to_posit_inst.
 [treeopen] tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.
-[treeopen] tb_not_ppu.not_ppu_inst.set_sign_inst.
 [sst_width] 199
 [signals_width] 351
 [sst_expanded] 1
-[sst_vpaned_height] 402
+[sst_vpaned_height] 630
 @24
 tb_not_ppu.test_no[16:0]
 @820
@@ -42,78 +41,36 @@ tb_not_ppu.p2_ascii[300:0]
 -
 @22
 tb_not_ppu.pout[15:0]
-@24
-tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-@c00022
-tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
+tb_not_ppu.not_ppu_inst._exp[6:0]
+tb_not_ppu.not_ppu_inst._frac[39:0]
 @28
-(0)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(1)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(2)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(3)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(4)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(5)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(6)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(7)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(8)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(9)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(10)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(11)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(12)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(13)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(14)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-(15)tb_not_ppu.not_ppu_inst.set_sign_inst.posit_in[15:0]
-@1401200
--group_end
-@24
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.frac_full[39:0]
-@420
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.frac_len[4:0]
-@24
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.frac_len_diff[5:0]
-@28
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.round_bit
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.sticky_bit
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.exp_unpacked
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.compute_rouding_inst.exp
-@420
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.shift_fields_inst.compute_rouding_inst.frac_full[39:0]
+tb_not_ppu.not_ppu_inst._sign
 @22
-tb_not_ppu.not_ppu_inst.input_conditioning.p1_in[15:0]
+tb_not_ppu.not_ppu_inst.float[63:0]
+tb_not_ppu.not_ppu_inst.float_exp[10:0]
+tb_not_ppu.not_ppu_inst.float_frac[51:0]
 @28
-tb_not_ppu.not_ppu_inst.set_sign_inst.sign
-@200
--
-@22
-tb_not_ppu.not_ppu_inst.set_sign_inst.posit_out[15:0]
-tb_not_ppu.pout_ground_truth[15:0]
-@820
-[color] 2
-tb_not_ppu.pout_gt_ascii[300:0]
-@28
-tb_not_ppu.diff_pout_ground_truth
-tb_not_ppu.pout_off_by_1
-tb_not_ppu.diff_pout_hwdiv_exp
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.frac_lsb_cut_off
-tb_not_ppu.not_ppu_inst.pif_to_posit_inst.frac_lsb_cut_off
+tb_not_ppu.not_ppu_inst.float_sign
 tb_not_ppu.not_ppu_inst.frac_lsb_cut_off
 tb_not_ppu.not_ppu_inst.is_special_or_trivial
+tb_not_ppu.not_ppu_inst.op[2:0]
 @22
+tb_not_ppu.not_ppu_inst.ops_frac_full[39:0]
+tb_not_ppu.not_ppu_inst.ops_te_out[6:0]
+tb_not_ppu.not_ppu_inst.p1[15:0]
+tb_not_ppu.not_ppu_inst.p1_cond[15:0]
+tb_not_ppu.not_ppu_inst.p2[15:0]
+tb_not_ppu.not_ppu_inst.p2_cond[15:0]
+tb_not_ppu.not_ppu_inst.pif1[21:0]
+tb_not_ppu.not_ppu_inst.pif2[21:0]
+tb_not_ppu.not_ppu_inst.pout[15:0]
 tb_not_ppu.not_ppu_inst.pout_non_special[15:0]
+tb_not_ppu.not_ppu_inst.pout_special_or_trivial[15:0]
 @28
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.core_mul_inst.frac_lsb_cut_off
-@22
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.core_mul_inst.mant_mul[27:0]
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.core_mul_inst.mant_out[27:0]
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.core_mul_inst.te_out[6:0]
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.core_mul_inst.te_sum[6:0]
-tb_not_ppu.not_ppu_inst.ops_inst.core_op_inst.mant_out_mul[27:0]
-@821
-[color] 2
-tb_not_ppu.ascii_x[200:0]
-[color] 2
-tb_not_ppu.float_bits[63:0]
-[color] 2
-tb_not_ppu.posit_expected_ascii[200:0]
+tb_not_ppu.not_ppu_inst.sign_out_ops
+tb_not_ppu.diff_pout_ground_truth
+tb_not_ppu.diff_pout_ground_truth
+@29
+tb_not_ppu.diff_pout_hwdiv_exp
 [pattern_trace] 1
 [pattern_trace] 0

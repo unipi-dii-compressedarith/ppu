@@ -108,7 +108,7 @@ def single_arg_func(c, op):
             c += f"posit_expected_ascii = \"{p.eval()}\"; "
             c += "#10; \n"
         c += "`endif\n"
-    elif op == Tb.FLOAT_TO_POSIT:
+    elif op == Tb.POSIT_TO_FLOAT:
         pass
     else:
         raise Exception("wrong arg?")

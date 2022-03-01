@@ -127,20 +127,9 @@ module not_ppu #(
 
 
     wire frac_lsb_cut_off;
-    pif_to_posit #(
-        .N(N),
-        .ES(ES)
-    ) pif_to_posit_inst (
-        .te(_exp),
-        .frac_full(_frac),
-
-        .frac_lsb_cut_off(frac_lsb_cut_off),
-        .posit(pout_non_special_pre_sign)
-    );
 
 
-
-    wire [N-1:0] pout_non_special_pre_sign, pout_non_special;
+    wire [N-1:0] pout_non_special;
 
     wire _sign;
     assign _sign = 
@@ -150,14 +139,16 @@ module not_ppu #(
         sign_out_ops;
 
 
-    set_sign #(
-        .N(N)
-    ) set_sign_inst (
-        .posit_in(pout_non_special_pre_sign),
-        .sign(_sign),
-        .posit_out(pout_non_special)
-    );
 
+    pif_to_posit #(
+        .N(N),
+        .ES(ES),
+        .PIF_TOTAL_SIZE(1+TE_SIZE+FRAC_FULL_SIZE)
+    ) pif_to_posit_inst (
+        .pif({_sign, _exp, _frac}),
+        .frac_lsb_cut_off(frac_lsb_cut_off),
+        .posit(pout_non_special)
+    );
 
     assign pout = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
 
@@ -170,7 +161,9 @@ endmodule
 module tb_not_ppu;
     parameter N = `N;
     parameter ES = `ES;
+`ifdef FLOAT_TO_POSIT
     parameter FSIZE = `F;
+`endif
 
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
