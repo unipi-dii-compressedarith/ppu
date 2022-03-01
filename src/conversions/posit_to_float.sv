@@ -19,6 +19,7 @@ module posit_to_float #(
     parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
     wire [PIF_SIZE-1:0] pif;
+    
     posit_to_pif #(
         .N(N),
         .ES(ES)
@@ -27,36 +28,13 @@ module posit_to_float #(
         .pif(pif)
     );
 
-
-    wire posit_sign;
-    wire signed [TE_SIZE-1:0] posit_te;
-    wire [MANT_SIZE-1:0] posit_frac;
-
-    assign {posit_sign, posit_te, posit_frac} = pif;
-
-    
-
-    wire float_sign;
-    wire signed [FLOAT_EXP_SIZE-1:0] float_exp;
-    wire [FLOAT_MANT_SIZE-1:0] float_frac;
-
-    assign float_sign = posit_sign;
-    assign float_exp = $signed(posit_te) >= 0 ? 
-        posit_te : 
-        ~( 
-            {{FLOAT_MANT_SIZE-MANT_SIZE{1'b0}}, (~posit_te + 1'b1)} 
-        ) + 1'b1;
-        
-
-    assign float_frac = posit_frac << (FLOAT_MANT_SIZE - MANT_SIZE + 1);
-
-    float_encoder #(
+    pif_to_float #(
+        .N(N),
+        .ES(ES),
         .FSIZE(FSIZE)
-    ) float_encoder_inst (
-        .sign(float_sign),
-        .exp(float_exp),
-        .frac(float_frac),
-        .bits(float_bits)
+    ) pif_to_float_inst (
+        .pif(pif),
+        .float(float_bits)
     );
 
 endmodule

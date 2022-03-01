@@ -92,7 +92,9 @@ SRC_POSIT_TO_FLOAT := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/conversions/defines.vh \
 	$(SRC_FOLDER)/conversions/posit_to_float.sv \
+	$(SRC_FOLDER)/conversions/pif_to_float.sv \
 	$(SRC_FOLDER)/conversions/float_encoder.sv \
+	$(SRC_FOLDER)/conversions/cast_posit_exponent_to_float_exponent.sv \
 	$(SRC_FOLDER)/posit_to_pif.sv \
 	$(SRC_FOLDER)/posit_decoder.sv \
 	$(SRC_FOLDER)/posit_unpack.sv \
@@ -146,14 +148,18 @@ conversions:
 	./posit_to_float.out
 
 
-conversions-verilog-quartus:
+conversions-verilog-posit-to-float-quartus:
 	cd quartus && \
-	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
-	$(SRC_FLOAT_TO_POSIT) \
-	> float_to_posit.v && cp float_to_posit.v ppu.v && \
 	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
 	$(SRC_POSIT_TO_FLOAT) \
 	> posit_to_float.v && cp posit_to_float.v ppu.v
+
+conversions-verilog-float-to-posit-quartus:
+	cd quartus && \
+	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	$(SRC_FLOAT_TO_POSIT) \
+	> float_to_posit.v && cp float_to_posit.v ppu.v
+	
 
 yosys:
 	cd waveforms && \
