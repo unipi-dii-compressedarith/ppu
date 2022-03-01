@@ -13,9 +13,15 @@
 module not_ppu #(
         parameter N = `N,
         parameter ES = `ES
+`ifdef FLOAT_TO_POSIT
+        ,parameter FSIZE = `F
+`endif
     )(
         input   [N-1:0]         p1,
         input   [N-1:0]         p2,
+`ifdef FLOAT_TO_POSIT
+        input   [FSIZE-1:0]     float,
+`endif
         input   [OP_SIZE-1:0]   op,
         output  [N-1:0]         pout
     );
@@ -87,13 +93,46 @@ module not_ppu #(
     );
 
 
+
+`ifdef FLOAT_TO_POSIT
+    wire float_sign;
+    wire [FLOAT_EXP_SIZE_F`F-1:0] float_exp;
+    wire [FLOAT_MANT_SIZE_F`F-1:0] float_frac;
+
+    float_decoder #(
+        .FSIZE(FSIZE)
+    ) float_decoder_inst (
+        .bits(float),
+        .sign(float_sign),
+        .exp(float_exp),
+        .frac(float_frac)
+    );
+`endif
+
+
+
+    wire [FRAC_FULL_SIZE-1:0]   _frac;
+    wire [TE_SIZE-1:0]          _exp;
+    assign _exp = 
+`ifdef FLOAT_TO_POSIT
+        op == FLOAT_TO_POSIT ? float_exp : 
+`endif
+        ops_te_out;
+    assign _frac = 
+`ifdef FLOAT_TO_POSIT
+        op == FLOAT_TO_POSIT ? float_frac : 
+`endif
+        ops_frac_full;
+
+
+
     wire frac_lsb_cut_off;
     pif_to_posit #(
         .N(N),
         .ES(ES)
     ) pif_to_posit_inst (
-        .te(ops_te_out),
-        .frac_full(ops_frac_full),
+        .te(_exp),
+        .frac_full(_frac),
 
         .frac_lsb_cut_off(frac_lsb_cut_off),
         .posit(pout_non_special_pre_sign)
@@ -101,13 +140,21 @@ module not_ppu #(
 
 
 
-
     wire [N-1:0] pout_non_special_pre_sign, pout_non_special;
+
+    wire _sign;
+    assign _sign = 
+`ifdef FLOAT_TO_POSIT
+        op == FLOAT_TO_POSIT ? float_sign : 
+`endif
+        sign_out_ops;
+
+
     set_sign #(
         .N(N)
     ) set_sign_inst (
         .posit_in(pout_non_special_pre_sign),
-        .sign(sign_out_ops),
+        .sign(_sign),
         .posit_out(pout_non_special)
     );
 
@@ -123,6 +170,7 @@ endmodule
 module tb_not_ppu;
     parameter N = `N;
     parameter ES = `ES;
+    parameter FSIZE = `F;
 
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
@@ -137,6 +185,13 @@ module tb_not_ppu;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
+
+`ifdef FLOAT_TO_POSIT
+    reg [FSIZE-1:0] float_bits;
+    reg [N-1:0] posit_expected;
+    reg [200:0] ascii_x, ascii_exp, ascii_frac, posit_expected_ascii;
+`endif
+
 
     not_ppu #(
         .N      (N),
@@ -185,6 +240,9 @@ module tb_not_ppu;
             `include "../test_vectors/tv_posit_ppu_P32E2.sv"
         end
 
+`ifdef FLOAT_TO_POSIT
+        `include "../test_vectors/tv_posit_float_to_posit_P16E1.sv"
+`endif
 
         #10;
         $finish;

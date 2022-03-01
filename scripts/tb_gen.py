@@ -13,9 +13,9 @@ import pathlib
 import math
 
 # from posit_playground import from_bits
-from hardposit import from_bits
+from hardposit import from_bits, from_double
 from posit_playground.utils import get_bin, get_hex
-
+from posit_playground.f64 import F64
 
 LJUST = 25
 X = "'bX"
@@ -35,6 +35,7 @@ class Tb(enum.Enum):
     ENCODE = "encode"
     PPU = "ppu"
     PACOGEN = "pacogen"
+    FLOAT_TO_POSIT = "float_to_posit"
 
     def __str__(self):
         return self.value
@@ -83,6 +84,30 @@ S = clog2(N)
 
 if args.shuffle_random == False:
     random.seed(4)
+
+
+def single_arg_func(c, op):
+    if op == Tb.FLOAT_TO_POSIT:
+        c += "`ifdef FLOAT_TO_POSIT\n"
+        c += f"op = {op.name};\n"
+        c += f'op_ascii = "{op.name}";\n\n'
+        for _ in range(NUM_RANDOM_TEST_CASES):
+            # x is distributed between -A/2 and A/2
+            A = 150
+            x = random.random() * A - A/2
+
+            float_obj = F64(x_f64=x)
+            p = from_double(x, N, ES)
+
+            c += f"float_bits = {float_obj.bits}; "
+            c += f"ascii_x = \"{x}\"; "
+            c += f"ascii_exp = \"{float_obj.exp - float_obj.EXP_BIAS}\"; "
+            c += f"ascii_frac = \"{float_obj.mant}\"; "
+            c += f"posit_expected = {N}'d{p.to_bits()}; "
+            c += f"posit_expected_ascii = \"{p.eval()}\"; "
+            c += "#10; \n"
+        c += "`endif\n"
+    return c
 
 
 def func(c, op, list_a, list_b):
@@ -253,9 +278,13 @@ if __name__ == "__main__":
         c = func(c, Tb.ADD, list_a, list_b)
         c = func(c, Tb.SUB, list_a, list_b)
         c = func(c, Tb.DIV, list_a, list_b)
+        c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
 
     elif args.operation == Tb.PACOGEN:
         c = func(c, Tb.PACOGEN, list_a, list_b)
+    
+    elif args.operation == Tb.FLOAT_TO_POSIT:
+        c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
 
     filename = pathlib.Path(f"../test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv")
     with open(filename, "w") as f:

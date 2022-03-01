@@ -11,16 +11,28 @@ all: \
 
 .PHONY : all
 
+SRC_FOLDER := ../src
+SRC_PACOGEN := ../../PaCoGen
+
 
 ifeq ($(ES),0)
 ES_FIELD_PRESENCE_FLAG := -DNO_ES_FIELD
 endif
 
+ifeq ($(F),-1)
+else
+FLOAT_TO_POSIT_FLAG := -DFLOAT_TO_POSIT -DF=$(F)
+SRC_CONVERSIONS_PPU := \
+	$(SRC_FOLDER)/conversions/defines.vh \
+	$(SRC_FOLDER)/conversions/float_decoder.sv
+
+endif
+
+
+NR_STAGES := $(ES) 	# actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
 NUM_TESTS_PPU := 500
 
-SRC_FOLDER := ../src
-SRC_PACOGEN := ../../PaCoGen
 SRC_NOT_PPU := \
 	$(SRC_FOLDER)/utils.sv \
 	$(SRC_FOLDER)/constants.vh \
@@ -52,76 +64,74 @@ SRC_NOT_PPU := \
 	$(SRC_FOLDER)/round_posit.sv \
 	$(SRC_FOLDER)/sign_decisor.sv \
 	$(SRC_FOLDER)/set_sign.sv \
-	$(SRC_FOLDER)/highest_set.sv
+	$(SRC_FOLDER)/highest_set.sv \
+	$(SRC_CONVERSIONS_PPU)
 
 SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_NOT_PPU) \
-	$(SRC_FOLDER)/comparison_against_pacogen.sv \
 	$(SRC_PACOGEN)/common.v \
-	$(SRC_PACOGEN)/div/posit_div.v
+	$(SRC_PACOGEN)/div/posit_div.v \
+	$(SRC_FOLDER)/comparison_against_pacogen.sv 
+
+SRC_CONVERSIONS := \
+	$(SRC_FOLDER)/utils.sv \
+	$(SRC_FOLDER)/common.sv \
+	$(SRC_FOLDER)/conversions/defines.vh \
+	$(SRC_FOLDER)/conversions/float_to_posit.sv \
+	$(SRC_FOLDER)/conversions/float_decoder.sv \
+	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/posit_encoder.sv \
+	$(SRC_FOLDER)/round_posit.sv \
+	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/compute_rounding.sv \
+	$(SRC_FOLDER)/unpack_exponent.sv \
+	$(SRC_FOLDER)/set_sign.sv
+	
 
 
 gen-test-vectors:
 	cd scripts && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 4 && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
 not-ppu:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random && cd ..
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES) -o not_ppu_P$(N)E$(ES).out \
+	iverilog -g2012 -DTEST_BENCH_NOT_PPU \
+	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
+	-DN=$(N) -DES=$(ES) \
+	-o not_ppu_P$(N)E$(ES).out \
 	$(SRC_NOT_PPU) && \
 	sleep 1 && \
 	./not_ppu_P$(N)E$(ES).out
 
 not-ppu8:
-	make not-ppu N=8 ES=0
+	make not-ppu N=8 ES=0 F=-1
 
 not-ppu16:
-	make not-ppu N=16 ES=1
+	make not-ppu N=16 ES=1 F=-1
 
 not-ppu32:
-	make not-ppu N=32 ES=2
+	make not-ppu N=32 ES=2 F=-1
 
 
 conversions:
 	cd waveforms && \
 	iverilog -g2012 \
-	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
 	-DTB_FLOAT_TO_POSIT \
 	-o float_to_posit.out \
-	$(SRC_FOLDER)/utils.sv \
-	$(SRC_FOLDER)/common.sv \
-	$(SRC_FOLDER)/conversions/defines.vh \
-	$(SRC_FOLDER)/conversions/float_to_posit.sv \
-	$(SRC_FOLDER)/conversions/float_decoder.sv \
-	$(SRC_FOLDER)/pif_to_posit.sv \
-	$(SRC_FOLDER)/posit_encoder.sv \
-	$(SRC_FOLDER)/round_posit.sv \
-	$(SRC_FOLDER)/shift_fields.sv \
-	$(SRC_FOLDER)/compute_rounding.sv \
-	$(SRC_FOLDER)/unpack_exponent.sv \
-	$(SRC_FOLDER)/set_sign.sv && \
+	$(SRC_CONVERSIONS) && \
 	./float_to_posit.out
 
 
 conversions-verilog-quartus:
 	cd quartus && \
-	sv2v -DN=$(N) -DES=$(ES) -DF=$(F) \
-	$(SRC_FOLDER)/utils.sv \
-	$(SRC_FOLDER)/common.sv \
-	$(SRC_FOLDER)/conversions/defines.vh \
-	$(SRC_FOLDER)/conversions/float_to_posit.sv \
-	$(SRC_FOLDER)/conversions/float_decoder.sv \
-	$(SRC_FOLDER)/pif_to_posit.sv \
-	$(SRC_FOLDER)/posit_encoder.sv \
-	$(SRC_FOLDER)/round_posit.sv \
-	$(SRC_FOLDER)/shift_fields.sv \
-	$(SRC_FOLDER)/compute_rounding.sv \
-	$(SRC_FOLDER)/unpack_exponent.sv \
-	$(SRC_FOLDER)/set_sign.sv \
+	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	$(SRC_CONVERSIONS) \
 	> float_to_posit.v && cp float_to_posit.v ppu.v
 
 yosys:
@@ -131,13 +141,15 @@ yosys:
 
 verilog-quartus:
 	cd quartus && \
-	sv2v $(ES_FIELD_PRESENCE_FLAG) -DN=$(N) -DES=$(ES)  \
+	sv2v \
+	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
+	-DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_FOLDER)/ppu.sv \
 	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
 verilog-quartus16:
-	make verilog-quartus N=16 ES=0
+	make verilog-quartus N=16 ES=0 F=-1
 
 
 lint:
@@ -147,7 +159,7 @@ lint:
 div-against-pacogen:
 	cd scripts && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random
 	cd waveforms && \
-	iverilog -g2012 -DN=$(N) -DES=$(ES) -DNR=$(ES) $(ES_FIELD_PRESENCE_FLAG) -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen$(N).out \
+	iverilog -g2012 -DN=$(N) -DES=$(ES) -DNR=$(NR_STAGES) $(ES_FIELD_PRESENCE_FLAG) -DTEST_BENCH_COMP_PACOGEN -o comparison_against_pacogen$(N).out \
 	$(SRC_DIV_AGAINST_PACOGEN) \
 	&& ./comparison_against_pacogen$(N).out > comparison_against_pacogen$(N).log
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)

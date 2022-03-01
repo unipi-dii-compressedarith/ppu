@@ -12,7 +12,15 @@ parameter ES = `ES;
 
 
 `ifndef OP_SIZE
-parameter OP_SIZE = 2;
+parameter OP_SIZE = 3;
+/*
+ADD,
+SUB,
+MUL,
+DIV,
+FLOAT2POSIT
+POSIT2FLOAT
+*/
 `endif
 
 
@@ -74,10 +82,11 @@ parameter ZERO =    {`N{1'b0}};
 parameter NAN =     {1'b1, {`N-1{1'b0}}};
 
 
-parameter ADD = 2'b00;
-parameter SUB = 2'b01;
-parameter MUL = 2'b10;
-parameter DIV = 2'b11;
+parameter   ADD =               3'd0;
+parameter   SUB =               3'd1;
+parameter   MUL =               3'd2;
+parameter   DIV =               3'd3;
+parameter   FLOAT_TO_POSIT =    3'd4;
 
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 
