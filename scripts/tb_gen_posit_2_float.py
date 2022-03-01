@@ -1,7 +1,7 @@
 """
-python tb_gen_comparisons.py -n 16 -es 1 --no-shuffle-random --num-tests 100 | pbcopy
+python tb_gen_posit_2_float.py -n 16 -es 1 --no-shuffle-random --num-tests 100 | pbcopy
 """
-from hardposit import from_double
+from hardposit import from_bits
 from posit_playground.f64 import F64
 import argparse
 import random
@@ -41,17 +41,25 @@ N, ES = args.num_bits, args.es_size
 NUM_RANDOM_TEST_CASES = args.num_tests
 
 
+c = ""
 for i in range(NUM_RANDOM_TEST_CASES):
     # x is distributed between -A/2 and A/2
     A = 150
-    x = random.random() * A - A/2
+    bits = int(random.random() * (1 << (N-1)))
+    p = from_bits(bits, N, ES)
 
-    f64_obj = F64(x_f64=x)
-    p = from_double(x, N, ES)
+    f64_obj = F64(x_f64 = p.eval())
     
-    print(f"float_bits = {f64_obj.bits}; ")
-    print(f"ascii_x = \"{x}\"; ")
-    print(f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; ")
-    print(f"ascii_frac = \"{f64_obj.mant}\"; ")
-    print(f"posit_expected = {N}'d{p.to_bits()}; ")
-    print("#10; \n")
+    c += f"posit = {N}'d{p.to_bits()}; "
+
+    float_obj = F64(x_f64 = p.eval())
+
+    c += f"ascii_x = \"{float_obj.eval()}\"; "
+    c += f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; "
+    c += f"ascii_frac = \"{f64_obj.mant}\"; "
+    c += f"float_bits_expected = {f64_obj.bits}; "
+
+    c += "#10; \n"
+
+
+print(c)

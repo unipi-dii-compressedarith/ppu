@@ -36,6 +36,7 @@ class Tb(enum.Enum):
     PPU = "ppu"
     PACOGEN = "pacogen"
     FLOAT_TO_POSIT = "float_to_posit"
+    POSIT_TO_FLOAT = "posit_to_float"
 
     def __str__(self):
         return self.value
@@ -107,6 +108,10 @@ def single_arg_func(c, op):
             c += f"posit_expected_ascii = \"{p.eval()}\"; "
             c += "#10; \n"
         c += "`endif\n"
+    elif op == Tb.FLOAT_TO_POSIT:
+        pass
+    else:
+        raise Exception("wrong arg?")
     return c
 
 
@@ -279,6 +284,7 @@ if __name__ == "__main__":
         c = func(c, Tb.SUB, list_a, list_b)
         c = func(c, Tb.DIV, list_a, list_b)
         c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
+        c = single_arg_func(c, Tb.POSIT_TO_FLOAT) 
 
     elif args.operation == Tb.PACOGEN:
         c = func(c, Tb.PACOGEN, list_a, list_b)

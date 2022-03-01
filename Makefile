@@ -73,7 +73,7 @@ SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_PACOGEN)/div/posit_div.v \
 	$(SRC_FOLDER)/comparison_against_pacogen.sv 
 
-SRC_CONVERSIONS := \
+SRC_FLOAT_TO_POSIT := \
 	$(SRC_FOLDER)/utils.sv \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/conversions/defines.vh \
@@ -87,6 +87,18 @@ SRC_CONVERSIONS := \
 	$(SRC_FOLDER)/unpack_exponent.sv \
 	$(SRC_FOLDER)/set_sign.sv
 	
+SRC_POSIT_TO_FLOAT := \
+	$(SRC_FOLDER)/utils.sv \
+	$(SRC_FOLDER)/common.sv \
+	$(SRC_FOLDER)/conversions/defines.vh \
+	$(SRC_FOLDER)/conversions/posit_to_float.sv \
+	$(SRC_FOLDER)/conversions/float_encoder.sv \
+	$(SRC_FOLDER)/posit_to_pif.sv \
+	$(SRC_FOLDER)/posit_decoder.sv \
+	$(SRC_FOLDER)/posit_unpack.sv \
+	$(SRC_FOLDER)/total_exponent.sv \
+	$(SRC_FOLDER)/cls.sv \
+	$(SRC_FOLDER)/highest_set.sv
 
 
 gen-test-vectors:
@@ -124,15 +136,24 @@ conversions:
 	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
 	-DTB_FLOAT_TO_POSIT \
 	-o float_to_posit.out \
-	$(SRC_CONVERSIONS) && \
-	./float_to_posit.out
+	$(SRC_FLOAT_TO_POSIT) && \
+	./float_to_posit.out && \
+	iverilog -g2012 \
+	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	-DTB_POSIT_TO_FLOAT \
+	-o posit_to_float.out \
+	$(SRC_POSIT_TO_FLOAT) && \
+	./posit_to_float.out
 
 
 conversions-verilog-quartus:
 	cd quartus && \
 	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
-	$(SRC_CONVERSIONS) \
-	> float_to_posit.v && cp float_to_posit.v ppu.v
+	$(SRC_FLOAT_TO_POSIT) \
+	> float_to_posit.v && cp float_to_posit.v ppu.v && \
+	sv2v -DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	$(SRC_POSIT_TO_FLOAT) \
+	> posit_to_float.v && cp posit_to_float.v ppu.v
 
 yosys:
 	cd waveforms && \

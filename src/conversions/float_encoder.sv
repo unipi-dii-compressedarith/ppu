@@ -6,19 +6,19 @@ iverilog -g2012 -DN=16 -DES=1 -DFSIZE=64 -DTB_FLOAT_DECODE float_encoder.sv && .
 
 
 module float_encoder #(
-        parameter FSIZE = 64,
-        parameter EXP_SIZE = 11,
-        parameter MANT_SIZE = 52
+        parameter FSIZE = `F
     )(
         input sign,
-        input signed [EXP_SIZE-1:0] exp,
-        input [MANT_SIZE-1:0] frac,
+        input signed [FLOAT_EXP_SIZE_F`F-1:0] exp,
+        input [FLOAT_MANT_SIZE_F`F-1:0] frac,
         output [FSIZE-1:0] bits
     );
 
-    parameter EXP_BIAS = (1 << (EXP_SIZE - 1)) - 1;
+    parameter EXP_BIAS = (1 << (FLOAT_EXP_SIZE_F`F - 1)) - 1;
 
-    assign bits = 0; // todo
+    wire [FLOAT_EXP_SIZE_F`F-1:0] exp_biased;
+    assign exp_biased = exp + EXP_BIAS;
+    assign bits = {sign, exp_biased, frac};
 
 endmodule
 
@@ -28,19 +28,15 @@ endmodule
 
 module tb_float_encoder;
 
-    parameter FSIZE = 64;
-    parameter EXP_SIZE = 11;
-    parameter MANT_SIZE = 52;
-
+    parameter FSIZE = `F
+    
     reg sign;
-    reg [EXP_SIZE-1:0] exp;
-    reg [MANT_SIZE-1:0] frac;
+    reg [FLOAT_EXP_SIZE-1:0] exp;
+    reg [FLOAT_MANT_SIZE-1:0] frac;
     wire [FSIZE-1:0] bits;
 
     float_encoder #(
-        .FSIZE(FSIZE),
-        .EXP_SIZE(EXP_SIZE),
-        .MANT_SIZE(MANT_SIZE)
+        .FSIZE(FSIZE)
     ) float_encoder_inst (
         .sign(sign),
         .exp(exp),
