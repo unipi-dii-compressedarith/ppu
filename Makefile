@@ -1,8 +1,8 @@
 all: \
 	gen-test-vectors \
-	not-ppu8 \
-	not-ppu16 \
-	not-ppu32 \
+	ppu-core_ops8 \
+	ppu-core_ops16 \
+	ppu-core_ops32 \
 	div-against-pacogen8 \
 	div-against-pacogen16 \
 	div-against-pacogen32 \
@@ -33,11 +33,11 @@ NR_STAGES := $(ES) 	# actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 f
 
 NUM_TESTS_PPU := 500
 
-SRC_NOT_PPU := \
+SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/utils.sv \
 	$(SRC_FOLDER)/constants.vh \
 	$(SRC_FOLDER)/common.sv \
-	$(SRC_FOLDER)/not_ppu.sv \
+	$(SRC_FOLDER)/ppu_core_ops.sv \
 	$(SRC_FOLDER)/posit_to_pif.sv \
 	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
@@ -68,7 +68,7 @@ SRC_NOT_PPU := \
 	$(SRC_CONVERSIONS_PPU)
 
 SRC_DIV_AGAINST_PACOGEN := \
-	$(SRC_NOT_PPU) \
+	$(SRC_PPU_CORE_OPS) \
 	$(SRC_PACOGEN)/common.v \
 	$(SRC_PACOGEN)/div/posit_div.v \
 	$(SRC_FOLDER)/comparison_against_pacogen.sv 
@@ -111,25 +111,25 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
-not-ppu:
+ppu-core_ops:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_NOT_PPU \
+	iverilog -g2012 -DTEST_BENCH_ppu_core_ops \
 	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
 	-DN=$(N) -DES=$(ES) \
-	-o not_ppu_P$(N)E$(ES).out \
-	$(SRC_NOT_PPU) && \
+	-o ppu_core_ops_P$(N)E$(ES).out \
+	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
-	./not_ppu_P$(N)E$(ES).out
+	./ppu_core_ops_P$(N)E$(ES).out
 
-not-ppu8:
-	make not-ppu N=8 ES=0 F=-1
+ppu-core_ops8:
+	make ppu-core_ops N=8 ES=0 F=-1
 
-not-ppu16:
-	make not-ppu N=16 ES=1 F=-1
+ppu-core_ops16:
+	make ppu-core_ops N=16 ES=1 F=-1
 
-not-ppu32:
-	make not-ppu N=32 ES=2 F=-1
+ppu-core_ops32:
+	make ppu-core_ops N=32 ES=2 F=-1
 
 
 conversions:
@@ -163,8 +163,8 @@ conversions-verilog-float-to-posit-quartus:
 
 yosys:
 	cd waveforms && \
-	yosys -DN=16 -DES=1 -p "synth_intel -family max10 -top not_ppu -vqm not_ppu.vqm" \
-	$(SRC_NOT_PPU) > yosys_not_ppu.out
+	yosys -DN=16 -DES=1 -p "synth_intel -family max10 -top ppu_core_ops -vqm ppu_core_ops.vqm" \
+	$(SRC_PPU_CORE_OPS) > yosys_ppu_core_ops.out
 
 verilog-quartus:
 	cd quartus && \
@@ -172,7 +172,7 @@ verilog-quartus:
 	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
 	-DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_FOLDER)/ppu.sv \
-	$(SRC_NOT_PPU) > ./ppu.v && iverilog ppu.v && ./a.out
+	$(SRC_PPU_CORE_OPS) > ./ppu.v && iverilog ppu.v && ./a.out
 
 
 verilog-quartus16:
@@ -180,7 +180,7 @@ verilog-quartus16:
 
 
 lint:
-	slang quartus/ppu.v --top not_ppu # https://github.com/MikePopoloski/slang
+	slang quartus/ppu.v --top ppu_core_ops # https://github.com/MikePopoloski/slang
 
 
 div-against-pacogen:
@@ -192,13 +192,13 @@ div-against-pacogen:
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
 
 div-against-pacogen8:
-	make div-against-pacogen N=8 ES=0
+	make div-against-pacogen N=8 ES=0 F=-1
 
 div-against-pacogen16:
-	make div-against-pacogen N=16 ES=1
+	make div-against-pacogen N=16 ES=1 F=-1
 
 div-against-pacogen32:
-	make div-against-pacogen N=32 ES=2
+	make div-against-pacogen N=32 ES=2 F=-1
 
 clean:
 	rm waveforms/*.out
@@ -214,4 +214,4 @@ open-waveforms:
 modelsim:
 	cd modelsim && \
 	vlog ../src/cls.sv ../src/utils.sv
-	#do not_ppu.do
+	#do ppu_core_ops.do

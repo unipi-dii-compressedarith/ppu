@@ -10,7 +10,7 @@
 // `define NO_ES_FIELD
 // `endif
 
-module not_ppu #(
+module ppu_core_ops #(
         parameter N = `N,
         parameter ES = `ES
 `ifdef FLOAT_TO_POSIT
@@ -43,7 +43,7 @@ module not_ppu #(
     wire is_special_or_trivial;
     wire [N-1:0] pout_special_or_trivial;
     input_conditioning #(
-         .N(N)
+        .N(N)
     ) input_conditioning (
         .p1_in(p1),
         .p2_in(p2),
@@ -156,9 +156,9 @@ endmodule
 
 
 
-`ifdef TEST_BENCH_NOT_PPU
+`ifdef TEST_BENCH_ppu_core_ops
 
-module tb_not_ppu;
+module tb_ppu_core_ops;
     parameter N = `N;
     parameter ES = `ES;
 `ifdef FLOAT_TO_POSIT
@@ -186,10 +186,10 @@ module tb_not_ppu;
 `endif
 
 
-    not_ppu #(
+    ppu_core_ops #(
         .N      (N),
         .ES     (ES)
-    ) not_ppu_inst (
+    ) ppu_core_ops_inst (
         .p1     (p1),
         .p2     (p2),
         .op     (op),
@@ -210,7 +210,7 @@ module tb_not_ppu;
     initial begin
 
         $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
-        $dumpvars(0, tb_not_ppu);                        
+        $dumpvars(0, tb_ppu_core_ops);                        
 
         
         if (N == 8 && ES == 0) begin

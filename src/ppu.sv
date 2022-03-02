@@ -21,10 +21,10 @@ module ppu #(
         output reg [N-1:0] pout
     );
 
-    not_ppu #(
+    ppu_core_ops #(
         .N(N),
         .ES(ES)
-    ) not_ppu_inst (
+    ) ppu_core_ops_inst (
         .p1(p1_reg),
         .p2(p2_reg),
 `ifdef FLOAT_TO_POSIT

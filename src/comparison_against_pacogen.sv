@@ -9,19 +9,19 @@ module comparison_against_pacogen #(
         input [N-1:0] p1,
         input [N-1:0] p2,
         input [OP_SIZE-1:0] op,
-        output [N-1:0] pout_not_ppu,
+        output [N-1:0] pout_ppu_core_ops,
         output [N-1:0] pout_pacogen
     );
 
 
-    not_ppu #(
+    ppu_core_ops #(
         .N(N),
         .ES(ES)
-    ) not_ppu_inst (
+    ) ppu_core_ops_inst (
         .p1(p1),
         .p2(p2),
         .op(op),
-        .pout(pout_not_ppu)
+        .pout(pout_ppu_core_ops)
     );
 
 
@@ -50,14 +50,14 @@ module tb_comparison_against_pacogen;
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
     reg [100:0] op_ascii;
-    wire [N-1:0] pout_pacogen, pout_not_ppu;
+    wire [N-1:0] pout_pacogen, pout_ppu_core_ops;
 
-    reg [(10)-1:0] diff_pout_not_ppu_analog;
+    reg [(10)-1:0] diff_pout_ppu_core_ops_analog;
 
     reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
     
     reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
-    reg diff_pout_not_ppu, diff_pout_pacogen, not_ppu_off_by_1, pacogen_off_by_1;
+    reg diff_pout_ppu_core_ops, diff_pout_pacogen, ppu_core_ops_off_by_1, pacogen_off_by_1;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
@@ -69,18 +69,18 @@ module tb_comparison_against_pacogen;
         .p1     (p1),
         .p2     (p2),
         .op     (op),
-        .pout_not_ppu   (pout_not_ppu),
+        .pout_ppu_core_ops   (pout_ppu_core_ops),
         .pout_pacogen   (pout_pacogen)
     );
 
     
     always @(*) begin
-        diff_pout_not_ppu = pout_not_ppu === pout_ground_truth ? 0 : 1'bx;
+        diff_pout_ppu_core_ops = pout_ppu_core_ops === pout_ground_truth ? 0 : 1'bx;
         diff_pout_pacogen = pout_pacogen === pout_ground_truth ? 0 : 1'bx;
-        not_ppu_off_by_1 = abs(pout_not_ppu - pout_ground_truth) == 0 ? 0 : abs(pout_not_ppu - pout_ground_truth) == 1 ? 1 : 'bx;
+        ppu_core_ops_off_by_1 = abs(pout_ppu_core_ops - pout_ground_truth) == 0 ? 0 : abs(pout_ppu_core_ops - pout_ground_truth) == 1 ? 1 : 'bx;
         pacogen_off_by_1 = abs(pout_pacogen - pout_ground_truth) == 0 ? 0 : abs(pout_pacogen - pout_ground_truth) == 1 ? 1 : 'bx;
 
-        diff_pout_not_ppu_analog = abs(pout_not_ppu - pout_ground_truth);
+        diff_pout_ppu_core_ops_analog = abs(pout_ppu_core_ops - pout_ground_truth);
     end
 
     initial begin

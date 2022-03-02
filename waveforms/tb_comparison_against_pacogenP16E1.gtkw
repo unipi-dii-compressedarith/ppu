@@ -34,13 +34,13 @@ tb_comparison_against_pacogen.pout_ground_truth[15:0]
 tb_comparison_against_pacogen.pout_gt_ascii[300:0]
 @22
 tb_comparison_against_pacogen.pout_hwdiv_expected[15:0]
-tb_comparison_against_pacogen.pout_not_ppu[15:0]
+tb_comparison_against_pacogen.pout_ppu_core_ops[15:0]
 tb_comparison_against_pacogen.pout_pacogen[15:0]
 tb_comparison_against_pacogen.test_no[16:0]
 @28
-tb_comparison_against_pacogen.diff_pout_not_ppu
+tb_comparison_against_pacogen.diff_pout_ppu_core_ops
 @29
-tb_comparison_against_pacogen.not_ppu_off_by_1
+tb_comparison_against_pacogen.ppu_core_ops_off_by_1
 @28
 tb_comparison_against_pacogen.diff_pout_pacogen
 tb_comparison_against_pacogen.pacogen_off_by_1

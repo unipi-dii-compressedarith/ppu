@@ -83,7 +83,7 @@ def main():
         content = f.read()
 
     pacogen_tests_failed = content.count("PACOGEN_ERROR")
-    not_ppu_tests_failed = content.count("NOT_PPU_ERROR")
+    ppu_core_ops_tests_failed = content.count("ppu_core_ops_ERROR")
 
     REGEX_HEX_NUM = r"0x[0-9a-f]" + "{" + str(N // 4) + "}"
     REGEX_SEQUENCE = "({0}) / ({0}) = ({0}) != ({0})".format(REGEX_HEX_NUM)
@@ -92,23 +92,23 @@ def main():
     for match in re.compile("PACOGEN_ERROR: " + REGEX_SEQUENCE).finditer(content):
         pacogen_tests.append(match.groups())
 
-    not_ppu_tests = []
-    for match in re.compile("NOT_PPU_ERROR: " + REGEX_SEQUENCE).finditer(content):
-        not_ppu_tests.append(match.groups())
+    ppu_core_ops_tests = []
+    for match in re.compile("ppu_core_ops_ERROR: " + REGEX_SEQUENCE).finditer(content):
+        ppu_core_ops_tests.append(match.groups())
 
     # pacogen_rms = compute_rms(pacogen_tests)
     # print(f"pacogen_rms = {pacogen_rms}")
 
-    # not_ppu_rms = compute_rms(not_ppu_tests)
-    # print(f"not_ppu_rms = {not_ppu_rms}")
+    # ppu_core_ops_rms = compute_rms(ppu_core_ops_tests)
+    # print(f"ppu_core_ops_rms = {ppu_core_ops_rms}")
 
     pacogen_mad = compute_mad(pacogen_tests)
     print(f"pacogen_mad = ", end="")
     print(mad_stats(pacogen_mad))
 
-    not_ppu_mad = compute_mad(not_ppu_tests)
-    print(f"not_ppu_mad = ", end="")
-    print(mad_stats(not_ppu_mad))
+    ppu_core_ops_mad = compute_mad(ppu_core_ops_tests)
+    print(f"ppu_core_ops_mad = ", end="")
+    print(mad_stats(ppu_core_ops_mad))
 
     REGEX_NUM_TESTS = r"Total tests cases: (\d+)"
     num_total_tests = 0
@@ -123,7 +123,7 @@ def main():
         )
 
         print(
-            f"not_ppu wrong: {not_ppu_tests_failed}/{num_total_tests} = {100*not_ppu_tests_failed/num_total_tests:.5g}%"
+            f"ppu_core_ops wrong: {ppu_core_ops_tests_failed}/{num_total_tests} = {100*ppu_core_ops_tests_failed/num_total_tests:.5g}%"
         )
 
 

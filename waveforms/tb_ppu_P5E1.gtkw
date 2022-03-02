@@ -10,22 +10,22 @@
 [size] 1440 855
 [pos] -1 -1
 *-7.597095 452 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[treeopen] tb_not_ppu.
+[treeopen] tb_ppu_core_ops.
 [sst_width] 193
 [signals_width] 223
 [sst_expanded] 1
 [sst_vpaned_height] 256
 @28
-tb_not_ppu.diff_pout
-tb_not_ppu.op[1:0]
+tb_ppu_core_ops.diff_pout
+tb_ppu_core_ops.op[1:0]
 @22
-tb_not_ppu.p1[4:0]
-tb_not_ppu.p2[4:0]
-tb_not_ppu.pout[4:0]
-tb_not_ppu.pout_expected[4:0]
+tb_ppu_core_ops.p1[4:0]
+tb_ppu_core_ops.p2[4:0]
+tb_ppu_core_ops.pout[4:0]
+tb_ppu_core_ops.pout_expected[4:0]
 @28
-tb_not_ppu.pout_off_by_1
+tb_ppu_core_ops.pout_off_by_1
 @25
-tb_not_ppu.test_no[5:0]
+tb_ppu_core_ops.test_no[5:0]
 [pattern_trace] 1
 [pattern_trace] 0
