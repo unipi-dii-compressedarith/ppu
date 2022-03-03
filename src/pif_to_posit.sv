@@ -1,7 +1,7 @@
 module pif_to_posit #(
         parameter N = 4,
         parameter ES = 0,
-        parameter PIF_TOTAL_SIZE = 20
+        parameter PIF_TOTAL_SIZE = 43
     )(
         input [PIF_TOTAL_SIZE-1:0] pif,
         input frac_lsb_cut_off, // flag

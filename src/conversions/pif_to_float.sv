@@ -1,3 +1,4 @@
+`ifdef FLOAT_TO_POSIT
 module pif_to_float #(
         parameter N = 10,
         parameter ES = 1,
@@ -48,3 +49,4 @@ module pif_to_float #(
 
 
 endmodule
+`endif

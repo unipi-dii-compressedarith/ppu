@@ -4,7 +4,7 @@ iverilog -g2012 -DN=16 -DES=1 -DFSIZE=64 -DTB_FLOAT_DECODE float_encoder.sv && .
 
 */
 
-
+`ifdef FLOAT_TO_POSIT
 module float_encoder #(
         parameter FSIZE = `F
     )(
@@ -21,6 +21,7 @@ module float_encoder #(
     assign bits = {sign, exp_biased, frac};
 
 endmodule
+`endif
 
 
 `ifdef TB_FLOAT_DECODE

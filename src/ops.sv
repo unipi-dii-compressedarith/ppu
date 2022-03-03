@@ -6,17 +6,19 @@ module ops #(
         input [PIF_SIZE-1:0] pif1,
         input [PIF_SIZE-1:0] pif2,
 
-        output sign_out,
-        output [TE_SIZE-1:0] te_out,
-        output [FRAC_FULL_SIZE-1:0] frac_full,
+        output [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_ops_out,
         output frac_lsb_cut_off
     );
 
-
-    wire sign1, sign2, sign_out;
+    wire sign1, sign2;
     wire [TE_SIZE-1:0] te1, te2;
     wire [MANT_SIZE-1:0] mant1, mant2;
     wire [FRAC_FULL_SIZE-1:0] frac_out;
+
+
+    wire sign_out;
+    wire [TE_SIZE-1:0] te_out;
+    wire [FRAC_FULL_SIZE-1:0] frac_full;
 
     assign {sign1, te1, mant1} = pif1;
     assign {sign2, te2, mant2} = pif2;
@@ -44,7 +46,6 @@ module ops #(
         .sign(sign_out)
     );
 
-
-    assign frac_full = frac_out;
+    assign pif_ops_out = {sign_out, te_out, frac_out};
 
 endmodule

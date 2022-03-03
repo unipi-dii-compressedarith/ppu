@@ -13,15 +13,20 @@
 module ppu_core_ops #(
         parameter N = `N,
         parameter ES = `ES
+`ifdef FLOAT_TO_POSIT
+        ,parameter FSIZE = `F
+`endif
     )(
-        input   [N-1:0]                                     p1,
-        input   [N-1:0]                                     p2,
-        input   [OP_SIZE-1:0]                               op,
-        /************************************************************/
-        input   [(1+FLOAT_EXP_SIZE+FLOAT_MANT_SIZE)-1:0]    float_pif,
-        output  [(PIF_SIZE)-1:0]                            posit_pif,
-        /************************************************************/
-        output  [N-1:0]                                     pout
+        input   [N-1:0]                                                 p1,
+        input   [N-1:0]                                                 p2,
+        input   [OP_SIZE-1:0]                                           op,
+`ifdef FLOAT_TO_POSIT
+        /************************************************************************/
+        input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_pif,
+        output  [(PIF_SIZE)-1:0]                                        posit_pif,
+        /************************************************************************/
+`endif
+        output  [N-1:0]                                                 pout
     );
     
     
@@ -63,55 +68,73 @@ module ppu_core_ops #(
         .pif(pif1)
     );
 
-
+    wire [N-1:0] posit_in_posit_to_pif2;
+    assign posit_in_posit_to_pif2 = 
+`ifdef FLOAT_TO_POSIT
+        (op == POSIT_TO_FLOAT) ? p2 : 
+`endif        
+        p2_cond;
+    
     posit_to_pif #(
         .N(N),
         .ES(ES)
     ) posit_to_pif2 (
-        .p_cond(p2_cond),
+        .p_cond(posit_in_posit_to_pif2),
         .pif(pif2)
     );
 
+`ifdef FLOAT_TO_POSIT
+    assign posit_pif = pif2;
+`endif
 
     wire [TE_SIZE-1:0] ops_te_out;
     wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
     wire sign_out_ops;
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_ops_out;
     ops #(
         .N(N)
     ) ops_inst (
         .op(op),
         .pif1(pif1),
         .pif2(pif2),
-        .sign_out(sign_out_ops),
-        .te_out(ops_te_out),
-        .frac_full(ops_frac_full),
+        .pif_ops_out(pif_ops_out),        
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
-
-
-
-    wire [FRAC_FULL_SIZE-1:0]   _frac;
-    wire [TE_SIZE-1:0]          _exp;
-    assign _exp = ops_te_out;
-    assign _frac = ops_frac_full;
 
     wire frac_lsb_cut_off;
 
     wire [N-1:0] pout_non_special;
 
-    wire _sign;
-    assign _sign = sign_out_ops;
+    
+`ifdef FLOAT_TO_POSIT
+    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] pif_to_posit_in;
+`else
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_to_posit_in;
+`endif
+
+    assign pif_to_posit_in = 
+`ifdef FLOAT_TO_POSIT
+        (op == FLOAT_TO_POSIT) ? float_pif : 
+`endif
+        pif_ops_out;
+
+    wire frac_lsb_cut_off_pif_to_posit_in;
+    assign frac_lsb_cut_off_pif_to_posit_in = 
+`ifdef FLOAT_TO_POSIT
+        (op == FLOAT_TO_POSIT) ? 1'b0 : 
+`endif        
+        frac_lsb_cut_off;
 
 
     pif_to_posit #(
         .N(N),
         .ES(ES),
-        .PIF_TOTAL_SIZE(1+TE_SIZE+FRAC_FULL_SIZE)
+        .PIF_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
     ) pif_to_posit_inst (
-        .pif({_sign, _exp, _frac}),
-        .frac_lsb_cut_off(frac_lsb_cut_off),
+        .pif(pif_to_posit_in),
+        .frac_lsb_cut_off(frac_lsb_cut_off_pif_to_posit_in),
         .posit(pout_non_special)
     );
 

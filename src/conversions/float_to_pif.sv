@@ -1,3 +1,4 @@
+`ifdef FLOAT_TO_POSIT
 module float_to_pif #(
         parameter FSIZE = 64
     )(
@@ -21,3 +22,4 @@ module float_to_pif #(
     assign pif = {sign, exp, frac};
     
 endmodule
+`endif

@@ -29,7 +29,7 @@ SRC_CONVERSIONS_PPU := \
 endif
 
 
-NR_STAGES := $(ES) 	# actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
+NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
 NUM_TESTS_PPU := 500
 
@@ -40,6 +40,10 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/ppu_core_ops.sv \
 	$(SRC_FOLDER)/posit_to_pif.sv \
 	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/conversions/float_encoder.sv \
+	$(SRC_FOLDER)/conversions/sign_extend.sv \
+	$(SRC_FOLDER)/conversions/float_to_pif.sv \
+	$(SRC_FOLDER)/conversions/pif_to_float.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
 	$(SRC_FOLDER)/handle_special_or_trivial.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
