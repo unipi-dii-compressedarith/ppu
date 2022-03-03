@@ -191,8 +191,9 @@ verilog-quartus:
 	sv2v \
 	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
 	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	$(SRC_FOLDER)/ppu_top.sv \
 	$(SRC_FOLDER)/ppu.sv \
-	$(SRC_PPU_CORE_OPS) > ./ppu.v && iverilog ppu.v && ./a.out
+	$(SRC_PPU_CORE_OPS) > ./ppu_top.v && iverilog ppu_top.v && ./a.out
 
 
 verilog-quartus16:

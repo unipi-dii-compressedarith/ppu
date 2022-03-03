@@ -77,3 +77,83 @@ module ppu #(
 
 
 endmodule
+
+
+
+
+
+
+`ifdef TEST_BENCH_PPU
+`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
+
+module tb_ppu;
+    parameter N = `N;
+    parameter ES = `ES;
+
+    reg [N-1:0]  p1, p2;
+    reg [OP_SIZE-1:0] op;
+    reg [100:0] op_ascii;
+    wire [N-1:0] pout;
+
+    reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
+
+    
+    reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
+    reg diff_pout_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
+    reg [N:0] test_no;
+
+    reg [100:0] count_errors;
+
+
+    ppu_core_ops #(
+        .N      (N),
+        .ES     (ES)
+    ) ppu_core_ops_inst (
+        .p1     (p1),
+        .p2     (p2),
+        .op     (op),
+        .pout   (pout)
+    );
+
+    
+    always @(*) begin
+        diff_pout_ground_truth = pout === pout_ground_truth ? 0 : 1'bx;
+        pout_off_by_1 = abs(pout - pout_ground_truth) == 0 ? 0 : abs(pout - pout_ground_truth) == 1 ? 1 : 'bx;
+        diff_pout_hwdiv_exp = (op != DIV) ? 'hz : pout === pout_hwdiv_expected ? 0 : 1'bx;
+    end
+
+
+    reg [10-1:0] nn, ee;
+    initial begin
+
+        $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
+        $dumpvars(0, tb_ppu);                        
+
+        
+        if (N == 8 && ES == 0) begin
+            `include "../test_vectors/tv_posit_ppu_P8E0.sv"
+        end
+
+        if (N == 8 && ES == 4) begin
+            `include "../test_vectors/tv_posit_ppu_P8E4.sv"
+        end
+
+        if (N == 5 && ES == 1) begin
+            `include "../test_vectors/tv_posit_ppu_P5E1.sv"
+        end
+
+        if (N == 16 && ES == 1) begin
+            `include "../test_vectors/tv_posit_ppu_P16E1.sv"
+        end
+
+        if (N == 32 && ES == 2) begin
+            `include "../test_vectors/tv_posit_ppu_P32E2.sv"
+        end
+
+
+        #10;
+        $finish;
+    end
+
+endmodule
+`endif

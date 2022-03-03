@@ -1,39 +1,56 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Mon Feb 28 09:22:00 2022
+[*] Thu Mar  3 16:19:48 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P32E2.vcd"
-[dumpfile_mtime] "Mon Feb 28 09:20:47 2022"
-[dumpfile_size] 15908923
+[dumpfile_mtime] "Thu Mar  3 16:18:53 2022"
+[dumpfile_size] 16411676
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P32E2.gtkw"
 [timestart] 0
 [size] 2560 1418
 [pos] -1 -1
-*-10.952936 9474 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[treeopen] tb_ppu_core_ops.
+*-10.959382 9474 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_ppu.
+[treeopen] tb_ppu.ppu_core_ops_inst.
 [sst_width] 193
-[signals_width] 296
+[signals_width] 305
 [sst_expanded] 1
 [sst_vpaned_height] 583
 @28
-tb_ppu_core_ops.ppu_core_ops_inst.op[1:0]
+tb_ppu.ppu_core_ops_inst.frac_lsb_cut_off
+tb_ppu.ppu_core_ops_inst.frac_lsb_cut_off_pif_to_posit_in
+tb_ppu.ppu_core_ops_inst.is_special_or_trivial
+tb_ppu.ppu_core_ops_inst.op[2:0]
 @22
-tb_ppu_core_ops.ppu_core_ops_inst.p1[31:0]
-tb_ppu_core_ops.ppu_core_ops_inst.p2[31:0]
-tb_ppu_core_ops.ppu_core_ops_inst.pout[31:0]
-@28
-tb_ppu_core_ops.diff_pout_ground_truth
-tb_ppu_core_ops.pout_off_by_1
-tb_ppu_core_ops.diff_pout_hwdiv_exp
-tb_ppu_core_ops.op[1:0]
-@820
-[color] 2
-tb_ppu_core_ops.op_ascii[100:0]
-[color] 2
-tb_ppu_core_ops.p1_ascii[300:0]
-[color] 2
-tb_ppu_core_ops.p2_ascii[300:0]
-[color] 2
-tb_ppu_core_ops.pout_gt_ascii[300:0]
+tb_ppu.ppu_core_ops_inst.p1[31:0]
+tb_ppu.ppu_core_ops_inst.p1_cond[31:0]
+tb_ppu.ppu_core_ops_inst.p2[31:0]
+tb_ppu.ppu_core_ops_inst.p2_cond[31:0]
+tb_ppu.ppu_core_ops_inst.pif1[39:0]
+tb_ppu.ppu_core_ops_inst.pif2[39:0]
+tb_ppu.ppu_core_ops_inst.pif_ops_out[97:0]
+tb_ppu.ppu_core_ops_inst.pif_to_posit_in[97:0]
+tb_ppu.ppu_core_ops_inst.posit_in_posit_to_pif2[31:0]
+tb_ppu.ppu_core_ops_inst.pout[31:0]
+tb_ppu.ppu_core_ops_inst.pout_non_special[31:0]
+tb_ppu.ppu_core_ops_inst.pout_special_or_trivial[31:0]
+@29
+tb_ppu.diff_pout_ground_truth
+tb_ppu.diff_pout_hwdiv_exp
+tb_ppu.op[2:0]
+@23
+tb_ppu.op_ascii[100:0]
+tb_ppu.p1[31:0]
+tb_ppu.p1_ascii[300:0]
+tb_ppu.p2[31:0]
+tb_ppu.p2_ascii[300:0]
+tb_ppu.pout[31:0]
+tb_ppu.pout_ground_truth[31:0]
+tb_ppu.pout_gt_ascii[300:0]
+tb_ppu.pout_hwdiv_expected[31:0]
+@29
+tb_ppu.pout_off_by_1
+@23
+tb_ppu.test_no[32:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -3,54 +3,51 @@
 
 */
 
-module ppu #(
-        parameter N = `N,
-        parameter ES = `ES
+`define WORD 64
+module ppu_top #(
+        parameter WORD = `WORD
 `ifdef FLOAT_TO_POSIT
         ,parameter FSIZE = `F
 `endif
     )(
         input clk,
-        // input rst,
-        input [N-1:0] p1,
-        input [N-1:0] p2,
-`ifdef FLOAT_TO_POSIT
-        input [FSIZE-1:0] float,
-`endif
-        input [OP_SIZE-1:0] op,
-        output reg [N-1:0] pout
+        input [WORD-1:0] in1,
+        input [WORD-1:0] in2,
+        input [OP_SIZE-1:0] op, /*
+                              ADD
+                            | SUB
+                            | MUL
+                            | DIV
+                            | F2P
+                            | P2F
+                            */
+        output [WORD-1:0] out
     );
 
-    ppu_core_ops #(
+
+    ppu #(
+        .WORD(WORD),
+`ifdef FLOAT_TO_POSIT
+        .FSIZE(FSIZE),
+`endif
         .N(N),
-        .ES(ES)
-    ) ppu_core_ops_inst (
-        .p1(p1_reg),
-        .p2(p2_reg),
-
-        .float_pif(float_pif),
-        .posit_pif(posit_pif),
-        
+        .ES(ES),
+    ) ppu_inst (
+        .in1(in1_reg),
+        .in2(in2_reg),
         .op(op_reg),
-        .pout(pout_reg)
+        .out(out_reg)
     );
 
 
-    reg [N-1:0] p1_reg, p2_reg, pout_reg;
-`ifdef FLOAT_TO_POSIT
-    reg [FSIZE-1:0] float_reg;
-`endif
+    reg [WORD-1:0] in1_reg, in2_reg, out_reg;
     reg [OP_SIZE-1:0] op_reg;
 
-    
     always @(posedge clk) begin
-        p1_reg <= p1;
-        p2_reg <= p2;
-`ifdef FLOAT_TO_POSIT
-        float_reg <= float;
-`endif
+        in1_reg <= in1;
+        in2_reg <= in2;
         op_reg <= op;
-        pout <= pout_reg;    
+        out <= out_reg;    
     end
 
 endmodule
