@@ -78,6 +78,7 @@ SRC_FLOAT_TO_POSIT := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/conversions/defines.vh \
 	$(SRC_FOLDER)/conversions/float_to_posit.sv \
+	$(SRC_FOLDER)/conversions/float_to_pif.sv \
 	$(SRC_FOLDER)/conversions/float_decoder.sv \
 	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/posit_encoder.sv \
@@ -94,7 +95,7 @@ SRC_POSIT_TO_FLOAT := \
 	$(SRC_FOLDER)/conversions/posit_to_float.sv \
 	$(SRC_FOLDER)/conversions/pif_to_float.sv \
 	$(SRC_FOLDER)/conversions/float_encoder.sv \
-	$(SRC_FOLDER)/conversions/cast_posit_exponent_to_float_exponent.sv \
+	$(SRC_FOLDER)/conversions/sign_extend.sv \
 	$(SRC_FOLDER)/posit_to_pif.sv \
 	$(SRC_FOLDER)/posit_decoder.sv \
 	$(SRC_FOLDER)/posit_unpack.sv \
@@ -114,7 +115,7 @@ gen-test-vectors:
 ppu-core_ops:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
 	cd waveforms && \
-	iverilog -g2012 -DTEST_BENCH_ppu_core_ops \
+	iverilog -g2012 -DTEST_BENCH_PPU_CORE_OPS \
 	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
 	-DN=$(N) -DES=$(ES) \
 	-o ppu_core_ops_P$(N)E$(ES).out \
@@ -132,6 +133,19 @@ ppu-core_ops32:
 	make ppu-core_ops N=32 ES=2 F=-1
 
 
+ppu:
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
+	cd waveforms && \
+	iverilog -g2012 -DTEST_BENCH_PPU \
+	$(ES_FIELD_PRESENCE_FLAG) \
+	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	-o ppu_P$(N)E$(ES).out \
+	../src/ppu.sv \
+	$(SRC_PPU_CORE_OPS) && \
+	sleep 1 && \
+	./ppu_P$(N)E$(ES).out
+
+
 conversions:
 	cd waveforms && \
 	iverilog -g2012 \
@@ -146,6 +160,8 @@ conversions:
 	-o posit_to_float.out \
 	$(SRC_POSIT_TO_FLOAT) && \
 	./posit_to_float.out
+	gtkwave waveforms/tb_float_F64_to_posit_P16E1.gtkw &
+	gtkwave waveforms/tb_posit_P16E1_to_float_F64.vcd &
 
 
 conversions-verilog-posit-to-float-quartus:

@@ -13,17 +13,15 @@
 module ppu_core_ops #(
         parameter N = `N,
         parameter ES = `ES
-`ifdef FLOAT_TO_POSIT
-        ,parameter FSIZE = `F
-`endif
     )(
-        input   [N-1:0]         p1,
-        input   [N-1:0]         p2,
-`ifdef FLOAT_TO_POSIT
-        input   [FSIZE-1:0]     float,
-`endif
-        input   [OP_SIZE-1:0]   op,
-        output  [N-1:0]         pout
+        input   [N-1:0]                                     p1,
+        input   [N-1:0]                                     p2,
+        input   [OP_SIZE-1:0]                               op,
+        /************************************************************/
+        input   [(1+FLOAT_EXP_SIZE+FLOAT_MANT_SIZE)-1:0]    float_pif,
+        output  [(PIF_SIZE)-1:0]                            posit_pif,
+        /************************************************************/
+        output  [N-1:0]                                     pout
     );
     
     
@@ -83,7 +81,6 @@ module ppu_core_ops #(
         .N(N)
     ) ops_inst (
         .op(op),
-        
         .pif1(pif1),
         .pif2(pif2),
         .sign_out(sign_out_ops),
@@ -94,50 +91,18 @@ module ppu_core_ops #(
 
 
 
-`ifdef FLOAT_TO_POSIT
-    wire float_sign;
-    wire [FLOAT_EXP_SIZE_F`F-1:0] float_exp;
-    wire [FLOAT_MANT_SIZE_F`F-1:0] float_frac;
-
-    float_decoder #(
-        .FSIZE(FSIZE)
-    ) float_decoder_inst (
-        .bits(float),
-        .sign(float_sign),
-        .exp(float_exp),
-        .frac(float_frac)
-    );
-`endif
-
-
 
     wire [FRAC_FULL_SIZE-1:0]   _frac;
     wire [TE_SIZE-1:0]          _exp;
-    assign _exp = 
-`ifdef FLOAT_TO_POSIT
-        op == FLOAT_TO_POSIT ? float_exp : 
-`endif
-        ops_te_out;
-    assign _frac = 
-`ifdef FLOAT_TO_POSIT
-        op == FLOAT_TO_POSIT ? float_frac : 
-`endif
-        ops_frac_full;
-
-
+    assign _exp = ops_te_out;
+    assign _frac = ops_frac_full;
 
     wire frac_lsb_cut_off;
-
 
     wire [N-1:0] pout_non_special;
 
     wire _sign;
-    assign _sign = 
-`ifdef FLOAT_TO_POSIT
-        op == FLOAT_TO_POSIT ? float_sign : 
-`endif
-        sign_out_ops;
-
+    assign _sign = sign_out_ops;
 
 
     pif_to_posit #(
@@ -156,14 +121,10 @@ endmodule
 
 
 
-`ifdef TEST_BENCH_ppu_core_ops
-
+`ifdef TEST_BENCH_PPU_CORE_OPS
 module tb_ppu_core_ops;
     parameter N = `N;
     parameter ES = `ES;
-`ifdef FLOAT_TO_POSIT
-    parameter FSIZE = `F;
-`endif
 
     reg [N-1:0]  p1, p2;
     reg [OP_SIZE-1:0] op;
@@ -178,12 +139,6 @@ module tb_ppu_core_ops;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
-
-`ifdef FLOAT_TO_POSIT
-    reg [FSIZE-1:0] float_bits;
-    reg [N-1:0] posit_expected;
-    reg [200:0] ascii_x, ascii_exp, ascii_frac, posit_expected_ascii;
-`endif
 
 
     ppu_core_ops #(
@@ -202,8 +157,6 @@ module tb_ppu_core_ops;
         pout_off_by_1 = abs(pout - pout_ground_truth) == 0 ? 0 : abs(pout - pout_ground_truth) == 1 ? 1 : 'bx;
         diff_pout_hwdiv_exp = (op != DIV) ? 'hz : pout === pout_hwdiv_expected ? 0 : 1'bx;
     end
-
-
 
 
     reg [10-1:0] nn, ee;
@@ -233,9 +186,6 @@ module tb_ppu_core_ops;
             `include "../test_vectors/tv_posit_ppu_P32E2.sv"
         end
 
-`ifdef FLOAT_TO_POSIT
-        `include "../test_vectors/tv_posit_float_to_posit_P16E1.sv"
-`endif
 
         #10;
         $finish;

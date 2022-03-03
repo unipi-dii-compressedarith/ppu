@@ -26,10 +26,10 @@ module pif_to_float #(
 
     assign float_sign = posit_sign;
     
-    cast_posit_exponent_to_float_exponent #(
+    sign_extend #(
         .POSIT_TOTAL_EXPONENT_SIZE(TE_SIZE),
         .FLOAT_EXPONENT_SIZE(FLOAT_EXP_SIZE)
-    ) cast_posit_exponent_to_float_exponent_inst (
+    ) sign_extend_inst (
         .posit_total_exponent(posit_te),
         .float_exponent(float_exp)
     );      

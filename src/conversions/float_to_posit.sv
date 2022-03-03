@@ -11,15 +11,16 @@ module float_to_posit #(
     wire [TE_SIZE-1:0] exp;
     wire [FLOAT_MANT_SIZE-1:0] frac;
 
-    float_decoder #(
+    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] pif_out;
+    float_to_pif #(
         .FSIZE(FSIZE)
-    ) float_decoder_inst (
+    ) float_to_pif_inst (
         .bits(float_bits),
-        .sign(sign),
-        .exp(float_exp),
-        .frac(frac)
+        .pif(pif_out)
     );
     
+    assign {sign, float_exp, frac} = pif_out;
+
     parameter FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
     parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
@@ -31,24 +32,14 @@ module float_to_posit #(
     assign frac_full = frac >> (FLOAT_MANT_SIZE - FRAC_FULL_SIZE);
 
 
-    wire [N-1:0] posit_pif_out;
     pif_to_posit #(
         .N(N),
-        .ES(ES)
+        .ES(ES),
+        .PIF_TOTAL_SIZE(1+TE_SIZE+FRAC_FULL_SIZE)
     ) pif_to_posit_inst (
-        .te(exp),
-        .frac_full(frac_full),
+        .pif({sign, exp, frac_full}),
         .frac_lsb_cut_off(1'b0),
-        .posit(posit_pif_out)
-    );
-
-
-    set_sign #(
-        .N(N)
-    ) set_sign_inst (
-        .posit_in(posit_pif_out),
-        .sign(sign),
-        .posit_out(posit)
+        .posit(posit)
     );
 
 endmodule

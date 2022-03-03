@@ -87,6 +87,7 @@ parameter   SUB =               3'd1;
 parameter   MUL =               3'd2;
 parameter   DIV =               3'd3;
 parameter   FLOAT_TO_POSIT =    3'd4;
+parameter   POSIT_TO_FLOAT =    3'd5;
 
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 

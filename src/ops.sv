@@ -36,7 +36,7 @@ module ops #(
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
-    sign_decisor # (
+    sign_decisor #(
     ) sign_decisor (
         .sign1(sign1),
         .sign2(sign2),
