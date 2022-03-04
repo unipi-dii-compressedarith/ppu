@@ -43,8 +43,6 @@ NUM_RANDOM_TEST_CASES = args.num_tests
 
 c = ""
 for i in range(NUM_RANDOM_TEST_CASES):
-    # x is distributed between -A/2 and A/2
-    A = 150
     bits = int(random.random() * (1 << (N-1)))
     p = from_bits(bits, N, ES)
 

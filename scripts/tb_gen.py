@@ -88,8 +88,9 @@ if args.shuffle_random == False:
 
 
 def single_arg_func(c, op):
+    c += "`ifdef FLOAT_TO_POSIT\n"
+    c += f"out_ground_truth = 'bz;\n"
     if op == Tb.FLOAT_TO_POSIT:
-        c += "`ifdef FLOAT_TO_POSIT\n"
         c += f"op = {op.name};\n"
         c += f'op_ascii = "{op.name}";\n\n'
         for _ in range(NUM_RANDOM_TEST_CASES):
@@ -100,18 +101,36 @@ def single_arg_func(c, op):
             float_obj = F64(x_f64=x)
             p = from_double(x, N, ES)
 
-            c += f"float_bits = {float_obj.bits}; "
+            c += f"in1 = {float_obj.bits}; "
             c += f"ascii_x = \"{x}\"; "
             c += f"ascii_exp = \"{float_obj.exp - float_obj.EXP_BIAS}\"; "
             c += f"ascii_frac = \"{float_obj.mant}\"; "
-            c += f"posit_expected = {N}'d{p.to_bits()}; "
-            c += f"posit_expected_ascii = \"{p.eval()}\"; "
+            c += f"out_ground_truth = {N}'d{p.to_bits()}; "
+            c += f"out_expected_ascii = \"{p.eval()}\"; "
+            #c += f"assert (pout === pout_ground_truth) else $display("ERROR: 0x64c4 / 0x6436 = 0x%h != 0x40ba", pout);"
             c += "#10; \n"
-        c += "`endif\n"
     elif op == Tb.POSIT_TO_FLOAT:
-        pass
+        c += f"op = {op.name};\n"
+        c += f'op_ascii = "{op.name}";\n\n'
+        c += f"in1 = 'bz;\n\n"
+        for _ in range(NUM_RANDOM_TEST_CASES):
+            bits = int(random.random() * (1 << (N-1)))
+            p = from_bits(bits, N, ES)
+
+            f64_obj = F64(x_f64 = p.eval())
+            
+            c += f"in2 = {N}'d{p.to_bits()}; "
+
+            float_obj = F64(x_f64 = p.eval())
+
+            c += f"ascii_x = \"{float_obj.eval()}\"; "
+            c += f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; "
+            c += f"ascii_frac = \"{f64_obj.mant}\"; "
+            c += f"out_ground_truth = {f64_obj.bits}; "
+            c += "#10; \n"
     else:
         raise Exception("wrong arg?")
+    c += "`endif\n"
     return c
 
 
@@ -143,12 +162,12 @@ def func(c, op, list_a, list_b):
             raise Exception("wrong op?")
 
         c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
-        c += f"{'p1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
-        c += f"""{'p1_ascii ='.ljust(LJUST)} "{p1.eval()}";\n\t"""
-        c += f"{'p2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
-        c += f"""{'p2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
-        c += f"""{'pout_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
-        c += f"{'pout_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        c += f"{'in1 ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
+        c += f"""{'in1_ascii ='.ljust(LJUST)} "{p1.eval()}";\n\t"""
+        c += f"{'in2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
+        c += f"""{'in2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
+        c += f"""{'out_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
+        c += f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
         if op != Tb.DIV and op != Tb.PACOGEN:
             c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         else:
@@ -158,10 +177,10 @@ def func(c, op, list_a, list_b):
                 c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         c += f"#10;\n\t"
         if op == Tb.PACOGEN:
-            c += f'assert (pout_pacogen === pout_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
+            c += f'assert (pout_pacogen === out_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
             c += f'assert (pout_ppu_core_ops === pout_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
         else:
-            c += f'assert (pout === pout_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout);\n\n'
+            c += f'assert (out === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", out);\n\n'
     c += f'$display("Total tests cases: {len(list_a)}");\n'
     # c += "end\n"
     return c
@@ -206,9 +225,6 @@ if __name__ == "__main__":
     # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
     list_a[8] = (1 << (N - 1)) + 1
 
-    if N == 16:
-        list_a[9] = 0x7fff
-        list_b[9] = 0x9a65
 
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:

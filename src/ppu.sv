@@ -1,7 +1,6 @@
-`define WORD 64
 module ppu #(
         parameter WORD = `WORD,
-`ifdef FLOAT_TO_POSIT        
+`ifdef FLOAT_TO_POSIT
         parameter FSIZE = `F,
 `endif
         parameter N = `N,
@@ -21,7 +20,7 @@ module ppu #(
     );
 
     wire [N-1:0] p1, p2, posit;
-    
+
     assign p1 = in1[N-1:0];
     assign p2 = in2[N-1:0];
 
@@ -68,10 +67,10 @@ module ppu #(
         .float(float_out)
     );
 `endif
-    
-    assign out = 
+
+    assign out =
 `ifdef FLOAT_TO_POSIT
-        (op == POSIT_TO_FLOAT) ? float_out : 
+        (op == POSIT_TO_FLOAT) ? float_out :
 `endif
         posit;
 
@@ -87,49 +86,63 @@ endmodule
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 
 module tb_ppu;
+    parameter WORD = `WORD;
     parameter N = `N;
     parameter ES = `ES;
+    parameter FSIZE = `F;
 
-    reg [N-1:0]  p1, p2;
+    parameter ASCII_SIZE = 300;
+
+    reg [WORD-1:0]  in1, in2;
     reg [OP_SIZE-1:0] op;
-    reg [100:0] op_ascii;
-    wire [N-1:0] pout;
+    reg [ASCII_SIZE:0] op_ascii;
+    wire [WORD-1:0] out;
 
-    reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
+    reg [ASCII_SIZE:0] in1_ascii, in2_ascii, out_ascii, out_gt_ascii;
 
-    
-    reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
-    reg diff_pout_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
+`ifdef FLOAT_TO_POSIT
+    reg [ASCII_SIZE:0] ascii_x, ascii_exp, ascii_frac, out_expected_ascii;
+
+    // reg [FSIZE-1:0] float_bits;
+    // reg [N-1:0] posit;
+`endif
+
+
+    reg [WORD-1:0] out_ground_truth;
+    reg [N-1:0] pout_hwdiv_expected;
+    reg diff_out_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
     reg [N:0] test_no;
 
     reg [100:0] count_errors;
 
-
-    ppu_core_ops #(
-        .N      (N),
-        .ES     (ES)
-    ) ppu_core_ops_inst (
-        .p1     (p1),
-        .p2     (p2),
-        .op     (op),
-        .pout   (pout)
+    ppu #(
+        .WORD(WORD),
+`ifdef FLOAT_TO_POSIT
+        .FSIZE(FSIZE),
+`endif
+        .N(N),
+        .ES(ES)
+    ) ppu_inst (
+        .in1(in1),
+        .in2(in2),
+        .op(op),
+        .out(out)
     );
 
-    
+
     always @(*) begin
-        diff_pout_ground_truth = pout === pout_ground_truth ? 0 : 1'bx;
-        pout_off_by_1 = abs(pout - pout_ground_truth) == 0 ? 0 : abs(pout - pout_ground_truth) == 1 ? 1 : 'bx;
-        diff_pout_hwdiv_exp = (op != DIV) ? 'hz : pout === pout_hwdiv_expected ? 0 : 1'bx;
+        diff_out_ground_truth = out === out_ground_truth ? 0 : 1'bx;
+        pout_off_by_1 = abs(out - out_ground_truth) == 0 ? 0 : abs(out - out_ground_truth) == 1 ? 1 : 'bx;
+        diff_pout_hwdiv_exp = (op != DIV) ? 'hz : out === pout_hwdiv_expected ? 0 : 1'bx;
     end
 
 
-    reg [10-1:0] nn, ee;
     initial begin
 
         $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
-        $dumpvars(0, tb_ppu);                        
+        $dumpvars(0, tb_ppu);
 
-        
+
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
         end

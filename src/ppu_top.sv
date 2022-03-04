@@ -1,6 +1,5 @@
 /*
-
-
+a wrapper around the actual ppu.
 */
 
 `define WORD 64

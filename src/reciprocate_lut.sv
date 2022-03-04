@@ -3,14 +3,14 @@ module reciprocate_lut #(
         parameter LUT_WIDTH_OUT = 9
     )(
         input [(LUT_WIDTH_IN)-1:0] addr,
-        output [(LUT_WIDTH_OUT)-1:0] out   
+        output [(LUT_WIDTH_OUT)-1:0] out
     );
 
     reg [(LUT_WIDTH_OUT)-1:0] dout;
     reg [(LUT_WIDTH_OUT)-1:0] mant_recip_rom [(2**LUT_WIDTH_IN - 1):0];
 
-    always @(*) begin 
-        case (addr) 
+    always @(*) begin
+        case (addr)
             8'd0 :    dout <= 24'h0;
             8'd1 :    dout <= 24'hff00ff;
             8'd2 :    dout <= 24'hfe03f8;
@@ -267,7 +267,7 @@ module reciprocate_lut #(
             8'd253 :    dout <= 24'h80c122;
             8'd254 :    dout <= 24'h808081;
             8'd255 :    dout <= 24'h804020;
-            default: 	dout <= 24'h0;
+            default:     dout <= 24'h0;
         endcase
     end
 

@@ -1,40 +1,62 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Thu Mar  3 16:20:06 2022
+[*] Fri Mar  4 09:12:21 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Thu Mar  3 16:16:31 2022"
-[dumpfile_size] 9214754
+[dumpfile_mtime] "Fri Mar  4 09:11:51 2022"
+[dumpfile_size] 1104387
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
 [timestart] 0
 [size] 2560 1418
 [pos] -1 -1
-*-10.997197 4760 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.059078 225 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [sst_width] 199
 [signals_width] 351
 [sst_expanded] 1
 [sst_vpaned_height] 630
-@200
--
--
-@29
-tb_ppu.diff_pout_ground_truth
-tb_ppu.diff_pout_hwdiv_exp
-tb_ppu.op[2:0]
-@23
-tb_ppu.op_ascii[100:0]
-tb_ppu.p1[15:0]
-tb_ppu.p1_ascii[300:0]
-tb_ppu.p2[15:0]
-tb_ppu.p2_ascii[300:0]
-tb_ppu.pout[15:0]
-tb_ppu.pout_ground_truth[15:0]
-tb_ppu.pout_gt_ascii[300:0]
-tb_ppu.pout_hwdiv_expected[15:0]
-@29
-tb_ppu.pout_off_by_1
-@23
+@25
 tb_ppu.test_no[16:0]
+@820
+[color] 2
+tb_ppu.ascii_exp[300:0]
+[color] 2
+tb_ppu.ascii_frac[300:0]
+[color] 2
+tb_ppu.ascii_x[300:0]
+@28
+tb_ppu.diff_out_ground_truth
+tb_ppu.diff_pout_hwdiv_exp
+@22
+tb_ppu.float_bits[63:0]
+tb_ppu.in1[15:0]
+@820
+[color] 2
+tb_ppu.in1_ascii[300:0]
+@22
+tb_ppu.in2[15:0]
+@820
+[color] 2
+tb_ppu.in2_ascii[300:0]
+@28
+tb_ppu.op[2:0]
+@820
+[color] 2
+tb_ppu.op_ascii[300:0]
+@22
+tb_ppu.out[15:0]
+tb_ppu.out_ground_truth[15:0]
+@820
+[color] 2
+tb_ppu.out_gt_ascii[300:0]
+@22
+tb_ppu.posit_expected[15:0]
+@820
+[color] 2
+tb_ppu.posit_expected_ascii[300:0]
+@22
+tb_ppu.pout_hwdiv_expected[15:0]
+@28
+tb_ppu.pout_off_by_1
 [pattern_trace] 1
 [pattern_trace] 0

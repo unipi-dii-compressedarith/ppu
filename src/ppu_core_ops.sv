@@ -28,8 +28,8 @@ module ppu_core_ops #(
 `endif
         output  [N-1:0]                                                 pout
     );
-    
-    
+
+
     wire [K_SIZE-1:0] k1, k2;
 `ifndef NO_ES_FIELD
     wire [ES-1:0] exp1, exp2;
@@ -69,12 +69,12 @@ module ppu_core_ops #(
     );
 
     wire [N-1:0] posit_in_posit_to_pif2;
-    assign posit_in_posit_to_pif2 = 
+    assign posit_in_posit_to_pif2 =
 `ifdef FLOAT_TO_POSIT
-        (op == POSIT_TO_FLOAT) ? p2 : 
-`endif        
+        (op == POSIT_TO_FLOAT) ? p2 :
+`endif
         p2_cond;
-    
+
     posit_to_pif #(
         .N(N),
         .ES(ES)
@@ -98,7 +98,7 @@ module ppu_core_ops #(
         .op(op),
         .pif1(pif1),
         .pif2(pif2),
-        .pif_ops_out(pif_ops_out),        
+        .pif_ops_out(pif_ops_out),
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
@@ -107,24 +107,24 @@ module ppu_core_ops #(
 
     wire [N-1:0] pout_non_special;
 
-    
+
 `ifdef FLOAT_TO_POSIT
     wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] pif_to_posit_in;
 `else
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_to_posit_in;
 `endif
 
-    assign pif_to_posit_in = 
+    assign pif_to_posit_in =
 `ifdef FLOAT_TO_POSIT
-        (op == FLOAT_TO_POSIT) ? float_pif : 
+        (op == FLOAT_TO_POSIT) ? float_pif :
 `endif
         pif_ops_out;
 
     wire frac_lsb_cut_off_pif_to_posit_in;
-    assign frac_lsb_cut_off_pif_to_posit_in = 
+    assign frac_lsb_cut_off_pif_to_posit_in =
 `ifdef FLOAT_TO_POSIT
-        (op == FLOAT_TO_POSIT) ? 1'b0 : 
-`endif        
+        (op == FLOAT_TO_POSIT) ? 1'b0 :
+`endif
         frac_lsb_cut_off;
 
 

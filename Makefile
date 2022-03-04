@@ -142,7 +142,7 @@ ppu:
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
-	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-o ppu_P$(N)E$(ES).out \
 	../src/ppu.sv \
 	$(SRC_PPU_CORE_OPS) && \
@@ -153,13 +153,13 @@ ppu:
 conversions:
 	cd waveforms && \
 	iverilog -g2012 \
-	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-DTB_FLOAT_TO_POSIT \
 	-o float_to_posit.out \
 	$(SRC_FLOAT_TO_POSIT) && \
 	./float_to_posit.out && \
 	iverilog -g2012 \
-	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) -DF=$(F) \
+	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-DTB_POSIT_TO_FLOAT \
 	-o posit_to_float.out \
 	$(SRC_POSIT_TO_FLOAT) && \
@@ -182,9 +182,13 @@ conversions-verilog-float-to-posit-quartus:
 	
 
 yosys:
-	cd waveforms && \
-	yosys -DN=16 -DES=1 -p "synth_intel -family max10 -top ppu_core_ops -vqm ppu_core_ops.vqm" \
-	$(SRC_PPU_CORE_OPS) > yosys_ppu_core_ops.out
+	cd src && \
+	yosys -p "synth_intel -family max10 -top ppu -vqm ppu.vqm" \
+	../quartus/ppu_top.v > yosys_ppu.out
+
+sim-yosys:
+	make yosys
+	sv2v src/ppu.vqm > src/sv2v_ppu.vqm
 
 verilog-quartus:
 	cd quartus && \
@@ -201,7 +205,7 @@ verilog-quartus16:
 
 
 lint:
-	slang quartus/ppu.v --top ppu_core_ops # https://github.com/MikePopoloski/slang
+	slang quartus/ppu_top.v --top ppu_top # https://github.com/MikePopoloski/slang
 
 
 div-against-pacogen:

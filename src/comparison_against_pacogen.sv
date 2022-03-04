@@ -29,12 +29,12 @@ module comparison_against_pacogen #(
         .N(N),
         .es(ES)
     ) uut (
-        .in1(p1), 
-        .in2(p2), 
-        .start(1'b1), 
+        .in1(p1),
+        .in2(p2),
+        .start(1'b1),
         .out(pout_pacogen), // pout_pacogen
-        .inf(), 
-        .zero(), 
+        .inf(),
+        .zero(),
         .done()
     );
 
@@ -55,7 +55,7 @@ module tb_comparison_against_pacogen;
     reg [(10)-1:0] diff_pout_ppu_core_ops_analog;
 
     reg [300:0] p1_ascii, p2_ascii, pout_ascii, pout_gt_ascii;
-    
+
     reg [N-1:0] pout_ground_truth, pout_hwdiv_expected;
     reg diff_pout_ppu_core_ops, diff_pout_pacogen, ppu_core_ops_off_by_1, pacogen_off_by_1;
     reg [N:0] test_no;
@@ -73,7 +73,7 @@ module tb_comparison_against_pacogen;
         .pout_pacogen   (pout_pacogen)
     );
 
-    
+
     always @(*) begin
         diff_pout_ppu_core_ops = pout_ppu_core_ops === pout_ground_truth ? 0 : 1'bx;
         diff_pout_pacogen = pout_pacogen === pout_ground_truth ? 0 : 1'bx;
@@ -87,8 +87,8 @@ module tb_comparison_against_pacogen;
 
         $dumpfile({"tb_comparison_against_pacogenP",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
 
-        $dumpvars(0, tb_comparison_against_pacogen);                        
-            
+        $dumpvars(0, tb_comparison_against_pacogen);
+
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_pacogen_P8E0.sv"
         end
@@ -101,7 +101,7 @@ module tb_comparison_against_pacogen;
             `include "../test_vectors/tv_posit_pacogen_P32E2.sv"
         end
 
-        
+
         #10;
         $finish;
     end
