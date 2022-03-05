@@ -166,7 +166,7 @@ module highest_set_v3 #(
     /// detect the rightmost bit-set index: 10'b0011001000 
     ///                                               ^
     ///                                  -> 10'b0000001000
-    assign _index_bit_tmp = bits_reversed & c2(bits_reversed);
+    assign _index_bit_tmp = bits_reversed & (~bits_reversed + 1'b1);
 
     generate
         for (i=0; i<N; i=i+1) begin: _gen2

@@ -56,7 +56,7 @@ module tb_cls;
 
     /* count leading set (ones) */
     cls #(
-        .N                  (N)
+        .NUM_BITS               (N)
     ) count_leading_ones (
         .bits               (posit),
         .leading_set        (leading_ones),
@@ -65,7 +65,7 @@ module tb_cls;
 
     /* count leading set (zeros), inputs bits are flipped */
     cls #(
-        .N              (N)
+        .NUM_BITS           (N)
     ) count_leading_zeros (
         .bits               (~posit),
         .leading_set        (leading_zeros),
@@ -73,7 +73,7 @@ module tb_cls;
     );
 
     cls #(
-        .N              (N)
+        .NUM_BITS           (N)
     ) count_leading_x (
         .bits               (cls_input),
         .val                (val),

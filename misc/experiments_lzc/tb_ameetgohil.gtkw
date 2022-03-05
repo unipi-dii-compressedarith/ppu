@@ -1,0 +1,27 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sat Mar  5 16:30:01 2022
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/experiments_lzc/tb_ameetgohil.vcd"
+[dumpfile_mtime] "Sat Mar  5 16:29:36 2022"
+[dumpfile_size] 42574
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/experiments_lzc/tb_ameetgohil.gtkw"
+[timestart] 0
+[size] 2059 1093
+[pos] -1 -1
+*-7.954885 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 193
+[signals_width] 193
+[sst_expanded] 1
+[sst_vpaned_height] 340
+@22
+tb_ameetgohil.in_i[31:0]
+@24
+tb_ameetgohil.lz[5:0]
+tb_ameetgohil.lz_expected[5:0]
+@28
+tb_ameetgohil.diff
+@29
+tb_ameetgohil.all_zeroes_expected
+[pattern_trace] 1
+[pattern_trace] 0

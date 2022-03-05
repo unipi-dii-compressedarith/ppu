@@ -1,0 +1,61 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sat Mar  5 15:13:51 2022
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/experimental/tb_milankovic.vcd"
+[dumpfile_mtime] "Sat Mar  5 15:13:39 2022"
+[dumpfile_size] 45259
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/src/experimental/tb_milankovic.gtkw"
+[timestart] 4
+[size] 2560 1418
+[pos] -1 -1
+*-7.627450 759 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_milankovic.
+[treeopen] tb_milankovic.milankovic_inst.
+[sst_width] 193
+[signals_width] 281
+[sst_expanded] 1
+[sst_vpaned_height] 455
+@800022
+tb_milankovic.milankovic_inst.a[7:0]
+@28
+(0)tb_milankovic.milankovic_inst.a[7:0]
+(1)tb_milankovic.milankovic_inst.a[7:0]
+(2)tb_milankovic.milankovic_inst.a[7:0]
+(3)tb_milankovic.milankovic_inst.a[7:0]
+(4)tb_milankovic.milankovic_inst.a[7:0]
+(5)tb_milankovic.milankovic_inst.a[7:0]
+(6)tb_milankovic.milankovic_inst.a[7:0]
+(7)tb_milankovic.milankovic_inst.a[7:0]
+@1001200
+-group_end
+@22
+tb_milankovic.milankovic_inst.lz[4:0]
+@28
+tb_milankovic.milankovic_inst.q
+tb_milankovic.milankovic_inst.x[31:0]
+tb_milankovic.milankovic_inst.y0
+tb_milankovic.milankovic_inst.y1
+tb_milankovic.milankovic_inst.y2
+@24
+tb_milankovic.in_i[31:0]
+@200
+-
+@24
+tb_milankovic.lz[4:0]
+@28
+tb_milankovic.diff
+tb_milankovic.milankovic_inst.muxx_inst.sel[2:0]
+tb_milankovic.milankovic_inst.bne_inst.y0
+tb_milankovic.milankovic_inst.bne_inst.y1
+tb_milankovic.milankovic_inst.bne_inst.y2
+tb_milankovic.milankovic_inst.muxx_inst.mux_in[15:0]
+tb_milankovic.milankovic_inst.muxx_inst.mux_out[1:0]
+tb_milankovic.milankovic_inst.q
+tb_milankovic.all_zeroes_expected
+@200
+-
+@29
+tb_milankovic.diff
+[pattern_trace] 1
+[pattern_trace] 0
