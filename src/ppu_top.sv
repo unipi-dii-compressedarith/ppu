@@ -46,7 +46,7 @@ module ppu_top #(
         in1_reg <= in1;
         in2_reg <= in2;
         op_reg <= op;
-        out <= out_reg;    
+        out <= out_reg;
     end
 
 endmodule

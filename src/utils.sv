@@ -49,8 +49,8 @@ parameter FRAC_SIZE = N - 1;
 `endif
 
 `ifndef MANT_SIZE
-parameter MANT_SIZE = N - 2;    // mant (mantissa) and frac (fraction) are 
-                                // not the same thing. mant is a Fx<1,MANT_SIZE>. 
+parameter MANT_SIZE = N - 2;    // mant (mantissa) and frac (fraction) are
+                                // not the same thing. mant is a Fx<1,MANT_SIZE>.
                                 // frac is a Fx<0, MANT_SIZE-1>
 parameter MS = MANT_SIZE;       // alias
 

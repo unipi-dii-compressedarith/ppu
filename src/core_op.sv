@@ -41,7 +41,7 @@ module core_op #(
         .te_out(te_out_add_sub),
         .frac_lsb_cut_off(frac_lsb_cut_off_add_sub)
     );
-    
+
     core_mul #(
         .N(N)
     ) core_mul_inst (
@@ -65,22 +65,22 @@ module core_op #(
         .te_out(te_out_div)
     );
 
-    
+
     wire [(FRAC_FULL_SIZE)-1:0] mant_out_core_op;
-    assign mant_out_core_op = (op == ADD || op == SUB) 
-        ? {mant_out_add_sub, {FRAC_FULL_SIZE-MANT_ADD_RESULT_SIZE{1'b0}}} : op == MUL 
+    assign mant_out_core_op = (op == ADD || op == SUB)
+        ? {mant_out_add_sub, {FRAC_FULL_SIZE-MANT_ADD_RESULT_SIZE{1'b0}}} : op == MUL
         ? {mant_out_mul, {FRAC_FULL_SIZE-MANT_MUL_RESULT_SIZE{1'b0}}} : /* op == DIV */
           mant_out_div;
-    
 
-    // chopping off the two MSB representing the 
+
+    // chopping off the two MSB representing the
     // non-fractional components i.e. ones and tens.
     assign frac_out_core_op = op == DIV
         ? mant_out_core_op : /* ADD, SUB, and MUL */
-          mant_out_core_op << 2; 
+          mant_out_core_op << 2;
 
     assign te_out_core_op = (op == ADD || op == SUB)
-        ? te_out_add_sub : op == MUL 
+        ? te_out_add_sub : op == MUL
         ? te_out_mul : /* op == DIV */
           te_out_div;
 

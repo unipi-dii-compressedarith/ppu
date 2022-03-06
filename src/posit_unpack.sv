@@ -51,8 +51,8 @@ module posit_unpack #(
     );
 
     assign sign = bits[N-1];
-    
-    // u_bits = abs(bits)  
+
+    // u_bits = abs(bits)
     wire [N-1:0] u_bits;
     assign u_bits = sign == 0 ? bits : c2(bits);
 
@@ -74,13 +74,13 @@ module posit_unpack #(
         assign is_special_case = bits == { {1{1'b1}}, {N-2{1'b0}}, {1{1'b1}} };
 
 
-        assign leading_set_2 = is_special_case ? (N-1) : leading_set; // temporary fix until you have 
-                                                                    // the time to embed this in the 
+        assign leading_set_2 = is_special_case ? (N-1) : leading_set; // temporary fix until you have
+                                                                    // the time to embed this in the
                                                                     // general case (perhaps fixing cls.sv)
 
     assign k = reg_s == 1 ? leading_set_2 - 1 : c2(leading_set_2);
-    
-    
+
+
     assign reg_len = reg_s == 1 ? k + 2 : c2(k) + 1;
 
 
@@ -99,9 +99,9 @@ module posit_unpack #(
     // assign mant = frac; // before
     assign mant = MSB | (frac << (MANT_SIZE-mant_len-1)); // after -> 1.frac
 
-    
+
     wire [N-1:0] bits_cls_in = sign == 0 ? u_bits : ~u_bits;
-    
+
     wire val = bits_cls_in[N-2];
 
     // count leading X
@@ -123,13 +123,13 @@ endmodule
 module tb_posit_unpack;
     parameter N = `N;
     parameter ES = `ES;
-    
+
 
     // input
     reg [N-1:0]     bits;
-    
+
     // outputs
-    
+
 
     wire [1:0]      is_special;
     /*************************/
@@ -152,21 +152,21 @@ module tb_posit_unpack;
 `endif
     reg [N-1:0]     mant_expected;
     reg [S-1:0]     mant_len_expected;
-    
+
     reg err;
     reg [N:0] test_no;
 
 
 `ifndef NO_ES_FIELD
     reg diff_exp;
-`endif    
+`endif
     reg diff_k, diff_mant, diff_is_special, diff_sign;
-    
+
     reg k_is_pos;
 
 
 
-    
+
     always @(*) begin
 `ifndef NO_ES_FIELD
         diff_exp = (exp === exp_expected ? 0 : 'bx);
@@ -174,14 +174,14 @@ module tb_posit_unpack;
         diff_mant = (mant === mant_expected ? 0 : 'bx);
         diff_k = (k === k_expected ? 0 : 'bx);
         diff_sign = (sign === sign_expected ? 0 : 'bx);
-        
+
         if (
             diff_mant == 0
 `ifndef NO_ES_FIELD
-            && diff_exp == 0 
+            && diff_exp == 0
 `endif
             && diff_sign == 0
-            && diff_k == 0 
+            && diff_k == 0
         ) err = 0;
         else err = 1'bx;
     end
@@ -191,7 +191,7 @@ module tb_posit_unpack;
         .ES(ES)
     ) posit_unpack_inst (
         .bits           (bits),
-        
+
         .sign           (sign),
         .reg_s          (reg_s),
         .reg_len        (reg_len),
@@ -209,8 +209,8 @@ module tb_posit_unpack;
         else if (N == 32 && ES == 2)$dumpfile("tb_posit_unpack_P32E2.vcd");
         else                        $dumpfile("tb_posit_unpack.vcd");
 
-	    $dumpvars(0, tb_posit_unpack);                        
-            
+        $dumpvars(0, tb_posit_unpack);
+
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_unpack_P8E0.sv"
         end
@@ -228,9 +228,9 @@ module tb_posit_unpack;
         end
 
 
-        
+
         #10;
-		$finish;
+        $finish;
     end
 
 endmodule

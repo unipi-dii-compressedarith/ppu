@@ -1,5 +1,5 @@
 /*
-Fixed point equivalent values of the rational numbers 
+Fixed point equivalent values of the rational numbers
 1.466, 1.0012, 2.0 expressed on a range of different bits.
 
 to visualize what i mean try:

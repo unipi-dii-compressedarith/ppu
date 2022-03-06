@@ -13,32 +13,32 @@ module compute_rouding #(
         output round_bit,
         output sticky_bit
     );
-    
+
     wire [(3*MANT_SIZE+2)-1:0] _tmp0, _tmp1, _tmp2, _tmp3;
-    
+
     assign _tmp0 = (1 << (frac_len_diff - 1));
     assign _tmp1 = frac_full & _tmp0;
 
 `ifndef NO_ES_FIELD
-    assign round_bit = 
-        $signed(frac_len) >= 0 
+    assign round_bit =
+        $signed(frac_len) >= 0
         ? _tmp1 != 0 : (
-            $signed(k) == N - 2 - ES 
-            ? exp > 0 && $unsigned(frac_full) > 0 : $signed(k) == -(N - 2) 
+            $signed(k) == N - 2 - ES
+            ? exp > 0 && $unsigned(frac_full) > 0 : $signed(k) == -(N - 2)
             ? $signed(exp) > 0 : 1'b0
         );
 `else
-    assign round_bit = 
-        $signed(frac_len) >= 0 
+    assign round_bit =
+        $signed(frac_len) >= 0
         ? _tmp1 != 0 : 1'b0;
 `endif
 
-    
+
     assign _tmp2 = ((1 << (frac_len_diff - 1)) - 1);
     assign _tmp3 = frac_full & _tmp2;
 
-    assign sticky_bit = 
-        $signed(frac_len) >= 0 
+    assign sticky_bit =
+        $signed(frac_len) >= 0
         ? (_tmp3 != 0) || frac_lsb_cut_off : 1'b0;
 
 endmodule

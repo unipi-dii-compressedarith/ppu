@@ -49,7 +49,7 @@ module ppu #(
 
     wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_pif_out;
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] float_pif_in;
-    
+
     wire                        __sign = float_pif_out[ (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F) - 1 ];
     wire [TE_SIZE-1:0]          __exp  = float_pif_out[ M_I+E_II : M_I ];
     wire [FRAC_FULL_SIZE-1:0]   __frac = float_pif_out[ M_I-1 -: M_II ];

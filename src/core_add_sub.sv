@@ -6,7 +6,7 @@ module core_add_sub #(
         input [MANT_SIZE-1:0] mant1_in,
         input [MANT_SIZE-1:0] mant2_in,
         input have_opposite_sign,
-        
+
         output [(MANT_ADD_RESULT_SIZE)-1:0] mant_out,
         output [TE_SIZE-1:0] te_out,
         output frac_lsb_cut_off
@@ -21,7 +21,7 @@ module core_add_sub #(
     assign {te1, te2} = {te1_in, te2_in};
     assign {mant1, mant2} = {mant1_in, mant2_in};
 
-    
+
     wire [TE_SIZE-1:0] te_diff;
     assign te_diff = $signed(te1) - $signed(te2);
 
@@ -30,11 +30,11 @@ module core_add_sub #(
     assign mant2_upshifted = (mant2 << MAX_TE_DIFF) >> max(0, te_diff);
 
     wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_sum;
-    assign mant_sum = 
-        mant1_upshifted + (have_opposite_sign 
+    assign mant_sum =
+        mant1_upshifted + (have_opposite_sign
             ? _c2(mant2_upshifted) : mant2_upshifted
         );
-    
+
 
     wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_core_add;
     wire [TE_SIZE-1:0] te_diff_out_core_add;
@@ -48,7 +48,7 @@ module core_add_sub #(
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
-    
+
     wire [(MANT_SUB_RESULT_SIZE)-1:0] mant_out_core_sub;
     wire [TE_SIZE-1:0] te_diff_out_core_sub;
     core_sub #(
@@ -61,14 +61,14 @@ module core_add_sub #(
     );
 
     wire [TE_SIZE-1:0] te_diff_updated;
-    assign te_diff_updated = 
-        have_opposite_sign 
+    assign te_diff_updated =
+        have_opposite_sign
         ? te_diff_out_core_sub : te_diff_out_core_add;
 
-    assign mant_out = 
-        have_opposite_sign 
+    assign mant_out =
+        have_opposite_sign
         ? {mant_out_core_sub/*, 1'b0*/} : mant_out_core_add;
-    
+
     assign te_out = te2 + te_diff_updated;
 
 endmodule

@@ -21,7 +21,7 @@ module posit_to_pif #(
         .te(te),
         .mant(mant)
     );
-   
+
     assign pif = {sign, te, mant};
-    
+
 endmodule

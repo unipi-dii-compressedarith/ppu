@@ -7,7 +7,7 @@ module fast_reciprocal #(
 
     wire [SIZE-1:0] i_data;
     wire [(3*SIZE-3)-1:0] o_data;
-    
+
     assign i_data = fraction >> 1;
 
     reciprocal_approx #(

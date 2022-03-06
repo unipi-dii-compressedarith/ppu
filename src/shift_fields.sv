@@ -7,7 +7,7 @@ module shift_fields #(
         parameter ES = 0
     )(
         input [FRAC_FULL_SIZE-1:0] frac_full,
-        input [TE_SIZE-1:0] total_exp, 
+        input [TE_SIZE-1:0] total_exp,
         input frac_lsb_cut_off, // new flag
 
         output [K_SIZE-1:0] k,
@@ -22,7 +22,7 @@ module shift_fields #(
         output k_is_oob,
         output non_zero_frac_field_size
     );
-    
+
     wire [K_SIZE-1:0] k_unpacked;
 
 `ifndef NO_ES_FIELD
@@ -40,7 +40,7 @@ module shift_fields #(
 `endif
     );
 
-    
+
     wire [K_SIZE-1:0] regime_k;
     assign regime_k = ($signed(k_unpacked) <= (N-2) && $signed(k_unpacked) >= -(N-2)) ? $signed(k_unpacked) : (
         $signed(k_unpacked) >= 0 ? N -2 : -(N-2)
@@ -51,7 +51,7 @@ module shift_fields #(
     wire [REG_LEN_SIZE-1:0] reg_len;
     assign reg_len = $signed(regime_k) >= 0 ? regime_k + 2 : -$signed(regime_k) + 1;
 
-    
+
     wire [MANT_LEN_SIZE-1:0] frac_len; // fix size
     assign frac_len = N - 1 - ES - reg_len;
 
@@ -64,11 +64,11 @@ module shift_fields #(
     assign exp1 = exp_unpacked >> max(0, ES - es_actual_len);
 `endif
 
-    
+
     wire [(S+2)-1:0] frac_len_diff;
     assign frac_len_diff = FRAC_FULL_SIZE - $signed(frac_len);
 
-    
+
     compute_rouding #(
         .N(N),
         .ES(ES)

@@ -12,7 +12,7 @@ module handle_special #(
     );
 
     wire [N-1:0] nan;
-    assign nan = ( { {1{1'b1}}, {N-1{1'b0}} });    
+    assign nan = ( { {1{1'b1}}, {N-1{1'b0}} });
 
     always @(*) begin
         case (op)
@@ -24,10 +24,10 @@ module handle_special #(
             end else if (p2_is_zero) begin
                 pout = p1;
             end else begin
-                pout = 'bX; // 
+                pout = 'bX; //
             end
-        end 
-        SUB: begin // - 
+        end
+        SUB: begin // -
             if (p1_is_nan || p2_is_nan) begin
                 pout = nan;
             end else if (p1_is_zero && p2_is_zero) begin
@@ -37,7 +37,7 @@ module handle_special #(
             end else if (p2_is_zero) begin
                 pout = p1;
             end else begin
-                pout = 'bX; // 
+                pout = 'bX; //
             end
         end
         MUL: begin // *
@@ -46,7 +46,7 @@ module handle_special #(
             end else if (p1_is_zero || p2_is_zero) begin
                 pout = 0;
             end else begin
-                pout = 'bX; // 
+                pout = 'bX; //
             end
         end
         DIV: begin // /
@@ -55,7 +55,7 @@ module handle_special #(
             end else if (p1_is_zero) begin
                 pout = 0;
             end else begin
-                pout = 'bX; // 
+                pout = 'bX; //
             end
         end
         endcase

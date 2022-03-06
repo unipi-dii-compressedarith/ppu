@@ -4,7 +4,7 @@
 
 module total_exponent #(
         parameter N = 4,
-        parameter ES = 1 
+        parameter ES = 1
     )(
         input [K_SIZE-1:0] k,
 `ifndef NO_ES_FIELD
@@ -15,8 +15,8 @@ module total_exponent #(
 
 
 `ifndef NO_ES_FIELD
-    assign total_exp = 
-        $signed(k) >= 0 
+    assign total_exp =
+        $signed(k) >= 0
         ? (k << ES) + exp : (-($signed(-k) << ES) + exp);
 
     // assign total_exp = (1 << ES) * k + exp;

@@ -8,13 +8,13 @@ module handle_special_or_trivial #(
     );
 
     wire [N-1:0] p_out_lut_mul, p_out_lut_add, p_out_lut_sub, p_out_lut_div;
-    
+
     lut_mul #(
         .N(N)
     ) lut_mul_inst (
         .p1(p1_in),
         .p2(p2_in),
-        .p_out(p_out_lut_mul)   
+        .p_out(p_out_lut_mul)
     );
 
     lut_add #(
@@ -22,7 +22,7 @@ module handle_special_or_trivial #(
     ) lut_add_inst (
         .p1(p1_in),
         .p2(p2_in),
-        .p_out(p_out_lut_add)   
+        .p_out(p_out_lut_add)
     );
 
     lut_sub #(
@@ -30,7 +30,7 @@ module handle_special_or_trivial #(
     ) lut_sub_inst (
         .p1(p1_in),
         .p2(p2_in),
-        .p_out(p_out_lut_sub)   
+        .p_out(p_out_lut_sub)
     );
 
     lut_div #(
@@ -38,7 +38,7 @@ module handle_special_or_trivial #(
     ) lut_div_inst (
         .p1(p1_in),
         .p2(p2_in),
-        .p_out(p_out_lut_div)   
+        .p_out(p_out_lut_div)
     );
 
     assign pout = op == MUL
@@ -57,14 +57,14 @@ module lut_mul #(
     )(
         input [(N)-1:0] p1,
         input [(N)-1:0] p2,
-        output reg [(N)-1:0] p_out   
+        output reg [(N)-1:0] p_out
     );
 
     wire [(2*N)-1:0] addr;
     assign addr = {p1, p2};
 
-    always @(*) begin 
-        case (p1) 
+    always @(*) begin
+        case (p1)
             ZERO:       p_out = p2 == NAN || p2 == ZERO ? p2 : ZERO;
             NAN:        p_out = NAN;
             default:    p_out = p2;
@@ -77,14 +77,14 @@ module lut_add #(
     )(
         input [(N)-1:0] p1,
         input [(N)-1:0] p2,
-        output reg [(N)-1:0] p_out   
+        output reg [(N)-1:0] p_out
     );
 
-    always @(*) begin 
-        case (p1) 
+    always @(*) begin
+        case (p1)
             ZERO:       p_out = p2;
             NAN:        p_out = NAN;
-            default:    p_out = p2 == c2(p1) 
+            default:    p_out = p2 == c2(p1)
                                 ? ZERO : p2 == ZERO
                                 ? p1 : NAN;
         endcase
@@ -97,11 +97,11 @@ module lut_sub #(
     )(
         input [(N)-1:0] p1,
         input [(N)-1:0] p2,
-        output reg [(N)-1:0] p_out   
+        output reg [(N)-1:0] p_out
     );
 
-    always @(*) begin 
-        case (p1) 
+    always @(*) begin
+        case (p1)
             ZERO:       p_out = (p2 == ZERO) || (p2 == NAN) ? p2 : c2(p2);
             NAN:        p_out = NAN;
             default:    p_out = p2 == p1
@@ -116,11 +116,11 @@ module lut_div #(
     )(
         input [(N)-1:0] p1,
         input [(N)-1:0] p2,
-        output reg [(N)-1:0] p_out   
+        output reg [(N)-1:0] p_out
     );
 
-    always @(*) begin 
-        case (p1) 
+    always @(*) begin
+        case (p1)
             ZERO:       p_out = (p2 == NAN || p2 == ZERO) ? NAN : ZERO;
             NAN:        p_out = NAN;
             default:    p_out = NAN;

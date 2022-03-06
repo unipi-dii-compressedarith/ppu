@@ -17,17 +17,17 @@ module newton_raphson #(
     x0                      :   Fx<1, 3MS - 3>
 
     num * x0                :   Fx<2, 4MS - 3>      -> Fx<2, 2MS> (downshifted by ((4MS-3) - (2MS) = 2MS - 3)
-    
+
     2                       :   Fx<2, 2MS>
 
-    2 - num * x0            :   Fx<2, 2MS> 
+    2 - num * x0            :   Fx<2, 2MS>
 
     x0_2n                   :   Fx<1, 2MS>          -> x0 downshifted by ((3MS - 3) - (2MS) = MS - 3)
 
     x0_2n * (2 - num * x0)  :   Fx<3, 4MS>          -> downshifted by ((4MS) - (2MS) - 2 = 2MS).
                                                                                        └── due to being:   000.101000111011101001110 vs      (what you have)
                                                                                                              0.10100011110                   (what you want)
-                                                                                                      
+
     */
 
     wire [(4*MS-3)-1:0] _num_times_x0;
@@ -43,7 +43,7 @@ module newton_raphson #(
     wire [(2*MS)-1:0] two_minus_num_x0;
     assign two_minus_num_x0 = fx_2 - num_times_x0;
 
-    
+
     wire [(2*MS)-1:0] x0_on_2n_bits;
     assign x0_on_2n_bits = x0 >> (MS - 3);
 
@@ -79,7 +79,7 @@ module tb_newton_raphson;
         $dumpvars(0, tb_newton_raphson);
     end
 
-    
+
     initial begin
 
               num = 47104;

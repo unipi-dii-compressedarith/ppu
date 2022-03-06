@@ -14,7 +14,7 @@ module core_mul #(
         output [TE_SIZE-1:0] te_out,
         output frac_lsb_cut_off
     );
-    
+
     wire [TE_SIZE-1:0] te_sum;
     assign te_sum = te1 + te2;
 

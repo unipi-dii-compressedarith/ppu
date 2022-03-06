@@ -41,7 +41,7 @@ module pif_to_posit #(
     );
 
 
-    wire [N-1:0] posit_encoded;    
+    wire [N-1:0] posit_encoded;
     posit_encoder #(
         .N(N),
         .ES(ES)
@@ -66,7 +66,7 @@ module pif_to_posit #(
         .sticky_bit(sticky_bit),
         .k_is_oob(k_is_oob),
         .non_zero_frac_field_size(non_zero_frac_field_size),
-        
+
         .posit_rounded(posit_pre_sign)
     );
 

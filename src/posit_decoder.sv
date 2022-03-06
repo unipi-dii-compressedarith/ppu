@@ -14,7 +14,7 @@ module posit_decoder #(
         .ES(ES)
     ) posit_unpack_inst (
         .bits           (bits),
-        
+
         .sign           (sign),
         .reg_s          (),
         .reg_len        (),

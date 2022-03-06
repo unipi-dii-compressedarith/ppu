@@ -28,13 +28,13 @@ module highest_set_v1 #(
         input logic[N-1:0] bits,
         output wire [$clog2(N)-1:0] index
     );
-    
+
     wire [S-1:0] out_stage [0:N];
     assign out_stage[0] = {S{1'b1}}; // desired default output if no bits set
 
     generate genvar i;
         for (i=0; i<N; i=i+1) begin: _gen
-            assign out_stage[i+1] = (bits[i] == VAL) ? i : out_stage[i]; 
+            assign out_stage[i+1] = (bits[i] == VAL) ? i : out_stage[i];
         end
     endgenerate
 
@@ -48,13 +48,13 @@ module highest_set_v1b #(
         input val,
         output wire [$clog2(SIZE)-1:0] index
     );
-    
+
     wire [$clog2(SIZE)-1:0] out_stage [0:SIZE];
     assign out_stage[0] = ~0; // desired default output if no bits set
 
     generate genvar i;
         for (i=0; i<SIZE; i=i+1) begin: _gen
-            assign out_stage[i+1] = (bits[i] == val) ? i : out_stage[i]; 
+            assign out_stage[i+1] = (bits[i] == val) ? i : out_stage[i];
         end
     endgenerate
 
@@ -79,7 +79,7 @@ module highest_set_v2 #(
     );
 
     wire [N-1:0] _wire;
-    
+
     generate genvar i;
         for (i=0; i<N-1; i=i+1) begin
             mux mux_inst (
@@ -111,7 +111,7 @@ module decoder #(
         input [N-1:0] in,
         output [$clog2(N)-1:0] out
     );
-    
+
     generate genvar i;
         for (i=0; i<N; i=i+1) begin
             assign out = in == (1 << i) ? i : 'bz;
@@ -120,7 +120,7 @@ module decoder #(
 endmodule
 
 /**
- * mux + and gate actually. 
+ * mux + and gate actually.
  * only instantiated by `highest_set_v2`. maybe unnecessary later on.
  */
 module mux (
@@ -133,7 +133,7 @@ module mux (
     );
     wire b = 0;
     assign mux_out = sel == 0 ? a : b;
-    assign and_out = and_in & mux_out; 
+    assign and_out = and_in & mux_out;
 endmodule
 
 
@@ -161,9 +161,9 @@ module highest_set_v3 #(
             assign bits_reversed[i] = bits[N-1-i];
         end
     endgenerate
-    
-    
-    /// detect the rightmost bit-set index: 10'b0011001000 
+
+
+    /// detect the rightmost bit-set index: 10'b0011001000
     ///                                               ^
     ///                                  -> 10'b0000001000
     assign _index_bit_tmp = bits_reversed & (~bits_reversed + 1'b1);

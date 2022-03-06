@@ -25,7 +25,7 @@ module reciprocal_approx #(
 
     assign a = i_data;
 
-    
+
     /// generated with `scripts/gen_fixed_point_values.py`
     wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;
     wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N;
@@ -36,7 +36,7 @@ module reciprocal_approx #(
     assign d = fx_1_0012 - c;
     assign e = $signed(d) * $signed(b);
     assign out = e;
-    
+
     /// full width output:
     assign o_data = out;
 
@@ -65,7 +65,7 @@ module tb_reciprocal_approx;
         $dumpvars(0, tb_reciprocal_approx);
     end
 
-    // python -c "for i in range(0, 1<<16): print(f\"#10;   i_data = 16'h{hex(i)[2:]};\")" | pbcopy 
+    // python -c "for i in range(0, 1<<16): print(f\"#10;   i_data = 16'h{hex(i)[2:]};\")" | pbcopy
 
     initial begin
 
