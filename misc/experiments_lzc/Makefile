@@ -14,10 +14,10 @@ ameetgohil:
 	sv2v -DN=32 -DTB ameetgohil.sv > ameetgohil.v
 	iverilog ameetgohil.v && ./a.out
 
-milankovic:
+milenkovic:
 	python tb_gen_lzc.py > tv_lzc.sv
-	sv2v -DTB_MILANKOVIC milankovic.sv > milankovic.v && iverilog milankovic.v && ./a.out
-	gtkwave tb_milankovic.gtkw &
+	sv2v -DTB_MILANKOVIC milenkovic.sv > milenkovic.v && iverilog milenkovic.v && ./a.out
+	gtkwave tb_milenkovic.gtkw &
 
 pacogen:
 	sv2v lzc_pacogen.sv > lzc_pacogen.v

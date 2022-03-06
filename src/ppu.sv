@@ -43,9 +43,10 @@ module ppu #(
 
     localparam E_I = FLOAT_EXP_SIZE_F`F;
     localparam M_I = FLOAT_MANT_SIZE_F`F;
-
     localparam E_II = TE_SIZE;
     localparam M_II = FRAC_FULL_SIZE;
+
+    wire [10:0] EI_wire = E_I, MI_wire = M_I, EII_wire = E_II, MII_wire = M_II;
 
     wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_pif_out;
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] float_pif_in;

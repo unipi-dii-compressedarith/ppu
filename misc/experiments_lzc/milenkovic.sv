@@ -2,7 +2,7 @@
 https://www.researchgate.net/publication/284919835_Modular_Design_Of_Fast_Leading_Zeros_Counting_Circuit
 */
 
-module milankovic #(
+module milenkovic #(
         parameter N = 32
     )(
         input [N-1:0] x,
@@ -118,7 +118,7 @@ endmodule
 
 
 `ifdef TB_MILANKOVIC
-module tb_milankovic;
+module tb_milenkovic;
     
     parameter N = 32;
     reg [N-1:0] in_i;
@@ -129,9 +129,9 @@ module tb_milankovic;
     reg [$clog2(N)-1:0] lz_expected;
     reg all_zeroes_expected;
 
-    milankovic #(
+    milenkovic #(
         .N(N)
-    ) milankovic_inst (
+    ) milenkovic_inst (
         .x(in_i),
         .lz(lz),
         .q(q)
@@ -143,8 +143,8 @@ module tb_milankovic;
     end
     
     initial begin
-        $dumpfile("tb_milankovic.vcd");
-        $dumpvars(0, tb_milankovic);
+        $dumpfile("tb_milenkovic.vcd");
+        $dumpvars(0, tb_milenkovic);
 
         //         in_i = 32'b0000_0001; val = 1; // expected = 0;
         // #10     in_i = 32'b1000_0011; val = 1; // expected = 0;

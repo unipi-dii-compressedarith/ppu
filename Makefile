@@ -228,6 +228,9 @@ div-against-pacogen32:
 clean:
 	rm waveforms/*.out
 	
+fmt:
+	python scripts/fmt.py # local only
+
 open-waveforms:
 	gtkwave waveforms/tb_ppu_P8E0.gtkw &
 	gtkwave waveforms/tb_ppu_P16E1.gtkw &
