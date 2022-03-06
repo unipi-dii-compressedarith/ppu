@@ -33,14 +33,28 @@ module ppu #(
         .p2(p2),
         .op(op),
 `ifdef FLOAT_TO_POSIT
-        .float_pif(float_pif),
+        .float_pif(float_pif_in),
         .posit_pif(posit_pif),
 `endif
         .pout(posit)
     );
 
 `ifdef FLOAT_TO_POSIT
-    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_pif;
+
+    localparam E_I = FLOAT_EXP_SIZE_F`F;
+    localparam M_I = FLOAT_MANT_SIZE_F`F;
+
+    localparam E_II = TE_SIZE;
+    localparam M_II = FRAC_FULL_SIZE;
+
+    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_pif_out;
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] float_pif_in;
+    
+    wire                        __sign = float_pif_out[ (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F) - 1 ];
+    wire [TE_SIZE-1:0]          __exp  = float_pif_out[ M_I+E_II : M_I ];
+    wire [FRAC_FULL_SIZE-1:0]   __frac = float_pif_out[ M_I-1 -: M_II ];
+
+    assign float_pif_in = {__sign, __exp, __frac};
 `endif
     wire [PIF_SIZE-1:0] posit_pif;
 
@@ -53,7 +67,7 @@ module ppu #(
         .FSIZE(FSIZE)
     ) float_to_pif_inst (
         .bits(float_in),
-        .pif(float_pif)
+        .pif(float_pif_out)
     );
 
 

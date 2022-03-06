@@ -22,7 +22,8 @@ module ppu_core_ops #(
         input   [OP_SIZE-1:0]                                           op,
 `ifdef FLOAT_TO_POSIT
         /************************************************************************/
-        input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_pif,
+        input  [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]                         float_pif,
+        // input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_pif,
         output  [(PIF_SIZE)-1:0]                                        posit_pif,
         /************************************************************************/
 `endif
@@ -108,11 +109,7 @@ module ppu_core_ops #(
     wire [N-1:0] pout_non_special;
 
 
-`ifdef FLOAT_TO_POSIT
-    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] pif_to_posit_in;
-`else
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_to_posit_in;
-`endif
 
     assign pif_to_posit_in =
 `ifdef FLOAT_TO_POSIT
@@ -131,11 +128,7 @@ module ppu_core_ops #(
     pif_to_posit #(
         .N(N),
         .ES(ES),
-`ifdef FLOAT_TO_POSIT
-        .PIF_TOTAL_SIZE(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)
-`else
         .PIF_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
-`endif
     ) pif_to_posit_inst (
         .pif(pif_to_posit_in),
         .frac_lsb_cut_off(frac_lsb_cut_off_pif_to_posit_in),
