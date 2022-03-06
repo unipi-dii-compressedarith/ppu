@@ -178,7 +178,7 @@ def func(c, op, list_a, list_b):
         c += f"#10;\n\t"
         if op == Tb.PACOGEN:
             c += f'assert (pout_pacogen === out_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
-            c += f'assert (pout_ppu_core_ops === pout_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
+            c += f'assert (pout_ppu_core_ops === out_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
         else:
             c += f'assert (out === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", out);\n\n'
     c += f'$display("Total tests cases: {len(list_a)}");\n'

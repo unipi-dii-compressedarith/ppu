@@ -104,6 +104,7 @@ module posit_unpack #(
 
     wire val = bits_cls_in[N-2];
 
+    /*
     // count leading X
     cls #(
         .NUM_BITS(N)
@@ -112,6 +113,19 @@ module posit_unpack #(
         .val                (val),
         .leading_set        (leading_set),
         .index_highest_set  ()
+    );
+    */
+
+    lzc #(
+        .N(N)
+    ) lzc_inst (
+        .in(
+            (
+                val == 1'b0
+                ? (bits_cls_in) : (~bits_cls_in)
+            ) << 1
+        ),
+        .out(leading_set)
     );
 
 

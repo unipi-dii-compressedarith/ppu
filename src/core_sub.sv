@@ -9,13 +9,22 @@ module core_sub #(
 
     wire [($clog2(MANT_SUB_RESULT_SIZE))-1:0] leading_zeros;
 
+    /*
     cls #(
         .NUM_BITS(MANT_SUB_RESULT_SIZE)
-    ) clz (
+    ) clz_inst (
         .bits               (mant),
         .val                (1'b0),
         .leading_set        (leading_zeros),
         .index_highest_set  ()
+    );
+    */
+
+    lzc #(
+        .N(MANT_SUB_RESULT_SIZE)
+    ) lzc_inst (
+        .in(mant),
+        .out(leading_zeros)
     );
 
     assign new_te_diff = te_diff - leading_zeros;

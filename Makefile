@@ -11,6 +11,9 @@ all: \
 
 .PHONY : all
 
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 SRC_FOLDER := ../src
 SRC_PACOGEN := ../../PaCoGen
 
@@ -64,7 +67,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/posit_unpack.sv \
 	$(SRC_FOLDER)/posit_decoder.sv \
 	$(SRC_FOLDER)/posit_encoder.sv \
-	$(SRC_FOLDER)/cls.sv \
+	$(SRC_FOLDER)/lzc.sv \
 	$(SRC_FOLDER)/round_posit.sv \
 	$(SRC_FOLDER)/sign_decisor.sv \
 	$(SRC_FOLDER)/set_sign.sv \

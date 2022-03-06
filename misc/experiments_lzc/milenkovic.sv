@@ -117,7 +117,7 @@ module bne #(
 endmodule
 
 
-`ifdef TB_MILANKOVIC
+`ifdef TB_MILENKOVIC
 module tb_milenkovic;
     
     parameter N = 32;
