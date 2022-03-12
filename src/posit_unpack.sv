@@ -104,29 +104,31 @@ module posit_unpack #(
 
     wire val = bits_cls_in[N-2];
 
-    /*
-    // count leading X
-    cls #(
-        .NUM_BITS(N)
-    ) cls_inst (
-        .bits               (bits_cls_in << 1), // strip sign bit and count ones from the left
-        .val                (val),
-        .leading_set        (leading_set),
-        .index_highest_set  ()
-    );
-    */
+    
+    // //// count leading X
+    // cls #(
+    //     .NUM_BITS(N)
+    // ) cls_inst (
+    //     .bits               (bits_cls_in << 1), // strip sign bit and count ones from the left
+    //     .val                (val),
+    //     .leading_set        (leading_set),
+    //     .index_highest_set  ()
+    // );
+    
+    wire [S-1:0] leading_set_out_lzc;
+    wire lzc_is_valid;
 
     lzc #(
-        .N(N)
+        .NUM_BITS(N)
     ) lzc_inst (
         .in(
-            (
-                val == 1'b0
-                ? (bits_cls_in) : (~bits_cls_in)
-            ) << 1
+            (val == 1'b0 ? bits_cls_in : ~bits_cls_in) << 1
         ),
-        .out(leading_set)
+        .out(leading_set_out_lzc),
+        .vld(lzc_is_valid)
     );
+
+    assign leading_set = lzc_is_valid == 1'b1 ? leading_set_out_lzc : N - 1;
 
 
 endmodule

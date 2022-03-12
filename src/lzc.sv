@@ -1,13 +1,13 @@
 module lzc #(
-        parameter N = 32
+        parameter NUM_BITS = 32
     )(
-        input  [N-1:0] in,
-        output [$clog2(N)-1:0] out,
+        input  [NUM_BITS-1:0] in,
+        output [$clog2(NUM_BITS)-1:0] out,
         output vld
     );
 
     lzc_internal #(
-        .N(N)
+        .NUM_BITS(NUM_BITS)
     ) l1 (
         .in(in),
         .out(out),
@@ -16,23 +16,23 @@ module lzc #(
 endmodule
 
 module lzc_internal #(
-        parameter N = 8
+        parameter NUM_BITS = 8
     )(
-        input   [N-1:0]         in,
-        output  [$clog2(N)-1:0] out,
+        input   [NUM_BITS-1:0]         in,
+        output  [$clog2(NUM_BITS)-1:0] out,
         output                  vld
     );
-    localparam S = $clog2(N);
+    localparam S = $clog2(NUM_BITS);
 
     generate
-        if (N == 2) begin
+        if (NUM_BITS == 2) begin
             assign vld = |in;
             assign out = ~in[1] & in[0];
-        end else if (N & (N-1)) begin
+        end else if (NUM_BITS & (NUM_BITS-1)) begin
             lzc_internal #(
-                .N      (1<<S)
+                .NUM_BITS      (1<<S)
             ) lzc_internal (
-                .in({in, {((1<<S) - N) {1'b0}}}),
+                .in({in, {((1<<S) - NUM_BITS) {1'b0}}}),
                 .out(out),
                 .vld(vld));
         end else begin
@@ -40,16 +40,16 @@ module lzc_internal #(
             wire out_vl, out_vh;
 
             lzc_internal #(
-                .N      (N >> 1)
+                .NUM_BITS      (NUM_BITS >> 1)
             ) l (
-                .in     (in[(N>>1)-1:0]),
+                .in     (in[(NUM_BITS >> 1)-1:0]),
                 .out    (out_l),
                 .vld    (out_vl));
 
             lzc_internal #(
-                .N      (N >> 1)
+                .NUM_BITS      (NUM_BITS >> 1)
             ) h (
-                .in     (in[N-1 : N>>1]),
+                .in     (in[NUM_BITS-1 : NUM_BITS >> 1]),
                 .out    (out_h),
                 .vld    (out_vh));
 
@@ -64,17 +64,17 @@ endmodule
 `ifdef TB_PACOGEN
 module tb_pacogen;
 
-    parameter N = 32;
-    reg [N-1:0] in_i;
+    parameter NUM_BITS = 32;
+    reg [NUM_BITS-1:0] in_i;
     reg val;
-    wire [$clog2(N)-1:0] lz;
+    wire [$clog2(NUM_BITS)-1:0] lz;
     wire q;
 
-    reg [$clog2(N)-1:0] lz_expected;
+    reg [$clog2(NUM_BITS)-1:0] lz_expected;
     reg all_zeroes_expected;
 
     lzc_pacogen #(
-        .N(N)
+        .NUM_BITS(NUM_BITS)
     ) lzc_pacogen_inst (
         .in(in_i),
         .out(lz),

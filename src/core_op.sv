@@ -68,8 +68,8 @@ module core_op #(
 
     wire [(FRAC_FULL_SIZE)-1:0] mant_out_core_op;
     assign mant_out_core_op = (op == ADD || op == SUB)
-        ? {mant_out_add_sub, {FRAC_FULL_SIZE-MANT_ADD_RESULT_SIZE{1'b0}}} : op == MUL
-        ? {mant_out_mul, {FRAC_FULL_SIZE-MANT_MUL_RESULT_SIZE{1'b0}}} : /* op == DIV */
+        ? mant_out_add_sub << (FRAC_FULL_SIZE - MANT_ADD_RESULT_SIZE) : op == MUL
+        ? mant_out_mul << (FRAC_FULL_SIZE - MANT_MUL_RESULT_SIZE) : /* op == DIV */
           mant_out_div;
 
 

@@ -21,7 +21,7 @@ module core_sub #(
     */
 
     lzc #(
-        .N(MANT_SUB_RESULT_SIZE)
+        .NUM_BITS(MANT_SUB_RESULT_SIZE)
     ) lzc_inst (
         .in(mant),
         .out(leading_zeros)
