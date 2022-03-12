@@ -44,14 +44,14 @@ NUM_RANDOM_TEST_CASES = args.num_tests
 for i in range(NUM_RANDOM_TEST_CASES):
     # x is distributed between -A/2 and A/2
     A = 150
-    x = random.random() * A - A/2
+    x = random.random() * A - A / 2
 
     f64_obj = F64(x_f64=x)
     p = from_double(x, N, ES)
-    
+
     print(f"float_bits = {f64_obj.bits}; ")
-    print(f"ascii_x = \"{x}\"; ")
-    print(f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; ")
-    print(f"ascii_frac = \"{f64_obj.mant}\"; ")
+    print(f'ascii_x = "{x}"; ')
+    print(f'ascii_exp = "{f64_obj.exp - f64_obj.EXP_BIAS}"; ')
+    print(f'ascii_frac = "{f64_obj.mant}"; ')
     print(f"posit_expected = {N}'d{p.to_bits()}; ")
     print("#10; \n")

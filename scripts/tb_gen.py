@@ -14,8 +14,8 @@ import math
 
 # from posit_playground import from_bits
 from hardposit import from_bits, from_double
-from posit_playground.utils import get_bin, get_hex
-from posit_playground.f64 import F64
+from hardposit.utils import get_bin
+from hardposit.f64 import F64
 
 LJUST = 25
 X = "'bX"
@@ -96,36 +96,36 @@ def single_arg_func(c, op):
         for _ in range(NUM_RANDOM_TEST_CASES):
             # x is distributed between -A/2 and A/2
             A = 150
-            x = random.random() * A - A/2
+            x = random.random() * A - A / 2
 
             float_obj = F64(x_f64=x)
             p = from_double(x, N, ES)
 
             c += f"in1 = {float_obj.bits}; "
-            c += f"ascii_x = \"{x}\"; "
-            c += f"ascii_exp = \"{float_obj.exp - float_obj.EXP_BIAS}\"; "
-            c += f"ascii_frac = \"{float_obj.mant}\"; "
+            c += f'ascii_x = "{x}"; '
+            c += f'ascii_exp = "{float_obj.exp - float_obj.EXP_BIAS}"; '
+            c += f'ascii_frac = "{float_obj.mant}"; '
             c += f"out_ground_truth = {N}'d{p.to_bits()}; "
-            c += f"out_expected_ascii = \"{p.eval()}\"; "
-            #c += f"assert (pout === pout_ground_truth) else $display("ERROR: 0x64c4 / 0x6436 = 0x%h != 0x40ba", pout);"
+            c += f'out_expected_ascii = "{p.eval()}"; '
+            # c += f"assert (pout === pout_ground_truth) else $display("ERROR: 0x64c4 / 0x6436 = 0x%h != 0x40ba", pout);"
             c += "#10; \n"
     elif op == Tb.POSIT_TO_FLOAT:
         c += f"op = {op.name};\n"
         c += f'op_ascii = "{op.name}";\n\n'
         c += f"in1 = 'bz;\n\n"
         for _ in range(NUM_RANDOM_TEST_CASES):
-            bits = int(random.random() * (1 << (N-1)))
+            bits = int(random.random() * (1 << (N - 1)))
             p = from_bits(bits, N, ES)
 
-            f64_obj = F64(x_f64 = p.eval())
-            
+            f64_obj = F64(x_f64=p.eval())
+
             c += f"in2 = {N}'d{p.to_bits()}; "
 
-            float_obj = F64(x_f64 = p.eval())
+            float_obj = F64(x_f64=p.eval())
 
-            c += f"ascii_x = \"{float_obj.eval()}\"; "
-            c += f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; "
-            c += f"ascii_frac = \"{f64_obj.mant}\"; "
+            c += f'ascii_x = "{float_obj.eval()}"; '
+            c += f'ascii_exp = "{f64_obj.exp - f64_obj.EXP_BIAS}"; '
+            c += f'ascii_frac = "{f64_obj.mant}"; '
             c += f"out_ground_truth = {f64_obj.bits}; "
             c += "#10; \n"
     else:
@@ -167,7 +167,9 @@ def func(c, op, list_a, list_b):
         c += f"{'in2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
         c += f"""{'in2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
         c += f"""{'out_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
-        c += f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        c += (
+            f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
+        )
         if op != Tb.DIV and op != Tb.PACOGEN:
             c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         else:
@@ -224,8 +226,6 @@ if __name__ == "__main__":
     list_b[7] = (~list_a[7] + 1) & ((1 << N) - 1)
     # 0b10000.....001 kind of number causes errors as of 3316bd5 due to mant_len out of bound. needs more bits to be representate because it can go negative.
     list_a[8] = (1 << (N - 1)) + 1
-
-
 
     if args.operation == Tb.DECODE or args.operation == Tb.ENCODE:
         for (counter, a) in enumerate(list_a):
@@ -300,11 +300,11 @@ if __name__ == "__main__":
         c = func(c, Tb.SUB, list_a, list_b)
         c = func(c, Tb.DIV, list_a, list_b)
         c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
-        c = single_arg_func(c, Tb.POSIT_TO_FLOAT) 
+        c = single_arg_func(c, Tb.POSIT_TO_FLOAT)
 
     elif args.operation == Tb.PACOGEN:
         c = func(c, Tb.PACOGEN, list_a, list_b)
-    
+
     elif args.operation == Tb.FLOAT_TO_POSIT:
         c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
 

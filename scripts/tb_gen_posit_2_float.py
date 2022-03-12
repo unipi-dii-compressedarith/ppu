@@ -43,18 +43,18 @@ NUM_RANDOM_TEST_CASES = args.num_tests
 
 c = ""
 for i in range(NUM_RANDOM_TEST_CASES):
-    bits = int(random.random() * (1 << (N-1)))
+    bits = int(random.random() * (1 << (N - 1)))
     p = from_bits(bits, N, ES)
 
-    f64_obj = F64(x_f64 = p.eval())
-    
+    f64_obj = F64(x_f64=p.eval())
+
     c += f"posit = {N}'d{p.to_bits()}; "
 
-    float_obj = F64(x_f64 = p.eval())
+    float_obj = F64(x_f64=p.eval())
 
-    c += f"ascii_x = \"{float_obj.eval()}\"; "
-    c += f"ascii_exp = \"{f64_obj.exp - f64_obj.EXP_BIAS}\"; "
-    c += f"ascii_frac = \"{f64_obj.mant}\"; "
+    c += f'ascii_x = "{float_obj.eval()}"; '
+    c += f'ascii_exp = "{f64_obj.exp - f64_obj.EXP_BIAS}"; '
+    c += f'ascii_frac = "{f64_obj.mant}"; '
     c += f"float_bits_expected = {f64_obj.bits}; "
 
     c += "#10; \n"

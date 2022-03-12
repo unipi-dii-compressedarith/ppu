@@ -1,15 +1,15 @@
 all: \
 	gen-test-vectors \
-	ppu-core_ops8 \
-	ppu-core_ops16 \
-	ppu-core_ops32 \
+	ppu8 \
+	ppu16 \
+	ppu32 \
 	div-against-pacogen8 \
 	div-against-pacogen16 \
 	div-against-pacogen32 \
 	verilog-quartus16 \
 	lint 
 
-.PHONY : all
+.PHONY : all modelsim
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
@@ -130,15 +130,6 @@ ppu-core_ops:
 	sleep 1 && \
 	./ppu_core_ops_P$(N)E$(ES).out
 
-ppu-core_ops8:
-	make ppu-core_ops N=8 ES=0 F=-1
-
-ppu-core_ops16:
-	make ppu-core_ops N=16 ES=1 F=-1
-
-ppu-core_ops32:
-	make ppu-core_ops N=32 ES=2 F=-1
-
 
 ppu:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
@@ -151,6 +142,15 @@ ppu:
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
+
+ppu8:
+	make ppu N=8 ES=0 F=64 WORD=64
+
+ppu16:
+	make ppu N=16 ES=1 F=64 WORD=64
+
+ppu32:
+	make ppu N=32 ES=2 F=64 WORD=64
 
 
 conversions:
