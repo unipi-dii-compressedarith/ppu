@@ -243,6 +243,6 @@ open-waveforms:
 	gtkwave waveforms/tb_comparison_against_pacogenP32E2.gtkw &
 
 modelsim:
-	cd modelsim && \
-	vlog ../src/cls.sv ../src/utils.sv
-	#do ppu_core_ops.do
+	make verilog-quartus N=16 ES=1 WORD=64 F=64
+	cp quartus/ppu.v modelsim/ppu.v
+	# do ppu.do
