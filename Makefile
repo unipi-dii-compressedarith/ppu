@@ -61,7 +61,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/reciprocate_lut.sv \
 	$(SRC_FOLDER)/reciprocal_approx.sv \
 	$(SRC_FOLDER)/newton_raphson.sv \
-	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/pack_fields.sv \
 	$(SRC_FOLDER)/unpack_exponent.sv \
 	$(SRC_FOLDER)/compute_rounding.sv \
 	$(SRC_FOLDER)/posit_unpack.sv \
@@ -90,7 +90,7 @@ SRC_FLOAT_TO_POSIT := \
 	$(SRC_FOLDER)/pif_to_posit.sv \
 	$(SRC_FOLDER)/posit_encoder.sv \
 	$(SRC_FOLDER)/round_posit.sv \
-	$(SRC_FOLDER)/shift_fields.sv \
+	$(SRC_FOLDER)/pack_fields.sv \
 	$(SRC_FOLDER)/compute_rounding.sv \
 	$(SRC_FOLDER)/unpack_exponent.sv \
 	$(SRC_FOLDER)/set_sign.sv

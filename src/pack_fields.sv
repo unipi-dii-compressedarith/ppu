@@ -2,7 +2,7 @@
 
 
 */
-module shift_fields #(
+module pack_fields #(
         parameter N = 4,
         parameter ES = 0
     )(

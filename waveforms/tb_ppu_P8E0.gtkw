@@ -63,7 +63,7 @@ tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_rap
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant_out[17:0]
 @420
-tb_ppu.ppu_inst.ppu_core_ops_inst.pif_to_posit_inst.shift_fields_inst.k_unpacked[4:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.pif_to_posit_inst.pack_fields_inst.k_unpacked[4:0]
 @24
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.mant1[5:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.mant2[5:0]

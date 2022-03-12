@@ -20,10 +20,10 @@ module pif_to_posit #(
     wire [ES-1:0] next_exp;
 `endif
 
-    shift_fields #(
+    pack_fields #(
         .N(N),
         .ES(ES)
-    ) shift_fields_inst (
+    ) pack_fields_inst (
         .frac_full(frac_full), // the whole mantissa w/o the leading 1. (let's call it `frac_full` to distinguish it from `frac`)
         .total_exp(te),
         .frac_lsb_cut_off(frac_lsb_cut_off),
