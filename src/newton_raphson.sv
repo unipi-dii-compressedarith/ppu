@@ -6,17 +6,17 @@ iverilog -DTB_NEWTON_RAPHSON -g2012 -o newton_raphson.out ../src/newton_raphson.
 module newton_raphson #(
         parameter MS = 10
     )(
-        input [(MS)-1:0] num,
-        input [(3*MS-3)-1:0] x0,
-        output [(2*MS)-1:0] x1
+        input   [(MS)-1:0]      num,
+        input   [(3*MS-4)-1:0]  x0,
+        output  [(2*MS)-1:0]    x1
     );
 
     /*
 
     num                     :   Fx<1, MS>
-    x0                      :   Fx<1, 3MS - 3>
+    x0                      :   Fx<1, 3MS - 4>
 
-    num * x0                :   Fx<2, 4MS - 3>      -> Fx<2, 2MS> (downshifted by ((4MS-3) - (2MS) = 2MS - 3)
+    num * x0                :   Fx<2, 4MS - 4>      -> Fx<2, 2MS> (downshifted by ((4MS-4) - (2MS) = 2MS - 4)
 
     2                       :   Fx<2, 2MS>
 
@@ -31,7 +31,7 @@ module newton_raphson #(
     */
 
     wire [(4*MS-3)-1:0] _num_times_x0;
-    assign _num_times_x0 = (num * x0) >> (2*MS - 3);
+    assign _num_times_x0 = (num * x0) >> (2*MS - 4);
     wire [(2*MS)-1:0] num_times_x0;
     assign num_times_x0 = _num_times_x0;
 
@@ -45,7 +45,7 @@ module newton_raphson #(
 
 
     wire [(2*MS)-1:0] x0_on_2n_bits;
-    assign x0_on_2n_bits = x0 >> (MS - 3);
+    assign x0_on_2n_bits = x0 >> (MS - 4);
 
     wire [(4*MS)-1:0] _x1;
     assign _x1 = x0_on_2n_bits * two_minus_num_x0;

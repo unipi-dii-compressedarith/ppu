@@ -38,14 +38,12 @@ module core_div #(
     );
 `endif
 
-
-
     wire [(2*MANT_SIZE)-1:0] x1;
     newton_raphson #(
         .MS(MANT_SIZE)
     ) newton_raphson_inst (
         .num(mant2),
-        .x0(mant2_reciprocal << 1), // shifted up by one because i drop the "tens" digit in favor on an additional fractional bit
+        .x0(mant2_reciprocal),
         .x1(x1)
     );
 

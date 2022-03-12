@@ -7,7 +7,6 @@ python pacogen_mant_recip_LUT_gen.py -i 8 -o 9 > LUT.txt
 import argparse
 import fixed2float as f2f
 
-
 parser = argparse.ArgumentParser(description="Generate LUT")
 
 parser.add_argument("--size-in", "-i", type=int, required=True, help="Input width")
