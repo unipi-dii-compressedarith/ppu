@@ -10,3 +10,6 @@ out.v
 
 # autogen by sv2v
 _p161_p160.v
+
+# script-generated
+reciprocate_lut.sv

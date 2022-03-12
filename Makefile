@@ -119,6 +119,10 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
+gen-lut-reciprocate-mant:
+	cd scripts && python pacogen_mant_recip_LUT_gen.py -i 13 -o 37 > lut.sv
+	cd src && mv ../scripts/lut.sv reciprocate_lut.sv
+
 ppu-core_ops:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
 	cd waveforms && \
