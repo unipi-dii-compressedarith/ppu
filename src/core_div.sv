@@ -20,49 +20,41 @@ module core_div #(
     wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
 
 
-// `define USE_LUT
+`define USE_LUT
 `ifdef USE_LUT
 
-    parameter LUT_WIDTH_IN = 13;
-    parameter LUT_WIDTH_OUT = 13;
+    parameter LUT_WIDTH_IN = 8;
+    parameter LUT_WIDTH_OUT = 9;
 
     //// python scripts/pacogen_mant_recip_LUT_gen.py -i 14 -o 39 > src/reciprocate_lut.sv
-    generate
+    wire [10:0] branch;
+    generate  
+        wire [(LUT_WIDTH_OUT)-1:0] _mant_out;
+
         if (MANT_SIZE < LUT_WIDTH_IN) begin
-            // e.g P8
-            reciprocate_lut #(
+            assign branch = 0;
+            // e.g P8 mant_size = 6, lut_width_in = 8
+            lut #(
                 .LUT_WIDTH_IN(LUT_WIDTH_IN),
                 .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
-            ) reciprocate_lut_inst (
+            ) lut_inst (
                 .addr(mant2[MANT_SIZE-2 -: LUT_WIDTH_IN]),
                 .out(_mant_out)
             );
-            wire [(LUT_WIDTH_OUT)-1:0] _mant_out;
+            
             assign mant2_reciprocal = {_mant_out, {3*MANT_SIZE-4 - LUT_WIDTH_IN{1'b0}}};
         end else begin
             // e.g. P16 upwards
-            if (LUT_WIDTH_OUT > 3*MANT_SIZE-4) begin
-                reciprocate_lut #(
-                    .LUT_WIDTH_IN(LUT_WIDTH_IN),
-                    .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
-                ) reciprocate_lut_inst (
-                    .addr(mant2[MANT_SIZE-2 -: LUT_WIDTH_IN]),
-                    .out(_mant_out)
-                );
-                wire [(LUT_WIDTH_OUT)-1:0] mant2_reciprocal;
-                assign mant2_reciprocal = _mant_out[LUT_WIDTH_OUT -: (3*MANT_SIZE-4)];
-            end else begin
-                wire [(LUT_WIDTH_OUT)-1:0] _mant_out;
-                reciprocate_lut #(
-                    .LUT_WIDTH_IN(LUT_WIDTH_IN),
-                    .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
-                ) reciprocate_lut_inst (
-                    .addr(mant2[MANT_SIZE-2 -: LUT_WIDTH_IN]),
-                    .out(_mant_out)
-                );
-                wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
-                assign mant2_reciprocal = {_mant_out, {(3*MANT_SIZE-4) - LUT_WIDTH_OUT{1'b0}}} >> 1'b1;
-            end
+            assign branch = 1;
+            lut #(
+                .LUT_WIDTH_IN(LUT_WIDTH_IN),
+                .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
+            ) lut_inst (
+                .addr(mant2[MANT_SIZE-2 -: LUT_WIDTH_IN]),
+                .out(_mant_out)
+            );
+            
+            assign mant2_reciprocal = {_mant_out, {3*MANT_SIZE-4 - LUT_WIDTH_OUT{1'b0}}} >> 1'b1;
         end
     endgenerate
 

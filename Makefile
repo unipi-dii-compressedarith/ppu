@@ -58,7 +58,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/core_mul.sv \
 	$(SRC_FOLDER)/core_div.sv \
 	$(SRC_FOLDER)/fast_reciprocal.sv \
-	$(SRC_FOLDER)/reciprocate_lut.sv \
+	$(SRC_FOLDER)/lut.sv \
 	$(SRC_FOLDER)/reciprocal_approx.sv \
 	$(SRC_FOLDER)/newton_raphson.sv \
 	$(SRC_FOLDER)/pack_fields.sv \
@@ -120,8 +120,8 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
 gen-lut-reciprocate-mant:
-	cd scripts && python pacogen_mant_recip_LUT_gen.py -i 13 -o 37 > lut.sv
-	cd src && mv ../scripts/lut.sv reciprocate_lut.sv
+	cd scripts && python pacogen_mant_recip_LUT_gen.py -i 8 -o 9 > lut.sv
+	cd src && mv ../scripts/lut.sv lut.sv
 
 ppu-core_ops:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random

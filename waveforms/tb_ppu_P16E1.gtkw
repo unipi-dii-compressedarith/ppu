@@ -1,21 +1,25 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Mar 12 15:32:54 2022
+[*] Sat Mar 12 18:09:46 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sat Mar 12 15:32:29 2022"
-[dumpfile_size] 11006671
+[dumpfile_mtime] "Sat Mar 12 17:58:13 2022"
+[dumpfile_size] 10990961
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
-[timestart] 16186
-[size] 1440 847
+[timestart] 16200
+[size] 2560 1412
 [pos] -1 -1
-*-2.581895 16207 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-1.997197 16207 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [treeopen] tb_ppu.ppu_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.
 [sst_width] 199
-[signals_width] 351
+[signals_width] 429
 [sst_expanded] 1
-[sst_vpaned_height] 391
+[sst_vpaned_height] 698
 @24
 tb_ppu.test_no[16:0]
 @28
@@ -52,10 +56,15 @@ tb_ppu.ppu_inst.in2[63:0]
 tb_ppu.ppu_inst.op[2:0]
 @22
 tb_ppu.ppu_inst.out[63:0]
-@23
 tb_ppu.ppu_inst.p1[15:0]
-@22
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst._x1[55:0]
 tb_ppu.ppu_inst.p2[15:0]
 tb_ppu.ppu_inst.posit[15:0]
+@28
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst._x1[55:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[27:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant2_reciprocal[37:0]
+@29
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant_out[41:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Mar 12 15:30:11 2022
+[*] Sat Mar 12 18:09:50 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P8E0.vcd"
-[dumpfile_mtime] "Sat Mar 12 15:29:54 2022"
-[dumpfile_size] 6084068
+[dumpfile_mtime] "Sat Mar 12 17:06:02 2022"
+[dumpfile_size] 5783286
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P8E0.gtkw"
-[timestart] 0
+[timestart] 17210
 [size] 2560 1412
 [pos] -1 -1
-*-10.965857 3720 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-1.965857 17225 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [treeopen] tb_ppu.ppu_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.
@@ -50,21 +50,12 @@ tb_ppu.ppu_inst.p2[7:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif1.posit_decoder_inst.posit_unpack_inst.bits[7:0]
 tb_ppu.ppu_inst.posit[7:0]
 @24
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.a[5:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.b[5:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.c[10:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.d[10:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.e[16:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.fast_reciprocal_inst.reciprocal_approx_inst.o_data[14:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.num[5:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x0_on_2n_bits[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.two_minus_num_x0[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst._x1[23:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant_out[17:0]
-@420
-tb_ppu.ppu_inst.ppu_core_ops_inst.pif_to_posit_inst.pack_fields_inst.k_unpacked[4:0]
-@24
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.mant1[5:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.mant2[5:0]
 @200
@@ -89,7 +80,9 @@ tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_rap
 @28
 tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.bits[7:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.val
-@29
 tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.lzc_inst.vld
+tb_ppu.out[63:0]
+@29
+tb_ppu.out_ground_truth[63:0]
 [pattern_trace] 1
 [pattern_trace] 0
