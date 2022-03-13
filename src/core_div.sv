@@ -20,46 +20,62 @@ module core_div #(
     wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
 
 
-`define USE_LUT
-`ifdef USE_LUT
 
-    parameter LUT_WIDTH_IN = 8;
-    parameter LUT_WIDTH_OUT = 9;
+`ifdef DIV_WITH_LUT
+
+    initial $display("\n***** Using DIV with LUT *****\n");
+
+    parameter LUT_WIDTH_IN = `LUT_SIZE_IN;
+    parameter LUT_WIDTH_OUT = `LUT_SIZE_OUT;
 
     //// python scripts/pacogen_mant_recip_LUT_gen.py -i 14 -o 39 > src/reciprocate_lut.sv
-    generate  
+    generate
         wire [(LUT_WIDTH_OUT)-1:0] _mant_out;
 
         if (MANT_SIZE < LUT_WIDTH_IN) begin
+
+            wire [(LUT_WIDTH_IN)-1:0] addr;
+            assign addr = {mant2[MANT_SIZE-2:0], {1'b0}, {LUT_WIDTH_IN - MANT_SIZE{1'b0}}};
+            //                                      ^- one more zero due to lack to unit digit in mant2
+
             wire mant_is_one;
-            assign mant_is_one = {mant2[MANT_SIZE-2:0], {1'b0}, {LUT_WIDTH_IN - MANT_SIZE{1'b0}}} == 0;
-            
+            assign mant_is_one = addr == 0;
 
             // e.g P8 mant_size = 6, lut_width_in = 8
             lut #(
                 .LUT_WIDTH_IN(LUT_WIDTH_IN),
                 .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
             ) lut_inst (
-                .addr({mant2[MANT_SIZE-2:0], {1'b0}, {LUT_WIDTH_IN - MANT_SIZE{1'b0}}}),
-                //                              ^- one more zero due to lack to unit digit in mant2
+                .addr(addr),
                 .out(_mant_out)
             );
-            
-            assign mant2_reciprocal = 
-                mant_is_one 
+
+
+            //// if mant is one we fall under a special case since the reciprocate of 1 is 1
+            //// and it cannot be represented by only fractional bits (which is the interpretation of
+            //// the number spat out by the lut).
+            assign mant2_reciprocal =
+                mant_is_one
                 ? { 1'b1, {3*MANT_SIZE-4 - 1{1'b0}} } : {_mant_out, {3*MANT_SIZE-4 - LUT_WIDTH_OUT{1'b0}}} >> 1;
 
         end else begin
             // e.g. P16 upwards
+            wire [(LUT_WIDTH_IN)-1:0] addr;
+            assign addr = mant2[MANT_SIZE-2 -: LUT_WIDTH_IN];
+
+            wire mant_is_one;
+            assign mant_is_one = addr == 0;
+
             lut #(
                 .LUT_WIDTH_IN(LUT_WIDTH_IN),
                 .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
             ) lut_inst (
-                .addr(mant2[MANT_SIZE-2 -: LUT_WIDTH_IN]),
+                .addr(addr),
                 .out(_mant_out)
             );
-            
-            assign mant2_reciprocal = {_mant_out, {3*MANT_SIZE-4 - LUT_WIDTH_OUT{1'b0}}} >> 1'b1;
+
+            assign mant2_reciprocal =
+                mant_is_one ? { 1'b1, {3*MANT_SIZE-4 - 1{1'b0}} } : {_mant_out, {3*MANT_SIZE-4 - LUT_WIDTH_OUT{1'b0}}} >> 1'b1;
         end
     endgenerate
 
@@ -73,6 +89,8 @@ module core_div #(
     // );
 
 `else
+    initial $display("\n***** NOT using DIV with LUT *****\n");
+
     fast_reciprocal #(
         .SIZE(MANT_SIZE)
     ) fast_reciprocal_inst (

@@ -1,5 +1,4 @@
 all: \
-	gen-test-vectors \
 	ppu8 \
 	ppu16 \
 	ppu32 \
@@ -20,6 +19,10 @@ SRC_PACOGEN := ../../PaCoGen
 
 ifeq ($(ES),0)
 ES_FIELD_PRESENCE_FLAG := -DNO_ES_FIELD
+endif
+
+ifeq ($(DIV_WITH_LUT),1)
+DIV_WITH_LUT_FLAG := -DDIV_WITH_LUT -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT)
 endif
 
 ifeq ($(F),-1)
@@ -113,18 +116,18 @@ SRC_POSIT_TO_FLOAT := \
 
 gen-test-vectors:
 	cd scripts && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 4 && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random \
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 && \
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 && \
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 4 && \
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
 gen-lut-reciprocate-mant:
-	cd scripts && python pacogen_mant_recip_LUT_gen.py -i 8 -o 9 > lut.sv
-	cd src && mv ../scripts/lut.sv lut.sv
+	python scripts/pacogen_mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > src/lut.sv 
 
 ppu-core_ops:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU_CORE_OPS \
 	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
@@ -135,11 +138,12 @@ ppu-core_ops:
 	./ppu_core_ops_P$(N)E$(ES).out
 
 
-ppu:
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
+ppu: gen-lut-reciprocate-mant
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
+	$(DIV_WITH_LUT_FLAG) \
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-o ppu_P$(N)E$(ES).out \
 	../src/ppu.sv \
@@ -148,13 +152,13 @@ ppu:
 	./ppu_P$(N)E$(ES).out
 
 ppu8:
-	make ppu N=8 ES=0 F=64 WORD=64
+	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
 
 ppu16:
-	make ppu N=16 ES=1 F=64 WORD=64
+	make ppu N=16 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
 
 ppu32:
-	make ppu N=32 ES=2 F=64 WORD=64
+	make ppu N=32 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
 
 
 conversions:
@@ -200,7 +204,9 @@ sim-yosys:
 verilog-quartus:
 	cd quartus && \
 	sv2v \
-	$(ES_FIELD_PRESENCE_FLAG) $(FLOAT_TO_POSIT_FLAG) \
+	$(ES_FIELD_PRESENCE_FLAG) \
+	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \
+	$(FLOAT_TO_POSIT_FLAG) \
 	-DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_FOLDER)/ppu_top.sv \
 	$(SRC_FOLDER)/ppu.sv \

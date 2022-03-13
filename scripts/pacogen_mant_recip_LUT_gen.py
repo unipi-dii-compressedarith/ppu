@@ -68,8 +68,6 @@ module lut #(
     assign out = dout; // << 1;
 endmodule
 
-
-
 """.format(
         LUT_IN,
         LUT_OUT,
