@@ -1,22 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sat Mar 12 18:09:46 2022
+[*] Sun Mar 13 17:50:56 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sat Mar 12 17:58:13 2022"
-[dumpfile_size] 10990961
+[dumpfile_mtime] "Sun Mar 13 17:47:57 2022"
+[dumpfile_size] 11170249
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_ppu_P16E1.gtkw"
-[timestart] 16200
+[timestart] 0
 [size] 2560 1412
 [pos] -1 -1
-*-1.997197 16207 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-11.102639 16205 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [treeopen] tb_ppu.ppu_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.
-[sst_width] 199
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk2.
+[sst_width] 259
 [signals_width] 429
 [sst_expanded] 1
 [sst_vpaned_height] 698
@@ -64,7 +65,19 @@ tb_ppu.ppu_inst.posit[15:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst._x1[55:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[27:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant2_reciprocal[37:0]
-@29
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant_out[41:0]
+@22
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.branch[10:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant2_reciprocal[37:0]
+@28
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant2_reciprocal_fast_reciprocal[37:0]
+@22
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant_out[41:0]
+@28
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.mant2[13:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk2.reciprocate_lut_inst.addr[7:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk2.reciprocate_lut_inst.out[8:0]
+@29
+tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk2.reciprocate_lut_inst.dout[8:0]
 [pattern_trace] 1
 [pattern_trace] 0
