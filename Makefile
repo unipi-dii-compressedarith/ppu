@@ -5,8 +5,7 @@ all: \
 	div-against-pacogen8 \
 	div-against-pacogen16 \
 	div-against-pacogen32 \
-	verilog-quartus16 \
-	lint 
+	lint \
 
 .PHONY : all modelsim
 
@@ -23,9 +22,12 @@ endif
 
 ifeq ($(DIV_WITH_LUT),1)
 DIV_WITH_LUT_FLAG := -DDIV_WITH_LUT -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT)
+else
+LUT_SIZE_IN := 8
+LUT_SIZE_OUT := 9
 endif
 
-ifeq ($(F),-1)
+ifeq ($(F),0)
 else
 FLOAT_TO_POSIT_FLAG := -DFLOAT_TO_POSIT -DF=$(F)
 SRC_CONVERSIONS_PPU := \
@@ -138,7 +140,7 @@ ppu-core_ops:
 	./ppu_core_ops_P$(N)E$(ES).out
 
 
-ppu: gen-lut-reciprocate-mant
+ppu: gen-lut-reciprocate-mant verilog-quartus
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
 	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
@@ -207,14 +209,14 @@ verilog-quartus:
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \
 	$(FLOAT_TO_POSIT_FLAG) \
-	-DN=$(N) -DES=$(ES) -DF=$(F) \
+	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_FOLDER)/ppu_top.sv \
 	$(SRC_FOLDER)/ppu.sv \
-	$(SRC_PPU_CORE_OPS) > ./ppu_top.v && iverilog ppu_top.v && ./a.out
+	$(SRC_PPU_CORE_OPS) > ppu_top.v && iverilog ppu_top.v && ./a.out
 
 
 verilog-quartus16:
-	make verilog-quartus N=16 ES=0 F=-1
+	make verilog-quartus N=16 ES=0 F=0
 
 
 lint:
@@ -230,13 +232,13 @@ div-against-pacogen:
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
 
 div-against-pacogen8:
-	make div-against-pacogen N=8 ES=0 F=-1
+	make div-against-pacogen N=8 ES=0 F=0
 
 div-against-pacogen16:
-	make div-against-pacogen N=16 ES=1 F=-1
+	make div-against-pacogen N=16 ES=1 F=0
 
 div-against-pacogen32:
-	make div-against-pacogen N=32 ES=2 F=-1
+	make div-against-pacogen N=32 ES=2 F=0
 
 clean:
 	rm waveforms/*.out

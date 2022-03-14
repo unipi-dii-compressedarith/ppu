@@ -2,7 +2,6 @@
 a wrapper around the actual ppu.
 */
 
-`define WORD 64
 module ppu_top #(
         parameter WORD = `WORD
 `ifdef FLOAT_TO_POSIT

@@ -20,11 +20,14 @@ module core_sub #(
     );
     */
 
+    wire is_valid; // flag we dont care about here.
+
     lzc #(
         .NUM_BITS(MANT_SUB_RESULT_SIZE)
     ) lzc_inst (
         .in(mant),
-        .out(leading_zeros)
+        .out(leading_zeros),
+        .vld(is_valid)
     );
 
     assign new_te_diff = te_diff - leading_zeros;
