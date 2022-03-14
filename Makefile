@@ -5,7 +5,7 @@ all: \
 	div-against-pacogen8 \
 	div-against-pacogen16 \
 	div-against-pacogen32 \
-	lint \
+
 
 .PHONY : all modelsim
 
@@ -46,12 +46,12 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/constants.vh \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/ppu_core_ops.sv \
-	$(SRC_FOLDER)/posit_to_pif.sv \
-	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/posit_to_fir.sv \
+	$(SRC_FOLDER)/fir_to_posit.sv \
 	$(SRC_FOLDER)/conversions/float_encoder.sv \
 	$(SRC_FOLDER)/conversions/sign_extend.sv \
-	$(SRC_FOLDER)/conversions/float_to_pif.sv \
-	$(SRC_FOLDER)/conversions/pif_to_float.sv \
+	$(SRC_FOLDER)/conversions/float_to_fir.sv \
+	$(SRC_FOLDER)/conversions/fir_to_float.sv \
 	$(SRC_FOLDER)/input_conditioning.sv \
 	$(SRC_FOLDER)/handle_special_or_trivial.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
@@ -90,9 +90,9 @@ SRC_FLOAT_TO_POSIT := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/conversions/defines.vh \
 	$(SRC_FOLDER)/conversions/float_to_posit.sv \
-	$(SRC_FOLDER)/conversions/float_to_pif.sv \
+	$(SRC_FOLDER)/conversions/float_to_fir.sv \
 	$(SRC_FOLDER)/conversions/float_decoder.sv \
-	$(SRC_FOLDER)/pif_to_posit.sv \
+	$(SRC_FOLDER)/fir_to_posit.sv \
 	$(SRC_FOLDER)/posit_encoder.sv \
 	$(SRC_FOLDER)/round_posit.sv \
 	$(SRC_FOLDER)/pack_fields.sv \
@@ -105,10 +105,10 @@ SRC_POSIT_TO_FLOAT := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/conversions/defines.vh \
 	$(SRC_FOLDER)/conversions/posit_to_float.sv \
-	$(SRC_FOLDER)/conversions/pif_to_float.sv \
+	$(SRC_FOLDER)/conversions/fir_to_float.sv \
 	$(SRC_FOLDER)/conversions/float_encoder.sv \
 	$(SRC_FOLDER)/conversions/sign_extend.sv \
-	$(SRC_FOLDER)/posit_to_pif.sv \
+	$(SRC_FOLDER)/posit_to_fir.sv \
 	$(SRC_FOLDER)/posit_decoder.sv \
 	$(SRC_FOLDER)/posit_unpack.sv \
 	$(SRC_FOLDER)/total_exponent.sv \
@@ -152,6 +152,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
+	make lint
 
 ppu8:
 	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0

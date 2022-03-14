@@ -1,9 +1,9 @@
-module pif_to_posit #(
+module fir_to_posit #(
         parameter N = 4,
         parameter ES = 0,
-        parameter PIF_TOTAL_SIZE = 43
+        parameter fir_TOTAL_SIZE = 43
     )(
-        input [PIF_TOTAL_SIZE-1:0] pif,
+        input [fir_TOTAL_SIZE-1:0] fir,
         input frac_lsb_cut_off, // flag
         output [N-1:0] posit
     );
@@ -11,7 +11,7 @@ module pif_to_posit #(
     wire sign;
     wire [TE_SIZE-1:0] te;
     wire [FRAC_FULL_SIZE-1:0] frac_full;
-    assign {sign, te, frac_full} = pif;
+    assign {sign, te, frac_full} = fir;
 
 
     wire [MANT_SIZE-1:0] frac;

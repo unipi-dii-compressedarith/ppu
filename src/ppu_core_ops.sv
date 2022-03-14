@@ -22,9 +22,9 @@ module ppu_core_ops #(
         input   [OP_SIZE-1:0]                                           op,
 `ifdef FLOAT_TO_POSIT
         /************************************************************************/
-        input  [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]                         float_pif,
-        // input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_pif,
-        output  [(PIF_SIZE)-1:0]                                        posit_pif,
+        input  [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]                         float_fir,
+        // input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_fir,
+        output  [(fir_SIZE)-1:0]                                        posit_fir,
         /************************************************************************/
 `endif
         output  [N-1:0]                                                 pout
@@ -59,47 +59,47 @@ module ppu_core_ops #(
     );
 
 
-    wire [PIF_SIZE-1:0] pif1, pif2;
+    wire [fir_SIZE-1:0] fir1, fir2;
 
-    posit_to_pif #(
+    posit_to_fir #(
         .N(N),
         .ES(ES)
-    ) posit_to_pif1 (
+    ) posit_to_fir1 (
         .p_cond(p1_cond),
-        .pif(pif1)
+        .fir(fir1)
     );
 
-    wire [N-1:0] posit_in_posit_to_pif2;
-    assign posit_in_posit_to_pif2 =
+    wire [N-1:0] posit_in_posit_to_fir2;
+    assign posit_in_posit_to_fir2 =
 `ifdef FLOAT_TO_POSIT
         (op == POSIT_TO_FLOAT) ? p2 :
 `endif
         p2_cond;
 
-    posit_to_pif #(
+    posit_to_fir #(
         .N(N),
         .ES(ES)
-    ) posit_to_pif2 (
-        .p_cond(posit_in_posit_to_pif2),
-        .pif(pif2)
+    ) posit_to_fir2 (
+        .p_cond(posit_in_posit_to_fir2),
+        .fir(fir2)
     );
 
 `ifdef FLOAT_TO_POSIT
-    assign posit_pif = pif2;
+    assign posit_fir = fir2;
 `endif
 
     wire [TE_SIZE-1:0] ops_te_out;
     wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
     wire sign_out_ops;
-    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_ops_out;
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out;
     ops #(
         .N(N)
     ) ops_inst (
         .op(op),
-        .pif1(pif1),
-        .pif2(pif2),
-        .pif_ops_out(pif_ops_out),
+        .fir1(fir1),
+        .fir2(fir2),
+        .fir_ops_out(fir_ops_out),
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
@@ -109,29 +109,29 @@ module ppu_core_ops #(
     wire [N-1:0] pout_non_special;
 
 
-    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] pif_to_posit_in;
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_to_posit_in;
 
-    assign pif_to_posit_in =
+    assign fir_to_posit_in =
 `ifdef FLOAT_TO_POSIT
-        (op == FLOAT_TO_POSIT) ? float_pif :
+        (op == FLOAT_TO_POSIT) ? float_fir :
 `endif
-        pif_ops_out;
+        fir_ops_out;
 
-    wire frac_lsb_cut_off_pif_to_posit_in;
-    assign frac_lsb_cut_off_pif_to_posit_in =
+    wire frac_lsb_cut_off_fir_to_posit_in;
+    assign frac_lsb_cut_off_fir_to_posit_in =
 `ifdef FLOAT_TO_POSIT
         (op == FLOAT_TO_POSIT) ? 1'b0 :
 `endif
         frac_lsb_cut_off;
 
 
-    pif_to_posit #(
+    fir_to_posit #(
         .N(N),
         .ES(ES),
-        .PIF_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
-    ) pif_to_posit_inst (
-        .pif(pif_to_posit_in),
-        .frac_lsb_cut_off(frac_lsb_cut_off_pif_to_posit_in),
+        .fir_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
+    ) fir_to_posit_inst (
+        .fir(fir_to_posit_in),
+        .frac_lsb_cut_off(frac_lsb_cut_off_fir_to_posit_in),
         .posit(pout_non_special)
     );
 

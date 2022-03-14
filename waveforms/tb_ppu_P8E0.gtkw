@@ -17,14 +17,14 @@
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk1.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.pif_to_posit_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif1.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif1.posit_decoder_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif1.posit_decoder_inst.posit_unpack_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.lzc_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.fir_to_posit_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir1.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir1.posit_decoder_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir1.posit_decoder_inst.posit_unpack_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.posit_unpack_inst.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.posit_unpack_inst.lzc_inst.
 [sst_width] 261
 [signals_width] 525
 [sst_expanded] 1
@@ -48,7 +48,7 @@ tb_ppu.ppu_inst.op[2:0]
 tb_ppu.ppu_inst.out[63:0]
 tb_ppu.ppu_inst.p1[7:0]
 tb_ppu.ppu_inst.p2[7:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif1.posit_decoder_inst.posit_unpack_inst.bits[7:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir1.posit_decoder_inst.posit_unpack_inst.bits[7:0]
 tb_ppu.ppu_inst.posit[7:0]
 @24
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.num[5:0]
@@ -79,9 +79,9 @@ tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.frac_out[15:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.mant_out_mul[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[11:0]
 @28
-tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.bits[7:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.val
-tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_pif2.posit_decoder_inst.posit_unpack_inst.lzc_inst.vld
+tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.posit_unpack_inst.bits[7:0]
+tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.posit_unpack_inst.val
+tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir2.posit_decoder_inst.posit_unpack_inst.lzc_inst.vld
 @22
 tb_ppu.out[63:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x0[13:0]

@@ -180,7 +180,7 @@ BT
 /F1 12 Tf
 1 0 0 -1 0 0 Tm
 -73.044 2.484 Td
-(float_to_pif:float_to_pif_inst) Tj
+(float_to_fir:float_to_fir_inst) Tj
 ET
 Q
 3 w
@@ -208,7 +208,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 0 2.07 Td
-(pif[63..0]) Tj
+(fir[63..0]) Tj
 ET
 Q
 90 120 m
@@ -323,7 +323,7 @@ BT
 /F1 12 Tf
 1 0 0 -1 0 0 Tm
 -75.708 2.484 Td
-(pif_to_posit:pif_to_posit_inst) Tj
+(fir_to_posit:fir_to_posit_inst) Tj
 ET
 Q
 0.024 0.278 0.435 RG
@@ -361,7 +361,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 -38.36 2.07 Td
-(pif[47..0]) Tj
+(fir[47..0]) Tj
 ET
 Q
 1950 170 m
@@ -1297,7 +1297,7 @@ endobj
 endobj
 13 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2 float_to_pif:float_to_pif_inst_2)
+  /Title  (float_to_fir:float_to_fir_inst_2 float_to_fir:float_to_fir_inst_2)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 87 292 211 337]
   /Parent 12 0 R
@@ -1306,7 +1306,7 @@ endobj
 endobj
 14 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2|float_decoder:float_decoder_inst_3 float_decoder:float_decoder_inst_3)
+  /Title  (float_to_fir:float_to_fir_inst_2|float_decoder:float_decoder_inst_3 float_decoder:float_decoder_inst_3)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 115 296 170 328]
   /Parent 12 0 R
@@ -1316,7 +1316,7 @@ endobj
 endobj
 15 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4 pif_to_posit:pif_to_posit_inst_4)
+  /Title  (fir_to_posit:fir_to_posit_inst_4 fir_to_posit:fir_to_posit_inst_4)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 236 266 711 344]
   /Parent 12 0 R
@@ -1326,7 +1326,7 @@ endobj
 endobj
 16 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|posit_encoder:posit_encoder_inst_8 posit_encoder:posit_encoder_inst_8)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|posit_encoder:posit_encoder_inst_8 posit_encoder:posit_encoder_inst_8)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 411 293 468 332]
   /Parent 12 0 R
@@ -1336,7 +1336,7 @@ endobj
 endobj
 17 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|round_posit:round_posit_inst_9 round_posit:round_posit_inst_9)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|round_posit:round_posit_inst_9 round_posit:round_posit_inst_9)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 505 274 591 319]
   /Parent 12 0 R
@@ -1346,7 +1346,7 @@ endobj
 endobj
 18 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|set_sign:set_sign_inst_10 set_sign:set_sign_inst_10)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|set_sign:set_sign_inst_10 set_sign:set_sign_inst_10)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 616 280 679 306]
   /Parent 12 0 R
@@ -1356,7 +1356,7 @@ endobj
 endobj
 19 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|pack_fields:pack_fields_inst_5 pack_fields:pack_fields_inst_5)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|pack_fields:pack_fields_inst_5 pack_fields:pack_fields_inst_5)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 289 274 368 332]
   /Parent 12 0 R
@@ -1421,7 +1421,7 @@ endobj
 endobj
 25 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2|sign_2344)
+  /Title  (float_to_fir:float_to_fir_inst_2|sign_2344)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 155 300 194 307]
   /Parent 24 0 R
@@ -1430,7 +1430,7 @@ endobj
 endobj
 26 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|OUT0_2101)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|OUT0_2101)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 270 298 308 298]
   /Parent 24 0 R
@@ -1440,7 +1440,7 @@ endobj
 endobj
 27 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|k_is_oob_71)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|k_is_oob_71)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 334 304 538 336]
   /Parent 24 0 R
@@ -1450,7 +1450,7 @@ endobj
 endobj
 28 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|non_zero_frac_field_size_72)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|non_zero_frac_field_size_72)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 334 291 538 298]
   /Parent 24 0 R
@@ -1460,7 +1460,7 @@ endobj
 endobj
 29 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|round_bit_89)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|round_bit_89)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 334 285 538 285]
   /Parent 24 0 R
@@ -1470,7 +1470,7 @@ endobj
 endobj
 30 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|sticky_bit_90)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|sticky_bit_90)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 334 278 538 278]
   /Parent 24 0 R
@@ -1501,7 +1501,7 @@ endobj
 endobj
 33 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2|OUT0_2345)
+  /Title  (float_to_fir:float_to_fir_inst_2|OUT0_2345)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 104 307 130 307]
   /Parent 31 0 R
@@ -1511,7 +1511,7 @@ endobj
 endobj
 34 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2|exp[10..0]_2346)
+  /Title  (float_to_fir:float_to_fir_inst_2|exp[10..0]_2346)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 154 307 194 314]
   /Parent 31 0 R
@@ -1521,7 +1521,7 @@ endobj
 endobj
 35 0 obj
 <<
-  /Title  (float_to_pif:float_to_pif_inst_2|frac[51..0]_2347)
+  /Title  (float_to_fir:float_to_fir_inst_2|frac[51..0]_2347)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 155 307 194 307]
   /Parent 31 0 R
@@ -1531,7 +1531,7 @@ endobj
 endobj
 36 0 obj
 <<
-  /Title  (pif[63..0]_2429)
+  /Title  (fir[63..0]_2429)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 199 303 265 308]
   /Parent 31 0 R
@@ -1541,7 +1541,7 @@ endobj
 endobj
 37 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|OUT0_2119)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|OUT0_2119)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 270 271 633 306]
   /Parent 31 0 R
@@ -1551,7 +1551,7 @@ endobj
 endobj
 38 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|frac[13..0]_2122)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|frac[13..0]_2122)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 333 309 427 318]
   /Parent 31 0 R
@@ -1561,7 +1561,7 @@ endobj
 endobj
 39 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|k[5..0]_2120)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|k[5..0]_2120)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 333 303 427 311]
   /Parent 31 0 R
@@ -1571,7 +1571,7 @@ endobj
 endobj
 40 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|next_exp[0..0]_2121)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|next_exp[0..0]_2121)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 333 297 427 318]
   /Parent 31 0 R
@@ -1581,7 +1581,7 @@ endobj
 endobj
 41 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|posit[15..0]_2123)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|posit[15..0]_2123)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 451 290 539 311]
   /Parent 31 0 R
@@ -1591,7 +1591,7 @@ endobj
 endobj
 42 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|posit_out[15..0]_2125)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|posit_out[15..0]_2125)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 659 291 691 291]
   /Parent 31 0 R
@@ -1601,7 +1601,7 @@ endobj
 endobj
 43 0 obj
 <<
-  /Title  (pif_to_posit:pif_to_posit_inst_4|posit_rounded[15..0]_2124)
+  /Title  (fir_to_posit:fir_to_posit_inst_4|posit_rounded[15..0]_2124)
   /C      [0.0 0.0 0.4]
   /Dest   [9 0 R /FitR 563 291 633 291]
   /Parent 31 0 R
@@ -1861,7 +1861,7 @@ BT
 /F1 12 Tf
 1 0 0 -1 0 0 Tm
 -73.044 2.484 Td
-(pif_to_float:pif_to_float_inst) Tj
+(fir_to_float:fir_to_float_inst) Tj
 ET
 Q
 3 w
@@ -1876,7 +1876,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 -38.36 2.07 Td
-(pif[21..0]) Tj
+(fir[21..0]) Tj
 ET
 Q
 1950 100 m
@@ -2004,7 +2004,7 @@ BT
 /F1 12 Tf
 1 0 0 -1 0 0 Tm
 -75.708 2.484 Td
-(posit_to_pif:posit_to_pif_inst) Tj
+(posit_to_fir:posit_to_fir_inst) Tj
 ET
 Q
 3 w
@@ -2032,7 +2032,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 0 2.07 Td
-(pif[21..0]) Tj
+(fir[21..0]) Tj
 ET
 Q
 110 100 m

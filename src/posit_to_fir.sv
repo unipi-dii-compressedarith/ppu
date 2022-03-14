@@ -1,9 +1,9 @@
-module posit_to_pif #(
+module posit_to_fir #(
         parameter N = 4,
         parameter ES = 0
     )(
         input   [N-1:0]         p_cond,
-        output  [PIF_SIZE-1:0]  pif
+        output  [fir_SIZE-1:0]  fir
     );
 
 
@@ -22,6 +22,6 @@ module posit_to_pif #(
         .mant(mant)
     );
 
-    assign pif = {sign, te, mant};
+    assign fir = {sign, te, mant};
 
 endmodule

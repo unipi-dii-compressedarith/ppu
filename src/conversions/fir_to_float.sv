@@ -1,10 +1,10 @@
 `ifdef FLOAT_TO_POSIT
-module pif_to_float #(
+module fir_to_float #(
         parameter N = 10,
         parameter ES = 1,
         parameter FSIZE = 54
     )(
-        input  [PIF_SIZE-1:0]   pif,
+        input  [fir_SIZE-1:0]   fir,
         output [FSIZE-1:0]      float
     );
 
@@ -17,7 +17,7 @@ module pif_to_float #(
     wire signed [TE_SIZE-1:0] posit_te;
     wire [MANT_SIZE-1:0] posit_frac;
 
-    assign {posit_sign, posit_te, posit_frac} = pif;
+    assign {posit_sign, posit_te, posit_frac} = fir;
 
     
 

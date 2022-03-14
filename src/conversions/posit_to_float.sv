@@ -18,22 +18,22 @@ module posit_to_float #(
     parameter FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
     parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
-    wire [PIF_SIZE-1:0] pif;
+    wire [fir_SIZE-1:0] fir;
     
-    posit_to_pif #(
+    posit_to_fir #(
         .N(N),
         .ES(ES)
-    ) posit_to_pif_inst (
+    ) posit_to_fir_inst (
         .p_cond(posit),
-        .pif(pif)
+        .fir(fir)
     );
 
-    pif_to_float #(
+    fir_to_float #(
         .N(N),
         .ES(ES),
         .FSIZE(FSIZE)
-    ) pif_to_float_inst (
-        .pif(pif),
+    ) fir_to_float_inst (
+        .fir(fir),
         .float(float_bits)
     );
 

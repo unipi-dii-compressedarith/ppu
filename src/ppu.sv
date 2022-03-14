@@ -33,8 +33,8 @@ module ppu #(
         .p2(p2),
         .op(op),
 `ifdef FLOAT_TO_POSIT
-        .float_pif(float_pif_in),
-        .posit_pif(posit_pif),
+        .float_fir(float_fir_in),
+        .posit_fir(posit_fir),
 `endif
         .pout(posit)
     );
@@ -48,37 +48,37 @@ module ppu #(
 
     wire [10:0] EI_wire = E_I, MI_wire = M_I, EII_wire = E_II, MII_wire = M_II;
 
-    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_pif_out;
-    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] float_pif_in;
+    wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] float_fir_out;
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] float_fir_in;
 
-    wire                        __sign = float_pif_out[ (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F) - 1 ];
-    wire [TE_SIZE-1:0]          __exp  = float_pif_out[ M_I+E_II : M_I ];
-    wire [FRAC_FULL_SIZE-1:0]   __frac = float_pif_out[ M_I-1 -: M_II ];
+    wire                        __sign = float_fir_out[ (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F) - 1 ];
+    wire [TE_SIZE-1:0]          __exp  = float_fir_out[ M_I+E_II : M_I ];
+    wire [FRAC_FULL_SIZE-1:0]   __frac = float_fir_out[ M_I-1 -: M_II ];
 
-    assign float_pif_in = {__sign, __exp, __frac};
+    assign float_fir_in = {__sign, __exp, __frac};
 `endif
-    wire [PIF_SIZE-1:0] posit_pif;
+    wire [fir_SIZE-1:0] posit_fir;
 
 
 `ifdef FLOAT_TO_POSIT
     wire [FSIZE-1:0] float_in, float_out;
     assign float_in = in1[FSIZE-1:0];
 
-    float_to_pif #(
+    float_to_fir #(
         .FSIZE(FSIZE)
-    ) float_to_pif_inst (
+    ) float_to_fir_inst (
         .bits(float_in),
-        .pif(float_pif_out)
+        .fir(float_fir_out)
     );
 
 
     wire [FSIZE-1:0] float;
-    pif_to_float #(
+    fir_to_float #(
         .N(N),
         .ES(ES),
         .FSIZE(FSIZE)
-    ) pif_to_float_inst (
-        .pif(posit_pif),
+    ) fir_to_float_inst (
+        .fir(posit_fir),
         .float(float_out)
     );
 `endif

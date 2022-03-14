@@ -1,9 +1,9 @@
 `ifdef FLOAT_TO_POSIT
-module float_to_pif #(
+module float_to_fir #(
         parameter FSIZE = 64
     )(
         input [FSIZE-1:0] bits,
-        output [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] pif
+        output [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] fir
     );
 
     wire sign;
@@ -19,7 +19,7 @@ module float_to_pif #(
         .frac(frac)
     );
 
-    assign pif = {sign, exp, frac};
+    assign fir = {sign, exp, frac};
     
 endmodule
 `endif

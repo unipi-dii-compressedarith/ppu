@@ -101,6 +101,7 @@ module core_div #(
 
 
     wire [(2*MANT_SIZE)-1:0] x1;
+`define NEWTON_RAPHSON
 `ifdef NEWTON_RAPHSON
     initial $display("\n***** Using NR *****\n");
     newton_raphson #(
