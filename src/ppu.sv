@@ -170,9 +170,18 @@ module tb_ppu;
             `include "../test_vectors/tv_posit_ppu_P5E1.sv"
         end
 
+        if (N == 16 && ES == 0) begin
+            `include "../test_vectors/tv_posit_ppu_P16E0.sv"
+        end
+
         if (N == 16 && ES == 1) begin
             `include "../test_vectors/tv_posit_ppu_P16E1.sv"
         end
+
+        if (N == 16 && ES == 2) begin
+            `include "../test_vectors/tv_posit_ppu_P16E2.sv"
+        end
+
 
         if (N == 32 && ES == 2) begin
             `include "../test_vectors/tv_posit_ppu_P32E2.sv"

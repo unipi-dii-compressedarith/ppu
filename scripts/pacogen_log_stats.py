@@ -34,7 +34,7 @@ def _compute_rms(arr: List[Tuple[int]]) -> float:
         rms /= len(arr) - count_nans
     except ZeroDivisionError:
         rms = 0.0
-    rms = rms ** 0.5
+    rms = rms**0.5
     return rms
 
 
