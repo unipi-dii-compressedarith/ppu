@@ -99,7 +99,10 @@ module core_div #(
     );
 `endif
 
+
     wire [(2*MANT_SIZE)-1:0] x1;
+`ifdef NEWTON_RAPHSON
+    initial $display("\n***** Using NR *****\n");
     newton_raphson #(
         .MS(MANT_SIZE)
     ) newton_raphson_inst (
@@ -107,6 +110,10 @@ module core_div #(
         .x0(mant2_reciprocal),
         .x1(x1)
     );
+`else
+    initial $display("\n***** NOT using NR *****\n");
+    assign x1 = mant2_reciprocal >> ((3*MANT_SIZE-4) - (2*MANT_SIZE));
+`endif
 
     assign mant_div = mant1 * x1;
 

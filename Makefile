@@ -126,7 +126,7 @@ gen-test-vectors:
 	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
 
 gen-lut-reciprocate-mant:
-	python scripts/pacogen_mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > src/lut.sv 
+	python scripts/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > src/lut.sv 
 
 ppu-core_ops:
 	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random

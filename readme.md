@@ -13,7 +13,7 @@
 make 
 ```
 
-The design is customizable in terms of Posit format, operations supported and internal implementations details via macros and preprocessor `ifdef`s, 
+The design is customizable in terms of Posit format (P<any, any>), operations supported (e.g. including/leaving out conversions) and internal implementations details (e.g. using LUT for division or adding newton-raphson steps) via macros and preprocessor `ifdef`s, 
 e.g.:
 
 - bare bone PPU (+ run its testbench) with add/sub/mul/div for P<8,0> for 32 bits cpu:
