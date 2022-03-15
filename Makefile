@@ -197,8 +197,9 @@ conversions-verilog-float-to-posit-quartus:
 
 yosys:
 	cd src && \
-	yosys -p "synth_intel -family max10 -top ppu -vqm ppu.vqm" \
-	../quartus/ppu_top.v > yosys_ppu.out
+	yosys -p "synth_xilinx -edif example.edif -top ppu_top" ../quartus/ppu_top.v > yosys_ppu_top.out
+	# yosys -p "synth_intel -family max10 -top ppu -vqm ppu.vqm" \
+	# ../quartus/ppu_top.v > yosys_ppu.out
 
 sim-yosys:
 	make yosys
