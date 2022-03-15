@@ -47,6 +47,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_FOLDER)/common.sv \
 	$(SRC_FOLDER)/ppu_core_ops.sv \
 	$(SRC_FOLDER)/posit_to_fir.sv \
+	$(SRC_FOLDER)/demux1_to_2.sv \
 	$(SRC_FOLDER)/fir_to_posit.sv \
 	$(SRC_FOLDER)/conversions/float_encoder.sv \
 	$(SRC_FOLDER)/conversions/sign_extend.sv \
