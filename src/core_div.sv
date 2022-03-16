@@ -23,7 +23,7 @@ module core_div #(
 
 `ifdef DIV_WITH_LUT
 
-    initial $display("\n***** Using DIV with LUT *****\n");
+    initial $display("\n***** Using DIV with LUT *****");
 
     parameter LUT_WIDTH_IN = `LUT_SIZE_IN;
     parameter LUT_WIDTH_OUT = `LUT_SIZE_OUT;
@@ -89,7 +89,7 @@ module core_div #(
     // );
 
 `else
-    initial $display("\n***** NOT using DIV with LUT *****\n");
+    initial $display("\n***** NOT using DIV with LUT *****");
 
     fast_reciprocal #(
         .SIZE(MANT_SIZE)
@@ -103,7 +103,7 @@ module core_div #(
     wire [(2*MANT_SIZE)-1:0] x1;
 `define NEWTON_RAPHSON
 `ifdef NEWTON_RAPHSON
-    initial $display("\n***** Using NR *****\n");
+    initial $display("***** Using NR *****\n");
     newton_raphson #(
         .MS(MANT_SIZE)
     ) newton_raphson_inst (
@@ -112,7 +112,7 @@ module core_div #(
         .x1(x1)
     );
 `else
-    initial $display("\n***** NOT using NR *****\n");
+    initial $display("***** NOT using NR *****\n");
     assign x1 = mant2_reciprocal >> ((3*MANT_SIZE-4) - (2*MANT_SIZE));
 `endif
 

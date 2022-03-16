@@ -157,9 +157,16 @@ module tb_ppu;
         $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
         $dumpvars(0, tb_ppu);
 
+        if (N == 4 && ES == 0) begin
+            `include "../test_vectors/tv_posit_ppu_P4E0.sv"
+        end
 
         if (N == 8 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P8E0.sv"
+        end
+
+        if (N == 8 && ES == 1) begin
+            `include "../test_vectors/tv_posit_ppu_P8E1.sv"
         end
 
         if (N == 8 && ES == 4) begin
@@ -168,6 +175,10 @@ module tb_ppu;
 
         if (N == 5 && ES == 1) begin
             `include "../test_vectors/tv_posit_ppu_P5E1.sv"
+        end
+
+        if (N == 16 && ES == 0) begin
+            `include "../test_vectors/tv_posit_ppu_P16E0.sv"
         end
 
         if (N == 16 && ES == 0) begin

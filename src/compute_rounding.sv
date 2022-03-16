@@ -22,15 +22,13 @@ module compute_rouding #(
 `ifndef NO_ES_FIELD
     assign round_bit =
         $signed(frac_len) >= 0
-        ? _tmp1 != 0 : (
-            $signed(k) == N - 2 - ES
-            ? exp > 0 && $unsigned(frac_full) > 0 : $signed(k) == -(N - 2)
-            ? $signed(exp) > 0 : 1'b0
-        );
+        ? _tmp1 != 0 : $signed(k) == N - 2 - ES
+        ? exp > 0 && $unsigned(frac_full) > 0 : $signed(k) == -(N - 2)
+        ? $signed(exp) > 0 : 
+          1'b0;
 `else
     assign round_bit =
-        $signed(frac_len) >= 0
-        ? _tmp1 != 0 : 1'b0;
+        $signed(frac_len) >= 0 ? (_tmp1 != 0) : 1'b0;
 `endif
 
 

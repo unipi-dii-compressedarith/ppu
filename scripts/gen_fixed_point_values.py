@@ -6,7 +6,7 @@ and paste into src/constants.sv
 
 from fixed2float import to_Fx
 
-lower, upper = 5, 33  # N (posit size)
+lower, upper = 4, 33  # N (posit size)
 round = True
 
 decimal = lambda fx_num, num_bits: f"{num_bits}'d{fx_num.val}"

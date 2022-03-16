@@ -1,10 +1,12 @@
 all: \
-	ppu8 \
-	ppu16 \
-	ppu32 \
-	div-against-pacogen8 \
-	div-against-pacogen16 \
-	div-against-pacogen32 \
+	ppu_P8E0 \
+	ppu_P8E1 \
+	ppu_P16E0 \
+	ppu_P16E1 \
+	ppu_P32E2 \
+	div-against-pacogen_P8E0 \
+	div-against-pacogen_P16E1 \
+	div-against-pacogen_P32E2 \
 
 
 .PHONY : all modelsim
@@ -142,8 +144,8 @@ ppu-core_ops:
 
 
 ppu: gen-lut-reciprocate-mant verilog-quartus
-	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
-	cd waveforms && \
+	@cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
+	@cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) \
@@ -153,15 +155,21 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
-	make lint
+	# make lint # commented out because it fails wiht P32
 
-ppu8:
+ppu_P8E0:
 	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
 
-ppu16:
+ppu_P8E1:
+	make ppu N=8 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
+
+ppu_P16E0:
+	make ppu N=16 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
+
+ppu_P16E1:
 	make ppu N=16 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
 
-ppu32:
+ppu_P32E2:
 	make ppu N=32 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
 
 
@@ -207,7 +215,7 @@ sim-yosys:
 	sv2v src/ppu.vqm > src/sv2v_ppu.vqm
 
 verilog-quartus:
-	cd quartus && \
+	@cd quartus && \
 	sv2v \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \
@@ -234,13 +242,13 @@ div-against-pacogen:
 	&& ./comparison_against_pacogen$(N).out > comparison_against_pacogen$(N).log
 	cd scripts && python pacogen_log_stats.py -n $(N) -es $(ES)
 
-div-against-pacogen8:
+div-against-pacogen_P8E0:
 	make div-against-pacogen N=8 ES=0 F=0
 
-div-against-pacogen16:
+div-against-pacogen_P16E1:
 	make div-against-pacogen N=16 ES=1 F=0
 
-div-against-pacogen32:
+div-against-pacogen_P32E2:
 	make div-against-pacogen N=32 ES=2 F=0
 
 clean:

@@ -14,9 +14,7 @@ This file exists because SV doesn't support proper conditional compilation.
 
 
 
-
-
-
+parameter fx_1_466___N4 = 2'd3;
 parameter fx_1_466___N5 = 3'd6;
 parameter fx_1_466___N6 = 4'd12;
 parameter fx_1_466___N7 = 5'd23;
@@ -46,6 +44,7 @@ parameter fx_1_466___N30 = 28'd196763189;
 parameter fx_1_466___N31 = 29'd393526378;
 parameter fx_1_466___N32 = 30'd787052757;
 
+parameter fx_1_0012___N4 = 3'd4;
 parameter fx_1_0012___N5 = 5'd16;
 parameter fx_1_0012___N6 = 7'd64;
 parameter fx_1_0012___N7 = 9'd256;
@@ -75,6 +74,7 @@ parameter fx_1_0012___N30 = 55'd18036015787693365;
 parameter fx_1_0012___N31 = 57'd72144063150773457;
 parameter fx_1_0012___N32 = 59'd288576252603093825;
 
+parameter fx_2___N4 = 4'd8;
 parameter fx_2___N5 = 6'd32;
 parameter fx_2___N6 = 8'd128;
 parameter fx_2___N7 = 10'd512;
