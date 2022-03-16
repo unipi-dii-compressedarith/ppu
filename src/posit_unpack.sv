@@ -1,37 +1,8 @@
 /*
 Description:
     Posit unpacker.
-
-Usage:
-    cd $PROJECT_ROOT/waveforms
-
-    iverilog -g2012 -DTEST_BENCH_DECODE -DNO_ES_FIELD -DN=8 -DES=0 -o posit_unpack.out \
-    ../src/posit_unpack.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv \
-    ../src/cls.sv \
-    && ./posit_unpack.out
-
-    iverilog -g2012 -DTEST_BENCH_DECODE               -DN=16 -DES=1 -o posit_unpack.out \
-    ../src/posit_unpack.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv \
-    ../src/cls.sv \
-    && ./posit_unpack.out
-
-    sv2v -DN=16 -DES=1 \
-    ../src/posit_unpack.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv \
-    ../src/cls.sv > posit_unpack.v
-
-    yosys -p "synth_intel -family max10 -top posit_unpack -vqm posit_unpack.vqm" \
-    ../src/posit_unpack.sv \
-    ../src/utils.sv \
-    ../src/highest_set.sv \
-    ../src/cls.sv > yosys_posit_unpack.out
-
 */
+
 module posit_unpack #(
         parameter N = 5,
         parameter ES = 0

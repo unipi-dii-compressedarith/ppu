@@ -144,8 +144,8 @@ ppu-core_ops:
 
 
 ppu: gen-lut-reciprocate-mant verilog-quartus
-	@cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
-	@cd waveforms && \
+	cd scripts && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
+	cd waveforms && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) \
@@ -215,7 +215,7 @@ sim-yosys:
 	sv2v src/ppu.vqm > src/sv2v_ppu.vqm
 
 verilog-quartus:
-	@cd quartus && \
+	cd quartus && \
 	sv2v \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \
@@ -223,7 +223,9 @@ verilog-quartus:
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_FOLDER)/ppu_top.sv \
 	$(SRC_FOLDER)/ppu.sv \
-	$(SRC_PPU_CORE_OPS) > ppu_top.v && iverilog ppu_top.v && ./a.out
+	$(SRC_PPU_CORE_OPS) > ppu_top.v && \
+	iverilog ppu_top.v && ./a.out
+	cp -r quartus/ppu_top.v vivado/ppu_top.v
 
 
 verilog-quartus16:
