@@ -3,24 +3,17 @@ a wrapper around the actual ppu.
 */
 
 module ppu_top #(
-        parameter WORD = `WORD
-`ifdef FLOAT_TO_POSIT
-        ,parameter FSIZE = `F
+    parameter WORD  = `WORD
+`ifdef FLOAT_TO_POSIT,
+    parameter FSIZE = `F
 `endif
-    )(
-        input clk,
-        input [WORD-1:0] in1,
-        input [WORD-1:0] in2,
-        input [OP_SIZE-1:0] op, /*
-                              ADD
-                            | SUB
-                            | MUL
-                            | DIV
-                            | F2P
-                            | P2F
-                            */
-        output [WORD-1:0] out
-    );
+) (
+    input                clk,
+    input  [   WORD-1:0] in1,
+    input  [   WORD-1:0] in2,
+    input  [OP_SIZE-1:0] op,
+    output [   WORD-1:0] out
+);
 
 
     ppu #(
@@ -33,7 +26,7 @@ module ppu_top #(
     ) ppu_inst (
         .in1(in1_reg),
         .in2(in2_reg),
-        .op(op_reg),
+        .op (op_reg),
         .out(out_reg)
     );
 

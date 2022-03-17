@@ -1,20 +1,16 @@
 module ops #(
-        parameter N = 4
-    )(
-        input [OP_SIZE-1:0] op,
+    parameter N = 4
+) (
+    input [OP_SIZE-1:0] op,
 
-        input [fir_SIZE-1:0] fir1,
-        input [fir_SIZE-1:0] fir2,
+    input [fir_SIZE-1:0] fir1,
+    input [fir_SIZE-1:0] fir2,
 
-        output [
-            (
+    output [(
                 (1 + TE_SIZE + FRAC_FULL_SIZE)  // fir_ops_out
                 + 1                             // frac_lsb_cut_off
-            )-1:0
-        ] ops_out
-        // output [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out,
-        // output frac_lsb_cut_off
-    );
+            )-1:0] ops_out
+);
 
     wire sign1, sign2;
     wire [TE_SIZE-1:0] te1, te2;
@@ -44,8 +40,7 @@ module ops #(
         .frac_lsb_cut_off(frac_lsb_cut_off)
     );
 
-    sign_decisor #(
-    ) sign_decisor (
+    sign_decisor #() sign_decisor (
         .sign1(sign1),
         .sign2(sign2),
         .op(op),
@@ -54,9 +49,9 @@ module ops #(
 
     assign fir_ops_out = {sign_out, te_out, frac_out};
 
-    
+
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out;
-    wire frac_lsb_cut_off;    
-    assign ops_out = {fir_ops_out , frac_lsb_cut_off};
+    wire frac_lsb_cut_off;
+    assign ops_out = {fir_ops_out, frac_lsb_cut_off};
 
 endmodule

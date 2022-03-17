@@ -6,9 +6,9 @@ module ppu #(
         parameter N = `N,
         parameter ES = `ES
     )(
-        input [WORD-1:0] in1,
-        input [WORD-1:0] in2,
-        input [OP_SIZE-1:0] op, /*
+        input [WORD-1:0]            in1,
+        input [WORD-1:0]            in2,
+        input [OP_SIZE-1:0]         op, /*
                               ADD
                             | SUB
                             | MUL
@@ -16,7 +16,7 @@ module ppu #(
                             | F2P
                             | P2F
                             */
-        output [WORD-1:0] out
+        output [WORD-1:0]               out
     );
 
     wire [N-1:0] p1, p2, posit;

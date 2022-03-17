@@ -3,39 +3,39 @@
 */
 
 module comparison_against_pacogen #(
-        parameter N = 4,
-        parameter ES = 1
-    )(
-        input [N-1:0] p1,
-        input [N-1:0] p2,
-        input [OP_SIZE-1:0] op,
-        output [N-1:0] pout_ppu_core_ops,
-        output [N-1:0] pout_pacogen
-    );
+    parameter N  = 4,
+    parameter ES = 1
+) (
+    input  [      N-1:0] p1,
+    input  [      N-1:0] p2,
+    input  [OP_SIZE-1:0] op,
+    output [      N-1:0] pout_ppu_core_ops,
+    output [      N-1:0] pout_pacogen
+);
 
 
     ppu_core_ops #(
-        .N(N),
+        .N (N),
         .ES(ES)
     ) ppu_core_ops_inst (
-        .p1(p1),
-        .p2(p2),
-        .op(op),
+        .p1  (p1),
+        .p2  (p2),
+        .op  (op),
         .pout(pout_ppu_core_ops)
     );
 
 
     posit_div #(
-        .N(N),
+        .N (N),
         .es(ES)
     ) uut (
-        .in1(p1),
-        .in2(p2),
+        .in1  (p1),
+        .in2  (p2),
         .start(1'b1),
-        .out(pout_pacogen), // pout_pacogen
-        .inf(),
-        .zero(),
-        .done()
+        .out  (pout_pacogen),  // pout_pacogen
+        .inf  (),
+        .zero (),
+        .done ()
     );
 
 endmodule
@@ -47,9 +47,9 @@ module tb_comparison_against_pacogen;
     parameter N = `N;
     parameter ES = `ES;
 
-    reg [N-1:0]  in1, in2;
+    reg [N-1:0] in1, in2;
 
-    reg [N-1:0]  p1, p2;
+    reg [N-1:0] p1, p2;
     reg [OP_SIZE-1:0] op;
     reg [(ASCII_SIZE)-1:0] in1_ascii, in2_ascii, out_gt_ascii;
     reg [(ASCII_SIZE)-1:0] op_ascii;
@@ -68,29 +68,31 @@ module tb_comparison_against_pacogen;
     reg [(ASCII_SIZE)-1:0] count_errors;
 
     comparison_against_pacogen #(
-        .N      (N),
-        .ES     (ES)
+        .N (N),
+        .ES(ES)
     ) comparison_against_pacogen_inst (
-        .p1     (in1),
-        .p2     (in2),
-        .op     (op),
-        .pout_ppu_core_ops   (pout_ppu_core_ops),
-        .pout_pacogen   (pout_pacogen)
+        .p1               (in1),
+        .p2               (in2),
+        .op               (op),
+        .pout_ppu_core_ops(pout_ppu_core_ops),
+        .pout_pacogen     (pout_pacogen)
     );
 
 
     always @(*) begin
         diff_pout_ppu_core_ops = pout_ppu_core_ops === out_ground_truth ? 0 : 1'bx;
         diff_pout_pacogen = pout_pacogen === out_ground_truth ? 0 : 1'bx;
-        ppu_core_ops_off_by_1 = abs(pout_ppu_core_ops - out_ground_truth) == 0 ? 0 : abs(pout_ppu_core_ops - out_ground_truth) == 1 ? 1 : 'bx;
-        pacogen_off_by_1 = abs(pout_pacogen - out_ground_truth) == 0 ? 0 : abs(pout_pacogen - out_ground_truth) == 1 ? 1 : 'bx;
+        ppu_core_ops_off_by_1 = abs(pout_ppu_core_ops - out_ground_truth) == 0 ? 0 :
+            abs(pout_ppu_core_ops - out_ground_truth) == 1 ? 1 : 'bx;
+        pacogen_off_by_1 = abs(pout_pacogen - out_ground_truth) == 0 ? 0 :
+            abs(pout_pacogen - out_ground_truth) == 1 ? 1 : 'bx;
 
         diff_pout_ppu_core_ops_analog = abs(pout_ppu_core_ops - out_ground_truth);
     end
 
     initial begin
 
-        $dumpfile({"tb_comparison_against_pacogenP",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
+        $dumpfile({"tb_comparison_against_pacogenP", `STRINGIFY(`N), "E", `STRINGIFY(`ES), ".vcd"});
 
         $dumpvars(0, tb_comparison_against_pacogen);
 

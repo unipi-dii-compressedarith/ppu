@@ -17,15 +17,12 @@ module ppu_core_ops #(
         ,parameter FSIZE = `F
 `endif
     )(
-        input   [N-1:0]                                                 p1,
-        input   [N-1:0]                                                 p2,
+        input   [N-1:0]                                     p1,
+        input   [N-1:0]                                          p2,
         input   [OP_SIZE-1:0]                                           op,
 `ifdef FLOAT_TO_POSIT
-        /************************************************************************/
         input  [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]                         float_fir,
-        // input   [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0]    float_fir,
         output  [(fir_SIZE)-1:0]                                        posit_fir,
-        /************************************************************************/
 `endif
         output  [N-1:0]                                                 pout
     );

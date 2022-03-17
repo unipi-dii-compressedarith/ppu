@@ -1,13 +1,13 @@
 module core_div #(
-        parameter N = 16
-    )(
-        input [TE_SIZE-1:0] te1,
-        input [TE_SIZE-1:0] te2,
-        input [MANT_SIZE-1:0] mant1,
-        input [MANT_SIZE-1:0] mant2,
-        output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
-        output [TE_SIZE-1:0] te_out
-    );
+    parameter N = 16
+) (
+    input  [               TE_SIZE-1:0] te1,
+    input  [               TE_SIZE-1:0] te2,
+    input  [             MANT_SIZE-1:0] mant1,
+    input  [             MANT_SIZE-1:0] mant2,
+    output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
+    output [               TE_SIZE-1:0] te_out
+);
 
     wire [TE_SIZE-1:0] te_diff;
     assign te_diff = te1 - te2;
@@ -43,11 +43,11 @@ module core_div #(
 
             // e.g P8 mant_size = 6, lut_width_in = 8
             lut #(
-                .LUT_WIDTH_IN(LUT_WIDTH_IN),
+                .LUT_WIDTH_IN (LUT_WIDTH_IN),
                 .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
             ) lut_inst (
                 .addr(addr),
-                .out(_mant_out)
+                .out (_mant_out)
             );
 
 
@@ -61,17 +61,17 @@ module core_div #(
         end else begin
             // e.g. P16 upwards
             wire [(LUT_WIDTH_IN)-1:0] addr;
-            assign addr = mant2[MANT_SIZE-2 -: LUT_WIDTH_IN];
+            assign addr = mant2[MANT_SIZE-2-:LUT_WIDTH_IN];
 
             wire mant_is_one;
             assign mant_is_one = addr == 0;
 
             lut #(
-                .LUT_WIDTH_IN(LUT_WIDTH_IN),
+                .LUT_WIDTH_IN (LUT_WIDTH_IN),
                 .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
             ) lut_inst (
                 .addr(addr),
-                .out(_mant_out)
+                .out (_mant_out)
             );
 
             assign mant2_reciprocal =
@@ -101,31 +101,28 @@ module core_div #(
 
 
     wire [(2*MANT_SIZE)-1:0] x1;
-`define NEWTON_RAPHSON
+    `define NEWTON_RAPHSON
 `ifdef NEWTON_RAPHSON
     initial $display("***** Using NR *****\n");
     newton_raphson #(
         .MS(MANT_SIZE)
     ) newton_raphson_inst (
         .num(mant2),
-        .x0(mant2_reciprocal),
-        .x1(x1)
+        .x0 (mant2_reciprocal),
+        .x1 (x1)
     );
 `else
     initial $display("***** NOT using NR *****\n");
-    assign x1 = mant2_reciprocal >> ((3*MANT_SIZE-4) - (2*MANT_SIZE));
+    assign x1 = mant2_reciprocal >> ((3 * MANT_SIZE - 4) - (2 * MANT_SIZE));
 `endif
 
     assign mant_div = mant1 * x1;
 
 
     wire mant_div_less_than_one;
-    assign mant_div_less_than_one =
-        (mant_div & (1 << (3*MANT_SIZE-2))) == 0;
+    assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
 
-    assign mant_out =
-        mant_div_less_than_one ? mant_div << 1 : mant_div;
-    assign te_out =
-        mant_div_less_than_one ? te_diff - 1 : te_diff;
+    assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
+    assign te_out = mant_div_less_than_one ? te_diff - 1 : te_diff;
 
 endmodule

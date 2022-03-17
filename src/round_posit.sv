@@ -1,12 +1,12 @@
 module round_posit #(
-        parameter N = 10
-    )(
-        input [N-1:0] posit,
-        input round_bit,
-        input sticky_bit,
-        input k_is_oob,
-        input non_zero_frac_field_size,
-        output [N-1:0] posit_rounded
+    parameter N = 10
+) (
+    input  [N-1:0] posit,
+    input          round_bit,
+    input          sticky_bit,
+    input          k_is_oob,
+    input          non_zero_frac_field_size,
+    output [N-1:0] posit_rounded
 );
 
     wire guard_bit;

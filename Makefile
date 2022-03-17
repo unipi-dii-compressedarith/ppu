@@ -244,6 +244,8 @@ verilog-quartus16:
 lint:
 	slang $(QUARTUS_DIR)/ppu_top.v --top ppu_top # https://github.com/MikePopoloski/slang
 
+fmt:
+	verible-verilog-format --inplace --indentation_spaces 4 */*.sv
 
 div-against-pacogen:
 	cd $(SCRIPTS_DIR) && python tb_gen.py --operation pacogen -n $(N) -es $(ES) --num-tests 3000 --shuffle-random
@@ -265,9 +267,6 @@ div-against-pacogen_P32E2:
 clean:
 	rm $(WAVEFORMS_DIR)/*.out
 	
-fmt:
-	python $(SCRIPTS_DIR)/fmt.py # local only
-
 open-waveforms:
 	gtkwave $(WAVEFORMS_DIR)/tb_ppu_P8E0.gtkw &
 	gtkwave $(WAVEFORMS_DIR)/tb_ppu_P16E1.gtkw &

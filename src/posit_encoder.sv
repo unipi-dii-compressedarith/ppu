@@ -22,13 +22,13 @@ module posit_encoder #(
         parameter N = 4,
         parameter ES = 1
     )(
-        input sign,
-        input [K_SIZE-1:0] k,
+        input                       sign,
+        input [K_SIZE-1:0]              k,
 `ifndef NO_ES_FIELD
-        input [ES-1:0] exp,
+        input [ES-1:0]                  exp,
 `endif
-        input [MANT_SIZE-1:0] frac,
-        output [N-1:0] posit
+        input [MANT_SIZE-1:0]           frac,
+        output [N-1:0]                  posit
     );
 
     wire [REG_LEN_SIZE-1:0] reg_len;

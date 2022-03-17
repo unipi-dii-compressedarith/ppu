@@ -9,21 +9,24 @@ sv2v -DN=16 -DES=1 \
 */
 
 module core_op #(
-        parameter N = 10
-    )(
-        input [OP_SIZE-1:0] op,
-        input sign1, sign2,
-        input [TE_SIZE-1:0] te1, te2,
-        input [MANT_SIZE-1:0] mant1, mant2,
+    parameter N = 10
+) (
+    input [  OP_SIZE-1:0] op,
+    input                 sign1,
+    sign2,
+    input [  TE_SIZE-1:0] te1,
+    te2,
+    input [MANT_SIZE-1:0] mant1,
+    mant2,
 
-        output [TE_SIZE-1:0] te_out_core_op,
-        output [(FRAC_FULL_SIZE)-1:0] frac_out_core_op,
-        output frac_lsb_cut_off
-    );
+    output [         TE_SIZE-1:0] te_out_core_op,
+    output [(FRAC_FULL_SIZE)-1:0] frac_out_core_op,
+    output                        frac_lsb_cut_off
+);
 
-    wire [(MANT_ADD_RESULT_SIZE)-1:0]   mant_out_add_sub;
-    wire [(MANT_MUL_RESULT_SIZE)-1:0]   mant_out_mul;
-    wire [(MANT_DIV_RESULT_SIZE)-1:0]   mant_out_div;
+    wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_add_sub;
+    wire [(MANT_MUL_RESULT_SIZE)-1:0] mant_out_mul;
+    wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_out_div;
 
 
     wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;

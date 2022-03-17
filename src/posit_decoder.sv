@@ -1,28 +1,28 @@
 module posit_decoder #(
-        parameter N = 4,  // dummy
-        parameter ES = 0  // dummy
-    )(
-        input [N-1:0] bits,
-/////////////
-        output sign,
-        output [TE_SIZE-1:0] te,
-        output [MANT_SIZE-1:0] mant
-    );
+    parameter N  = 4,  // dummy
+    parameter ES = 0   // dummy
+) (
+    input  [        N-1:0] bits,
+    /////////////
+    output                 sign,
+    output [  TE_SIZE-1:0] te,
+    output [MANT_SIZE-1:0] mant
+);
 
     posit_unpack #(
-        .N(N),
+        .N (N),
         .ES(ES)
     ) posit_unpack_inst (
-        .bits           (bits),
+        .bits(bits),
 
-        .sign           (sign),
-        .reg_s          (),
-        .reg_len        (),
-        .k              (k),
+        .sign   (sign),
+        .reg_s  (),
+        .reg_len(),
+        .k      (k),
 `ifndef NO_ES_FIELD
-        .exp            (exp),
+        .exp    (exp),
 `endif
-        .mant           (mant)
+        .mant   (mant)
     );
 
 
@@ -32,7 +32,7 @@ module posit_decoder #(
 `endif
 
     total_exponent #(
-        .N(N),
+        .N (N),
         .ES(ES)
     ) total_exponent_inst (
         .k(k),

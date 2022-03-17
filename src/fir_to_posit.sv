@@ -1,26 +1,22 @@
 module fir_to_posit #(
-        parameter N = 4,
-        parameter ES = 0,
-        parameter FIR_TOTAL_SIZE = 43
-    )(
-        input [
-            (
+    parameter N = 4,
+    parameter ES = 0,
+    parameter FIR_TOTAL_SIZE = 43
+) (
+    input [(
                 FIR_TOTAL_SIZE      // fir
                 + 1                 // frac_lsb_cut_off
-            )-1:0
-        ]               ops_in,
-        // input [FIR_TOTAL_SIZE-1:0] fir,
-        // input frac_lsb_cut_off, // flag
-        output [N-1:0]  posit
-    );
+            )-1:0] ops_in,
+    output [N-1:0] posit
+);
 
     wire [FIR_TOTAL_SIZE-1:0] fir;
-    wire frac_lsb_cut_off; // flag
+    wire frac_lsb_cut_off;  // flag
     assign {fir, frac_lsb_cut_off} = ops_in;
 
     wire sign;
     wire [TE_SIZE-1:0] te;
-    wire [FRAC_FULL_SIZE-1:0] frac_full;    
+    wire [FRAC_FULL_SIZE-1:0] frac_full;
     assign {sign, te, frac_full} = fir;
 
 
@@ -31,7 +27,7 @@ module fir_to_posit #(
 `endif
 
     pack_fields #(
-        .N(N),
+        .N (N),
         .ES(ES)
     ) pack_fields_inst (
         .frac_full(frac_full), // the whole mantissa w/o the leading 1. (let's call it `frac_full` to distinguish it from `frac`)
@@ -53,7 +49,7 @@ module fir_to_posit #(
 
     wire [N-1:0] posit_encoded;
     posit_encoder #(
-        .N(N),
+        .N (N),
         .ES(ES)
     ) posit_encoder_inst (
         .sign(1'b0),

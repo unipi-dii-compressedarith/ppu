@@ -6,9 +6,9 @@ iverilog -DTB_NEWTON_RAPHSON -g2012 -o newton_raphson.out ../src/newton_raphson.
 module newton_raphson #(
         parameter MS = 10
     )(
-        input   [(MS)-1:0]      num,
-        input   [(3*MS-4)-1:0]  x0,
-        output  [(2*MS)-1:0]    x1
+        input   [(MS)-1:0]              num,
+        input   [(3*MS-4)-1:0]          x0,
+        output  [(2*MS)-1:0]            x1
     );
 
     /*

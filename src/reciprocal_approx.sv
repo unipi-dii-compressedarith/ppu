@@ -14,8 +14,8 @@ iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o reciprocal_approx.out \
 module reciprocal_approx #(
         parameter N = 10
     )(
-        input [N-1:0] i_data,
-        output [(3*N-1-2)-1:0] o_data
+        input [N-1:0]                   i_data,
+        output [(3*N-1-2)-1:0]          o_data
     );
 
     reg [(N)-1:0] a, b;

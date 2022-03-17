@@ -7,17 +7,17 @@ module posit_unpack #(
         parameter N = 5,
         parameter ES = 0
     )(
-        input [N-1:0]   bits,
+        input [N-1:0]           bits,
 
 /////////////
-        output sign,
-        output reg_s,
-        output [REG_LEN_SIZE-1:0] reg_len,
-        output [K_SIZE-1:0] k,
+        output                  sign,
+        output                      reg_s,
+        output [REG_LEN_SIZE-1:0]   reg_len,
+        output [K_SIZE-1:0]         k,
 `ifndef NO_ES_FIELD
-        output [ES-1:0] exp,
+        output [ES-1:0]             exp,
 `endif
-        output [MANT_SIZE-1:0] mant
+        output [MANT_SIZE-1:0]          mant
 /////////////
     );
 

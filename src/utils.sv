@@ -41,7 +41,7 @@ parameter MANT_LEN_SIZE = S + 1;
 `endif
 
 `ifndef K_SIZE
-parameter K_SIZE = S + 2; // prev. S + 1 (leads to bug when te too large)
+parameter K_SIZE = S + 2;  // prev. S + 1 (leads to bug when te too large)
 `endif
 
 `ifndef FRAC_SIZE
@@ -49,17 +49,17 @@ parameter FRAC_SIZE = N - 1;
 `endif
 
 `ifndef MANT_SIZE
-parameter MANT_SIZE = N - 2;    // mant (mantissa) and frac (fraction) are
-                                // not the same thing. mant is a Fx<1,MANT_SIZE>.
-                                // frac is a Fx<0, MANT_SIZE-1>
-parameter MS = MANT_SIZE;       // alias
+parameter MANT_SIZE = N - 2;  // mant (mantissa) and frac (fraction) are
+                              // not the same thing. mant is a Fx<1,MANT_SIZE>.
+                              // frac is a Fx<0, MANT_SIZE-1>
+parameter MS = MANT_SIZE;  // alias
 
-parameter MAX_TE_DIFF = MS; // not really, but it works anyway.
-parameter MTD = MAX_TE_DIFF; // alias
+parameter MAX_TE_DIFF = MS;  // not really, but it works anyway.
+parameter MTD = MAX_TE_DIFF;  // alias
 
 
 parameter RECIPROCATE_MANT_SIZE = 2 * MANT_SIZE;
-parameter RMS = RECIPROCATE_MANT_SIZE; // alias
+parameter RMS = RECIPROCATE_MANT_SIZE;  // alias
 
 /****************************************/
 parameter MANT_MUL_RESULT_SIZE = 2 * MS;
@@ -73,21 +73,21 @@ parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest amon
 
 // fir is posit intermediate format
 `ifndef fir_SIZE
-parameter fir_SIZE = 1 + TE_SIZE + MANT_SIZE; // sign size + total exponent size + mantissa size
+parameter fir_SIZE = 1 + TE_SIZE + MANT_SIZE;  // sign size + total exponent size + mantissa size
 `endif
 
 
 
-parameter ZERO =    {`N{1'b0}};
-parameter NAN =     {1'b1, {`N-1{1'b0}}};
+parameter ZERO = {`N{1'b0}};
+parameter NAN = {1'b1, {`N - 1{1'b0}}};
 
 
-parameter   ADD =               3'd0;
-parameter   SUB =               3'd1;
-parameter   MUL =               3'd2;
-parameter   DIV =               3'd3;
-parameter   FLOAT_TO_POSIT =    3'd4;
-parameter   POSIT_TO_FLOAT =    3'd5;
+parameter ADD = 3'd0;
+parameter SUB = 3'd1;
+parameter MUL = 3'd2;
+parameter DIV = 3'd3;
+parameter FLOAT_TO_POSIT = 3'd4;
+parameter POSIT_TO_FLOAT = 3'd5;
 
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 

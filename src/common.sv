@@ -9,15 +9,11 @@ function [N-1:0] abs(input [N-1:0] in);
     abs = in[N-1] == 0 ? in : c2(in);
 endfunction
 
-function [N-1:0] min(
-        input [N-1:0] a, b
-    );
+function [N-1:0] min(input [N-1:0] a, b);
     min = $signed(a) <= $signed(b) ? a : b;
 endfunction
 
-function [N-1:0] max(
-        input [N-1:0] a, b
-    );
+function [N-1:0] max(input [N-1:0] a, b);
     max = a >= b ? a : b;
 endfunction
 
@@ -25,10 +21,7 @@ function is_negative(input [S:0] k);
     is_negative = k[S];
 endfunction
 
-function [N-1:0] shl (
-        input [N-1:0] bits,
-        input [N-1:0] rhs
-    );
+function [N-1:0] shl(input [N-1:0] bits, input [N-1:0] rhs);
     shl = rhs[N-1] == 0 ? bits << rhs : bits >> c2(rhs);
 endfunction
 
