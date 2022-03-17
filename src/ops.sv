@@ -6,8 +6,14 @@ module ops #(
         input [fir_SIZE-1:0] fir1,
         input [fir_SIZE-1:0] fir2,
 
-        output [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out,
-        output frac_lsb_cut_off
+        output [
+            (
+                (1 + TE_SIZE + FRAC_FULL_SIZE)  // fir_ops_out
+                + 1                             // frac_lsb_cut_off
+            )-1:0
+        ] ops_out
+        // output [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out,
+        // output frac_lsb_cut_off
     );
 
     wire sign1, sign2;
@@ -47,5 +53,10 @@ module ops #(
     );
 
     assign fir_ops_out = {sign_out, te_out, frac_out};
+
+    
+    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out;
+    wire frac_lsb_cut_off;    
+    assign ops_out = {fir_ops_out , frac_lsb_cut_off};
 
 endmodule

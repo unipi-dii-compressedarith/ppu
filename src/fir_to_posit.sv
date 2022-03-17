@@ -1,16 +1,26 @@
 module fir_to_posit #(
         parameter N = 4,
         parameter ES = 0,
-        parameter fir_TOTAL_SIZE = 43
+        parameter FIR_TOTAL_SIZE = 43
     )(
-        input [fir_TOTAL_SIZE-1:0] fir,
-        input frac_lsb_cut_off, // flag
-        output [N-1:0] posit
+        input [
+            (
+                FIR_TOTAL_SIZE      // fir
+                + 1                 // frac_lsb_cut_off
+            )-1:0
+        ]               ops_in,
+        // input [FIR_TOTAL_SIZE-1:0] fir,
+        // input frac_lsb_cut_off, // flag
+        output [N-1:0]  posit
     );
+
+    wire [FIR_TOTAL_SIZE-1:0] fir;
+    wire frac_lsb_cut_off; // flag
+    assign {fir, frac_lsb_cut_off} = ops_in;
 
     wire sign;
     wire [TE_SIZE-1:0] te;
-    wire [FRAC_FULL_SIZE-1:0] frac_full;
+    wire [FRAC_FULL_SIZE-1:0] frac_full;    
     assign {sign, te, frac_full} = fir;
 
 

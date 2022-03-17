@@ -157,7 +157,7 @@ ppu-core_ops:
 
 ppu: gen-lut-reciprocate-mant verilog-quartus
 	@cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
-	@cd $(WAVEFORMS_DIR) && \
+	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) \

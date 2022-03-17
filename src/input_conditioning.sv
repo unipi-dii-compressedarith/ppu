@@ -7,8 +7,14 @@ module input_conditioning #(
         output [N-1:0]      p1_out,
         output [N-1:0]      p2_out,
 
-        output is_special_or_trivial,
-        output [N-1:0] pout_special_or_trivial
+        output [
+            (
+                N               // pout_special_or_trivial
+                + 1             // is_special_or_trivial
+            )-1:0
+        ]                   special
+        // output is_special_or_trivial,
+        // output [N-1:0] pout_special_or_trivial
     );
 
     wire [N-1:0] _p1, _p2;
@@ -40,5 +46,10 @@ module input_conditioning #(
         || (op == SUB && p1_in == p2_in)
         || (op == ADD && p1_in == c2(p2_in));
 
+
+    wire is_special_or_trivial;
+    wire [N-1:0] pout_special_or_trivial;
+    assign special = 
+        {pout_special_or_trivial, is_special_or_trivial};
 
 endmodule

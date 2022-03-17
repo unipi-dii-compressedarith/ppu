@@ -46,6 +46,7 @@ module ppu_core_ops #(
     wire [N-1:0] p1_cond, p2_cond;
     wire is_special_or_trivial;
     wire [N-1:0] pout_special_or_trivial;
+    wire [((N) + 1) -1:0] special;
     input_conditioning #(
         .N(N)
     ) input_conditioning (
@@ -54,10 +55,11 @@ module ppu_core_ops #(
         .op(op),
         .p1_out(p1_cond),
         .p2_out(p2_cond),
-        .is_special_or_trivial(is_special_or_trivial),
-        .pout_special_or_trivial(pout_special_or_trivial)
+        .special(special)
     );
 
+    assign is_special_or_trivial = special[0];
+    assign pout_special_or_trivial = special >> 1;
 
     wire [fir_SIZE-1:0] fir1, fir2;
 
@@ -92,15 +94,14 @@ module ppu_core_ops #(
     wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
     wire sign_out_ops;
-    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out;
+    wire [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_out;
     ops #(
         .N(N)
     ) ops_inst (
         .op(op),
         .fir1(fir1),
         .fir2(fir2),
-        .fir_ops_out(fir_ops_out),
-        .frac_lsb_cut_off(frac_lsb_cut_off)
+        .ops_out(ops_out)
     );
 
 
@@ -109,29 +110,19 @@ module ppu_core_ops #(
     wire [N-1:0] pout_non_special;
 
 
-    wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_to_posit_in;
-
-    assign fir_to_posit_in =
+    wire [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire;
+    assign ops_wire =
 `ifdef FLOAT_TO_POSIT
-        (op == FLOAT_TO_POSIT) ? float_fir :
+        (op == FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
 `endif
-        fir_ops_out;
-
-    wire frac_lsb_cut_off_fir_to_posit_in;
-    assign frac_lsb_cut_off_fir_to_posit_in =
-`ifdef FLOAT_TO_POSIT
-        (op == FLOAT_TO_POSIT) ? 1'b0 :
-`endif
-        frac_lsb_cut_off;
-
+        ops_out;
 
     fir_to_posit #(
         .N(N),
         .ES(ES),
-        .fir_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
+        .FIR_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
     ) fir_to_posit_inst (
-        .fir(fir_to_posit_in),
-        .frac_lsb_cut_off(frac_lsb_cut_off_fir_to_posit_in),
+        .ops_in(ops_wire),
         .posit(pout_non_special)
     );
 
