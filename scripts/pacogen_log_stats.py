@@ -78,7 +78,7 @@ def mad_stats(mad_return_tuple):
 
 
 def main():
-    LOG_FILE = pathlib.Path(f"../waveforms/comparison_against_pacogen{N}.log")
+    LOG_FILE = pathlib.Path(f"../sim/waveforms/comparison_against_pacogen{N}.log")
     with open(LOG_FILE, "r") as f:
         content = f.read()
 

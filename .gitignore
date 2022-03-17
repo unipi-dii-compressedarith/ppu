@@ -13,7 +13,7 @@
 .ipynb*
 
 # test vectors
-test_vectors/*
+sim/test_vectors/*
 
 # python
 .pytest_cache
