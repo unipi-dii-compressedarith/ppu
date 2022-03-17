@@ -7,7 +7,7 @@
     
     - [cli tools](#cli_tools)
     - [`hardposit`](https://github.com/urbanij/hardposit) (required for test benches generation).
-
+- export `RISCV_PPU_DIR` env variable to point to the root of the RISCV-PPU directory (which contains at least `ppu` i.e. this repo and `PACoGen` i.e. [this](https://bitbucket.org/riscv-ppu/pacogen/src/urbani/) repo)
 - generate all the waveforms. (unless otherwise specified all the commands are meant to be run from $PPU_ROOT).
 ```sh
 make 
