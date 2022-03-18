@@ -3,7 +3,7 @@ module posit_to_fir #(
     parameter ES = 0
 ) (
     input  [       N-1:0] p_cond,
-    output [fir_SIZE-1:0] fir
+    output [FIR_SIZE-1:0] fir
 );
 
 

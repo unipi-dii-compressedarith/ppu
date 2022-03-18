@@ -4,7 +4,7 @@ module fir_to_float #(
         parameter ES = 1,
         parameter FSIZE = 54
     )(
-        input  [fir_SIZE-1:0]   fir,
+        input  [FIR_SIZE-1:0]   fir,
         output [FSIZE-1:0]      float
     );
 

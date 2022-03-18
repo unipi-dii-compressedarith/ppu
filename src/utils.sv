@@ -72,8 +72,8 @@ parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest amon
 
 
 // fir is posit intermediate format
-`ifndef fir_SIZE
-parameter fir_SIZE = 1 + TE_SIZE + MANT_SIZE;  // sign size + total exponent size + mantissa size
+`ifndef FIR_SIZE
+parameter FIR_SIZE = 1 + TE_SIZE + MANT_SIZE;  // sign size + total exponent size + mantissa size
 `endif
 
 

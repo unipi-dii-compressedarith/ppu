@@ -3,8 +3,8 @@ module ops #(
 ) (
     input [OP_SIZE-1:0] op,
 
-    input [fir_SIZE-1:0] fir1,
-    input [fir_SIZE-1:0] fir2,
+    input [FIR_SIZE-1:0] fir1,
+    input [FIR_SIZE-1:0] fir2,
 
     output [(
                 (1 + TE_SIZE + FRAC_FULL_SIZE)  // fir_ops_out

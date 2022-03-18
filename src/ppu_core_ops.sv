@@ -17,14 +17,14 @@ module ppu_core_ops #(
         ,parameter FSIZE = `F
 `endif
     )(
-        input   [N-1:0]                                     p1,
-        input   [N-1:0]                                          p2,
-        input   [OP_SIZE-1:0]                                           op,
+        input           [N-1:0]                         p1,
+        input           [N-1:0]                         p2,
+        input       [OP_SIZE-1:0]                       op,
 `ifdef FLOAT_TO_POSIT
-        input  [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]                         float_fir,
-        output  [(fir_SIZE)-1:0]                                        posit_fir,
+        input       [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]    float_fir,
+        output      [(FIR_SIZE)-1:0]                    posit_fir,
 `endif
-        output  [N-1:0]                                                 pout
+        output      [N-1:0]                             pout
     );
 
 
@@ -58,7 +58,7 @@ module ppu_core_ops #(
     assign is_special_or_trivial = special[0];
     assign pout_special_or_trivial = special >> 1;
 
-    wire [fir_SIZE-1:0] fir1, fir2;
+    wire [FIR_SIZE-1:0] fir1, fir2;
 
     posit_to_fir #(
         .N(N),

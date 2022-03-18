@@ -57,7 +57,7 @@ module ppu #(
 
     assign float_fir_in = {__sign, __exp, __frac};
 `endif
-    wire [fir_SIZE-1:0] posit_fir;
+    wire [FIR_SIZE-1:0] posit_fir;
 
 
 `ifdef FLOAT_TO_POSIT
