@@ -5,7 +5,7 @@ all: \
 	ppu_P8E1 \
 	ppu_P16E0 \
 	ppu_P16E1 \
-	ppu_P32E2 \
+	ppu_P16E2 \
 	div-against-pacogen_P8E0 \
 	div-against-pacogen_P16E1 \
 	div-against-pacogen_P32E2 \
@@ -180,6 +180,9 @@ ppu_P16E0:
 
 ppu_P16E1:
 	make ppu N=16 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
+
+ppu_P16E2:
+	make ppu N=16 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
 
 ppu_P32E2:
 	make ppu N=32 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
