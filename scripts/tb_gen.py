@@ -167,6 +167,9 @@ def func(c, op, list_a, list_b):
         c += f"{'in2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
         c += f"""{'in2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
         c += f"""{'out_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
+        
+        # adding 1 cycle delay 
+        c += f"#10;\n\t"
         c += (
             f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
         )

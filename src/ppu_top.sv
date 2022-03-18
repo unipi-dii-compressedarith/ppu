@@ -26,10 +26,13 @@ module ppu_top #(
         .N(N),
         .ES(ES),
     ) ppu_inst (
+        .clk(clk),
+        .rst(rst),
         .in1(in1_reg),
         .in2(in2_reg),
         .op (op_reg),
-        .out(out_reg)
+        .out(out_reg),
+        .valid_o(ppu_valid_o)
     );
 
 

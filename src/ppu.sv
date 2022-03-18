@@ -6,6 +6,8 @@ module ppu #(
         parameter N = `N,
         parameter ES = `ES
     )(
+        input                       clk,
+        input                       rst,
         input [WORD-1:0]            in1,
         input [WORD-1:0]            in2,
         input [OP_SIZE-1:0]         op, /*
@@ -16,7 +18,8 @@ module ppu #(
                             | F2P
                             | P2F
                             */
-        output [WORD-1:0]               out
+        output [WORD-1:0]           out,
+        output                      valid_o
     );
 
     wire [N-1:0] p1, p2, posit;
@@ -29,6 +32,8 @@ module ppu #(
         .N(N),
         .ES(ES)
     ) ppu_core_ops_inst (
+        .clk(clk),
+        .rst(rst),
         .p1(p1),
         .p2(p2),
         .op(op),
@@ -108,7 +113,10 @@ module tb_ppu;
 
     parameter ASCII_SIZE = 300;
 
-    reg [WORD-1:0]  in1, in2;
+    reg                       clk;
+    reg                       rst;
+    reg [WORD-1:0]              in1; 
+    reg [WORD-1:0]              in2;
     reg [OP_SIZE-1:0] op;
     reg [ASCII_SIZE:0] op_ascii;
     wire [WORD-1:0] out;
@@ -138,12 +146,20 @@ module tb_ppu;
         .N(N),
         .ES(ES)
     ) ppu_inst (
+        .clk(clk),
+        .rst(rst),
         .in1(in1),
         .in2(in2),
         .op(op),
         .out(out)
     );
 
+    initial clk = 0;
+    initial rst = 0;
+    always begin
+        clk = ~clk;
+        #5;
+    end
 
     always @(*) begin
         diff_out_ground_truth = out === out_ground_truth ? 0 : 1'bx;

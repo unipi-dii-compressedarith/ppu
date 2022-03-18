@@ -17,6 +17,8 @@ module ppu_core_ops #(
         ,parameter FSIZE = `F
 `endif
     )(
+        input                                           clk,
+        input                                           rst,
         input           [N-1:0]                         p1,
         input           [N-1:0]                         p2,
         input       [OP_SIZE-1:0]                       op,
@@ -107,23 +109,33 @@ module ppu_core_ops #(
     wire [N-1:0] pout_non_special;
 
 
-    wire [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire;
-    assign ops_wire =
+    reg [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_stage0, ops_wire_stage1;
+
+    assign ops_wire_stage0 =
 `ifdef FLOAT_TO_POSIT
         (op == FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
 `endif
         ops_out;
 
+    
     fir_to_posit #(
         .N(N),
         .ES(ES),
         .FIR_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
     ) fir_to_posit_inst (
-        .ops_in(ops_wire),
+        .ops_in(ops_wire_stage1),
         .posit(pout_non_special)
     );
 
     assign pout = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
+
+    always @(posedge clk) begin
+        if (rst == 1'b1) begin
+            ops_wire_stage1 <= 'b0;
+        end else begin
+            ops_wire_stage1 <= ops_wire_stage0;
+        end
+    end
 
 endmodule
 
