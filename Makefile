@@ -19,7 +19,8 @@ VIVADO_DIR := $(RISCV_PPU_DIR)/ppu/fpga/vivado
 
 SCRIPTS_DIR := $(RISCV_PPU_DIR)/ppu/scripts
 SRC_DIR := $(RISCV_PPU_DIR)/ppu/src
-WAVEFORMS_DIR := $(RISCV_PPU_DIR)/ppu/sim/waveforms
+SIM_DIR := $(RISCV_PPU_DIR)/ppu/sim
+WAVEFORMS_DIR := $(SIM_DIR)/waveforms
 PACOGEN_DIR := $(RISCV_PPU_DIR)/PaCoGen
 
 BUILD_DIR := $(RISCV_PPU_DIR)/ppu/build
@@ -189,6 +190,7 @@ ppu_P32E2:
 
 
 conversions:
+	cd $(SCRIPTS_DIR) && python tb_gen_float_2_posit.py -n $(N) -es $(ES) -f $(F) --no-shuffle-random --num-tests 100 > $(SIM_DIR)/test_vectors/tv_float_to_posit_P$(N)E$(ES)_F$(F).sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
 	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
@@ -196,14 +198,16 @@ conversions:
 	-o float_to_posit.out \
 	$(SRC_FLOAT_TO_POSIT) && \
 	./float_to_posit.out && \
+	cd $(SCRIPTS_DIR) && python tb_gen_posit_2_float.py -n $(N) -es $(ES) -f $(F) --no-shuffle-random --num-tests 100 > $(SIM_DIR)/test_vectors/tv_posit_to_float_P$(N)E$(ES)_F$(F).sv
+	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
 	-DN=$(N) $(ES_FIELD_PRESENCE_FLAG) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-DTB_POSIT_TO_FLOAT \
 	-o posit_to_float.out \
 	$(SRC_POSIT_TO_FLOAT) && \
 	./posit_to_float.out
-	gtkwave $(WAVEFORMS_DIR)/tb_float_F64_to_posit_P16E1.gtkw &
-	gtkwave $(WAVEFORMS_DIR)/tb_posit_P16E1_to_float_F64.gtkw &
+	gtkwave $(WAVEFORMS_DIR)/tb_float_F$(F)_to_posit_P$(N)E$(ES).vcd &
+	gtkwave $(WAVEFORMS_DIR)/tb_posit_P$(N)E$(ES)_to_float_F$(F).vcd &
 
 
 conversions-verilog-posit-to-float-quartus:
