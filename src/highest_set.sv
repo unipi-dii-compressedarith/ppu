@@ -45,9 +45,9 @@ endmodule
 module highest_set_v1b #(
     parameter SIZE = 2
 ) (
-    input logic [SIZE-1:0] bits,
-    input val,
-    output wire [$clog2(SIZE)-1:0] index
+    input  logic [        SIZE-1:0] bits,
+    input                           val,
+    output wire  [$clog2(SIZE)-1:0] index
 );
 
     wire [$clog2(SIZE)-1:0] out_stage[0:SIZE];
@@ -75,9 +75,9 @@ module highest_set_v2 #(
     parameter N   = `N,
     parameter VAL = 1
 ) (
-    input logic [N-1:0] bits,
-    output wire [N-1:0] index_bit,
-    output wire [$clog2(N)-1:0] index
+    input  logic [        N-1:0] bits,
+    output wire  [        N-1:0] index_bit,
+    output wire  [$clog2(N)-1:0] index
 );
 
     wire [N-1:0] _wire;
@@ -111,7 +111,7 @@ endmodule
 module decoder #(
     parameter N = `N
 ) (
-    input [N-1:0] in,
+    input  [        N-1:0] in,
     output [$clog2(N)-1:0] out
 );
 
@@ -151,9 +151,9 @@ module highest_set_v3 #(
     parameter N   = `N,
     parameter VAL = 1
 ) (
-    input logic [N-1:0] bits,
-    output wire [N-1:0] index_bit,
-    output wire [$clog2(N)-1:0] index
+    input  logic [        N-1:0] bits,
+    output wire  [        N-1:0] index_bit,
+    output wire  [$clog2(N)-1:0] index
 );
 
     wire [N-1:0] bits_reversed;

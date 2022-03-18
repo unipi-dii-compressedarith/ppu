@@ -9,9 +9,9 @@ module core_mul #(
     parameter N = `N
 ) (
     input  [             TE_SIZE-1:0] te1,
-    te2,
+    input  [             TE_SIZE-1:0] te2,
     input  [           MANT_SIZE-1:0] mant1,
-    mant2,
+    input  [           MANT_SIZE-1:0] mant2,
     output [MANT_MUL_RESULT_SIZE-1:0] mant_out,
     output [             TE_SIZE-1:0] te_out,
     output                            frac_lsb_cut_off

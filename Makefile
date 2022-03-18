@@ -167,7 +167,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
-	# make lint # commented out because it fails wiht P32
+	make lint # commented out because it fails wiht P32
 
 ppu_P8E0:
 	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
@@ -245,6 +245,7 @@ lint:
 	slang $(QUARTUS_DIR)/ppu_top.v --top ppu_top # https://github.com/MikePopoloski/slang
 
 fmt:
+	# https://github.com/chipsalliance/verible
 	verible-verilog-format --inplace --indentation_spaces 4 */*.sv
 
 div-against-pacogen:

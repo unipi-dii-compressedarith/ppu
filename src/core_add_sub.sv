@@ -1,12 +1,11 @@
 module core_add_sub #(
     parameter N = 16
 ) (
-    input [  TE_SIZE-1:0] te1_in,
-    input [  TE_SIZE-1:0] te2_in,
-    input [MANT_SIZE-1:0] mant1_in,
-    input [MANT_SIZE-1:0] mant2_in,
-    input                 have_opposite_sign,
-
+    input  [               TE_SIZE-1:0] te1_in,
+    input  [               TE_SIZE-1:0] te2_in,
+    input  [             MANT_SIZE-1:0] mant1_in,
+    input  [             MANT_SIZE-1:0] mant2_in,
+    input                               have_opposite_sign,
     output [(MANT_ADD_RESULT_SIZE)-1:0] mant_out,
     output [               TE_SIZE-1:0] te_out,
     output                              frac_lsb_cut_off

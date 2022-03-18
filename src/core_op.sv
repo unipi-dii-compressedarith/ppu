@@ -11,14 +11,13 @@ sv2v -DN=16 -DES=1 \
 module core_op #(
     parameter N = 10
 ) (
-    input [  OP_SIZE-1:0] op,
-    input                 sign1,
-    sign2,
-    input [  TE_SIZE-1:0] te1,
-    te2,
-    input [MANT_SIZE-1:0] mant1,
-    mant2,
-
+    input  [         OP_SIZE-1:0] op,
+    input                         sign1,
+    input                         sign2,
+    input  [         TE_SIZE-1:0] te1,
+    input  [         TE_SIZE-1:0] te2,
+    input  [       MANT_SIZE-1:0] mant1,
+    input  [       MANT_SIZE-1:0] mant2,
     output [         TE_SIZE-1:0] te_out_core_op,
     output [(FRAC_FULL_SIZE)-1:0] frac_out_core_op,
     output                        frac_lsb_cut_off

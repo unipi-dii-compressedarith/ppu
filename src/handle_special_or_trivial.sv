@@ -75,8 +75,8 @@ endmodule
 module lut_add #(
     parameter N = 8
 ) (
-    input [(N)-1:0] p1,
-    input [(N)-1:0] p2,
+    input      [(N)-1:0] p1,
+    input      [(N)-1:0] p2,
     output reg [(N)-1:0] p_out
 );
 
@@ -93,8 +93,8 @@ endmodule
 module lut_sub #(
     parameter N = 8
 ) (
-    input [(N)-1:0] p1,
-    input [(N)-1:0] p2,
+    input      [(N)-1:0] p1,
+    input      [(N)-1:0] p2,
     output reg [(N)-1:0] p_out
 );
 
@@ -110,8 +110,8 @@ endmodule
 module lut_div #(
     parameter N = 8
 ) (
-    input [(N)-1:0] p1,
-    input [(N)-1:0] p2,
+    input      [(N)-1:0] p1,
+    input      [(N)-1:0] p2,
     output reg [(N)-1:0] p_out
 );
 
