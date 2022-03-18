@@ -37,8 +37,7 @@ module float_to_posit #(
         .ES(ES),
         .FIR_TOTAL_SIZE(1+TE_SIZE+FRAC_FULL_SIZE)
     ) fir_to_posit_inst (
-        .fir({sign, exp, frac_full}),
-        .frac_lsb_cut_off(1'b0),
+        .ops_in({{sign, exp, frac_full}, 1'b0}),
         .posit(posit)
     );
 

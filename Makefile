@@ -127,7 +127,7 @@ SRC_POSIT_TO_FLOAT := \
 	$(SRC_DIR)/posit_decoder.sv \
 	$(SRC_DIR)/posit_unpack.sv \
 	$(SRC_DIR)/total_exponent.sv \
-	$(SRC_DIR)/cls.sv \
+	$(SRC_DIR)/lzc.sv \
 	$(SRC_DIR)/highest_set.sv
 
 
@@ -156,7 +156,7 @@ ppu-core_ops:
 
 
 ppu: gen-lut-reciprocate-mant verilog-quartus
-	@cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
+	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
@@ -167,7 +167,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
-	make lint # commented out because it fails wiht P32
+	make lint
 
 ppu_P8E0:
 	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
@@ -203,7 +203,7 @@ conversions:
 	$(SRC_POSIT_TO_FLOAT) && \
 	./posit_to_float.out
 	gtkwave $(WAVEFORMS_DIR)/tb_float_F64_to_posit_P16E1.gtkw &
-	gtkwave $(WAVEFORMS_DIR)/tb_posit_P16E1_to_float_F64.vcd &
+	gtkwave $(WAVEFORMS_DIR)/tb_posit_P16E1_to_float_F64.gtkw &
 
 
 conversions-verilog-posit-to-float-quartus:
@@ -227,7 +227,7 @@ yosys:
 
 
 verilog-quartus:
-	@cd $(QUARTUS_DIR) && \
+	cd $(QUARTUS_DIR) && \
 	sv2v \
 	$(ES_FIELD_PRESENCE_FLAG) \
 	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \

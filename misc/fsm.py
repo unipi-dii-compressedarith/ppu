@@ -109,7 +109,6 @@ class Fsm:
             yield self.state
 
     def next(self, op=None, en=1):
-        print(f"en = {en}")
         self.__run(en, op).__next__()
 
 

@@ -53,46 +53,46 @@ module fsm (
                 case (op)
                     ADD: begin
                         case (state)
-                            S_ADD0: state <= S_ADD1;
-                            S_MUL0: state <= S_MUL1;
-                            S_DIV0: state <= S_DIV1;
-                            S_DIV1: state <= S_DIV2;
+                            S_ADD0:  state <= S_ADD1;
+                            S_MUL0:  state <= S_MUL1;
+                            S_DIV0:  state <= S_DIV1;
+                            S_DIV1:  state <= S_DIV2;
                             default: state <= S_ADD0;
                         endcase
                     end
                     SUB: begin
                         case (state)
-                            S_ADD0: state <= S_ADD1;
-                            S_MUL0: state <= S_MUL1;
-                            S_DIV0: state <= S_DIV1;
-                            S_DIV1: state <= S_DIV2;
+                            S_ADD0:  state <= S_ADD1;
+                            S_MUL0:  state <= S_MUL1;
+                            S_DIV0:  state <= S_DIV1;
+                            S_DIV1:  state <= S_DIV2;
                             default: state <= S_ADD0;
                         endcase
                     end
                     MUL: begin
                         case (state)
-                            S_ADD0: state <= S_ADD1;
-                            S_MUL0: state <= S_MUL1;
-                            S_DIV0: state <= S_DIV1;
-                            S_DIV1: state <= S_DIV2;
+                            S_ADD0:  state <= S_ADD1;
+                            S_MUL0:  state <= S_MUL1;
+                            S_DIV0:  state <= S_DIV1;
+                            S_DIV1:  state <= S_DIV2;
                             default: state <= S_MUL0;
                         endcase
                     end
                     DIV: begin
                         case (state)
-                            S_ADD0: state <= S_ADD1;
-                            S_MUL0: state <= S_MUL1;
-                            S_DIV0: state <= S_DIV1;
-                            S_DIV1: state <= S_DIV2;
+                            S_ADD0:  state <= S_ADD1;
+                            S_MUL0:  state <= S_MUL1;
+                            S_DIV0:  state <= S_DIV1;
+                            S_DIV1:  state <= S_DIV2;
                             default: state <= S_DIV0;
                         endcase
                     end
                     default: begin
                         case (state)
-                            S_ADD0: state <= S_ADD1;
-                            S_MUL0: state <= S_MUL1;
-                            S_DIV0: state <= S_DIV1;
-                            S_DIV1: state <= S_DIV2;
+                            S_ADD0:  state <= S_ADD1;
+                            S_MUL0:  state <= S_MUL1;
+                            S_DIV0:  state <= S_DIV1;
+                            S_DIV1:  state <= S_DIV2;
                             default: state <= S_NONE;
                         endcase
                     end
@@ -107,9 +107,9 @@ module fsm (
             1'b0: valid_o <= 0;
             default: begin
                 case (state)
-                    S_ADD1: valid_o <= 1;
-                    S_MUL1: valid_o <= 1;
-                    S_DIV2: valid_o <= 1;
+                    S_ADD1:  valid_o <= 1;
+                    S_MUL1:  valid_o <= 1;
+                    S_DIV2:  valid_o <= 1;
                     default: valid_o <= 0;
                 endcase
             end
@@ -152,11 +152,11 @@ module tb_fsm;
     initial begin
         en = 1;
         #DEL;
-        
+
         op = ADD;
         #DEL;
 
-        
+
         #100000;
         $finish;
     end
