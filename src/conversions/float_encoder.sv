@@ -14,10 +14,10 @@ module float_encoder #(
         output [FSIZE-1:0] bits
     );
 
-    wire [FLOAT_EXP_SIZE_F`F-1:0] EXP_BIAS = (1 << (FLOAT_EXP_SIZE_F`F - 1)) - 1;
+    wire [FLOAT_EXP_SIZE_F`F-1:0] exp_bias = (1 << (FLOAT_EXP_SIZE_F`F - 1)) - 1;
 
     wire [FLOAT_EXP_SIZE_F`F-1:0] exp_biased;
-    assign exp_biased = exp + EXP_BIAS;
+    assign exp_biased = exp + exp_bias;
     assign bits = {sign, exp_biased, frac};
 
 endmodule
