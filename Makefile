@@ -171,25 +171,25 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	make lint
 
 ppu_P8E0:
-	make ppu N=8 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=8 ES=0 F=32 WORD=32 DIV_WITH_LUT=0
 
 ppu_P8E1:
-	make ppu N=8 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=8 ES=1 F=32 WORD=32 DIV_WITH_LUT=0
 
 ppu_P16E0:
-	make ppu N=16 ES=0 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=16 ES=0 F=32 WORD=32 DIV_WITH_LUT=0
 
 ppu_P16E1:
-	make ppu N=16 ES=1 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=16 ES=1 F=32 WORD=32 DIV_WITH_LUT=0
 
 ppu_P16E2:
-	make ppu N=16 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=16 ES=2 F=32 WORD=32 DIV_WITH_LUT=0
 
 ppu_P32E2:
-	make ppu N=32 ES=2 F=64 WORD=64 DIV_WITH_LUT=0
+	make ppu N=32 ES=2 F=32 WORD=32 DIV_WITH_LUT=0
 
 
-conversions:
+float_to_posit:
 	cd $(SCRIPTS_DIR) && python tb_gen_float_2_posit.py -n $(N) -es $(ES) -f $(F) --no-shuffle-random --num-tests 100 > $(SIM_DIR)/test_vectors/tv_float_to_posit_P$(N)E$(ES)_F$(F).sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
@@ -197,7 +197,11 @@ conversions:
 	-DTB_FLOAT_TO_POSIT \
 	-o float_to_posit.out \
 	$(SRC_FLOAT_TO_POSIT) && \
-	./float_to_posit.out && \
+	./float_to_posit.out
+	gtkwave $(WAVEFORMS_DIR)/tb_float_F$(F)_to_posit_P$(N)E$(ES).vcd &
+	
+
+posit_to_float:
 	cd $(SCRIPTS_DIR) && python tb_gen_posit_2_float.py -n $(N) -es $(ES) -f $(F) --no-shuffle-random --num-tests 100 > $(SIM_DIR)/test_vectors/tv_posit_to_float_P$(N)E$(ES)_F$(F).sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
@@ -206,7 +210,6 @@ conversions:
 	-o posit_to_float.out \
 	$(SRC_POSIT_TO_FLOAT) && \
 	./posit_to_float.out
-	gtkwave $(WAVEFORMS_DIR)/tb_float_F$(F)_to_posit_P$(N)E$(ES).vcd &
 	gtkwave $(WAVEFORMS_DIR)/tb_posit_P$(N)E$(ES)_to_float_F$(F).vcd &
 
 

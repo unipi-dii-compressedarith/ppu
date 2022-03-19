@@ -2,9 +2,7 @@
 python tb_gen_posit_2_float.py -n 16 -es 1 -f 32 --no-shuffle-random --num-tests 100 | pbcopy
 """
 from hardposit import from_bits
-from hardposit.f64 import F64
-from hardposit.f32 import F32
-from hardposit.f16 import F16
+from hardposit.float import F64, F32, F16
 import argparse
 import random
 
@@ -67,7 +65,7 @@ for i in range(NUM_RANDOM_TEST_CASES):
     float_obj = F64(x_f64=p.eval())
 
     c += f'ascii_x = "{float_obj.eval()}"; '
-    c += f'ascii_exp = "{float_obj.exp - float_obj.EXP_BIAS}"; '
+    c += f'ascii_exp = "{float_obj.exp - float_obj.exp_bias}"; '
     c += f'ascii_frac = "{float_obj.mant}"; '
     c += f"float_bits_expected = {float_obj.bits}; "
     c += f'assert (float_bits === float_bits_expected) else $display("ERROR: pf2({p.to_bits()}) = 0x%h != {float_obj.bits}", float_bits);\n\n'

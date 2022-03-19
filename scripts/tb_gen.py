@@ -15,7 +15,7 @@ import math
 # from posit_playground import from_bits
 from hardposit import from_bits, from_double
 from hardposit.utils import get_bin
-from hardposit.f64 import F64
+from hardposit.float import F64
 
 LJUST = 25
 X = "'bX"
@@ -103,7 +103,7 @@ def single_arg_func(c, op):
 
             c += f"in1 = {float_obj.bits}; "
             c += f'ascii_x = "{x}"; '
-            c += f'ascii_exp = "{float_obj.exp - float_obj.EXP_BIAS}"; '
+            c += f'ascii_exp = "{float_obj.exp - float_obj.exp_bias}"; '
             c += f'ascii_frac = "{float_obj.mant}"; '
             c += f"out_ground_truth = {N}'d{p.to_bits()}; "
             c += f'out_expected_ascii = "{p.eval()}"; '
@@ -124,7 +124,7 @@ def single_arg_func(c, op):
             float_obj = F64(x_f64=p.eval())
 
             c += f'ascii_x = "{float_obj.eval()}"; '
-            c += f'ascii_exp = "{f64_obj.exp - f64_obj.EXP_BIAS}"; '
+            c += f'ascii_exp = "{f64_obj.exp - f64_obj.exp_bias}"; '
             c += f'ascii_frac = "{f64_obj.mant}"; '
             c += f"out_ground_truth = {f64_obj.bits}; "
             c += "#10; \n"
