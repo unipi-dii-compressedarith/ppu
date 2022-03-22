@@ -1,6 +1,8 @@
 module core_div #(
     parameter N = 16
 ) (
+    input                               clk,
+    input                               rst,
     input  [               TE_SIZE-1:0] te1,
     input  [               TE_SIZE-1:0] te2,
     input  [             MANT_SIZE-1:0] mant1,
@@ -9,8 +11,11 @@ module core_div #(
     output [               TE_SIZE-1:0] te_out
 );
 
-    wire [TE_SIZE-1:0] te_diff;
-    assign te_diff = te1 - te2;
+    logic [MANT_SIZE-1:0] mant1_st0, mant1_st1;
+    assign mant1_st0 = mant1;
+
+    logic [TE_SIZE-1:0] te_diff_st0, te_diff_st1;
+    assign te_diff_st0 = te1 - te2;
 
     wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;
 
@@ -107,6 +112,8 @@ module core_div #(
     newton_raphson #(
         .MS(MANT_SIZE)
     ) newton_raphson_inst (
+        .clk(clk),
+        .rst(rst),
         .num(mant2),
         .x0 (mant2_reciprocal),
         .x1 (x1)
@@ -116,13 +123,24 @@ module core_div #(
     assign x1 = mant2_reciprocal >> ((3 * MANT_SIZE - 4) - (2 * MANT_SIZE));
 `endif
 
-    assign mant_div = mant1 * x1;
+    assign mant_div = mant1_st1 * x1;
 
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
 
     assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
-    assign te_out = mant_div_less_than_one ? te_diff - 1 : te_diff;
+    assign te_out = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
+
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            te_diff_st1 <= 0;
+            mant1_st1   <= 0;
+        end else begin
+            te_diff_st1 <= te_diff_st0;
+            mant1_st1   <= mant1_st0;
+        end
+    end
 
 endmodule

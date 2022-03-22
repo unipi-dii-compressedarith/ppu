@@ -93,16 +93,16 @@ module tb_pipelined;
 
         #2;
         ppu_valid_in = 1;
-        ppu_op   = ADD;
-        ppu_in1  = 126;  // 0x73 P<8,0>
-        ppu_in2  = 107;  // 0x6b 
+        ppu_op = ADD;
+        ppu_in1 = 126;  // 0x73 P<8,0>
+        ppu_in2 = 107;  // 0x6b 
 
 
         #10;
         ppu_valid_in = 1;
-        ppu_op   = SUB;
-        ppu_in1  = 126;  // 0x73 P<8,0>
-        ppu_in2  = 107;  // 0x6b 
+        ppu_op = SUB;
+        ppu_in1 = 126;  // 0x73 P<8,0>
+        ppu_in2 = 107;  // 0x6b 
 
 
         #20;

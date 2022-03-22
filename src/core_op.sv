@@ -11,6 +11,8 @@ sv2v -DN=16 -DES=1 \
 module core_op #(
     parameter N = 10
 ) (
+    input                         clk,
+    input                         rst,
     input  [         OP_SIZE-1:0] op,
     input                         sign1,
     input                         sign2,
@@ -59,6 +61,8 @@ module core_op #(
     core_div #(
         .N(N)
     ) core_div_inst (
+        .clk(clk),
+        .rst(rst),
         .te1(te1),
         .te2(te2),
         .mant1(mant1),

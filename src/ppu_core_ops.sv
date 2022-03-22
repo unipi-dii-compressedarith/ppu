@@ -99,6 +99,8 @@ module ppu_core_ops #(
     ops #(
         .N(N)
     ) ops_inst (
+        .clk(clk),
+        .rst(rst),
         .op(op),
         .fir1(fir1_st1),
         .fir2(fir2_st1),

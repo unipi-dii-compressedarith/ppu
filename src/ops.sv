@@ -1,6 +1,8 @@
 module ops #(
     parameter N = 4
 ) (
+    input clk,
+    input rst,
     input [OP_SIZE-1:0] op,
 
     input [FIR_SIZE-1:0] fir1,
@@ -28,6 +30,8 @@ module ops #(
     core_op #(
         .N(N)
     ) core_op_inst (
+        .clk(clk),
+        .rst(rst),
         .op(op),
         .sign1(sign1),
         .sign2(sign2),

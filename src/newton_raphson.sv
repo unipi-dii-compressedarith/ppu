@@ -6,9 +6,11 @@ iverilog -DTB_NEWTON_RAPHSON -g2012 -o newton_raphson.out ../src/newton_raphson.
 module newton_raphson #(
         parameter MS = 10
     )(
-        input   [(MS)-1:0]              num,
-        input   [(3*MS-4)-1:0]          x0,
-        output  [(2*MS)-1:0]            x1
+        input                   clk,
+        input                   rst,
+        input   [(MS)-1:0]      num,
+        input   [(3*MS-4)-1:0]  x0,
+        output  [(2*MS)-1:0]    x1
     );
 
     /*
@@ -30,10 +32,23 @@ module newton_raphson #(
 
     */
 
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            num_times_x0_st1 <= 0;
+            x0_on_2n_bits_st1 <= 0;
+        end else begin
+            num_times_x0_st1 <= num_times_x0_st0;
+            x0_on_2n_bits_st1 <= x0_on_2n_bits_st0;
+        end
+    end
+
     wire [(4*MS-3)-1:0] _num_times_x0;
     assign _num_times_x0 = (num * x0) >> (2*MS - 4);
-    wire [(2*MS)-1:0] num_times_x0;
-    assign num_times_x0 = _num_times_x0;
+    
+
+    
+    logic [(2*MS)-1:0] num_times_x0_st0, num_times_x0_st1;
+    assign num_times_x0_st0 = _num_times_x0;
 
 
 
@@ -41,14 +56,14 @@ module newton_raphson #(
     wire [(2*MS)-1:0] fx_2 = fx_2___N`N;
 
     wire [(2*MS)-1:0] two_minus_num_x0;
-    assign two_minus_num_x0 = fx_2 - num_times_x0;
+    assign two_minus_num_x0 = fx_2 - num_times_x0_st1;
 
 
-    wire [(2*MS)-1:0] x0_on_2n_bits;
-    assign x0_on_2n_bits = x0 >> (MS - 4);
+    logic [(2*MS)-1:0] x0_on_2n_bits_st0, x0_on_2n_bits_st1;
+    assign x0_on_2n_bits_st0 = x0 >> (MS - 4);
 
     wire [(4*MS)-1:0] _x1;
-    assign _x1 = x0_on_2n_bits * two_minus_num_x0;
+    assign _x1 = x0_on_2n_bits_st1 * two_minus_num_x0;
 
     wire [(2*MS)-1:0] x1;
     // assign x1 = _x1[(4*MS-1)-:MS];

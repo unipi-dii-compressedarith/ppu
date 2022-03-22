@@ -164,12 +164,13 @@ def func(c, op, list_a, list_b):
         c += f"""{'in2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
         c += f"""{'out_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
 
-        N_CYCLES_DEL = 2
         # adding N_CYCLES_DEL cycle delay
         if op == Tb.PACOGEN:
             pass
+        elif op == Tb.DIV:
+            c += f"#{10 * 3};\n\t"
         else:
-            c += f"#{10*N_CYCLES_DEL};\n\t"
+            c += f"#{10 * 2};\n\t"
 
         c += (
             f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
@@ -189,7 +190,7 @@ def func(c, op, list_a, list_b):
             c += f'assert (pout_ppu_core_ops === out_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
         else:
             c += f'assert (out === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", out);\n\n'
-            
+
     c += f'$display("Total tests cases: {len(list_a)}");\n'
     # c += "end\n"
     return c
