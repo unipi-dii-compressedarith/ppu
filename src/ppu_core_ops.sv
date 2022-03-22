@@ -45,7 +45,8 @@ module ppu_core_ops #(
     wire [N-1:0] p1_cond, p2_cond;
     wire is_special_or_trivial;
     wire [N-1:0] pout_special_or_trivial;
-    wire [((N) + 1) -1:0] special;
+    
+    logic [((N) + 1) -1:0] special_st0, special_st1, special_st2;
     input_conditioning #(
         .N(N)
     ) input_conditioning (
@@ -54,20 +55,21 @@ module ppu_core_ops #(
         .op(op),
         .p1_out(p1_cond),
         .p2_out(p2_cond),
-        .special(special)
+        .special(special_st0)
     );
 
-    assign is_special_or_trivial = special[0];
-    assign pout_special_or_trivial = special >> 1;
+    assign is_special_or_trivial = special_st2[0];
+    assign pout_special_or_trivial = special_st2 >> 1;
 
-    wire [FIR_SIZE-1:0] fir1, fir2;
+    logic [FIR_SIZE-1:0] fir1_st0, fir1_st1;
+    logic [FIR_SIZE-1:0] fir2_st0, fir2_st1;
 
     posit_to_fir #(
         .N(N),
         .ES(ES)
     ) posit_to_fir1 (
         .p_cond(p1_cond),
-        .fir(fir1)
+        .fir(fir1_st0)
     );
 
     wire [N-1:0] posit_in_posit_to_fir2;
@@ -82,11 +84,11 @@ module ppu_core_ops #(
         .ES(ES)
     ) posit_to_fir2 (
         .p_cond(posit_in_posit_to_fir2),
-        .fir(fir2)
+        .fir(fir2_st0)
     );
 
 `ifdef FLOAT_TO_POSIT
-    assign posit_fir = fir2;
+    assign posit_fir = fir2_st1;
 `endif
 
     wire [TE_SIZE-1:0] ops_te_out;
@@ -98,8 +100,8 @@ module ppu_core_ops #(
         .N(N)
     ) ops_inst (
         .op(op),
-        .fir1(fir1),
-        .fir2(fir2),
+        .fir1(fir1_st1),
+        .fir2(fir2_st1),
         .ops_out(ops_out)
     );
 
@@ -109,9 +111,9 @@ module ppu_core_ops #(
     wire [N-1:0] pout_non_special;
 
 
-    reg [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_stage0, ops_wire_stage1;
+    reg [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
 
-    assign ops_wire_stage0 =
+    assign ops_wire_st0 =
 `ifdef FLOAT_TO_POSIT
         (op == FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
 `endif
@@ -123,7 +125,7 @@ module ppu_core_ops #(
         .ES(ES),
         .FIR_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
     ) fir_to_posit_inst (
-        .ops_in(ops_wire_stage1),
+        .ops_in(ops_wire_st1),
         .posit(pout_non_special)
     );
 
@@ -131,9 +133,17 @@ module ppu_core_ops #(
 
     always @(posedge clk) begin
         if (rst == 1'b1) begin
-            ops_wire_stage1 <= 'b0;
+            fir1_st1 <= 'b0;
+            fir2_st1 <= 'b0;
+            ops_wire_st1 <= 'b0;
+            special_st1 <= 'b0;
+            special_st2 <= 'b0;
         end else begin
-            ops_wire_stage1 <= ops_wire_stage0;
+            fir1_st1 <= fir1_st0;
+            fir2_st1 <= fir2_st0;
+            ops_wire_st1 <= ops_wire_st0;
+            special_st1 <= special_st0;
+            special_st2 <= special_st1;
         end
     end
 

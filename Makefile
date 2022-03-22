@@ -54,7 +54,7 @@ endif
 
 NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
-NUM_TESTS_PPU := 500
+NUM_TESTS_PPU := 100
 
 SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/utils.sv \
@@ -169,6 +169,21 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
 	make lint
+
+tb_pipelined:
+	cd $(WAVEFORMS_DIR) && \
+	iverilog -g2012 \
+	$(ES_FIELD_PRESENCE_FLAG) \
+	$(DIV_WITH_LUT_FLAG) \
+	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
+	-o tb_pipelined_P$(N)E$(ES).out \
+	$(SRC_DIR)/tb_pipelined.sv \
+	$(SRC_DIR)/ppu_top.sv \
+	$(SRC_DIR)/ppu.sv \
+	$(SRC_PPU_CORE_OPS) && \
+	sleep 1 && \
+	./tb_pipelined_P$(N)E$(ES).out
+
 
 ppu_P8E0:
 	make ppu N=8 ES=0 F=32 WORD=32 DIV_WITH_LUT=0

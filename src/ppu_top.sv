@@ -3,18 +3,20 @@ a wrapper around the actual ppu.
 */
 
 module ppu_top #(
-    parameter WORD  = `WORD
-`ifdef FLOAT_TO_POSIT,
-    parameter FSIZE = `F
+    parameter WORD = `WORD,
+`ifdef FLOAT_TO_POSIT
+    parameter FSIZE = `F,
 `endif
+    parameter N = `N,
+    parameter ES = `ES
 ) (
-    input                clk,
-    input                rst,
-    input  [   WORD-1:0] ppu_in1,
-    input  [   WORD-1:0] ppu_in2,
-    input  [OP_SIZE-1:0] ppu_op,
-    output [   WORD-1:0] ppu_out,
-    output               ppu_valid_o
+    input                    clk,
+    input                    rst,
+    input      [   WORD-1:0] ppu_in1,
+    input      [   WORD-1:0] ppu_in2,
+    input      [OP_SIZE-1:0] ppu_op,
+    output reg [   WORD-1:0] ppu_out,
+    output reg               ppu_valid_o
 );
 
 
@@ -24,13 +26,13 @@ module ppu_top #(
         .FSIZE(FSIZE),
 `endif
         .N(N),
-        .ES(ES),
+        .ES(ES)
     ) ppu_inst (
         .clk(clk),
         .rst(rst),
         .in1(in1_reg),
         .in2(in2_reg),
-        .op (op_reg),
+        .op(op_reg),
         .out(out_reg),
         .valid_o(ppu_valid_o)
     );
