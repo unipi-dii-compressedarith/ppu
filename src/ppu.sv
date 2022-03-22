@@ -8,6 +8,7 @@ module ppu #(
     )(
         input                       clk,
         input                       rst,
+        input                       valid_in,
         input [WORD-1:0]            in1,
         input [WORD-1:0]            in2,
         input [OP_SIZE-1:0]         op, /*
@@ -21,6 +22,15 @@ module ppu #(
         output [WORD-1:0]           out,
         output                      valid_o
     );
+
+    fsm #(
+    ) fsm_inst (
+        .clk(clk),
+        .rst(rst),
+        .valid_in(valid_in),
+        .valid_o(valid_o)
+    );
+
 
     wire [N-1:0] p1, p2, posit;
 
@@ -58,7 +68,15 @@ module ppu #(
 
     wire                        __sign = float_fir_out[ (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F) - 1 ];
     wire [TE_SIZE-1:0]          __exp  = float_fir_out[ M_I+E_II : M_I ];
-    wire [FRAC_FULL_SIZE-1:0]   __frac = float_fir_out[ M_I-1 -: M_II ];
+    wire [FRAC_FULL_SIZE-1:0]   __frac;
+
+    generate
+        if (M_II <= (1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)) begin
+            assign __frac = float_fir_out[ M_I-1 -: M_II ];
+        end else begin
+            assign __frac = float_fir_out[ M_I-1:0 ];
+        end
+    endgenerate
 
     assign float_fir_in = {__sign, __exp, __frac};
 `endif
@@ -99,6 +117,26 @@ endmodule
 
 
 
+module fsm (
+    input        clk,
+    input        rst,
+    input        valid_in,
+    output logic valid_o
+);
+
+    logic [2:0] counter = 0;
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            valid_o <= 1'b0;
+            counter <= 0;
+        end else begin
+            valid_o <= counter == 3;
+            counter <= counter + 1;
+        end
+    end
+
+endmodule
 
 
 
@@ -115,6 +153,7 @@ module tb_ppu;
 
     reg                       clk;
     reg                       rst;
+    reg                      valid_in;
     reg [WORD-1:0]              in1; 
     reg [WORD-1:0]              in2;
     reg [OP_SIZE-1:0] op;
@@ -148,6 +187,7 @@ module tb_ppu;
     ) ppu_inst (
         .clk(clk),
         .rst(rst),
+        .valid_in(valid_in),
         .in1(in1),
         .in2(in2),
         .op(op),

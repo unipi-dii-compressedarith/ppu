@@ -7,6 +7,7 @@ i.e. fsm states are internal to the class itself.
 pattern matching requires Python3.10+
 """
 
+
 class Fsm:
     __None = 0
     __Add0 = 1

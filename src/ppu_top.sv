@@ -12,6 +12,7 @@ module ppu_top #(
 ) (
     input                    clk,
     input                    rst,
+    input                    ppu_valid_in,
     input      [   WORD-1:0] ppu_in1,
     input      [   WORD-1:0] ppu_in2,
     input      [OP_SIZE-1:0] ppu_op,
@@ -30,6 +31,7 @@ module ppu_top #(
     ) ppu_inst (
         .clk(clk),
         .rst(rst),
+        .valid_in(ppu_valid_in),
         .in1(in1_reg),
         .in2(in2_reg),
         .op(op_reg),

@@ -10,19 +10,15 @@ import random
 import datetime
 import enum
 import pathlib
-import math
+
 
 # from posit_playground import from_bits
 from hardposit import from_bits, from_double
-from hardposit.utils import get_bin
+from hardposit.utils import get_bin, clog2
 from hardposit.float import F64
 
 LJUST = 25
 X = "'bX"
-
-
-def clog2(x):
-    return math.ceil(math.log2(x))
 
 
 class Tb(enum.Enum):
@@ -167,12 +163,18 @@ def func(c, op, list_a, list_b):
         c += f"{'in2 ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
         c += f"""{'in2_ascii ='.ljust(LJUST)} "{p2.eval()}";\n\t"""
         c += f"""{'out_gt_ascii ='.ljust(LJUST)} "{pout.eval()}";\n\t"""
-        
-        # adding 2 cycle delay 
-        c += f"#{10*2};\n\t"
+
+        N_CYCLES_DEL = 2
+        # adding N_CYCLES_DEL cycle delay
+        if op == Tb.PACOGEN:
+            pass
+        else:
+            c += f"#{10*N_CYCLES_DEL};\n\t"
+
         c += (
             f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"
         )
+
         if op != Tb.DIV and op != Tb.PACOGEN:
             c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         else:
@@ -181,11 +183,13 @@ def func(c, op, list_a, list_b):
             else:
                 c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
         c += f"#10;\n\t"
+
         if op == Tb.PACOGEN:
             c += f'assert (pout_pacogen === out_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
             c += f'assert (pout_ppu_core_ops === out_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
         else:
             c += f'assert (out === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", out);\n\n'
+            
     c += f'$display("Total tests cases: {len(list_a)}");\n'
     # c += "end\n"
     return c

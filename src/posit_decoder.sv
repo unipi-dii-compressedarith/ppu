@@ -9,6 +9,9 @@ module posit_decoder #(
     output [MANT_SIZE-1:0] mant
 );
 
+    wire                    _reg_s;  // unused, only to satisfy the linter
+    wire [REG_LEN_SIZE-1:0] _reg_len;  // unused, only to satisfy the linter
+
     posit_unpack #(
         .N (N),
         .ES(ES)
@@ -16,8 +19,8 @@ module posit_decoder #(
         .bits(bits),
 
         .sign   (sign),
-        .reg_s  (),
-        .reg_len(),
+        .reg_s  (_reg_s),
+        .reg_len(_reg_len),
         .k      (k),
 `ifndef NO_ES_FIELD
         .exp    (exp),

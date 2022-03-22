@@ -67,5 +67,7 @@ for i in range(NUM_RANDOM_TEST_CASES):
     print(f'ascii_exp = "{float_obj.exp - float_obj.exp_bias}"; ')
     print(f'ascii_frac = "{float_obj.mant}"; ')
     print(f"posit_expected = {N}'d{p.to_bits()}; ")
-    print(f'assert (posit === posit_expected) else $display("ERROR: pf2({float_obj.bits}) = 0x%h != {p.to_bits()}", posit);\n\n')
+    print(
+        f'assert (posit === posit_expected) else $display("ERROR: pf2({float_obj.bits}) = 0x%h != {p.to_bits()}", posit);\n\n'
+    )
     print("#10; \n")
