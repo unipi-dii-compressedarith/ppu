@@ -23,11 +23,14 @@ module ppu #(
         output                      valid_o
     );
 
-    fsm #(
-    ) fsm_inst (
+    wire stall;
+    ppu_control_unit #(
+    ) ppu_control_unit_inst (
         .clk(clk),
         .rst(rst),
         .valid_in(valid_in),
+        .op(op),
+        .stall(stall),
         .valid_o(valid_o)
     );
 
@@ -47,6 +50,7 @@ module ppu #(
         .p1(p1),
         .p2(p2),
         .op(op),
+        .stall(stall),
 `ifdef FLOAT_TO_POSIT
         .float_fir(float_fir_in),
         .posit_fir(posit_fir),
@@ -129,27 +133,6 @@ endmodule
 
 
 
-module fsm (
-    input        clk,
-    input        rst,
-    input        valid_in,
-    output logic valid_o
-);
-
-    logic [2:0] counter = 0;
-
-    always_ff @(posedge clk) begin
-        if (rst) begin
-            valid_o <= 1'b0;
-            counter <= 0;
-        end else begin
-            valid_o <= counter == 3;
-            counter <= counter + 1;
-        end
-    end
-
-endmodule
-
 
 
 `ifdef TEST_BENCH_PPU
@@ -224,6 +207,8 @@ module tb_ppu;
 
         $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
         $dumpvars(0, tb_ppu);
+
+        valid_in = 1;
 
         if (N == 4 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P4E0.sv"

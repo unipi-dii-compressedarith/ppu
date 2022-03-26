@@ -72,7 +72,7 @@ module tb_posit_to_float;
 
 
     reg diff;
-    always @(*) begin
+    always_comb @(*) begin
         diff = float_bits == float_bits_expected? 0 : 1'bX;
     end
 

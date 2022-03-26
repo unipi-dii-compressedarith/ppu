@@ -154,7 +154,7 @@ module tb_posit_unpack;
 
 
 
-    always @(*) begin
+    always_comb @(*) begin
 `ifndef NO_ES_FIELD
         diff_exp = (exp === exp_expected ? 0 : 'bx);
 `endif

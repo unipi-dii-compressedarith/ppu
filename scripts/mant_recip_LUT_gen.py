@@ -44,7 +44,7 @@ def compute_frac_recip_val(frac):
 SPACES = "\t" * 3
 lut_content = ""
 for frac in range(0, 1 << LUT_IN):
-    lut_content += f"{SPACES}{LUT_IN}'d{frac} :    dout <= {LUT_OUT}'h{hex(compute_frac_recip_val(frac)).replace('0x','')};\n"
+    lut_content += f"{SPACES}{LUT_IN}'d{frac} :    dout = {LUT_OUT}'h{hex(compute_frac_recip_val(frac)).replace('0x','')};\n"
 
 
 print(
@@ -64,7 +64,7 @@ module lut #(
     always @(*) begin
         case (addr)
 {lut_content}
-            default: dout <= 'h0;
+            default: dout = 'h0;
         endcase
     end
 

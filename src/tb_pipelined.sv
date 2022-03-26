@@ -60,23 +60,13 @@ module tb_pipelined;
     end
 
     always @(*) begin
-        op_ascii = ppu_op == ADD 
-            ? "ADD" : ppu_op == MUL
-            ? "MUL" : ppu_op == SUB
-            ? "SUB" : ppu_op == DIV
-            ? "DIV" : "---";
+        op_ascii = rst == 1 
+            ? 'bz : ppu_op === ADD 
+            ? "ADD" : ppu_op === MUL
+            ? "MUL" : ppu_op === SUB
+            ? "SUB" : ppu_op === DIV
+            ? "DIV" : 'bz;
     end
-
-    // always @(*) begin
-    //     diff_out_ground_truth = out === out_ground_truth 
-    //         ? 0 : 1'bx;
-    //     pout_off_by_1 = abs(out - out_ground_truth) == 0 
-    //         ? 0 : abs(out - out_ground_truth) == 1 
-    //         ? 1 : 'bx;
-    //     diff_pout_hwdiv_exp = (op != DIV) ? 'hz : out === pout_hwdiv_expected 
-    //         ? 0 : 1'bx;
-    // end
-
 
 
     initial begin
@@ -86,33 +76,89 @@ module tb_pipelined;
         $dumpvars(0, tb_pipelined);
 
         rst = 1;
-        #12;
+        #9;
 
         rst = 0;
-
-
         #2;
+
+        ppu_valid_in = 0;
+        #20;
+
+
+
         ppu_valid_in = 1;
         ppu_op = ADD;
-        ppu_in1 = 126;  // 0x73 P<8,0>
-        ppu_in2 = 107;  // 0x6b 
-
-
+        ppu_in1 = 4;
+        ppu_in2 = 0;
         #10;
-        ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 126;  // 0x73 P<8,0>
-        ppu_in2 = 107;  // 0x6b 
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 'hcd9d;
+        // ppu_in2 = 'h9ea4;
+        // #10;
 
 
-        #20;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 120;
+        // ppu_in2 = 0;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 41;
+        // ppu_in2 = 157;
+        // #5;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4522;
+        // ppu_in2 = 12417;
+        // #13;
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 15;
+        // ppu_in2 = 15;
+        // #10;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4;
+        // ppu_in2 = (1 << (N - 1));
+        // #10;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 4;
+        // ppu_in2 = 0;
+        // #10;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 41;
+        // ppu_in2 = 1;
+        // #10;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 42;
+        // ppu_in2 = 1;
+        // #10;
+
         ppu_valid_in = 0;
         ppu_op = 'bz;
         ppu_in1 = 'bz;
         ppu_in2 = 'bz;
+        #10;
 
-
-        #400;
+        #50;
         $finish;
     end
 

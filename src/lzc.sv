@@ -25,10 +25,10 @@ module lzc_internal #(
     localparam S = $clog2(NUM_BITS);
 
     generate
-        if (NUM_BITS == 2) begin
+        if (NUM_BITS == 2) begin : gen_blk1
             assign vld = |in;
             assign out = ~in[1] & in[0];
-        end else if (NUM_BITS & (NUM_BITS - 1)) begin
+        end else if (NUM_BITS & (NUM_BITS - 1)) begin : gen_blk2
             lzc_internal #(
                 .NUM_BITS(1 << S)
             ) lzc_internal (
@@ -36,7 +36,7 @@ module lzc_internal #(
                 .out(out),
                 .vld(vld)
             );
-        end else begin
+        end else begin : gen_blk3
             wire [S-2:0] out_l, out_h;
             wire out_vl, out_vh;
 

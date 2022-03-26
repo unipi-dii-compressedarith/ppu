@@ -34,7 +34,7 @@ module highest_set_v1 #(
 
     generate
         genvar i;
-        for (i = 0; i < N; i = i + 1) begin : _gen
+        for (i = 0; i < N; i = i + 1) begin : gen_block
             assign out_stage[i+1] = (bits[i] == VAL) ? i : out_stage[i];
         end
     endgenerate
@@ -55,7 +55,7 @@ module highest_set_v1b #(
 
     generate
         genvar i;
-        for (i = 0; i < SIZE; i = i + 1) begin : _gen
+        for (i = 0; i < SIZE; i = i + 1) begin : gen_block
             assign out_stage[i+1] = (bits[i] == val) ? i : out_stage[i];
         end
     endgenerate
@@ -161,7 +161,7 @@ module highest_set_v3 #(
 
     genvar i;
     generate
-        for (i = 0; i < N; i = i + 1) begin : _gen1
+        for (i = 0; i < N; i = i + 1) begin : gen_block1
             assign bits_reversed[i] = bits[N-1-i];
         end
     endgenerate
@@ -173,7 +173,7 @@ module highest_set_v3 #(
     assign _index_bit_tmp = bits_reversed & (~bits_reversed + 1'b1);
 
     generate
-        for (i = 0; i < N; i = i + 1) begin : _gen2
+        for (i = 0; i < N; i = i + 1) begin : gen_block2
             assign index_bit[i] = _index_bit_tmp[N-1-i];
         end
     endgenerate
@@ -224,7 +224,7 @@ module tb_highest_set;
         .index  (index_v3)
     );
 
-    always @(*) begin
+    always_comb @(*) begin
         diff = index_v1 == index_v2 ? 0 : 1'bx;
     end
 

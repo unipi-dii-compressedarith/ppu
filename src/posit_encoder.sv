@@ -113,7 +113,7 @@ module tb_posit_encoder;
 
 
 
-    always @(*) begin
+    always_comb @(*) begin
         err = posit == posit_expected ? 0 : 1'bx;
     end
 

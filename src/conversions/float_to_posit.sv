@@ -74,7 +74,7 @@ module tb_float_to_posit;
 
 
     reg diff;
-    always @(*) begin
+    always_comb @(*) begin
         diff = posit == posit_expected? 0 : 1'bX;
     end
 

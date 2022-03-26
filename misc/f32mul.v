@@ -120,7 +120,7 @@ module tb_f32mul;
     reg [3:0] op; // unused
     reg [31:0] correct;
 
-    always @(*) diff = (out == z_expected);
+    always_comb @(*) diff = (out == z_expected);
 
     initial begin
         $dumpfile("tb_f32mul.vcd");

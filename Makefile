@@ -54,7 +54,7 @@ endif
 
 NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
-NUM_TESTS_PPU := 100
+NUM_TESTS_PPU := 15
 
 SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/utils.sv \
@@ -93,6 +93,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/sign_decisor.sv \
 	$(SRC_DIR)/set_sign.sv \
 	$(SRC_DIR)/highest_set.sv \
+	$(SRC_DIR)/ppu_control_unit.sv \
 	$(SRC_CONVERSIONS_PPU)
 
 SRC_DIV_AGAINST_PACOGEN := \
@@ -157,7 +158,7 @@ ppu-core_ops:
 
 
 ppu: gen-lut-reciprocate-mant verilog-quartus
-	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random
+	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 -DTEST_BENCH_PPU \
 	$(ES_FIELD_PRESENCE_FLAG) \
@@ -168,6 +169,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
+	verible-verilog-format --inplace --indentation_spaces 2 $(QUARTUS_DIR)/ppu_top.v
 	make lint
 
 tb_pipelined:

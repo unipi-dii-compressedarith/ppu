@@ -30,7 +30,7 @@ module highest_set (
 	assign out_stage[0] = ~0;
 	genvar i;
 	generate
-		for (i = 0; i < SIZE; i = i + 1) begin : _gen
+		for (i = 0; i < SIZE; i = i + 1) begin : gen_block
 			assign out_stage[i + 1] = (bits[i] == VAL ? i : out_stage[i]);
 		end
 	endgenerate

@@ -12,7 +12,7 @@ module reverse_bits #(
 
     genvar i;
     generate
-        for (i = 0; i < N; i = i + 1) begin : _gen_loop
+        for (i = 0; i < N; i = i + 1) begin : gen_block_loop
             assign reversed_bits[i] = bits[N-1-i];
         end
     endgenerate

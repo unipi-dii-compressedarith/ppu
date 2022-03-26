@@ -14,7 +14,7 @@ module handle_special #(
     wire [N-1:0] nan;
     assign nan = ({{1{1'b1}}, {N - 1{1'b0}}});
 
-    always @(*) begin
+    always_comb @(*) begin
         case (op)
             ADD: begin  // +
                 if (p1_is_nan || p2_is_nan) begin

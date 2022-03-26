@@ -16,7 +16,7 @@
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.
-[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.genblk2.
+[treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.gen_blk2.
 [sst_width] 259
 [signals_width] 429
 [sst_expanded] 1
