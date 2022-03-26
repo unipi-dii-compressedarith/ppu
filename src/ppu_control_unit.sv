@@ -15,7 +15,7 @@ module ppu_control_unit (
         end else begin
             op_prev <= op;
             if (op_prev !== DIV && op === DIV) begin
-                stall <= 1;
+                stall <= 0;  //stall <= 1;
             end else begin
                 stall <= 0;
             end
@@ -33,8 +33,8 @@ module ppu_control_unit (
             valid_in_st3 <= 0;
         end else begin
             valid_in_st0 <= valid_in;
-            valid_in_st1 <= stall == 1'b1 ? valid_in_st1 : valid_in_st0;
-            valid_in_st2 <= stall == 1'b1 ? 1'b0 : valid_in_st1;
+            valid_in_st1 <= valid_in_st0;  // stall == 1'b1 ? valid_in_st1 : valid_in_st0;
+            valid_in_st2 <= valid_in_st1;  // stall == 1'b1 ? 1'b0 : valid_in_st1;
             valid_in_st3 <= valid_in_st2;
         end
     end

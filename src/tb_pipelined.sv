@@ -68,6 +68,20 @@ module tb_pipelined;
             ? "DIV" : 'bz;
     end
 
+    //////////////////////////////////////////////////////////////////
+    integer f;
+    initial f = $fopen("output.log", "w");
+
+    always @(posedge clk) begin
+        if (ppu_valid_in) $fwrite(f, "%h %h %h\n", ppu_in1, ppu_op, ppu_in2);
+    end
+
+    always @(negedge clk) begin
+        if (ppu_valid_o) $fwrite(f, "%h\n", ppu_out);
+    end
+
+    //////////////////////////////////////////////////////////////////
+
 
     initial begin
         `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
@@ -87,16 +101,16 @@ module tb_pipelined;
 
 
         ppu_valid_in = 1;
-        ppu_op = ADD;
+        ppu_op = SUB;
         ppu_in1 = 4;
         ppu_in2 = 0;
         #10;
 
-        // ppu_valid_in = 1;
-        // ppu_op = DIV;
-        // ppu_in1 = 'hcd9d;
-        // ppu_in2 = 'h9ea4;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 'hcd9d;
+        ppu_in2 = 'h9ea4;
+        #10;
 
 
         // ppu_valid_in = 1;
@@ -160,6 +174,7 @@ module tb_pipelined;
 
         #50;
         $finish;
+        $fclose(f);
     end
 
 endmodule

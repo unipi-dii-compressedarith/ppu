@@ -50,7 +50,7 @@ module ppu_core_ops #(
     wire is_special_or_trivial;
     wire [N-1:0] pout_special_or_trivial;
     
-    logic [((N) + 1) -1:0] special_st0, special_st1, special_st2, special_st3;
+    logic [(N+1)-1:0] special_st0, special_st1, special_st2, special_st3;
     input_conditioning #(
         .N(N)
     ) input_conditioning (
@@ -62,8 +62,8 @@ module ppu_core_ops #(
         .special(special_st0)
     );
 
-    assign is_special_or_trivial = special_st3[0];
-    assign pout_special_or_trivial = special_st3 >> 1;
+    assign is_special_or_trivial = special_st2[0]; // special_st3[0];
+    assign pout_special_or_trivial = special_st2 >> 1; // special_st3 >> 1;
 
     logic [FIR_SIZE-1:0] fir1_st0, fir1_st1;
     logic [FIR_SIZE-1:0] fir2_st0, fir2_st1;
@@ -97,6 +97,20 @@ module ppu_core_ops #(
 
     wire [TE_SIZE-1:0] ops_te_out;
     wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
+
+    reg_banks #() reg_banks_inst (
+        .clk(clk),
+        .rst(rst),
+        .fir1_in(fir1_st0),
+        .fir2_in(fir2_st0),
+        .op_in(op_st0),
+        .special_in(special_st0),
+        .stall(stall),
+        .fir1_out(fir1_st1),
+        .fir2_out(fir2_st1),
+        .op_out(op_st1),
+        .special_out(special_st1)
+    );
 
     wire sign_out_ops;
     wire [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_out;
@@ -139,18 +153,10 @@ module ppu_core_ops #(
 
     always @(posedge clk) begin
         if (rst == 1'b1) begin
-            op_st1 <= 'b0;
-            fir1_st1 <= 'b0;
-            fir2_st1 <= 'b0;
-            special_st1 <= 'b0;
             ops_wire_st1 <= 'b0;
             special_st2 <= 'b0;
             special_st3 <= 'b0;
         end else begin
-            op_st1 <= stall ? op_st1 : op_st0;
-            fir1_st1 <= stall ? fir1_st1 : fir1_st0;
-            fir2_st1 <= stall ? fir2_st1 : fir2_st0;
-            special_st1 <= stall ? special_st1 : special_st0;
             ops_wire_st1 <= ops_wire_st0;
             special_st2 <= special_st1;
             special_st3 <= (op_st0 === DIV) ? special_st2 : special_st1;

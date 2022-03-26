@@ -123,14 +123,14 @@ module core_div #(
     assign x1 = mant2_reciprocal >> ((3 * MANT_SIZE - 4) - (2 * MANT_SIZE));
 `endif
 
-    assign mant_div = mant1_st1 * x1;
+    assign mant_div = mant1_st0 * x1; // mant1_st1 * x1;
 
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
 
     assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
-    assign te_out = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
+    assign te_out = mant_div_less_than_one ? te_diff_st0 - 1 : te_diff_st0; // te_diff_st1 - 1 : te_diff_st1;
 
 
     always_ff @(posedge clk) begin
