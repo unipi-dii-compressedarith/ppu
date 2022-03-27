@@ -45,6 +45,8 @@ module ops #(
     );
 
     sign_decisor #() sign_decisor (
+        .clk(clk),
+        .rst(rst),
         .sign1(sign1),
         .sign2(sign2),
         .op(op),

@@ -62,8 +62,8 @@ module ppu_core_ops #(
         .special(special_st0)
     );
 
-    assign is_special_or_trivial = special_st2[0]; // special_st3[0];
-    assign pout_special_or_trivial = special_st2 >> 1; // special_st3 >> 1;
+    assign is_special_or_trivial = special_st3[0];
+    assign pout_special_or_trivial = special_st3 >> 1;
 
     logic [FIR_SIZE-1:0] fir1_st0, fir1_st1;
     logic [FIR_SIZE-1:0] fir2_st0, fir2_st1;
@@ -106,6 +106,7 @@ module ppu_core_ops #(
         .op_in(op_st0),
         .special_in(special_st0),
         .stall(stall),
+        .dealy_op(op_st0 === DIV),
         .fir1_out(fir1_st1),
         .fir2_out(fir2_st1),
         .op_out(op_st1),
@@ -159,7 +160,7 @@ module ppu_core_ops #(
         end else begin
             ops_wire_st1 <= ops_wire_st0;
             special_st2 <= special_st1;
-            special_st3 <= (op_st0 === DIV) ? special_st2 : special_st1;
+            special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
         end
     end
 

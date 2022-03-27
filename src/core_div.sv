@@ -8,7 +8,8 @@ module core_div #(
     input  [             MANT_SIZE-1:0] mant1,
     input  [             MANT_SIZE-1:0] mant2,
     output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
-    output [               TE_SIZE-1:0] te_out
+    output [               TE_SIZE-1:0] te_out,
+    output                              frac_lsb_cut_off
 );
 
     logic [MANT_SIZE-1:0] mant1_st0, mant1_st1;
@@ -123,15 +124,16 @@ module core_div #(
     assign x1 = mant2_reciprocal >> ((3 * MANT_SIZE - 4) - (2 * MANT_SIZE));
 `endif
 
-    assign mant_div = mant1_st0 * x1; // mant1_st1 * x1;
+    assign mant_div = mant1_st1 * x1;
 
 
     wire mant_div_less_than_one;
     assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
 
     assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
-    assign te_out = mant_div_less_than_one ? te_diff_st0 - 1 : te_diff_st0; // te_diff_st1 - 1 : te_diff_st1;
+    assign te_out = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
 
+    assign frac_lsb_cut_off = 1'b0;
 
     always_ff @(posedge clk) begin
         if (rst) begin

@@ -28,10 +28,11 @@ module ppu #(
     ) ppu_control_unit_inst (
         .clk(clk),
         .rst(rst),
-        .valid_in(valid_in),
+        .valid_i(valid_in),
         .op(op),
-        .stall(stall),
-        .valid_o(valid_o)
+        .valid_o(valid_o),
+        .stall_o(stall),
+        .new_div_op_o()
     );
 
 

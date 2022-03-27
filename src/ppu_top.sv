@@ -35,7 +35,7 @@ module ppu_top #(
         .in1(in1_reg),
         .in2(in2_reg),
         .op(op_reg),
-        .out(out_reg),
+        .out(ppu_out),  //.out(out_reg),
         .valid_o(ppu_valid_o)
     );
 
@@ -47,7 +47,7 @@ module ppu_top #(
         in1_reg <= ppu_in1;
         in2_reg <= ppu_in2;
         op_reg  <= ppu_op;
-        ppu_out <= out_reg;
+        // ppu_out <= out_reg;
     end
 
 endmodule

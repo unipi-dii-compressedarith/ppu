@@ -31,7 +31,7 @@ module core_op #(
 
 
     wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;
-    wire frac_lsb_cut_off_add_sub, frac_lsb_cut_off_mul;
+    wire frac_lsb_cut_off_add_sub, frac_lsb_cut_off_mul, frac_lsb_cut_off_div;
 
     core_add_sub #(
         .N(N)
@@ -68,7 +68,8 @@ module core_op #(
         .mant1(mant1),
         .mant2(mant2),
         .mant_out(mant_out_div),
-        .te_out(te_out_div)
+        .te_out(te_out_div),
+        .frac_lsb_cut_off(frac_lsb_cut_off_div)
     );
 
 
@@ -92,7 +93,7 @@ module core_op #(
 
     assign frac_lsb_cut_off = op == MUL
         ? frac_lsb_cut_off_mul : op == DIV
-        ? 1'b0 : /* op == ADD || op == SUB */
+        ? frac_lsb_cut_off_div : /* op == ADD || op == SUB */
           frac_lsb_cut_off_add_sub;
 
 endmodule
