@@ -1,0 +1,49 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Mar 29 16:49:54 2022
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.vcd"
+[dumpfile_mtime] "Tue Mar 29 16:49:00 2022"
+[dumpfile_size] 88389
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.gtkw"
+[timestart] 0
+[size] 2396 1155
+[pos] -1 -1
+*-4.527141 35 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_pipelined.
+[treeopen] tb_pipelined.ppu_top_inst.
+[treeopen] tb_pipelined.ppu_top_inst.ppu_inst.
+[treeopen] tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.
+[treeopen] tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.
+[treeopen] tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.
+[treeopen] tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.
+[sst_width] 193
+[signals_width] 208
+[sst_expanded] 1
+[sst_vpaned_height] 362
+@28
+tb_pipelined.clk
+tb_pipelined.rst
+@820
+[color] 2
+tb_pipelined.op_ascii[300:0]
+@22
+tb_pipelined.ppu_in1[31:0]
+tb_pipelined.ppu_in2[31:0]
+@28
+tb_pipelined.ppu_op[2:0]
+tb_pipelined.ppu_valid_in
+tb_pipelined.ppu_top_inst.ppu_inst.ppu_control_unit_inst.valid
+@200
+-
+@820
+[color] 2
+tb_pipelined.ppu_top_inst.ppu_inst.ppu_control_unit_inst.state_reg[299:0]
+@22
+tb_pipelined.ppu_out[31:0]
+@28
+tb_pipelined.ppu_valid_o
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0

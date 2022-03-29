@@ -146,16 +146,18 @@ module ppu_control_unit (
     end
 
 
-    logic valid_in_st0, valid_in_st1, valid_in_st2;
+    logic valid_in_st0, valid_in_st1, valid_in_st2, valid_in_st3;
     always_ff @(posedge clk) begin
         if (rst) begin
             valid_in_st0 <= 0;
             valid_in_st1 <= 0;
             valid_in_st2 <= 0;
+            valid_in_st3 <= 0;
         end else begin
             valid_in_st0 <= valid;
             valid_in_st1 <= valid_in_st0;
             valid_in_st2 <= valid_in_st1;
+            valid_in_st3 <= valid_in_st2;
         end
     end
 

@@ -37,7 +37,7 @@ for i in range(len(inputs)):
     pa = from_bits(a, N, ES)
     pb = from_bits(b, N, ES)
     pc = from_bits(c, N, ES)
-    print(f"a {op} b", end='\t\t')
+    print(f"{a} {op} {b}{'':<22}", end='')
     match op:
         case '+': 
             print((pa + pb).to_bits(), pc.to_bits())

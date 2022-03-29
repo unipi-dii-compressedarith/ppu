@@ -101,11 +101,11 @@ module tb_pipelined;
 
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = SUB;
-        // ppu_in1 = 4;
-        // ppu_in2 = 0;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 'h41;
+        ppu_in2 = 0;
+        #10;
 
         // ppu_valid_in = 1;
         // ppu_op = DIV;
@@ -114,58 +114,67 @@ module tb_pipelined;
         // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 120;
-        ppu_in2 = 0;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 120;
+        // ppu_in2 = 0;
+        // #10;
 
-        ppu_valid_in = 1;
-        ppu_op = ADD;
-        ppu_in1 = 'h41;
-        ppu_in2 = 123;
-        #12;
-
-
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 4522;
-        ppu_in2 = 12417;
-        #9;
-
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 15;
-        ppu_in2 = 15;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // ppu_in1 = 'h41;
+        // ppu_in2 = 123;
+        // #12;
 
 
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 4;
-        ppu_in2 = (1 << (N - 1));
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4522;
+        // ppu_in2 = 12417;
+        // #9;
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 15;
+        // ppu_in2 = 15;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 4;
-        ppu_in2 = 0;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4;
+        // ppu_in2 = (1 << (N - 1));
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 41;
-        ppu_in2 = 1;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 4;
+        // ppu_in2 = 0;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 42;
-        ppu_in2 = 1;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 41;
+        // ppu_in2 = 1;
+        // #10;
+
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 42;
+        // ppu_in2 = 1;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // ppu_in1 = 422;
+        // ppu_in2 = 0;
+        // #10;
+
+
+
 
         ppu_valid_in = 0;
         ppu_op = 'bz;

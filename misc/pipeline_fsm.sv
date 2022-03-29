@@ -220,9 +220,6 @@ module tb_pipeline_fsm;
         #5;
 
 
-        valid_i = 1;
-        op = ADD;
-        #14;
 
         valid_i = 1;
         op = SUB;
@@ -232,10 +229,40 @@ module tb_pipeline_fsm;
         op = DIV;
         #10;
 
+
         valid_i = 1;
-        op = DIV;
+        op = SUB;
+        #10;
+
+        valid_i = 1;
+        op = ADD;
         #12;
 
+
+        valid_i = 1;
+        op = MUL;
+        #9;
+
+        valid_i = 1;
+        op = DIV;
+        #10;
+
+
+        valid_i = 1;
+        op = MUL;
+        #10;
+
+
+        valid_i = 1;
+        op = SUB;
+        #10;
+
+
+        valid_i = 1;
+        op = DIV;
+        #10;
+
+
         valid_i = 1;
         op = DIV;
         #10;
@@ -244,17 +271,8 @@ module tb_pipeline_fsm;
         op = ADD;
         #10;
 
-        valid_i = 0;
-        op = MUL;
-        #14;
 
-        valid_i = 1;
-        op = SUB;
-        #10;
 
-        valid_i = 1;
-        op = DIV;
-        #10;
 
         op = 'bz;
         valid_i = 0;
