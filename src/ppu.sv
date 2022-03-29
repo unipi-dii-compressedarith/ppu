@@ -31,8 +31,7 @@ module ppu #(
         .valid_i(valid_in),
         .op(op),
         .valid_o(valid_o),
-        .stall_o(stall),
-        .new_div_op_o()
+        .stall_o(stall)
     );
 
 

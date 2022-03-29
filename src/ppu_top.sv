@@ -32,9 +32,9 @@ module ppu_top #(
         .clk(clk),
         .rst(rst),
         .valid_in(ppu_valid_in),
-        .in1(in1_reg),
-        .in2(in2_reg),
-        .op(op_reg),
+        .in1(ppu_in1), // .in1(in1_reg),
+        .in2(ppu_in2), // .in2(in2_reg),
+        .op(ppu_op), // .op(op_reg),
         .out(ppu_out),  //.out(out_reg),
         .valid_o(ppu_valid_o)
     );

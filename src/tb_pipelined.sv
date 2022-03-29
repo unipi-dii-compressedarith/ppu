@@ -1,3 +1,4 @@
+`ifdef TB_PIPELINED
 module tb_pipelined;
     parameter WORD = `WORD;
     parameter N = `N;
@@ -73,11 +74,11 @@ module tb_pipelined;
     initial f = $fopen("output.log", "w");
 
     always @(posedge clk) begin
-        if (ppu_valid_in) $fwrite(f, "%h %h %h\n", ppu_in1, ppu_op, ppu_in2);
+        if (ppu_valid_in) $fwrite(f, "i %h %h %h\n", ppu_in1, ppu_op, ppu_in2);
     end
 
     always @(negedge clk) begin
-        if (ppu_valid_o) $fwrite(f, "%h\n", ppu_out);
+        if (ppu_valid_o) $fwrite(f, "o %h\n", ppu_out);
     end
 
     //////////////////////////////////////////////////////////////////
@@ -119,18 +120,18 @@ module tb_pipelined;
         ppu_in2 = 0;
         #10;
 
-        // ppu_valid_in = 1;
-        // ppu_op = MUL;
-        // ppu_in1 = 41;
-        // ppu_in2 = 157;
-        // #5;
+        ppu_valid_in = 1;
+        ppu_op = ADD;
+        ppu_in1 = 'h41;
+        ppu_in2 = 123;
+        #12;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = MUL;
-        // ppu_in1 = 4522;
-        // ppu_in2 = 12417;
-        // #13;
+        ppu_valid_in = 1;
+        ppu_op = MUL;
+        ppu_in1 = 4522;
+        ppu_in2 = 12417;
+        #9;
 
         ppu_valid_in = 1;
         ppu_op = DIV;
@@ -139,32 +140,32 @@ module tb_pipelined;
         #10;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = MUL;
-        // ppu_in1 = 4;
-        // ppu_in2 = (1 << (N - 1));
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = MUL;
+        ppu_in1 = 4;
+        ppu_in2 = (1 << (N - 1));
+        #10;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = SUB;
-        // ppu_in1 = 4;
-        // ppu_in2 = 0;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = SUB;
+        ppu_in1 = 4;
+        ppu_in2 = 0;
+        #10;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = DIV;
-        // ppu_in1 = 41;
-        // ppu_in2 = 1;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 41;
+        ppu_in2 = 1;
+        #10;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = DIV;
-        // ppu_in1 = 42;
-        // ppu_in2 = 1;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 42;
+        ppu_in2 = 1;
+        #10;
 
         ppu_valid_in = 0;
         ppu_op = 'bz;
@@ -178,3 +179,4 @@ module tb_pipelined;
     end
 
 endmodule
+`endif

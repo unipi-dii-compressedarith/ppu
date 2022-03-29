@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Mar 29 11:24:30 2022
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/tb_pipeline_fsm.vcd"
+[dumpfile_mtime] "Tue Mar 29 11:11:45 2022"
+[dumpfile_size] 1635
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/tb_pipeline_fsm.gtkw"
+[timestart] 0
+[size] 2371 930
+[pos] -42 0
+*-4.391249 49 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_pipeline_fsm.
+[sst_width] 193
+[signals_width] 217
+[sst_expanded] 1
+[sst_vpaned_height] 282
+@28
+tb_pipeline_fsm.tb_pipeline_fsm.clk
+tb_pipeline_fsm.tb_pipeline_fsm.rst
+tb_pipeline_fsm.tb_pipeline_fsm.op[2:0]
+@29
+tb_pipeline_fsm.tb_pipeline_fsm.valid_i
+@200
+-
+@820
+[color] 2
+tb_pipeline_fsm.tb_pipeline_fsm.state_reg[299:0]
+@28
+tb_pipeline_fsm.tb_pipeline_fsm.valid
+@200
+-
+@28
+tb_pipeline_fsm.tb_pipeline_fsm.stall_o
+tb_pipeline_fsm.tb_pipeline_fsm.valid_o
+[pattern_trace] 1
+[pattern_trace] 0
