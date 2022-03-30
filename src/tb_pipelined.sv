@@ -100,31 +100,49 @@ module tb_pipelined;
         #20;
 
 
+        ppu_valid_in = 1;
+        ppu_op = ADD;
+        ppu_in1 = 12;
+        ppu_in2 = 13;
+        #10;
 
         ppu_valid_in = 1;
         ppu_op = DIV;
-        ppu_in1 = 'h41;
+        ppu_in1 = 'hcd9d;
+        ppu_in2 = 2;
+        #12;
+
+        ppu_valid_in = 0;
+        ppu_op = 'hz;
+        ppu_in1 = 'hz;
+        ppu_in2 = 'hz;
+        #10;
+
+        ppu_valid_in = 1;
+        ppu_op = ADD;
+        ppu_in1 = 'h71a0;
+        ppu_in2 = 'h2c66;
+        #10;
+
+
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 120;
         ppu_in2 = 0;
         #10;
 
-        // ppu_valid_in = 1;
-        // ppu_op = DIV;
-        // ppu_in1 = 'h71a0;
-        // ppu_in2 = 'h2c66;
-        // #10;
+        ppu_valid_in = 0;
+        ppu_op = 'hz;
+        ppu_in1 = 'hz;
+        ppu_in2 = 'hz;
+        #10;
 
 
-        // ppu_valid_in = 1;
-        // ppu_op = SUB;
-        // ppu_in1 = 120;
-        // ppu_in2 = 0;
-        // #10;
-
-        // ppu_valid_in = 1;
-        // ppu_op = ADD;
-        // ppu_in1 = 'h41;
-        // ppu_in2 = 123;
-        // #12;
+        ppu_valid_in = 1;
+        ppu_op = ADD;
+        ppu_in1 = 'h41;
+        ppu_in2 = 123;
+        #12;
 
 
         // ppu_valid_in = 1;
@@ -133,16 +151,16 @@ module tb_pipelined;
         // ppu_in2 = 12417;
         // #9;
 
-        // ppu_valid_in = 1;
-        // ppu_op = DIV;
-        // ppu_in1 = 15;
-        // ppu_in2 = 15;
-        // #10;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 15;
+        ppu_in2 = 15;
+        #10;
 
 
         // ppu_valid_in = 1;
         // ppu_op = MUL;
-        // ppu_in1 = 4;
+        // ppu_in1 = 6;
         // ppu_in2 = (1 << (N - 1));
         // #10;
 
@@ -164,7 +182,7 @@ module tb_pipelined;
         // ppu_valid_in = 1;
         // ppu_op = DIV;
         // ppu_in1 = 42;
-        // ppu_in2 = 1;
+        // ppu_in2 = 16;
         // #10;
 
         // ppu_valid_in = 1;

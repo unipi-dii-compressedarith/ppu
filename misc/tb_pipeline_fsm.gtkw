@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Tue Mar 29 11:24:30 2022
+[*] Wed Mar 30 08:32:57 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/tb_pipeline_fsm.vcd"
-[dumpfile_mtime] "Tue Mar 29 11:11:45 2022"
-[dumpfile_size] 1635
+[dumpfile_mtime] "Wed Mar 30 08:30:20 2022"
+[dumpfile_size] 1564
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/misc/tb_pipeline_fsm.gtkw"
 [timestart] 0
-[size] 2371 930
-[pos] -42 0
-*-4.391249 49 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1440 847
+[pos] -1 -1
+*-5.193981 25 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_pipeline_fsm.
 [sst_width] 193
-[signals_width] 217
+[signals_width] 202
 [sst_expanded] 1
-[sst_vpaned_height] 282
+[sst_vpaned_height] 253
 @28
 tb_pipeline_fsm.tb_pipeline_fsm.clk
 tb_pipeline_fsm.tb_pipeline_fsm.rst

@@ -21,8 +21,7 @@ module pipeline_fsm (
     input                      valid_i,
     input        [OP_SIZE-1:0] op,
     output                     valid_o,
-    output logic               stall_o,
-    output logic               new_div_op_o
+    output logic               stall_o
 );
 
     logic valid;
@@ -35,8 +34,6 @@ module pipeline_fsm (
     localparam DIV_1 = "DIV_1";
     localparam DIV_2 = "DIV_2";
     localparam S1 = "S1";
-    localparam S2 = "S2";
-    localparam _TMP = "_TMP";
 `else
     reg [(4)-1:0] state_reg;
     localparam INIT = 0;
@@ -44,8 +41,6 @@ module pipeline_fsm (
     localparam DIV_1 = 2;
     localparam DIV_2 = 3;
     localparam S1 = 4;
-    localparam S2 = 5;
-    localparam _TMP = 6;
 `endif
 
 
@@ -53,9 +48,6 @@ module pipeline_fsm (
 
     always_ff @(posedge clk) begin
         if (rst) begin
-            stall_o <= 0;
-            valid <= 0;
-
             state_reg <= INIT;
         end else begin
             case (state_reg)
@@ -78,35 +70,27 @@ module pipeline_fsm (
                     end
                 end
                 DIV_1: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= S1;
-                    end else if (valid_i && __op === DIV) begin
+                    if (valid_i && __op === DIV) begin
                         state_reg <= DIV_2;
                     end else begin  /* !valid_i */
-                        state_reg <= _TMP;
+                        state_reg <= S1;
                     end
                 end
                 DIV_2: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= S1;
-                    end else if (valid_i && __op === DIV) begin
+                    if (valid_i && __op === DIV) begin
                         state_reg <= DIV_2;
                     end else begin  /* !valid_i */
-                        state_reg <= _TMP;
+                        state_reg <= S1;
                     end
                 end
                 S1: begin
-                    if (valid_i && (__op !== DIV)) begin
-                        state_reg <= S2;
-                    end else begin
+                    if (valid_i && (__op === ADD || __op === SUB || __op === MUL)) begin
                         state_reg <= OP;
+                    end else if (valid_i && __op === DIV) begin
+                        state_reg <= DIV_1;
+                    end else begin  /* !valid_i */
+                        state_reg <= INIT;
                     end
-                end
-                S2: begin
-                    state_reg <= OP;
-                end
-                _TMP: begin
-                    state_reg <= INIT;
                 end
                 default: begin
                     state_reg <= state_reg;
@@ -139,14 +123,6 @@ module pipeline_fsm (
                 stall_o = 1;
                 valid   = 1;  //& valid_i;
             end
-            S2: begin
-                stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
-            _TMP: begin
-                stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
             default: begin
                 stall_o = 0;
                 valid   = 0;
@@ -177,10 +153,11 @@ endmodule
 `ifdef TB_PIPELINE_FSM
 module tb_pipeline_fsm;
 
-
     reg                clk;
     reg                rst;
+    reg                ppu_valid_in;
     reg                valid_i;
+    reg  [OP_SIZE-1:0] ppu_op;
     reg  [OP_SIZE-1:0] op;
     wire               valid_o;
     wire               stall_o;
@@ -190,8 +167,8 @@ module tb_pipeline_fsm;
     pipeline_fsm tb_pipeline_fsm (
         .clk(clk),
         .rst(rst),
-        .valid_i(valid_i),
-        .op(op),
+        .valid_i(ppu_valid_in),
+        .op(ppu_op),
         .valid_o(valid_o),
         .stall_o(stall_o)
     );
@@ -213,69 +190,77 @@ module tb_pipeline_fsm;
     localparam DEL = 10;
     initial begin
         rst = 1;
-        op = 'hz;
-        valid_i = 0;
+        ppu_op = 'hz;
+        ppu_valid_in = 0;
         #12;
         rst = 0;
         #5;
 
 
 
-        valid_i = 1;
-        op = SUB;
+        ppu_valid_in = 1;
+        ppu_op = ADD;
         #10;
 
-        valid_i = 1;
-        op = DIV;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        #10;
+
+        ppu_valid_in = 0;
+        ppu_op = 'hz;
         #10;
 
 
-        valid_i = 1;
-        op = SUB;
+        ppu_valid_in = 1;
+        ppu_op = SUB;
         #10;
 
-        valid_i = 1;
-        op = ADD;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
         #12;
 
+        ppu_valid_in = 0;
+        ppu_op = 'hz;
+        #10;
 
-        valid_i = 1;
-        op = MUL;
+
+        ppu_valid_in = 1;
+        ppu_op = MUL;
         #9;
 
-        valid_i = 1;
-        op = DIV;
+        ppu_valid_in = 1;
+        ppu_op = DIV;
         #10;
 
 
-        valid_i = 1;
-        op = MUL;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // #10;
 
 
-        valid_i = 1;
-        op = SUB;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // #10;
 
 
-        valid_i = 1;
-        op = DIV;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // #10;
 
 
-        valid_i = 1;
-        op = DIV;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // #10;
 
-        valid_i = 1;
-        op = ADD;
-        #10;
-
-
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // #10;
 
 
-        op = 'bz;
-        valid_i = 0;
+
+
+        ppu_op = 'bz;
+        ppu_valid_in = 0;
 
         #100;
         $finish;

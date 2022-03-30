@@ -45,6 +45,17 @@ or
 gtkwave -S gtkwave.tcl waveforms/tb_ppu_P16E1.vcd # [3]
 ```
 
+---
+## Pipelined-PPU
+
+```sh
+make tb_pipelined WORD=32 N=16 ES=1 F=0
+gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw 
+```
+
+
+
+
 
 ### cli tools
 

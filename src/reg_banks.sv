@@ -1,8 +1,8 @@
 module reg_banks (
     input                clk,
     input                rst,
-    input                stall,
-    input                dealy_op,   // for division
+    input                stall_i,
+    input                delay_op,   // for division
     input [FIR_SIZE-1:0] fir1_in,
     input [FIR_SIZE-1:0] fir2_in,
     input [ OP_SIZE-1:0] op_in,
@@ -24,11 +24,11 @@ module reg_banks (
             op_out <= 0;
             special_out <= 0;
         end else begin
-            fir1_out <= stall ? fir1_out : fir1_in;
-            fir2_out <= stall ? fir2_out : fir2_in;
-            op_intermediate <= stall ? op_intermediate : op_in;
-            op_out <= dealy_op ? (stall ? op_intermediate : op_in) : op_intermediate;
-            special_out <= stall ? special_out : special_in;
+            fir1_out <= stall_i ? fir1_out : fir1_in;
+            fir2_out <= stall_i ? fir2_out : fir2_in;
+            op_intermediate <= stall_i ? op_intermediate : op_in;
+            op_out <= delay_op ? (stall_i ? op_intermediate : op_in) : op_intermediate;
+            special_out <= stall_i ? special_out : special_in;
         end
     end
 endmodule

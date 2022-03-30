@@ -10,15 +10,13 @@ module ppu_control_unit (
     logic valid;
 
 
-`ifdef TB_PPU_CONTROL_UNIT
+`ifdef TB_PIPELINE_FSM
     reg [(300)-1:0] state_reg = 'hz;
     localparam INIT = "INIT";
     localparam OP = "OP";
     localparam DIV_1 = "DIV_1";
     localparam DIV_2 = "DIV_2";
     localparam S1 = "S1";
-    localparam S2 = "S2";
-    localparam _TMP = "_TMP";
 `elsif TB_PIPELINED
     reg [(300)-1:0] state_reg = 'hz;
     localparam INIT = "INIT";
@@ -26,17 +24,13 @@ module ppu_control_unit (
     localparam DIV_1 = "DIV_1";
     localparam DIV_2 = "DIV_2";
     localparam S1 = "S1";
-    localparam S2 = "S2";
-    localparam _TMP = "_TMP";
 `else
-    reg [(4)-1:0] state_reg = INIT;
+    reg [(4)-1:0] state_reg;
     localparam INIT = 0;
     localparam OP = 1;
     localparam DIV_1 = 2;
     localparam DIV_2 = 3;
     localparam S1 = 4;
-    localparam S2 = 5;
-    localparam _TMP = 6;
 `endif
 
 
@@ -44,9 +38,6 @@ module ppu_control_unit (
 
     always_ff @(posedge clk) begin
         if (rst) begin
-            stall_o <= 0;
-            valid <= 0;
-
             state_reg <= INIT;
         end else begin
             case (state_reg)
@@ -69,35 +60,27 @@ module ppu_control_unit (
                     end
                 end
                 DIV_1: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= S1;
-                    end else if (valid_i && __op === DIV) begin
+                    if (valid_i && __op === DIV) begin
                         state_reg <= DIV_2;
                     end else begin  /* !valid_i */
-                        state_reg <= _TMP;
+                        state_reg <= S1;
                     end
                 end
                 DIV_2: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= S1;
-                    end else if (valid_i && __op === DIV) begin
+                    if (valid_i && __op === DIV) begin
                         state_reg <= DIV_2;
                     end else begin  /* !valid_i */
-                        state_reg <= _TMP;
+                        state_reg <= S1;
                     end
                 end
                 S1: begin
-                    if (valid_i && (__op !== DIV)) begin
-                        state_reg <= S2;
-                    end else begin
+                    if (valid_i && (__op === ADD || __op === SUB || __op === MUL)) begin
                         state_reg <= OP;
+                    end else if (valid_i && __op === DIV) begin
+                        state_reg <= DIV_1;
+                    end else begin  /* !valid_i */
+                        state_reg <= INIT;
                     end
-                end
-                S2: begin
-                    state_reg <= OP;
-                end
-                _TMP: begin
-                    state_reg <= INIT;
                 end
                 default: begin
                     state_reg <= state_reg;
@@ -130,14 +113,6 @@ module ppu_control_unit (
                 stall_o = 1;
                 valid   = 1;  //& valid_i;
             end
-            S2: begin
-                stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
-            _TMP: begin
-                stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
             default: begin
                 stall_o = 0;
                 valid   = 0;
@@ -146,31 +121,19 @@ module ppu_control_unit (
     end
 
 
-    logic valid_in_st0, valid_in_st1, valid_in_st2, valid_in_st3;
+    logic valid_in_st0, valid_in_st1, valid_in_st2;
     always_ff @(posedge clk) begin
         if (rst) begin
             valid_in_st0 <= 0;
             valid_in_st1 <= 0;
             valid_in_st2 <= 0;
-            valid_in_st3 <= 0;
         end else begin
             valid_in_st0 <= valid;
             valid_in_st1 <= valid_in_st0;
             valid_in_st2 <= valid_in_st1;
-            valid_in_st3 <= valid_in_st2;
         end
     end
 
-    assign valid_o = valid_in_st0;
-
-
-    logic [OP_SIZE-1:0] op_st0;
-    always_ff @(posedge clk) begin
-        if (rst) begin
-            op_st0 <= 0;
-        end else begin
-            op_st0 <= op;
-        end
-    end
+    assign valid_o = valid_in_st1;
 
 endmodule
