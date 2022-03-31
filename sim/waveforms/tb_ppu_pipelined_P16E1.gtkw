@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Thu Mar 31 16:10:42 2022
+[*] Thu Mar 31 21:34:47 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.vcd"
-[dumpfile_mtime] "Thu Mar 31 16:07:10 2022"
-[dumpfile_size] 894335
+[dumpfile_mtime] "Thu Mar 31 21:32:55 2022"
+[dumpfile_size] 8078024
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.gtkw"
-[timestart] 74
+[timestart] 0
 [size] 1440 847
 [pos] -1 -1
-*-5.891106 206 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-5.127096 47 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_pipelined.
 [treeopen] tb_pipelined.ppu_top_inst.
 [treeopen] tb_pipelined.ppu_top_inst.ppu_inst.
@@ -42,17 +42,5 @@ tb_pipelined.ppu_out[31:0]
 tb_pipelined.ppu_valid_o
 @200
 -
-@22
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.fir1[21:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.fir2[21:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_mul_inst.mant1[13:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_mul_inst.mant2[13:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_mul_inst.mant_out[27:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_add_sub_inst.te_diff_st0[6:0]
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_add_sub_inst.te_diff_st1[6:0]
-@23
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_add_sub_inst.mant_sum_st0[28:0]
-@22
-tb_pipelined.ppu_top_inst.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_add_sub_inst.mant_sum_st1[28:0]
 [pattern_trace] 1
 [pattern_trace] 0

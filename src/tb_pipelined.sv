@@ -101,6 +101,12 @@ module tb_pipelined;
 
 
         ppu_valid_in = 1;
+        ppu_op = SUB;
+        ppu_in1 = 250;
+        ppu_in2 = 34;
+        #10;
+
+        ppu_valid_in = 1;
         ppu_op = ADD;
         ppu_in1 = 12;
         ppu_in2 = 13;
@@ -112,11 +118,6 @@ module tb_pipelined;
         ppu_in2 = 0;
         #10;
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 'hcd9d;
-        ppu_in2 = 2;
-        #12;
 
         ppu_valid_in = 0;
         ppu_op = ADD;
@@ -130,19 +131,6 @@ module tb_pipelined;
         ppu_in1 = 120;
         ppu_in2 = 0;
         #10;
-
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 1210;
-        ppu_in2 = 4;
-        #10;
-
-        ppu_valid_in = 1;
-        ppu_op = ADD;
-        ppu_in1 = 'h41;
-        ppu_in2 = 123;
-        #12;
-
 
         ppu_valid_in = 1;
         ppu_op = MUL;
@@ -201,6 +189,12 @@ module tb_pipelined;
         //////////////////////////////////////////////
 
         
+        
+        ppu_valid_in = 1;
+        ppu_op = SUB;
+        ppu_in1 = 334;
+        ppu_in2 = 28;
+        #10;
 
         `include "../test_vectors/tv_pipelined.sv"
 

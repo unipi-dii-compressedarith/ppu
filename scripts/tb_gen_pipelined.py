@@ -14,7 +14,7 @@ ops = {
 }
 
 c = ""
-for i in range(200):
+for i in range(2000):
     valid_in = int(random.random() > 0.2)  # 80% of the time
     op = ops[int(random.random() * 4)]  # ops equally distributed
     in1 = int(random.random() * 423)

@@ -77,4 +77,4 @@ if err != 0:
     print(err_log)
 
 
-print("[ OK ]" if err == 0 else f"[ {err}/{len(inputs)} FAILING ]")
+print("[ OK ]" if err == 0 else f"[ FAILING ] ({err}/{len(inputs)} = {100*err/len(inputs):.4g}%)")
