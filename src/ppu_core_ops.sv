@@ -160,7 +160,7 @@ module ppu_core_ops #(
         end else begin
             ops_wire_st1 <= ops_wire_st0;
             special_st2 <= special_st1;
-            special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
+            special_st3 <= special_st2; // special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
         end
     end
 

@@ -27,6 +27,8 @@ outputs = []
 for match in re.compile(REGEX_OUTPUT).finditer(content):
     outputs.append(match.group(1))
 
+err_log = ""
+err = 0
 
 for i in range(len(inputs)):
     a = int(inputs[i][0], 16)
@@ -37,15 +39,24 @@ for i in range(len(inputs)):
     pa = from_bits(a, N, ES)
     pb = from_bits(b, N, ES)
     pc = from_bits(c, N, ES)
-    print(f"{a} {op} {b}{'':<22}", end='')
+    err_log += f"{a} {op} {b}{'':<22} "
     match op:
         case '+': 
-            print((pa + pb).to_bits(), pc.to_bits())
+            err_log += f"({(pa + pb).to_bits()}, {pc.to_bits()}) \n"
+            err += (pa + pb).to_bits() != pc.to_bits()
         case '-': 
-            print((pa - pb).to_bits(), pc.to_bits())
+            err_log += f"({(pa - pb).to_bits()}, {pc.to_bits()}) \n"
+            err += (pa - pb).to_bits() != pc.to_bits()
         case '*': 
-            print((pa * pb).to_bits(), pc.to_bits())
+            err_log += f"({(pa * pb).to_bits()}, {pc.to_bits()}) \n"
+            err += (pa * pb).to_bits() != pc.to_bits()
         case '/': 
-            print((pa / pb).to_bits(), pc.to_bits())
+            err_log += f"({(pa / pb).to_bits()}, {pc.to_bits()}) \n"
+            err += (pa / pb).to_bits() != pc.to_bits()
         case _: 
             raise Exception()
+
+print("[ OK ]" if err == 0 else "[ FAILING ]")
+
+if err != 0:
+    print(err_log)

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Mar 27 19:43:15 2022
+[*] Thu Mar 31 12:23:21 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_P16E1.vcd"
-[dumpfile_mtime] "Sun Mar 27 19:40:27 2022"
-[dumpfile_size] 512895
+[dumpfile_mtime] "Thu Mar 31 12:22:59 2022"
+[dumpfile_size] 521183
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_P16E1.gtkw"
-[timestart] 1193
+[timestart] 1
 [size] 2560 1412
 [pos] -1 -1
-*-4.956879 1350 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.751507 1350 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [treeopen] tb_ppu.ppu_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.
@@ -35,6 +35,16 @@ tb_ppu.ppu_inst.posit[15:0]
 @28
 tb_ppu.ppu_inst.rst
 tb_ppu.ppu_inst.stall
+tb_ppu.ppu_inst.ppu_control_unit_inst.stall_o
+tb_ppu.ppu_inst.ppu_control_unit_inst.valid_i
+tb_ppu.ppu_inst.ppu_control_unit_inst.valid
+tb_ppu.ppu_inst.ppu_control_unit_inst.clk
+tb_ppu.ppu_inst.ppu_control_unit_inst.rst
+tb_ppu.ppu_inst.ppu_control_unit_inst.stall_o
+@29
+tb_ppu.ppu_inst.ppu_control_unit_inst.state_reg
+@28
+tb_ppu.ppu_inst.ppu_control_unit_inst.valid_o
 tb_ppu.ppu_inst.valid_in
 tb_ppu.ppu_inst.valid_o
 @22
@@ -49,7 +59,7 @@ tb_ppu.ppu_inst.ppu_core_ops_inst.ops_wire_st0[48:0]
 tb_ppu.diff_out_ground_truth
 @22
 tb_ppu.ppu_inst.posit[15:0]
-@29
+@28
 tb_ppu.ppu_inst.valid_o
 [pattern_trace] 1
 [pattern_trace] 0

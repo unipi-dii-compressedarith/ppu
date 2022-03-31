@@ -7,11 +7,7 @@ module sign_decisor (
     output               sign
 );
 
-    assign sign = 
-        (op == ADD || op == SUB) 
-        ? sign1 : op == MUL 
-        ? sign1 ^ sign2 : /* op == DIV */
-          sign1_reg ^ sign2_reg;
+    assign sign = sign1_reg ^ sign2_reg; // delayed by 1 cycle just like the 4 operations underneath.
 
 
     logic sign1_reg, sign2_reg;

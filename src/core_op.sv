@@ -36,6 +36,8 @@ module core_op #(
     core_add_sub #(
         .N(N)
     ) core_add_sub_inst (
+        .clk(clk),
+        .rst(rst),
         .te1_in(te1),
         .te2_in(te2),
         .mant1_in(mant1),
@@ -49,6 +51,8 @@ module core_op #(
     core_mul #(
         .N(N)
     ) core_mul_inst (
+        .clk(clk),
+        .rst(rst),
         .te1(te1),
         .te2(te2),
         .mant1(mant1),

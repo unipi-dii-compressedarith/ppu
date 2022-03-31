@@ -24,6 +24,9 @@ module ppu #(
     );
 
     wire stall;
+
+`define USE_PPU_CONTROL_UNIT
+`ifdef USE_PPU_CONTROL_UNIT
     ppu_control_unit #(
     ) ppu_control_unit_inst (
         .clk(clk),
@@ -33,6 +36,7 @@ module ppu #(
         .valid_o(valid_o),
         .stall_o(stall)
     );
+`endif
 
 
     wire [N-1:0] p1, p2, posit;

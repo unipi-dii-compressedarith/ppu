@@ -79,7 +79,7 @@ module tb_comparison_against_pacogen;
     );
 
 
-    always_comb @(*) begin
+    always @(*) begin
         diff_pout_ppu_core_ops = pout_ppu_core_ops === out_ground_truth ? 0 : 1'bx;
         diff_pout_pacogen = pout_pacogen === out_ground_truth ? 0 : 1'bx;
         ppu_core_ops_off_by_1 = abs(pout_ppu_core_ops - out_ground_truth) == 0 ? 0 :

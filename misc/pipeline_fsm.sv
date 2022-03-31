@@ -1,4 +1,6 @@
 /*
+[see `pipeline_fsm.pdf` in this folder]
+
 iverilog -g2012 -DTB_PIPELINE_FSM pipeline_fsm.sv && ./a.out
 */
 

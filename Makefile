@@ -95,6 +95,7 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/highest_set.sv \
 	$(SRC_DIR)/ppu_control_unit.sv \
 	$(SRC_DIR)/reg_banks.sv \
+	$(SRC_DIR)/pp_mul.sv \
 	$(SRC_CONVERSIONS_PPU)
 
 SRC_DIV_AGAINST_PACOGEN := \

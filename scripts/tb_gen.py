@@ -167,10 +167,10 @@ def func(c, op, list_a, list_b):
         # adding N_CYCLES_DEL cycle delay
         if op == Tb.PACOGEN:
             pass
-        elif op == Tb.DIV:
+        elif op == Tb.ADD or op == Tb.SUB or op == Tb.MUL or op == Tb.DIV:
             c += f"#{10 * 3};\n\t"
         else:
-            c += f"#{10 * 2};\n\t"
+            raise Exception()
 
         c += (
             f"{'out_ground_truth ='.ljust(LJUST)} {N}'h{pout.to_hex(prefix=False)};\n\t"

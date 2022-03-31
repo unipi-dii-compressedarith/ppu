@@ -1,3 +1,7 @@
+/*
+also checkout the ~prototype~ at `$ROOT/misc/pipeline_fsm.sv`
+*/
+
 module ppu_control_unit (
     input                      clk,
     input                      rst,
@@ -13,24 +17,15 @@ module ppu_control_unit (
 `ifdef TB_PIPELINE_FSM
     reg [(300)-1:0] state_reg = 'hz;
     localparam INIT = "INIT";
-    localparam OP = "OP";
-    localparam DIV_1 = "DIV_1";
-    localparam DIV_2 = "DIV_2";
-    localparam S1 = "S1";
+    localparam ANY_OP = "ANY_OP";
 `elsif TB_PIPELINED
     reg [(300)-1:0] state_reg = 'hz;
     localparam INIT = "INIT";
-    localparam OP = "OP";
-    localparam DIV_1 = "DIV_1";
-    localparam DIV_2 = "DIV_2";
-    localparam S1 = "S1";
+    localparam ANY_OP = "ANY_OP";
 `else
-    reg [(4)-1:0] state_reg;
+    reg [(1)-1:0] state_reg = INIT;
     localparam INIT = 0;
-    localparam OP = 1;
-    localparam DIV_1 = 2;
-    localparam DIV_2 = 3;
-    localparam S1 = 4;
+    localparam ANY_OP = 1;
 `endif
 
 
@@ -42,42 +37,15 @@ module ppu_control_unit (
         end else begin
             case (state_reg)
                 INIT: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= OP;
-                    end else if (valid_i && __op === DIV) begin
-                        state_reg <= DIV_1;
+                    if (valid_i) begin
+                        state_reg <= ANY_OP;
                     end else begin  /* !valid_i */
                         state_reg <= INIT;
                     end
                 end
-                OP: begin
-                    if (valid_i && (__op === ADD || __op === MUL || __op === SUB)) begin
-                        state_reg <= OP;
-                    end else if (valid_i && __op === DIV) begin
-                        state_reg <= DIV_1;
-                    end else begin  /* !valid_i */
-                        state_reg <= INIT;
-                    end
-                end
-                DIV_1: begin
-                    if (valid_i && __op === DIV) begin
-                        state_reg <= DIV_2;
-                    end else begin  /* !valid_i */
-                        state_reg <= S1;
-                    end
-                end
-                DIV_2: begin
-                    if (valid_i && __op === DIV) begin
-                        state_reg <= DIV_2;
-                    end else begin  /* !valid_i */
-                        state_reg <= S1;
-                    end
-                end
-                S1: begin
-                    if (valid_i && (__op === ADD || __op === SUB || __op === MUL)) begin
-                        state_reg <= OP;
-                    end else if (valid_i && __op === DIV) begin
-                        state_reg <= DIV_1;
+                ANY_OP: begin
+                    if (valid_i) begin
+                        state_reg <= ANY_OP;
                     end else begin  /* !valid_i */
                         state_reg <= INIT;
                     end
@@ -97,21 +65,9 @@ module ppu_control_unit (
                 stall_o = 0;
                 valid   = 0;
             end
-            OP: begin
+            ANY_OP: begin
                 stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
-            DIV_1: begin
-                stall_o = 0;
-                valid   = 0;
-            end
-            DIV_2: begin
-                stall_o = 0;
-                valid   = 1;  //& valid_i;
-            end
-            S1: begin
-                stall_o = 1;
-                valid   = 1;  //& valid_i;
+                valid   = 1;
             end
             default: begin
                 stall_o = 0;
