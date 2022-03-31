@@ -175,6 +175,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	make lint
 
 tb_pipelined:
+	python $(SCRIPTS_DIR)/tb_gen_pipelined.py > $(SIM_DIR)/test_vectors/tv_pipelined.sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
 	-DTB_PIPELINED \

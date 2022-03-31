@@ -158,6 +158,8 @@ module tb_ppu;
     reg [OP_SIZE-1:0] op;
     reg [ASCII_SIZE:0] op_ascii;
     wire [WORD-1:0] out;
+    wire                      valid_o;
+
 
     reg [ASCII_SIZE:0] in1_ascii, in2_ascii, out_ascii, out_gt_ascii;
 
@@ -190,7 +192,8 @@ module tb_ppu;
         .in1(in1),
         .in2(in2),
         .op(op),
-        .out(out)
+        .out(out),
+        .valid_o(valid_o)
     );
 
     initial clk = 0;
@@ -207,12 +210,28 @@ module tb_ppu;
     end
 
 
+    //////////////////////////////////////////////////////////////////
+    ////// log to file //////
+    integer f;
+    initial f = $fopen("ppu_output.log", "w");
+
+    always @(posedge clk) begin
+        if (valid_in) $fwrite(f, "i %h %h %h\n", in1, op, in2);
+    end
+
+    always @(negedge clk) begin
+        if (valid_o) $fwrite(f, "o %h\n", out);
+    end
+    //////////////////////////////////////////////////////////////////
+
     initial begin
 
         $dumpfile({"tb_ppu_P",`STRINGIFY(`N),"E",`STRINGIFY(`ES),".vcd"});
         $dumpvars(0, tb_ppu);
+        #7;
 
         valid_in = 1;
+        
 
         if (N == 4 && ES == 0) begin
             `include "../test_vectors/tv_posit_ppu_P4E0.sv"

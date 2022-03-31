@@ -9,10 +9,10 @@ with open(Path("../sim/waveforms/output.log"), "r") as f:
 
 
 ops = {
-    0: '+',
-    1: '-',
-    2: '*',
-    3: '/',
+    0: "+",
+    1: "-",
+    2: "*",
+    3: "/",
 }
 
 REGEX_INPUT = r"i (\w+) (\d) (\w+)"
@@ -39,24 +39,42 @@ for i in range(len(inputs)):
     pa = from_bits(a, N, ES)
     pb = from_bits(b, N, ES)
     pc = from_bits(c, N, ES)
-    err_log += f"{a} {op} {b}{'':<22} "
+
     match op:
-        case '+': 
-            err_log += f"({(pa + pb).to_bits()}, {pc.to_bits()}) \n"
-            err += (pa + pb).to_bits() != pc.to_bits()
-        case '-': 
-            err_log += f"({(pa - pb).to_bits()}, {pc.to_bits()}) \n"
-            err += (pa - pb).to_bits() != pc.to_bits()
-        case '*': 
-            err_log += f"({(pa * pb).to_bits()}, {pc.to_bits()}) \n"
-            err += (pa * pb).to_bits() != pc.to_bits()
-        case '/': 
-            err_log += f"({(pa / pb).to_bits()}, {pc.to_bits()}) \n"
-            err += (pa / pb).to_bits() != pc.to_bits()
-        case _: 
+        case "+":
+            is_same = (pa + pb).to_bits() == pc.to_bits()
+            if not is_same:
+                err_log += (
+                    f"{a} {op} {b}       ({(pa + pb).to_bits()}, {pc.to_bits()}) \n"
+                )
+            err += (not is_same).real
+        case "-":
+            is_same = (pa - pb).to_bits() == pc.to_bits()
+            if not is_same:
+                err_log += (
+                    f"{a} {op} {b}       ({(pa - pb).to_bits()}, {pc.to_bits()}) \n"
+                )
+            err += (not is_same).real
+        case "*":
+            is_same = (pa * pb).to_bits() == pc.to_bits()
+            if not is_same:
+                err_log += (
+                    f"{a} {op} {b}       ({(pa * pb).to_bits()}, {pc.to_bits()}) \n"
+                )
+            err += (not is_same).real
+        case "/":
+            is_same = (pa / pb).to_bits() == pc.to_bits()
+            if not is_same:
+                err_log += (
+                    f"{a} {op} {b}       ({(pa / pb).to_bits()}, {pc.to_bits()}) \n"
+                )
+            err += (not is_same).real
+        case _:
             raise Exception()
 
-print("[ OK ]" if err == 0 else "[ FAILING ]")
 
 if err != 0:
     print(err_log)
+
+
+print("[ OK ]" if err == 0 else f"[ {err}/{len(inputs)} FAILING ]")

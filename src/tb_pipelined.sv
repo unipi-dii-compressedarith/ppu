@@ -70,6 +70,7 @@ module tb_pipelined;
     end
 
     //////////////////////////////////////////////////////////////////
+    ////// log to file //////
     integer f;
     initial f = $fopen("output.log", "w");
 
@@ -80,7 +81,6 @@ module tb_pipelined;
     always @(negedge clk) begin
         if (ppu_valid_o) $fwrite(f, "o %h\n", ppu_out);
     end
-
     //////////////////////////////////////////////////////////////////
 
 
@@ -107,12 +107,18 @@ module tb_pipelined;
         #10;
 
         ppu_valid_in = 1;
+        ppu_op = ADD;
+        ppu_in1 = 12;
+        ppu_in2 = 0;
+        #10;
+
+        ppu_valid_in = 1;
         ppu_op = DIV;
         ppu_in1 = 'hcd9d;
         ppu_in2 = 2;
         #12;
 
-        ppu_valid_in = 1;
+        ppu_valid_in = 0;
         ppu_op = ADD;
         ppu_in1 = 'h71a0;
         ppu_in2 = 'h2c66;
@@ -125,6 +131,11 @@ module tb_pipelined;
         ppu_in2 = 0;
         #10;
 
+        ppu_valid_in = 1;
+        ppu_op = DIV;
+        ppu_in1 = 1210;
+        ppu_in2 = 4;
+        #10;
 
         ppu_valid_in = 1;
         ppu_op = ADD;
@@ -137,6 +148,12 @@ module tb_pipelined;
         ppu_op = MUL;
         ppu_in1 = 4522;
         ppu_in2 = 12417;
+        #9;
+
+        ppu_valid_in = 1;
+        ppu_op = MUL;
+        ppu_in1 = 4522;
+        ppu_in2 = 0;
         #9;
 
         ppu_valid_in = 1;
@@ -180,6 +197,12 @@ module tb_pipelined;
         #10;
 
 
+
+        //////////////////////////////////////////////
+
+        
+
+        `include "../test_vectors/tv_pipelined.sv"
 
 
         ppu_valid_in = 0;
