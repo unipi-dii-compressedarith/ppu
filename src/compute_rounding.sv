@@ -28,7 +28,11 @@ module compute_rouding #(
         frac_full
     ) > 0 : $signed(
         k
-    ) == -(N - 2) ? $signed(
+    ) == -(N - 2) ? /*$signed*/(                /* no longer signed. bug fixed 
+                                                    Fri Apr  1 14:56:46 CEST 2022 
+                                                    after P<16,1> 0x73 * 0xa4 
+                                                    resulted in 0x1 rather than 
+                                                    the correct result 0x2 */
         exp
     ) > 0 : 1'b0;
 `else

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Thu Mar 31 21:34:47 2022
+[*] Fri Apr  1 14:19:12 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.vcd"
-[dumpfile_mtime] "Thu Mar 31 21:32:55 2022"
-[dumpfile_size] 8078024
+[dumpfile_mtime] "Fri Apr  1 14:18:50 2022"
+[dumpfile_size] 1797475
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_pipelined_P16E1.gtkw"
-[timestart] 0
-[size] 1440 847
+[timestart] 47300
+[size] 2199 847
 [pos] -1 -1
-*-5.127096 47 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.016702 184800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_pipelined.
 [treeopen] tb_pipelined.ppu_top_inst.
 [treeopen] tb_pipelined.ppu_top_inst.ppu_inst.

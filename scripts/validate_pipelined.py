@@ -40,30 +40,30 @@ for i in range(len(inputs)):
     pb = from_bits(b, N, ES)
     pc = from_bits(c, N, ES)
 
-    match op:
+    match op: # Python3.10+
         case "+":
-            is_same = (pa + pb).to_bits() == pc.to_bits()
+            is_same = (pa + pb) == pc
             if not is_same:
                 err_log += (
                     f"{a} {op} {b}       ({(pa + pb).to_bits()}, {pc.to_bits()}) \n"
                 )
             err += (not is_same).real
         case "-":
-            is_same = (pa - pb).to_bits() == pc.to_bits()
+            is_same = (pa - pb) == pc
             if not is_same:
                 err_log += (
                     f"{a} {op} {b}       ({(pa - pb).to_bits()}, {pc.to_bits()}) \n"
                 )
             err += (not is_same).real
         case "*":
-            is_same = (pa * pb).to_bits() == pc.to_bits()
+            is_same = (pa * pb) == pc
             if not is_same:
                 err_log += (
                     f"{a} {op} {b}       ({(pa * pb).to_bits()}, {pc.to_bits()}) \n"
                 )
             err += (not is_same).real
         case "/":
-            is_same = (pa / pb).to_bits() == pc.to_bits()
+            is_same = (pa / pb) == pc
             if not is_same:
                 err_log += (
                     f"{a} {op} {b}       ({(pa / pb).to_bits()}, {pc.to_bits()}) \n"

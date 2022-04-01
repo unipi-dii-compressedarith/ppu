@@ -1,4 +1,5 @@
 `ifdef TB_PIPELINED
+`timescale 1ns/1ps
 module tb_pipelined;
     parameter WORD = `WORD;
     parameter N = `N;
@@ -89,15 +90,22 @@ module tb_pipelined;
 
         $dumpfile({"tb_ppu_pipelined_P", `STRINGIFY(`N), "E", `STRINGIFY(`ES), ".vcd"});
         $dumpvars(0, tb_pipelined);
+    end
 
+    initial begin
         rst = 1;
-        #9;
-
-        rst = 0;
-        #2;
-
         ppu_valid_in = 0;
+        #9;
+        rst = 0;
         #20;
+    
+
+
+        ppu_valid_in = 1;
+        ppu_op = MUL;
+        ppu_in1 = 'h7e;
+        ppu_in2 = 'he4;
+        #10;
 
 
         ppu_valid_in = 1;
