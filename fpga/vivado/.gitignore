@@ -38,4 +38,4 @@ xvlog.*
 ppu_top.v
 
 
-*.pdf
+#*.pdf

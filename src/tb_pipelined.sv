@@ -1,5 +1,5 @@
 `ifdef TB_PIPELINED
-`timescale 1ns/1ps
+`timescale 1ns / 1ps
 module tb_pipelined;
     parameter WORD = `WORD;
     parameter N = `N;
@@ -98,7 +98,7 @@ module tb_pipelined;
         #9;
         rst = 0;
         #20;
-    
+
 
 
         ppu_valid_in = 1;
@@ -196,8 +196,8 @@ module tb_pipelined;
 
         //////////////////////////////////////////////
 
-        
-        
+
+
         ppu_valid_in = 1;
         ppu_op = SUB;
         ppu_in1 = 334;
