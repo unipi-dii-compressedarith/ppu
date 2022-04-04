@@ -249,6 +249,10 @@ module tb_ppu;
             `include "../test_vectors/tv_posit_ppu_P8E1.sv"
         end
 
+        if (N == 8 && ES == 2) begin
+            `include "../test_vectors/tv_posit_ppu_P8E2.sv"
+        end
+
         if (N == 8 && ES == 4) begin
             `include "../test_vectors/tv_posit_ppu_P8E4.sv"
         end
@@ -264,7 +268,6 @@ module tb_ppu;
         if (N == 16 && ES == 2) begin
             `include "../test_vectors/tv_posit_ppu_P16E2.sv"
         end
-
 
         if (N == 32 && ES == 2) begin
             `include "../test_vectors/tv_posit_ppu_P32E2.sv"

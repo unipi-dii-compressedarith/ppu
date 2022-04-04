@@ -54,7 +54,7 @@ endif
 
 NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
-NUM_TESTS_PPU := 15
+NUM_TESTS_PPU := 100
 
 SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/utils.sv \
@@ -304,9 +304,9 @@ open-waveforms:
 	gtkwave $(WAVEFORMS_DIR)/tb_ppu_P8E0.gtkw &
 	gtkwave $(WAVEFORMS_DIR)/tb_ppu_P16E1.gtkw &
 	gtkwave $(WAVEFORMS_DIR)/tb_ppu_P32E2.gtkw &
-	gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP8E0.gtkw &
-	gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP16E1.gtkw &
-	gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP32E2.gtkw &
+	# gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP8E0.gtkw &
+	# gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP16E1.gtkw &
+	# gtkwave $(WAVEFORMS_DIR)/tb_comparison_against_pacogenP32E2.gtkw &
 
 modelsim:
 	make verilog-quartus N=16 ES=1 WORD=64 F=64

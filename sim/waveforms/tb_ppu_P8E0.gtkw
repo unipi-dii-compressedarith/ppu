@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Mon Mar 21 19:13:34 2022
+[*] Mon Apr  4 14:06:55 2022
 [*]
 [dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_P8E0.vcd"
-[dumpfile_mtime] "Mon Mar 21 19:13:13 2022"
-[dumpfile_size] 1836727
+[dumpfile_mtime] "Mon Apr  4 14:06:33 2022"
+[dumpfile_size] 2105307
 [savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/sim/waveforms/tb_ppu_P8E0.gtkw"
 [timestart] 0
 [size] 2560 1412
 [pos] -1 -1
-*-10.183285 7410 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-11.031138 7410 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_ppu.
 [treeopen] tb_ppu.ppu_inst.
 [treeopen] tb_ppu.ppu_inst.ppu_core_ops_inst.
@@ -46,7 +46,6 @@ tb_ppu.ppu_inst.ppu_core_ops_inst.posit_to_fir1.posit_decoder_inst.posit_unpack_
 tb_ppu.ppu_inst.posit[7:0]
 @24
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.num[5:0]
-tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x0_on_2n_bits[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.two_minus_num_x0[11:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst._x1[23:0]
 tb_ppu.ppu_inst.ppu_core_ops_inst.ops_inst.core_op_inst.core_div_inst.newton_raphson_inst.x1[11:0]
