@@ -5,14 +5,14 @@ module fir_to_posit #(
 ) (
     input [(
                 FIR_TOTAL_SIZE      // fir
-                + 1                 // frac_lsb_cut_off
+                + 1                 // frac_truncated
             )-1:0] ops_in,
     output [N-1:0] posit
 );
 
     wire [FIR_TOTAL_SIZE-1:0] fir;
-    wire frac_lsb_cut_off;  // flag
-    assign {fir, frac_lsb_cut_off} = ops_in;
+    wire frac_truncated;  // flag
+    assign {fir, frac_truncated} = ops_in;
 
     wire sign;
     wire [TE_SIZE-1:0] te;
@@ -32,7 +32,7 @@ module fir_to_posit #(
     ) pack_fields_inst (
         .frac_full(frac_full), // the whole mantissa w/o the leading 1. (let's call it `frac_full` to distinguish it from `frac`)
         .total_exp(te),
-        .frac_lsb_cut_off(frac_lsb_cut_off),
+        .frac_truncated(frac_truncated),
 
         .k(k),
 `ifndef NO_ES_FIELD

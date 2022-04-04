@@ -337,7 +337,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 -70.59 2.07 Td
-(frac_lsb_cut_off) Tj
+(frac_truncated) Tj
 ET
 Q
 q
@@ -537,7 +537,7 @@ BT
 /F1 10 Tf
 1 0 0 -1 0 0 Tm
 -70.59 2.07 Td
-(frac_lsb_cut_off) Tj
+(frac_truncated) Tj
 ET
 Q
 3 w

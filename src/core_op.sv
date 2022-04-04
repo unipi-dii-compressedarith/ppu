@@ -22,7 +22,7 @@ module core_op #(
     input  [       MANT_SIZE-1:0] mant2,
     output [         TE_SIZE-1:0] te_out_core_op,
     output [(FRAC_FULL_SIZE)-1:0] frac_out_core_op,
-    output                        frac_lsb_cut_off
+    output                        frac_truncated
 );
 
     wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_add_sub;
@@ -31,7 +31,7 @@ module core_op #(
 
 
     wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;
-    wire frac_lsb_cut_off_add_sub, frac_lsb_cut_off_mul, frac_lsb_cut_off_div;
+    wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
     core_add_sub #(
         .N(N)
@@ -45,7 +45,7 @@ module core_op #(
         .have_opposite_sign(sign1 ^ sign2),
         .mant_out(mant_out_add_sub),
         .te_out(te_out_add_sub),
-        .frac_lsb_cut_off(frac_lsb_cut_off_add_sub)
+        .frac_truncated(frac_truncated_add_sub)
     );
 
     core_mul #(
@@ -59,7 +59,7 @@ module core_op #(
         .mant2(mant2),
         .mant_out(mant_out_mul),
         .te_out(te_out_mul),
-        .frac_lsb_cut_off(frac_lsb_cut_off_mul)
+        .frac_truncated(frac_truncated_mul)
     );
 
     core_div #(
@@ -73,7 +73,7 @@ module core_op #(
         .mant2(mant2),
         .mant_out(mant_out_div),
         .te_out(te_out_div),
-        .frac_lsb_cut_off(frac_lsb_cut_off_div)
+        .frac_truncated(frac_truncated_div)
     );
 
 
@@ -95,9 +95,9 @@ module core_op #(
         ? te_out_mul : /* op == DIV */
           te_out_div;
 
-    assign frac_lsb_cut_off = op == MUL
-        ? frac_lsb_cut_off_mul : op == DIV
-        ? frac_lsb_cut_off_div : /* op == ADD || op == SUB */
-          frac_lsb_cut_off_add_sub;
+    assign frac_truncated = op == MUL
+        ? frac_truncated_mul : op == DIV
+        ? frac_truncated_div : /* op == ADD || op == SUB */
+          frac_truncated_add_sub;
 
 endmodule

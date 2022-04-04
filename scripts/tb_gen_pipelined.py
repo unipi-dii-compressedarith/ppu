@@ -6,17 +6,21 @@ then paste it to tb_pipelined
 
 import random
 
+NUM_TESTS = 400
+
 ops = {
     0: "ADD",
     1: "SUB",
     2: "MUL",
     3: "DIV",
+    # 4: "FLOAT_TO_POSIT",
+    # 5: "POSIT_TO_FLOAT",
 }
 
 c = ""
-for i in range(400):
+for i in range(NUM_TESTS):
     valid_in = int(random.random() > 0.2)  # 80% of the time
-    op = ops[int(random.random() * 4)]  # ops equally distributed
+    op = ops[int(random.random() * len(ops))]  # ops equally distributed
     in1 = int(random.random() * 423)
     in2 = int(random.random() * 491)
     delay = int(random.random() * 15 + 3)  # between 3 and 18

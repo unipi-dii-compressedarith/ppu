@@ -9,7 +9,7 @@ module core_div #(
     input  [             MANT_SIZE-1:0] mant2,
     output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
     output [               TE_SIZE-1:0] te_out,
-    output                              frac_lsb_cut_off
+    output                              frac_truncated
 );
 
     logic [MANT_SIZE-1:0] mant1_st0, mant1_st1;
@@ -133,7 +133,7 @@ module core_div #(
     assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
     assign te_out = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
 
-    assign frac_lsb_cut_off = 1'b0;
+    assign frac_truncated = 1'b0;
 
     always_ff @(posedge clk) begin
         if (rst) begin

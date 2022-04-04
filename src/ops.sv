@@ -10,7 +10,7 @@ module ops #(
 
     output [(
                 (1 + TE_SIZE + FRAC_FULL_SIZE)  // fir_ops_out
-                + 1                             // frac_lsb_cut_off
+                + 1                             // frac_truncated
             )-1:0] ops_out
 );
 
@@ -41,7 +41,7 @@ module ops #(
         .mant2(mant2),
         .te_out_core_op(te_out),
         .frac_out_core_op(frac_out),
-        .frac_lsb_cut_off(frac_lsb_cut_off)
+        .frac_truncated(frac_truncated)
     );
 
     sign_decisor #() sign_decisor (
@@ -57,7 +57,7 @@ module ops #(
 
 
     wire [(1 + TE_SIZE + FRAC_FULL_SIZE)-1:0] fir_ops_out;
-    wire frac_lsb_cut_off;
-    assign ops_out = {fir_ops_out, frac_lsb_cut_off};
+    wire frac_truncated;
+    assign ops_out = {fir_ops_out, frac_truncated};
 
 endmodule

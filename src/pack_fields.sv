@@ -8,7 +8,7 @@ module pack_fields #(
 ) (
     input [FRAC_FULL_SIZE-1:0] frac_full,
     input [       TE_SIZE-1:0] total_exp,
-    input                      frac_lsb_cut_off, // new flag
+    input                      frac_truncated, // new flag
 
     output [   K_SIZE-1:0] k,
 `ifndef NO_ES_FIELD
@@ -86,7 +86,7 @@ module pack_fields #(
 `ifndef NO_ES_FIELD
         .exp(exp_unpacked),
 `endif
-        .frac_lsb_cut_off(frac_lsb_cut_off),
+        .frac_truncated(frac_truncated),
 
         .round_bit (round_bit),
         .sticky_bit(sticky_bit)

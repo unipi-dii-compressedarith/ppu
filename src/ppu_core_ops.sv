@@ -127,7 +127,7 @@ module ppu_core_ops #(
     );
 
 
-    wire frac_lsb_cut_off;
+    wire frac_truncated;
 
     wire [N-1:0] pout_non_special;
 

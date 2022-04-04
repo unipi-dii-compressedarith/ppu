@@ -9,7 +9,7 @@ module compute_rouding #(
 `ifndef NO_ES_FIELD
     input  [            ES-1:0] exp,
 `endif
-    input                       frac_lsb_cut_off,
+    input                       frac_truncated,
     output                      round_bit,
     output                      sticky_bit
 );
@@ -43,6 +43,6 @@ module compute_rouding #(
     assign _tmp2 = ((1 << (frac_len_diff - 1)) - 1);
     assign _tmp3 = frac_full & _tmp2;
 
-    assign sticky_bit = $signed(frac_len) >= 0 ? (_tmp3 != 0) || frac_lsb_cut_off : 1'b0;
+    assign sticky_bit = $signed(frac_len) >= 0 ? (_tmp3 != 0) || frac_truncated : 1'b0;
 
 endmodule
