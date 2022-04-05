@@ -55,6 +55,8 @@ endif
 NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32)
 
 NUM_TESTS_PPU := 100
+NUM_TESTS_PPU_PIPELINED := 500
+
 
 SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/utils.sv \
@@ -176,7 +178,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	make lint
 
 tb_pipelined:
-	python $(SCRIPTS_DIR)/tb_gen_pipelined.py --num-tests 200 -n $(N) -f $(F) --shuffle-random > $(SIM_DIR)/test_vectors/tv_pipelined.sv
+	python $(SCRIPTS_DIR)/tb_gen_pipelined.py --num-tests $(NUM_TESTS_PPU_PIPELINED) -n $(N) -f $(F) --shuffle-random > $(SIM_DIR)/test_vectors/tv_pipelined.sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
 	-DTB_PIPELINED \
@@ -190,7 +192,7 @@ tb_pipelined:
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./tb_pipelined_P$(N)E$(ES).out
-	cd $(SCRIPTS_DIR) && python validate_pipelined.py
+	cd $(SCRIPTS_DIR) && python validate_pipelined.py -n $(N) -es $(ES) -f $(F)
 
 
 ppu_P8E0:

@@ -5,7 +5,7 @@ import os
 N = 16
 ES = 1
 
-DIV_WITH_LUT = 1
+DIV_WITH_LUT = 0
 LUT_SIZE_IN = 8
 LUT_SIZE_OUT = 9
 # NEWTON_RAPHSON = 1

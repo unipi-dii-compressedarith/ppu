@@ -1,9 +1,19 @@
 import re
+import argparse
 from hardposit import from_bits, from_double
-from hardposit.float import F32, F64
+from hardposit.float import F32, F64, F16
 from pathlib import Path
 
-N, ES = 16, 1
+parser = argparse.ArgumentParser(description="Generate test benches")
+parser.add_argument("--num-bits", "-n", type=int, required=True, help="Num posit bits")
+parser.add_argument("--es-size", "-es", type=int, required=True, help="Exponent size")
+parser.add_argument("--float-size", "-f", type=int, required=True, help="Float size")
+args = parser.parse_args()
+
+
+N = args.num_bits
+ES = args.es_size
+F = args.float_size
 
 OUTPUT_LOG_FILE = "output.log"
 with open(Path(f"../sim/waveforms/{OUTPUT_LOG_FILE}"), "r") as f:
@@ -41,7 +51,7 @@ for i in range(len(inputs)):
     op = ops[int(inputs[i][1])]
 
     if 0 <= int(inputs[i][1]) < 4:
-        a = int(inputs[i][0], 16)
+        a = int(inputs[i][0], 16)  # 16 means cast from hex, not `N`
         b = int(inputs[i][2], 16)
         c = int(outputs[i], 16)
 
@@ -83,7 +93,16 @@ for i in range(len(inputs)):
 
     elif op == "f2p":
         a = int(inputs[i][0], 16)
-        float = F64(bits=a)
+        match F:
+            case 64:
+                float = F64(bits=a)
+            case 32:
+                float = F32(bits=a)
+            case 16:
+                float = F16(bits=a)
+            case _:
+                raise Exception("Float size non supported (yet)")
+
         p = from_double(float.eval(), N, ES)
         c = int(outputs[i], 16)
         is_same = p.to_bits() == c
@@ -96,7 +115,15 @@ for i in range(len(inputs)):
         # breakpoint()
         pb = from_bits(b, N, ES)
         c = int(outputs[i], 16)
-        float = F64(x_f64=pb.eval())
+        match F:
+            case 64:
+                float = F64(x_f64=pb.eval())
+            case 32:
+                float = F32(x_f32=pb.eval())
+            case 16:
+                float = F16(x_f16=pb.eval())
+            case _:
+                raise Exception("Float size non supported (yet)")
         is_same = float.to_bits() == c
         if not is_same:
             err_log += f"p2f({b})\n"
