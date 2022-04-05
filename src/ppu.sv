@@ -44,6 +44,8 @@ module ppu #(
     assign p1 = in1[N-1:0];
     assign p2 = in2[N-1:0];
 
+    wire [OP_SIZE-1:0] op_st2;
+
 
     ppu_core_ops #(
         .N(N),
@@ -54,6 +56,7 @@ module ppu #(
         .p1(p1),
         .p2(p2),
         .op(op),
+        .op_st2(op_st2),
         .stall(stall),
 `ifdef FLOAT_TO_POSIT
         .float_fir(float_fir_in),
@@ -95,21 +98,29 @@ module ppu #(
     logic [FSIZE-1:0] float_in_st0, float_in_st1;
 
     always_ff @(posedge clk) begin
-        if (rst) float_in_st1 <= 0;
-        else float_in_st1 <= float_in_st0;
+        if (rst) begin
+            float_in_st1 <= 0;
+        end else begin 
+            float_in_st1 <= float_in_st0;
+        end
     end
 
     logic [FSIZE-1:0] float_out_st0, float_out_st1;
     assign float_in_st0 = in1[FSIZE-1:0];
 
     always_ff @(posedge clk) begin
-        if (rst) float_out_st1 <= 0;
-        else float_out_st1 <= float_out_st0;
+        if (rst) begin
+            float_out_st1 <= 0;
+        end else begin 
+            float_out_st1 <= float_out_st0;
+        end
     end
 
     float_to_fir #(
         .FSIZE(FSIZE)
     ) float_to_fir_inst (
+        .clk(clk),
+        .rst(rst),
         .bits(float_in_st1),
         .fir(float_fir_out)
     );
@@ -121,6 +132,8 @@ module ppu #(
         .ES(ES),
         .FSIZE(FSIZE)
     ) fir_to_float_inst (
+        .clk(clk),
+        .rst(rst),
         .fir(posit_fir),
         .float(float_out_st0)
     );
@@ -128,7 +141,7 @@ module ppu #(
 
     assign out =
 `ifdef FLOAT_TO_POSIT
-        (op == POSIT_TO_FLOAT) ? float_out_st1 :
+        (op_st2 === POSIT_TO_FLOAT) ? float_out_st1 :
 `endif
         posit;
 

@@ -167,6 +167,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(DIV_WITH_LUT_FLAG) \
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-o ppu_P$(N)E$(ES).out \
+	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
@@ -175,7 +176,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	make lint
 
 tb_pipelined:
-	python $(SCRIPTS_DIR)/tb_gen_pipelined.py > $(SIM_DIR)/test_vectors/tv_pipelined.sv
+	python $(SCRIPTS_DIR)/tb_gen_pipelined.py --num-tests 200 -n $(N) -f $(F) --shuffle-random > $(SIM_DIR)/test_vectors/tv_pipelined.sv
 	cd $(WAVEFORMS_DIR) && \
 	iverilog -g2012 \
 	-DTB_PIPELINED \
@@ -270,7 +271,7 @@ verilog-quartus:
 
 
 verilog-quartus16:
-	make verilog-quartus N=16 ES=0 F=0
+	make verilog-quartus N=16 ES=1 F=0
 
 
 lint:

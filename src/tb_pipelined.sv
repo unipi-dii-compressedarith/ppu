@@ -38,7 +38,7 @@ module tb_pipelined;
 
     ppu_top #(
         .WORD(WORD),
-`ifdef FLOAT_TO_POSIT,
+`ifdef FLOAT_TO_POSIT
         .FSIZE(FSIZE),
 `endif
         .N(N),
@@ -67,20 +67,22 @@ module tb_pipelined;
             ? "ADD" : ppu_op === MUL
             ? "MUL" : ppu_op === SUB
             ? "SUB" : ppu_op === DIV
-            ? "DIV" : 'bz;
+            ? "DIV" : ppu_op === FLOAT_TO_POSIT
+            ? "F2P" : ppu_op === POSIT_TO_FLOAT
+            ? "P2F" : 'hz;
     end
 
     //////////////////////////////////////////////////////////////////
     ////// log to file //////
-    integer f;
-    initial f = $fopen("output.log", "w");
+    integer log_filename;
+    initial log_filename = $fopen("output.log", "w");
 
     always @(posedge clk) begin
-        if (ppu_valid_in) $fwrite(f, "i %h %h %h\n", ppu_in1, ppu_op, ppu_in2);
+        if (ppu_valid_in) $fwrite(log_filename, "i %h %h %h\n", ppu_in1, ppu_op, ppu_in2);
     end
 
     always @(negedge clk) begin
-        if (ppu_valid_o) $fwrite(f, "o %h\n", ppu_out);
+        if (ppu_valid_o) $fwrite(log_filename, "o %h\n", ppu_out);
     end
     //////////////////////////////////////////////////////////////////
 
@@ -99,98 +101,103 @@ module tb_pipelined;
         rst = 0;
         #20;
 
-
-
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 'h7e;
-        ppu_in2 = 'he4;
-        #10;
-
+/************************************************************/
 
         ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 250;
-        ppu_in2 = 34;
-        #10;
-
-        ppu_valid_in = 1;
-        ppu_op = ADD;
-        ppu_in1 = 12;
-        ppu_in2 = 13;
-        #10;
-
-        ppu_valid_in = 1;
-        ppu_op = ADD;
-        ppu_in1 = 12;
-        ppu_in2 = 0;
-        #10;
+        ppu_op = FLOAT_TO_POSIT;
+        ppu_in1 = 64'b0100000001001010100110110100100001000101000100110010111110001000;
+        #4;
+        
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 'h7e;
+        // ppu_in2 = 'he4;
+        // #10;
 
 
-        ppu_valid_in = 0;
-        ppu_op = ADD;
-        ppu_in1 = 'h71a0;
-        ppu_in2 = 'h2c66;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 250;
+        // ppu_in2 = 34;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // ppu_in1 = 12;
+        // ppu_in2 = 13;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // ppu_in1 = 12;
+        // ppu_in2 = 0;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 120;
-        ppu_in2 = 0;
-        #10;
-
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 4522;
-        ppu_in2 = 12417;
-        #9;
-
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 4522;
-        ppu_in2 = 0;
-        #9;
-
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 15;
-        ppu_in2 = 15;
-        #10;
+        // ppu_valid_in = 0;
+        // ppu_op = ADD;
+        // ppu_in1 = 'h71a0;
+        // ppu_in2 = 'h2c66;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = MUL;
-        ppu_in1 = 6;
-        ppu_in2 = (1 << (N - 1));
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 120;
+        // ppu_in2 = 0;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4522;
+        // ppu_in2 = 12417;
+        // #9;
+
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 4522;
+        // ppu_in2 = 0;
+        // #9;
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 15;
+        // ppu_in2 = 15;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 4;
-        ppu_in2 = 0;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = MUL;
+        // ppu_in1 = 6;
+        // ppu_in2 = (1 << (N - 1));
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 41;
-        ppu_in2 = 1;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 4;
+        // ppu_in2 = 0;
+        // #10;
 
 
-        ppu_valid_in = 1;
-        ppu_op = DIV;
-        ppu_in1 = 42;
-        ppu_in2 = 16;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 41;
+        // ppu_in2 = 1;
+        // #10;
 
-        ppu_valid_in = 1;
-        ppu_op = ADD;
-        ppu_in1 = 422;
-        ppu_in2 = 0;
-        #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = DIV;
+        // ppu_in1 = 42;
+        // ppu_in2 = 16;
+        // #10;
+
+        // ppu_valid_in = 1;
+        // ppu_op = ADD;
+        // ppu_in1 = 422;
+        // ppu_in2 = 0;
+        // #10;
 
 
 
@@ -198,13 +205,15 @@ module tb_pipelined;
 
 
 
-        ppu_valid_in = 1;
-        ppu_op = SUB;
-        ppu_in1 = 334;
-        ppu_in2 = 28;
-        #10;
+        // ppu_valid_in = 1;
+        // ppu_op = SUB;
+        // ppu_in1 = 334;
+        // ppu_in2 = 28;
+        // #10;
 
         `include "../test_vectors/tv_pipelined.sv"
+
+/************************************************************/
 
 
         ppu_valid_in = 0;
@@ -215,7 +224,7 @@ module tb_pipelined;
 
         #50;
         $finish;
-        $fclose(f);
+        $fclose(log_filename);
     end
 
 endmodule

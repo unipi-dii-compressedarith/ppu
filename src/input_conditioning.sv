@@ -33,6 +33,8 @@ module input_conditioning #(
     );
 
     assign is_special_or_trivial =
+           op === FLOAT_TO_POSIT  /* check required to activate the rightmost mux */
+           ? 0 :
            p1_in == ZERO
         || p1_in == NAN
         || p2_in == ZERO

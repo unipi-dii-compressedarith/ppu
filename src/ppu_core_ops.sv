@@ -22,6 +22,7 @@ module ppu_core_ops #(
         input           [N-1:0]                         p1,
         input           [N-1:0]                         p2,
         input       [OP_SIZE-1:0]                       op,
+        output      [OP_SIZE-1:0]                       op_st2,
         input                                           stall,
 `ifdef FLOAT_TO_POSIT
         input       [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]    float_fir,
@@ -30,7 +31,7 @@ module ppu_core_ops #(
         output      [N-1:0]                             pout
     );
     
-    logic [OP_SIZE-1:0] op_st0, op_st1;
+    logic [OP_SIZE-1:0] op_st0, op_st1, op_st2;
     assign op_st0 = op; // alias
 
 
@@ -136,7 +137,7 @@ module ppu_core_ops #(
 
     assign ops_wire_st0 =
 `ifdef FLOAT_TO_POSIT
-        (op_st0 == FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
+        (op_st1 === FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
 `endif
         ops_out;
 
@@ -157,10 +158,12 @@ module ppu_core_ops #(
             ops_wire_st1 <= 'b0;
             special_st2 <= 'b0;
             special_st3 <= 'b0;
+            op_st2 <= 'b0;
         end else begin
             ops_wire_st1 <= ops_wire_st0;
             special_st2 <= special_st1;
             special_st3 <= special_st2; // special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
+            op_st2 <= op_st1;
         end
     end
 
