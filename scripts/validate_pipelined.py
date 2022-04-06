@@ -107,7 +107,10 @@ for i in range(len(inputs)):
         c = int(outputs[i], 16)
         is_same = p.to_bits() == c
         if not is_same:
-            err_log += f"f2p({a})\n"
+            err_log += f"f2p({a}) = {c} != {p.to_bits()}\n"
+        else:
+            #err_log += f" --> [correct] f2p({a}) = {c} == {p.to_bits()}\n"
+            pass
         err += (not is_same).real
 
     elif op == "p2f":

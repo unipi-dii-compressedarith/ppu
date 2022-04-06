@@ -53,7 +53,12 @@ ops = {
 c = ""
 for i in range(NUM_RANDOM_TEST_CASES):
     valid_in = int(random.random() > 0.1)  # 90% of the time
-    op = ops[int(random.random() * len(ops))]  # ops equally distributed
+    match F:
+        case 0:
+            op = ops[int(random.random() * (len(ops) -2))]  # ops equally distributed
+        case _:
+            op = ops[int(random.random() * len(ops))]  # ops equally distributed
+            
     in1 = int(random.random() * ((1 << N) - 1))
     in2 = int(random.random() * ((1 << N) - 1))
     delay = int(random.random() * 12 + 3)  # between 3 and 15
