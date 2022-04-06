@@ -1,6 +1,7 @@
 # export RISCV_PPU_DIR=/path/to/RISCV-PPU
 
 all: \
+	gen-test-vectors \
 	ppu_P8E0 \
 	ppu_P8E1 \
 	ppu_P16E0 \
@@ -139,12 +140,16 @@ SRC_POSIT_TO_FLOAT := \
 
 gen-test-vectors:
 	cd $(SCRIPTS_DIR) && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random \
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 && \
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 && \
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 4 && \
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 && \
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 4  -es 0 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 1 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 2 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 0 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 2 --shuffle-random && \
+	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
+	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random \
 
 gen-lut-reciprocate-mant:
 	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/lut.sv 
