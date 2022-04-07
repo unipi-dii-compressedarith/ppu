@@ -1,3 +1,4 @@
+# export MAKEFLAGS=--no-print-directory
 # export RISCV_PPU_DIR=/path/to/RISCV-PPU
 
 all: \
