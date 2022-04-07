@@ -54,7 +54,7 @@ gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw
 ```
 
 
-## Build instructions from 0 to `ppu_top.v`
+## Build instructions
 
 Checkout [BUILD.md](./BUILD.md)
 
