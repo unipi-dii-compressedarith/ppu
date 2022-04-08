@@ -56,7 +56,7 @@ gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw
 
 ## Build instructions
 
-Checkout [BUILD.md](./BUILD.md)
+Check out [BUILD.md](./BUILD.md)
 
 
 ---
