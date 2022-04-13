@@ -15,7 +15,13 @@ pipelines:
           - echo "Changing to new non-root user"
           - useradd -rm -d /home/builder -s /bin/bash -g root -G sudo -u 1001 builder
           - apt update
-          - apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git unzip
+          - apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git unzip iverilog gtkwave yosys
+          - wget https://github.com/chipsalliance/verible/releases/download/v0.0-2130-gb11bba24/verible-v0.0-2130-gb11bba24-Ubuntu-18.04-bionic-x86_64.tar.gz
+          - tar -xf verible-v0.0-2130-gb11bba24-Ubuntu-18.04-bionic-x86_64.tar.gz
+          - sudo cp verible-v0.0-2130-gb11bba24/bin/verible-verilog-format /usr/local/bin/
+          - wget https://github.com/MikePopoloski/slang/releases/download/v0.9/slang-linux.tar.gz
+          - tar -xf slang-linux.tar.gz
+          - sudo cp slang/bin/slang /usr/local/bin/          
           - su builder
           - git clone https://github.com/pyenv/pyenv.git ~/.pyenv
           - echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
@@ -28,6 +34,20 @@ pipelines:
           - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           - source $HOME/.cargo/env
           - git clone git@bitbucket.org:riscv-ppu/hardposit.git
+          - cd hardposit/bindings/py-hardposit
+          - make
+          - cd $HOME
+          - mkdir RISCV-PPU && cd RISCV-PPU
+          - git clone git@bitbucket.org:riscv-ppu/ppu.git
+          - git clone git@bitbucket.org:riscv-ppu/pacogen.git PACoGen
+          - cd ppu
+
+          
+          
+
+          
+
+
 
 
 
