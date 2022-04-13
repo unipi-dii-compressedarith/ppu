@@ -1,1 +1,25 @@
-# example
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+
+    - step:
+        name: 'Build ppu_top.v'
+        deployment: staging
+        script:
+          - echo "Changing to new non-root user"
+          - useradd -rm -d /home/builder -s /bin/bash -g root -G sudo -u 1001 builder
+          - apt update
+          - apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git unzip
+
+    - step:
+        name: 'Deployment to Production'
+        deployment: production
+        trigger: 'manual'
+        script:
+          - echo "Your deployment to production script goes here..."
