@@ -68,7 +68,7 @@ Check out [BUILD.md](./BUILD.md)
         gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw 
 
     to visualize the waveforms.
-    Change the `--least-diverse` to `--most-diverse` and `N` here or the delays between consecutive operations here, if needed.
+    Change the `--least-diverse` to `--most-diverse` and `N` [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/Makefile#lines-208) or the delays between consecutive operations [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/scripts/tb_gen_pipelined_long.py#lines-72), if needed.
 
 ---
 
