@@ -25,7 +25,8 @@ pipelines:
           - pyenv install 3.10.0
           - pyenv global 3.10.0
           - pip install maturin
-
+          - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          - source /home/builder/.cargo/env
 
 
  
