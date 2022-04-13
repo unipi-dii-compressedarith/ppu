@@ -16,6 +16,12 @@ pipelines:
           - useradd -rm -d /home/builder -s /bin/bash -g root -G sudo -u 1001 builder
           - apt update
           - apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git unzip
+          - apt install -y python3.10
+          - ln -sf /usr/bin/python3.10 /usr/local/bin/python
+          - echo "alias pip='python -m pip'" >> /home/buider/.bashrc
+          - su builder
+          - source /home/builder/.bashrc
+          
 
     - step:
         name: 'Deployment to Production'
