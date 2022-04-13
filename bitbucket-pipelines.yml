@@ -27,6 +27,7 @@ pipelines:
           - pip install maturin
           - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           - source $HOME/.cargo/env
+          - git clone git@bitbucket.org:riscv-ppu/hardposit.git
 
 
 
