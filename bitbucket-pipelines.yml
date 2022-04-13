@@ -3,7 +3,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-image: debian/debian:latest
+image: debian
 
 pipelines:
   default:
