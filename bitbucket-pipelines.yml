@@ -21,7 +21,10 @@ pipelines:
           - cp verible-v0.0-2130-gb11bba24/bin/verible-verilog-format /usr/local/bin/
           - wget https://github.com/MikePopoloski/slang/releases/download/v0.9/slang-linux.tar.gz
           - tar -xf slang-linux.tar.gz
-          - cp slang/bin/slang /usr/local/bin/          
+          - cp slang/bin/slang /usr/local/bin/  
+          - wget https://github.com/zachjs/sv2v/releases/download/v0.0.9/sv2v-Linux.zip
+          - unzip sv2v-Linux.zip
+          - cp sv2v-Linux/sv2v /usr/local/bin
           - su builder
           - git clone https://github.com/pyenv/pyenv.git ~/.pyenv
           - echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
