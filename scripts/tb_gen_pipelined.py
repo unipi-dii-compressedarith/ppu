@@ -1,5 +1,5 @@
 """
-$ python tb_gen_pipelined.py | pbcopy
+$ python tb_gen_pipelined.py --num-tests $(NUM_TESTS_PPU_PIPELINED) -n $(N) -f $(F) --shuffle-random | pbcopy
 
 then paste it to tb_pipelined
 """
@@ -55,10 +55,11 @@ for i in range(NUM_RANDOM_TEST_CASES):
     valid_in = int(random.random() > 0.1)  # 90% of the time
     match F:
         case 0:
-            op = ops[int(random.random() * (len(ops) -2))]  # ops equally distributed
+            # ops equally distributed. `-2` removes FLOAT_TO_POSIT and POSIT_TO_FLOAT from the options
+            op = ops[int(random.random() * (len(ops) - 2))]  
         case _:
             op = ops[int(random.random() * len(ops))]  # ops equally distributed
-            
+
     in1 = int(random.random() * ((1 << N) - 1))
     in2 = int(random.random() * ((1 << N) - 1))
     delay = int(random.random() * 12 + 3)  # between 3 and 15

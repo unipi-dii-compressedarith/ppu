@@ -58,6 +58,17 @@ gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw
 
 Check out [BUILD.md](./BUILD.md)
 
+## Changelog
+- added possibility to generate ppu tests (of the pipelined configuration) with high/low similarity between contiguous operands. Run e.g.:
+
+        make tb_pipelined_long WORD=32 F=0 N=16 ES=1
+    
+    to compile and run the test bench, and
+
+        gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw 
+
+    to visualize the waveforms.
+    Change the `--least-diverse` to `--most-diverse` and `N` here or the delays between consecutive operations here, if needed.
 
 ---
 
