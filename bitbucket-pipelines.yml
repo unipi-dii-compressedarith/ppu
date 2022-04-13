@@ -41,6 +41,11 @@ pipelines:
           - git clone git@bitbucket.org:riscv-ppu/ppu.git
           - git clone git@bitbucket.org:riscv-ppu/pacogen.git PACoGen
           - cd ppu
+          - source .env
+          - git checkout pipeline
+          - make gen-test-vectors
+          - make ppu WORD=64 F=32 N=8 ES=0
+          - ls fpga/quartus/
 
           
           
