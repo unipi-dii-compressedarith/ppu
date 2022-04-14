@@ -16,7 +16,8 @@ ES = args.es_size
 F = args.float_size
 
 OUTPUT_LOG_FILE = "output.log"
-with open(Path(f"../sim/waveforms/{OUTPUT_LOG_FILE}"), "r") as f:
+path = Path(f"./sim/waveforms/{OUTPUT_LOG_FILE}").resolve()
+with open(path, "r") as f:
     content = f.read()
 
 print("*" * 30 + f" {OUTPUT_LOG_FILE} " + "*" * 30)

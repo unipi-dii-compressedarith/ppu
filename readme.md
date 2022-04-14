@@ -70,6 +70,13 @@ Check out [BUILD.md](./BUILD.md)
     to visualize the waveforms.
     Change the `--least-diverse` to `--most-diverse` and `N` [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/Makefile#lines-208) or the delays between consecutive operations [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/scripts/tb_gen_pipelined_long.py#lines-72), if needed.
 
+- generate single test bench suitable file
+
+        make tb_pipelined_long_tb_single_file WORD=64 F=0 N=16 ES=1
+    
+    inside `$PPU_ROOT/sim/waveforms/tb_pipelined_long_tb_single_file.v` to be imported inside Vivado et al.
+
+
 ---
 
 ### cli tools

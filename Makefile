@@ -197,11 +197,15 @@ tb_pipelined:
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./tb_pipelined_P$(N)E$(ES).out
-	cd $(SCRIPTS_DIR) && python validate_pipelined.py -n $(N) -es $(ES) -f $(F)
+	python $(SCRIPTS_DIR)/validate_pipelined.py -n $(N) -es $(ES) -f $(F)
 
-tb_pipelined_long_tb_single_file: # not working yet
+tb_pipelined_long_tb_single_file:
+	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
 	cd $(WAVEFORMS_DIR) && \
-	sv2v -DTB_PIPELINED -DWORD=32 -DN=16 -DES=1 -DF=0 $(SRC_DIR)/tb_pipelined.sv $(QUARTUS_DIR)/ppu_top.v > TB.v
+	cp $(SRC_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/ppu_top.v > tb_pipelined_long_tb_single_file.v && \
+	rm tb_pipelined_tmp_copy.sv && \
+	iverilog tb_pipelined_long_tb_single_file.v && ./a.out
 
 
 tb_pipelined_long:
@@ -219,7 +223,7 @@ tb_pipelined_long:
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./tb_pipelined_P$(N)E$(ES).out
-	cd $(SCRIPTS_DIR) && python validate_pipelined.py -n $(N) -es $(ES) -f $(F)
+	python $(SCRIPTS_DIR)/validate_pipelined.py -n $(N) -es $(ES) -f $(F)
 
 
 ppu_P8E0:
