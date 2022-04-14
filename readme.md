@@ -54,8 +54,30 @@ gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw
 ```
 
 
+## Build instructions
+
+Check out [BUILD.md](./BUILD.md)
+
+## Changelog
+- added possibility to generate ppu tests (of the pipelined configuration) with high/low similarity between contiguous operands. Run e.g.:
+
+        make tb_pipelined_long WORD=32 F=0 N=16 ES=1
+    
+    to compile and run the test bench, and
+
+        gtkwave sim/waveforms/tb_ppu_pipelined_P16E1.gtkw 
+
+    to visualize the waveforms.
+    Change the `--least-diverse` to `--most-diverse` and `N` [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/Makefile#lines-208) or the delays between consecutive operations [here](https://bitbucket.org/riscv-ppu/ppu/src/1b4718bdcceea456942dc039c06b7711234f3f78/scripts/tb_gen_pipelined_long.py#lines-72), if needed.
+
+- generate single test bench suitable file
+
+        make tb_pipelined_long_tb_single_file WORD=64 F=0 N=16 ES=1
+    
+    inside `$PPU_ROOT/sim/waveforms/tb_pipelined_long_tb_single_file.v` to be imported inside Vivado et al.
 
 
+---
 
 ### cli tools
 

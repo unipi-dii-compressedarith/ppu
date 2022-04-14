@@ -198,7 +198,33 @@ tb_pipelined:
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./tb_pipelined_P$(N)E$(ES).out
-	cd $(SCRIPTS_DIR) && python validate_pipelined.py -n $(N) -es $(ES) -f $(F)
+	python $(SCRIPTS_DIR)/validate_pipelined.py -n $(N) -es $(ES) -f $(F)
+
+tb_pipelined_long_tb_single_file:
+	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
+	cd $(WAVEFORMS_DIR) && \
+	cp $(SRC_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/ppu_top.v > tb_pipelined_long_tb_single_file.v && \
+	rm tb_pipelined_tmp_copy.sv && \
+	iverilog tb_pipelined_long_tb_single_file.v && ./a.out
+
+
+tb_pipelined_long:
+	python $(SCRIPTS_DIR)/tb_gen_pipelined_long.py --num-tests 1000 -n $(N) -f $(F) --least-diverse > $(SIM_DIR)/test_vectors/tv_pipelined.sv
+	cd $(WAVEFORMS_DIR) && \
+	iverilog -g2012 \
+	-DTB_PIPELINED \
+	$(ES_FIELD_PRESENCE_FLAG) \
+	$(DIV_WITH_LUT_FLAG) \
+	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
+	-o tb_pipelined_P$(N)E$(ES).out \
+	$(SRC_DIR)/tb_pipelined.sv \
+	$(SRC_DIR)/ppu_top.sv \
+	$(SRC_DIR)/ppu.sv \
+	$(SRC_PPU_CORE_OPS) && \
+	sleep 1 && \
+	./tb_pipelined_P$(N)E$(ES).out
+	python $(SCRIPTS_DIR)/validate_pipelined.py -n $(N) -es $(ES) -f $(F)
 
 
 ppu_P8E0:
