@@ -204,9 +204,9 @@ tb_pipelined_long_tb_single_file:
 	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
 	cd $(WAVEFORMS_DIR) && \
 	cp $(SRC_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
-	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/ppu_top.v > tb_pipelined_long_tb_single_file.v && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/ppu_top.v > tb_pipelined_long_tb_single_file.sv && \
 	rm tb_pipelined_tmp_copy.sv && \
-	iverilog tb_pipelined_long_tb_single_file.v && ./a.out
+	iverilog tb_pipelined_long_tb_single_file.sv && ./a.out
 
 
 tb_pipelined_long:
