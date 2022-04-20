@@ -61,7 +61,7 @@ Check out [BUILD.md](./BUILD.md)
 ## Changelog
 - added possibility to generate ppu tests (of the pipelined configuration) with high/low similarity between contiguous operands. Run e.g.:
 
-        make tb_pipelined_long WORD=32 F=0 N=16 ES=1
+        make tb_pipelined_long WORD=64 F=0 N=16 ES=1
     
     to compile and run the test bench, and
 
