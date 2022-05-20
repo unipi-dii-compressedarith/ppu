@@ -33,3 +33,11 @@ jobs:
           make gen-test-vectors
           make ppu WORD=64 F=32 N=8 ES=0
           ls fpga/vivado
+          
+      - name: Upload ppu top
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          # Artifact name
+          name: ppu_top
+          path: fpga/vivado/*.v
+
