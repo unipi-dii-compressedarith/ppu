@@ -32,7 +32,11 @@ jobs:
           export RISCV_PPU_DIR=$(cd .. && pwd)
           make gen-test-vectors
           make ppu WORD=64 F=32 N=8 ES=0
-          ls fpga/vivado
+          make ppu WORD=64 F=32 N=16 ES=2
+          make ppu WORD=64 F=32 N=8 ES=2
+          make ppu WORD=32 F=32 N=8 ES=0
+          make ppu WORD=32 F=32 N=16 ES=2
+          make ppu WORD=32 F=32 N=8 ES=2
           
       - name: Upload ppu top
         uses: actions/upload-artifact@v3.1.0
