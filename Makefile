@@ -181,7 +181,7 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
-	verible-verilog-format --inplace --indentation_spaces 2 $(QUARTUS_DIR)/ppu_P$(N)E$(ES)_top.v || true
+	verible-verilog-format --inplace --indentation_spaces 2 $(QUARTUS_DIR)/$(PPU_TOP_NAME).v || true
 	make lint || true
 
 tb_pipelined:
@@ -301,7 +301,7 @@ verilog-quartus:
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) > $(PPU_TOP_NAME) && \
-	iverilog ppu_P$(N)E$(ES)_top.v && ./a.out
+	iverilog $(PPU_TOP_NAME) && ./a.out
 	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME)
 
 
