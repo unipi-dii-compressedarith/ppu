@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu
+    runs-on: federicorossir/ppuvhdl-env
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -28,9 +28,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo $(pwd)
           export RISCV_PPU_DIR=$(cd .. && pwd)
           make gen-test-vectors
           make ppu WORD=64 F=32 N=8 ES=0
           ls fpga/vivado
-          
