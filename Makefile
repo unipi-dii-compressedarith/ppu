@@ -27,6 +27,7 @@ PACOGEN_DIR := $(RISCV_PPU_DIR)/PaCoGen
 
 BUILD_DIR := $(RISCV_PPU_DIR)/ppu/build
 
+PPU_TOP_NAME := ppu$(WORD)_P$(N)E$(ES)_top.v
 
 
 GREEN='\033[0;32m'
@@ -180,8 +181,8 @@ ppu: gen-lut-reciprocate-mant verilog-quartus
 	$(SRC_PPU_CORE_OPS) && \
 	sleep 1 && \
 	./ppu_P$(N)E$(ES).out
-	verible-verilog-format --inplace --indentation_spaces 2 $(QUARTUS_DIR)/ppu_top.v
-	make lint
+	verible-verilog-format --inplace --indentation_spaces 2 $(QUARTUS_DIR)/ppu_P$(N)E$(ES)_top.v || true
+	make lint || true
 
 tb_pipelined:
 	python $(SCRIPTS_DIR)/tb_gen_pipelined.py --num-tests $(NUM_TESTS_PPU_PIPELINED) -n $(N) -f $(F) --shuffle-random > $(SIM_DIR)/test_vectors/tv_pipelined.sv
@@ -204,7 +205,7 @@ tb_pipelined_long_tb_single_file:
 	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
 	cd $(WAVEFORMS_DIR) && \
 	cp $(SRC_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
-	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/ppu_top.v > tb_pipelined_long_tb_single_file.sv && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/$(PPU_TOP_NAME) > tb_pipelined_long_tb_single_file.sv && \
 	rm tb_pipelined_tmp_copy.sv && \
 	iverilog tb_pipelined_long_tb_single_file.sv && ./a.out
 
@@ -285,9 +286,9 @@ conversions-verilog-float-to-posit-quartus:
 
 yosys:
 	cd $(SRC_DIR) && \
-	yosys -p "synth_xilinx -edif example.edif -top ppu_top" $(QUARTUS_DIR)/ppu_top.v > yosys_ppu_top.out
+	yosys -p "synth_xilinx -edif example.edif -top ppu_top" $(QUARTUS_DIR)/$(PPU_TOP_NAME) > yosys_ppu_top.out
 	# yosys -p "synth_intel -family max10 -top ppu -vqm ppu.vqm" \
-	# $(QUARTUS_DIR)/ppu_top.v > yosys_ppu.out
+	# $(QUARTUS_DIR)/$(PPU_TOP_NAME) > yosys_ppu.out
 
 
 verilog-quartus:
@@ -299,9 +300,9 @@ verilog-quartus:
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) -DF=$(F) \
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
-	$(SRC_PPU_CORE_OPS) > ppu_top.v && \
-	iverilog ppu_top.v && ./a.out
-	cp -r $(QUARTUS_DIR)/ppu_top.v $(VIVADO_DIR)/ppu_top.v
+	$(SRC_PPU_CORE_OPS) > $(PPU_TOP_NAME) && \
+	iverilog ppu_P$(N)E$(ES)_top.v && ./a.out
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME)
 
 
 verilog-quartus16:
@@ -309,7 +310,8 @@ verilog-quartus16:
 
 
 lint:
-	slang $(QUARTUS_DIR)/ppu_top.v --top ppu_top # https://github.com/MikePopoloski/slang
+	# https://github.com/MikePopoloski/slang 
+	slang $(QUARTUS_DIR)/$(PPU_TOP_NAME) --top ppu_top || true 
 
 fmt:
 	# https://github.com/chipsalliance/verible
