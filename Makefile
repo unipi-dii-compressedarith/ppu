@@ -309,6 +309,11 @@ verilog-quartus16:
 	make verilog-quartus N=16 ES=1 F=0
 
 
+vivado-reports: ppu
+	cd $(VIVADO_DIR) && \
+	N=$(N) ES=$(ES) WORD=$(WORD) vivado -mode batch -source $(SCRIPTS_DIR)/synth_and_report.tcl
+
+
 lint:
 	# https://github.com/MikePopoloski/slang 
 	slang $(QUARTUS_DIR)/$(PPU_TOP_NAME) --top ppu_top || true 
