@@ -36,7 +36,7 @@ jobs:
         run: |
           export RISCV_PPU_DIR=$(cd .. && pwd)
           make gen-test-vectors
-          make ppu ${{ matrix.word }} F=32 ${{ matrix.ns }} ${{ matrix.es }}
+          make ppu WORD=${{ matrix.word }} F=32 N=${{ matrix.ns }} ES=${{ matrix.es }}
         
           
       - name: Upload ppu top
