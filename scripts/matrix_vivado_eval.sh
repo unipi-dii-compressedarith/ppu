@@ -17,7 +17,7 @@ for part in ${parts[@]}; do
 				make ppu WORD=$word N=$n ES=$es F=32
 				cd $VIVADO_DIR
 				WORD=$word N=$n ES=$es PART=$part vivado -mode batch -nojournal -source $SCRIPTS_DIR/synth_and_report.tcl
-				cp *summary* reports/$part
+				mv *summary* reports/$part
 			done
 		done
 	done

@@ -29,3 +29,9 @@ __pycache__
 *.edif
 verif_post
 
+fpga/quartus/*.v
+fpga/vivado/*.v
+fpga/vivado/reports/*
+
+results.xml
+sim_build
