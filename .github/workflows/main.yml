@@ -46,14 +46,14 @@ jobs:
           name: ppu_top
           path: fpga/vivado/*.v
 
-  report:
-    runs-on: ubuntu-latest
-    container: siliconbootcamp/xilinx-vivado:stable
-    needs: build
+#  report:
+#    runs-on: ubuntu-latest
+#    container: siliconbootcamp/xilinx-vivado:stable
+#    needs: build
     
-    steps:
-      - name: Run a multi-line script
-        run: |
-          /tools/Xilinx/Vivado/2021.1/bin/vivado -mode batch -nojournal
+#    steps:
+#      - name: Run a multi-line script
+#        run: |
+#          /tools/Xilinx/Vivado/2021.1/bin/vivado -mode batch -nojournal
           
 
