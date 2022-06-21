@@ -54,6 +54,6 @@ jobs:
     steps:
       - name: Run a multi-line script
         run: |
-          vivado -mode batch -nojournal
+          /tools/Xilinx/Vivado/2021.1/bin/vivado -mode batch -nojournal
           
 
