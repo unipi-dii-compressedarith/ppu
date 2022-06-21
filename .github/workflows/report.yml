@@ -42,7 +42,7 @@ jobs:
         run: |
           cd ppu_top
           ls -la 
-          N=${{ matrix.ns }} ES=${{ matrix.es }} WORD={{ matrix.word }} /tools/Xilinx/Vivado/2021.1/bin/vivado -mode batch -nojournal -source ../scripts/synth_and_report.tcl
+          N=${{ matrix.ns }} ES=${{ matrix.es }} WORD=${{ matrix.word }} /tools/Xilinx/Vivado/2021.1/bin/vivado -mode batch -nojournal -source ../scripts/synth_and_report.tcl
           ls -la
           
       - name: Upload reports
