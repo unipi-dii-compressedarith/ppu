@@ -48,7 +48,8 @@ jobs:
 
   report:
     runs-on: ubuntu-latest
-    container: siliconbootcamp/xilinx-vivado
+    container: siliconbootcamp/xilinx-vivado:stable
+    needs: build
     
     steps:
       - name: Run a multi-line script
