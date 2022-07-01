@@ -67,7 +67,6 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/common.sv \
 	$(SRC_DIR)/ppu_core_ops.sv \
 	$(SRC_DIR)/posit_to_fir.sv \
-	$(SRC_DIR)/demux1_to_2.sv \
 	$(SRC_DIR)/fir_to_posit.sv \
 	$(SRC_DIR)/conversions/float_encoder.sv \
 	$(SRC_DIR)/conversions/sign_extend.sv \
@@ -97,7 +96,6 @@ SRC_PPU_CORE_OPS := \
 	$(SRC_DIR)/round_posit.sv \
 	$(SRC_DIR)/sign_decisor.sv \
 	$(SRC_DIR)/set_sign.sv \
-	$(SRC_DIR)/highest_set.sv \
 	$(SRC_DIR)/ppu_control_unit.sv \
 	$(SRC_DIR)/reg_banks.sv \
 	$(SRC_DIR)/pp_mul.sv \
