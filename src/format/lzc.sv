@@ -1,5 +1,5 @@
 module lzc #(
-    parameter NUM_BITS = 32
+    parameter NUM_BITS = 16
 ) (
     input  [        NUM_BITS-1:0] in,
     output [$clog2(NUM_BITS)-1:0] out,

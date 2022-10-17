@@ -1,6 +1,7 @@
 # export MAKEFLAGS=--no-print-directory
 # export RISCV_PPU_DIR=/path/to/RISCV-PPU
 
+
 all: \
 	gen-test-vectors \
 	ppu_P8E0 \
@@ -108,35 +109,33 @@ SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_DIR)/comparison_against_pacogen.sv 
 
 SRC_FLOAT_TO_POSIT := \
-	$(SRC_DIR)/utils.sv \
-	$(SRC_DIR)/common.sv \
+	$(SRC_DIR)/include/utils.sv \
+	$(SRC_DIR)/include/common.sv \
 	$(SRC_DIR)/conversions/defines.vh \
 	$(SRC_DIR)/conversions/float_to_posit.sv \
 	$(SRC_DIR)/conversions/float_to_fir.sv \
 	$(SRC_DIR)/conversions/float_decoder.sv \
-	$(SRC_DIR)/fir_to_posit.sv \
-	$(SRC_DIR)/posit_encoder.sv \
-	$(SRC_DIR)/round_posit.sv \
-	$(SRC_DIR)/pack_fields.sv \
-	$(SRC_DIR)/compute_rounding.sv \
-	$(SRC_DIR)/unpack_exponent.sv \
-	$(SRC_DIR)/set_sign.sv
+	$(SRC_DIR)/format/fir_to_posit.sv \
+	$(SRC_DIR)/format/posit_encoder.sv \
+	$(SRC_DIR)/format/round_posit.sv \
+	$(SRC_DIR)/format/pack_fields.sv \
+	$(SRC_DIR)/format/compute_rounding.sv \
+	$(SRC_DIR)/format/unpack_exponent.sv \
+	$(SRC_DIR)/format/set_sign.sv
 	
 SRC_POSIT_TO_FLOAT := \
-	$(SRC_DIR)/utils.sv \
-	$(SRC_DIR)/common.sv \
+	$(SRC_DIR)/include/utils.sv \
+	$(SRC_DIR)/include/common.sv \
 	$(SRC_DIR)/conversions/defines.vh \
 	$(SRC_DIR)/conversions/posit_to_float.sv \
 	$(SRC_DIR)/conversions/fir_to_float.sv \
 	$(SRC_DIR)/conversions/float_encoder.sv \
 	$(SRC_DIR)/conversions/sign_extend.sv \
-	$(SRC_DIR)/posit_to_fir.sv \
-	$(SRC_DIR)/posit_decoder.sv \
-	$(SRC_DIR)/posit_unpack.sv \
-	$(SRC_DIR)/total_exponent.sv \
-	$(SRC_DIR)/lzc.sv \
-	$(SRC_DIR)/highest_set.sv
-
+	$(SRC_DIR)/format/posit_to_fir.sv \
+	$(SRC_DIR)/format/posit_decoder.sv \
+	$(SRC_DIR)/format/posit_unpack.sv \
+	$(SRC_DIR)/format/total_exponent.sv \
+	$(SRC_DIR)/format/lzc.sv 
 
 gen-test-vectors:
 	cd $(SCRIPTS_DIR) && \
@@ -149,7 +148,6 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 --shuffle-random && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 2 --shuffle-random && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random \
 
 gen-lut-reciprocate-mant:
 	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/lut.sv 
@@ -203,7 +201,7 @@ tb_pipelined_long_tb_single_file:
 	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
 	cd $(WAVEFORMS_DIR) && \
 	cp $(TEST_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
-	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/$(PPU_TOP_NAME) > tb_pipelined_long_tb_single_file.sv && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/include/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/$(PPU_TOP_NAME) > tb_pipelined_long_tb_single_file.sv && \
 	rm tb_pipelined_tmp_copy.sv && \
 	iverilog tb_pipelined_long_tb_single_file.sv && ./a.out
 
