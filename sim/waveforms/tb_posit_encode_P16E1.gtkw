@@ -21,7 +21,7 @@ tb_posit_encode.test_no[16:0]
 -
 @28
 tb_posit_encode.is_zero
-tb_posit_encode.is_nan
+tb_posit_encode.is_nar
 @200
 -
 @28

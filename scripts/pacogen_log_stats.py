@@ -24,7 +24,7 @@ def _compute_rms(arr: List[Tuple[int]]) -> float:
         pout_exp_file = from_bits(int(tuple[2], 16), N, ES)
         assert pout_exp.to_hex(prefix=True) == tuple[3]
 
-        if pout_exp.is_nan or pout_exp_file.is_nan:
+        if pout_exp.is_nar or pout_exp_file.is_nar:
             count_nans += 1
         else:
             rms += (pout_exp.eval() - pout_exp_file.eval()) ** 2
@@ -54,9 +54,11 @@ def compute_mad(arr: List[Tuple[int]]) -> float:
         pout_exp_file = from_bits(int(tuple[2], 16), N, ES)
         assert pout_exp.to_hex(prefix=True) == tuple[3]
 
-        if pout_exp.is_nan or pout_exp_file.is_nan:
+        if pout_exp.is_nar or pout_exp_file.is_nar:
             count_nans += 1
         else:
+            # if type(pout_exp.eval()) == str or type(pout_exp_file.eval()) == str:
+            #     continue
             adv = abs(pout_exp.eval() - pout_exp_file.eval())
             if adv > mad:
                 mad = adv

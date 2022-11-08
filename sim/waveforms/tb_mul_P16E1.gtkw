@@ -24,7 +24,7 @@ tb_mul.mul_inst.p1[15:0]
 tb_mul.mul_inst.p2[15:0]
 tb_mul.mul_inst.pout[15:0]
 @28
-tb_mul.mul_inst.pout_is_nan
+tb_mul.mul_inst.pout_is_nar
 tb_mul.mul_inst.pout_is_zero
 @22
 tb_mul.p1[15:0]

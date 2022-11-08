@@ -76,7 +76,7 @@ module tb_posit_encoder;
 
     /* inputs */
     reg            is_zero;
-    reg            is_nan;
+    reg            is_nar;
 
     reg sign;
     reg [REG_LEN_SIZE-1:0] reg_len;
@@ -100,7 +100,7 @@ module tb_posit_encoder;
         .ES(ES)
     ) posit_encoder_inst (
         .is_zero(is_zero),
-        .is_nan(is_nan),
+        .is_nar(is_nar),
 
         .sign(sign),
         .k(k),

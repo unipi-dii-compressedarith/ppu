@@ -39,7 +39,7 @@ tb_mul_one_decoder.mul_inst.p_dec_out[30:0]
 tb_mul_one_decoder.mul_inst.pa[30:0]
 tb_mul_one_decoder.mul_inst.pout[15:0]
 @28
-tb_mul_one_decoder.mul_inst.pout_is_nan
+tb_mul_one_decoder.mul_inst.pout_is_nar
 tb_mul_one_decoder.mul_inst.pout_is_zero
 tb_mul_one_decoder.clk
 tb_mul_one_decoder.diff_pout

@@ -301,8 +301,9 @@ verilog-quartus:
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) > $(PPU_TOP_NAME) && \
-	iverilog $(PPU_TOP_NAME) && ./a.out
-	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME)
+	iverilog $(PPU_TOP_NAME) && ./a.out \
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME) \
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(QUARTUS_DIR)/ppu_top.v
 
 
 verilog-quartus16:
