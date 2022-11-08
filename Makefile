@@ -1,5 +1,5 @@
 # export MAKEFLAGS=--no-print-directory
-# export RISCV_PPU_DIR=/path/to/RISCV-PPU
+
 
 all: \
 	gen-test-vectors \
@@ -24,7 +24,7 @@ SRC_DIR := $(RISCV_PPU_DIR)/ppu/src
 SIM_DIR := $(RISCV_PPU_DIR)/ppu/sim
 WAVEFORMS_DIR := $(SIM_DIR)/waveforms
 PACOGEN_DIR := $(RISCV_PPU_DIR)/PaCoGen
-
+TEST_DIR := $(RISCV_PPU_DIR)/ppu/tests
 BUILD_DIR := $(RISCV_PPU_DIR)/ppu/build
 
 PPU_TOP_NAME := ppu$(WORD)_P$(N)E$(ES)_top.v
@@ -62,45 +62,43 @@ NUM_TESTS_PPU_PIPELINED := 500
 
 
 SRC_PPU_CORE_OPS := \
-	$(SRC_DIR)/utils.sv \
-	$(SRC_DIR)/constants.vh \
-	$(SRC_DIR)/common.sv \
-	$(SRC_DIR)/ppu_core_ops.sv \
-	$(SRC_DIR)/posit_to_fir.sv \
-	$(SRC_DIR)/demux1_to_2.sv \
-	$(SRC_DIR)/fir_to_posit.sv \
+	$(SRC_DIR)/include/utils.sv \
+	$(SRC_DIR)/include/constants.vh \
+	$(SRC_DIR)/include/common.sv \
+	$(SRC_DIR)/core_ops/ppu_core_ops.sv \
+	$(SRC_DIR)/format/posit_to_fir.sv \
+	$(SRC_DIR)/format/fir_to_posit.sv \
 	$(SRC_DIR)/conversions/float_encoder.sv \
 	$(SRC_DIR)/conversions/sign_extend.sv \
 	$(SRC_DIR)/conversions/float_to_fir.sv \
 	$(SRC_DIR)/conversions/fir_to_float.sv \
 	$(SRC_DIR)/input_conditioning.sv \
 	$(SRC_DIR)/handle_special_or_trivial.sv \
-	$(SRC_DIR)/total_exponent.sv \
+	$(SRC_DIR)/format/total_exponent.sv \
 	$(SRC_DIR)/ops.sv \
-	$(SRC_DIR)/core_op.sv \
-	$(SRC_DIR)/core_add_sub.sv \
-	$(SRC_DIR)/core_add.sv \
-	$(SRC_DIR)/core_sub.sv \
-	$(SRC_DIR)/core_mul.sv \
-	$(SRC_DIR)/core_div.sv \
-	$(SRC_DIR)/fast_reciprocal.sv \
-	$(SRC_DIR)/lut.sv \
-	$(SRC_DIR)/reciprocal_approx.sv \
-	$(SRC_DIR)/newton_raphson.sv \
-	$(SRC_DIR)/pack_fields.sv \
-	$(SRC_DIR)/unpack_exponent.sv \
-	$(SRC_DIR)/compute_rounding.sv \
-	$(SRC_DIR)/posit_unpack.sv \
-	$(SRC_DIR)/posit_decoder.sv \
-	$(SRC_DIR)/posit_encoder.sv \
-	$(SRC_DIR)/lzc.sv \
-	$(SRC_DIR)/round_posit.sv \
+	$(SRC_DIR)/core_ops/core_op.sv \
+	$(SRC_DIR)/core_ops/core_add_sub.sv \
+	$(SRC_DIR)/core_ops/core_add.sv \
+	$(SRC_DIR)/core_ops/core_sub.sv \
+	$(SRC_DIR)/core_ops/core_mul.sv \
+	$(SRC_DIR)/core_ops/core_div.sv \
+	$(SRC_DIR)/core_ops/fast_reciprocal.sv \
+	$(SRC_DIR)/core_ops/lut.sv \
+	$(SRC_DIR)/core_ops/reciprocal_approx.sv \
+	$(SRC_DIR)/core_ops/newton_raphson.sv \
+	$(SRC_DIR)/format/pack_fields.sv \
+	$(SRC_DIR)/format/unpack_exponent.sv \
+	$(SRC_DIR)/format/compute_rounding.sv \
+	$(SRC_DIR)/format/posit_unpack.sv \
+	$(SRC_DIR)/format/posit_decoder.sv \
+	$(SRC_DIR)/format/posit_encoder.sv \
+	$(SRC_DIR)/format/lzc.sv \
+	$(SRC_DIR)/format/round_posit.sv \
 	$(SRC_DIR)/sign_decisor.sv \
-	$(SRC_DIR)/set_sign.sv \
-	$(SRC_DIR)/highest_set.sv \
+	$(SRC_DIR)/format/set_sign.sv \
 	$(SRC_DIR)/ppu_control_unit.sv \
 	$(SRC_DIR)/reg_banks.sv \
-	$(SRC_DIR)/pp_mul.sv \
+	$(SRC_DIR)/core_ops/pp_mul.sv \
 	$(SRC_CONVERSIONS_PPU)
 
 SRC_DIV_AGAINST_PACOGEN := \
@@ -110,35 +108,33 @@ SRC_DIV_AGAINST_PACOGEN := \
 	$(SRC_DIR)/comparison_against_pacogen.sv 
 
 SRC_FLOAT_TO_POSIT := \
-	$(SRC_DIR)/utils.sv \
-	$(SRC_DIR)/common.sv \
+	$(SRC_DIR)/include/utils.sv \
+	$(SRC_DIR)/include/common.sv \
 	$(SRC_DIR)/conversions/defines.vh \
 	$(SRC_DIR)/conversions/float_to_posit.sv \
 	$(SRC_DIR)/conversions/float_to_fir.sv \
 	$(SRC_DIR)/conversions/float_decoder.sv \
-	$(SRC_DIR)/fir_to_posit.sv \
-	$(SRC_DIR)/posit_encoder.sv \
-	$(SRC_DIR)/round_posit.sv \
-	$(SRC_DIR)/pack_fields.sv \
-	$(SRC_DIR)/compute_rounding.sv \
-	$(SRC_DIR)/unpack_exponent.sv \
-	$(SRC_DIR)/set_sign.sv
+	$(SRC_DIR)/format/fir_to_posit.sv \
+	$(SRC_DIR)/format/posit_encoder.sv \
+	$(SRC_DIR)/format/round_posit.sv \
+	$(SRC_DIR)/format/pack_fields.sv \
+	$(SRC_DIR)/format/compute_rounding.sv \
+	$(SRC_DIR)/format/unpack_exponent.sv \
+	$(SRC_DIR)/format/set_sign.sv
 	
 SRC_POSIT_TO_FLOAT := \
-	$(SRC_DIR)/utils.sv \
-	$(SRC_DIR)/common.sv \
+	$(SRC_DIR)/include/utils.sv \
+	$(SRC_DIR)/include/common.sv \
 	$(SRC_DIR)/conversions/defines.vh \
 	$(SRC_DIR)/conversions/posit_to_float.sv \
 	$(SRC_DIR)/conversions/fir_to_float.sv \
 	$(SRC_DIR)/conversions/float_encoder.sv \
 	$(SRC_DIR)/conversions/sign_extend.sv \
-	$(SRC_DIR)/posit_to_fir.sv \
-	$(SRC_DIR)/posit_decoder.sv \
-	$(SRC_DIR)/posit_unpack.sv \
-	$(SRC_DIR)/total_exponent.sv \
-	$(SRC_DIR)/lzc.sv \
-	$(SRC_DIR)/highest_set.sv
-
+	$(SRC_DIR)/format/posit_to_fir.sv \
+	$(SRC_DIR)/format/posit_decoder.sv \
+	$(SRC_DIR)/format/posit_unpack.sv \
+	$(SRC_DIR)/format/total_exponent.sv \
+	$(SRC_DIR)/format/lzc.sv 
 
 gen-test-vectors:
 	cd $(SCRIPTS_DIR) && \
@@ -151,10 +147,9 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 --shuffle-random && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 2 --shuffle-random && \
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
-	# python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --shuffle-random \
 
 gen-lut-reciprocate-mant:
-	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/lut.sv 
+	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/core_ops/lut.sv 
 
 ppu-core_ops:
 	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
@@ -193,7 +188,7 @@ tb_pipelined:
 	$(DIV_WITH_LUT_FLAG) \
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-o tb_pipelined_P$(N)E$(ES).out \
-	$(SRC_DIR)/tb_pipelined.sv \
+	$(TEST_DIR)/tb_pipelined.sv \
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) && \
@@ -204,8 +199,8 @@ tb_pipelined:
 tb_pipelined_long_tb_single_file:
 	make ppu WORD=$(WORD) F=$(F) N=$(N) ES=$(ES)
 	cd $(WAVEFORMS_DIR) && \
-	cp $(SRC_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
-	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/$(PPU_TOP_NAME) > tb_pipelined_long_tb_single_file.sv && \
+	cp $(TEST_DIR)/tb_pipelined.sv ./tb_pipelined_tmp_copy.sv && \
+	sv2v -DTB_PIPELINED -DWORD=$(WORD) -DF=$(F) -DN=$(N) -DES=$(ES) $(SRC_DIR)/include/utils.sv tb_pipelined_tmp_copy.sv $(QUARTUS_DIR)/$(PPU_TOP_NAME) > tb_pipelined_long_tb_single_file.sv && \
 	rm tb_pipelined_tmp_copy.sv && \
 	iverilog tb_pipelined_long_tb_single_file.sv && ./a.out
 
@@ -219,7 +214,7 @@ tb_pipelined_long:
 	$(DIV_WITH_LUT_FLAG) \
 	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) $(FLOAT_TO_POSIT_FLAG) -DF=$(F) \
 	-o tb_pipelined_P$(N)E$(ES).out \
-	$(SRC_DIR)/tb_pipelined.sv \
+	$(TEST_DIR)/tb_pipelined.sv \
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) && \
@@ -308,6 +303,11 @@ verilog-quartus:
 
 verilog-quartus16:
 	make verilog-quartus N=16 ES=1 F=0
+
+
+vivado-reports: ppu
+	cd $(VIVADO_DIR) && \
+	N=$(N) ES=$(ES) WORD=$(WORD) vivado -mode batch -source $(SCRIPTS_DIR)/synth_and_report.tcl
 
 
 lint:

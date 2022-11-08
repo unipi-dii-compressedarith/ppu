@@ -1,0 +1,30 @@
+FROM ubuntu
+ARG DEBIAN_FRONTEND=noninteractive
+ARG MY_TOKEN
+ENV TZ=Europe
+RUN useradd -rm -d /home/builder -s /bin/bash -g root -G sudo -u 1001 builder
+RUN apt update
+RUN apt install tzdata
+RUN apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev  git unzip iverilog gtkwave yosys
+RUN wget https://github.com/chipsalliance/verible/releases/download/v0.0-2130-gb11bba24/verible-v0.0-2130-gb11bba24-Ubuntu-18.04-bionic-x86_64.tar.gz
+RUN tar -xf verible-v0.0-2130-gb11bba24-Ubuntu-18.04-bionic-x86_64.tar.gz
+RUN cp verible-v0.0-2130-gb11bba24/bin/verible-verilog-format /usr/local/bin/
+RUN wget https://github.com/MikePopoloski/slang/releases/download/v0.9/slang-linux.tar.gz
+RUN tar -xf slang-linux.tar.gz
+RUN cp slang/bin/slang /usr/local/bin/  
+RUN wget https://github.com/zachjs/sv2v/releases/download/v0.0.9/sv2v-Linux.zip
+RUN unzip sv2v-Linux.zip
+RUN cp sv2v-Linux/sv2v /usr/local/bin
+RUN su builder
+RUN git clone https://github.com/pyenv/pyenv.git /root/.pyenv
+ENV PYENV_ROOT /root/.pyenv 
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+RUN pyenv install 3.10.0
+RUN pyenv global 3.10.0
+RUN pip install maturin
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN . $HOME/.cargo/env
+RUN echo $MY_TOKEN
+RUN git clone https://$MY_TOKEN@github.com/urbanij/hardposit.git
+RUN . $HOME/.cargo/env && make
+RUN cd $HOME

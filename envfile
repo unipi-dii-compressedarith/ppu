@@ -1,2 +1,0 @@
-RISCV_PPU_DIR=$(cd .. && pwd)
-MAKEFLAGS=--no-print-directory
