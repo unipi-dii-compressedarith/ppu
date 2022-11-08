@@ -1,5 +1,4 @@
 # export MAKEFLAGS=--no-print-directory
-# export RISCV_PPU_DIR=/path/to/RISCV-PPU
 
 
 all: \
@@ -150,7 +149,7 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
 
 gen-lut-reciprocate-mant:
-	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/lut.sv 
+	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/core_ops/lut.sv 
 
 ppu-core_ops:
 	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
