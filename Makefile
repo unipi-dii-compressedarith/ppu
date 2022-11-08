@@ -1,5 +1,6 @@
 # export MAKEFLAGS=--no-print-directory
 
+RISCV_PPU_DIR=$(shell cd .. && pwd)
 
 all: \
 	gen-test-vectors \
