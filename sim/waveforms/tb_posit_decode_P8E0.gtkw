@@ -1,0 +1,78 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Mon Dec 20 18:39:21 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P8E0.vcd"
+[dumpfile_mtime] "Mon Dec 20 18:37:45 2021"
+[dumpfile_size] 57541
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_posit_decode_P8E0.gtkw"
+[timestart] 0
+[size] 1440 855
+[pos] -1 -1
+*-9.203135 477 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_posit_decode.
+[treeopen] tb_posit_decode.posit_decode_inst.
+[treeopen] tb_posit_decode.posit_decode_inst.clo_inst_o.
+[sst_width] 193
+[signals_width] 326
+[sst_expanded] 1
+[sst_vpaned_height] 454
+@24
+tb_posit_decode.test_no[8:0]
+@28
+tb_posit_decode.bits[7:0]
+@22
+tb_posit_decode.posit_decode_inst.bits[7:0]
+@28
+tb_posit_decode.posit_decode_inst.u_bits[7:0]
+@22
+tb_posit_decode.posit_decode_inst.u_bits[7:0]
+@200
+-
+@28
+tb_posit_decode.sign
+tb_posit_decode.sign_expected
+@200
+-
+@28
+tb_posit_decode.reg_s
+tb_posit_decode.reg_s_expected
+@24
+tb_posit_decode.posit_decode_inst.clo_inst_o.leading_ones[2:0]
+@25
+tb_posit_decode.reg_len[3:0]
+tb_posit_decode.reg_len_expected[3:0]
+@200
+-
+@28
+tb_posit_decode.posit_decode_inst.is_nar
+tb_posit_decode.posit_decode_inst.is_zero
+tb_posit_decode.diff_is_nar
+tb_posit_decode.diff_is_zero
+@200
+-
+@420
+tb_posit_decode.k[3:0]
+tb_posit_decode.k_expected[3:0]
+@28
+tb_posit_decode.diff_k
+@200
+-
+-
+-
+@28
+tb_posit_decode.mant[7:0]
+tb_posit_decode.mant_expected[7:0]
+tb_posit_decode.diff_mant
+tb_posit_decode.k_is_pos
+@200
+-
+-
+@28
+tb_posit_decode.err
+@200
+-
+@24
+tb_posit_decode.mant_len_expected[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sat Dec 25 18:13:52 2021
+[*]
+[dumpfile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_one_decoder_P16E1.vcd"
+[dumpfile_mtime] "Sat Dec 25 18:11:21 2021"
+[dumpfile_size] 600914
+[savefile] "/Users/fran/Dropbox/UNI/MASTER/thesis/msc-thesis/RISCV-PPU/ppu/waveforms/tb_mul_one_decoder_P16E1.gtkw"
+[timestart] 0
+[size] 2560 1418
+[pos] -1 -1
+*-3.239157 12 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_mul_one_decoder.
+[treeopen] tb_mul_one_decoder.mul_inst.
+[sst_width] 193
+[signals_width] 322
+[sst_expanded] 1
+[sst_vpaned_height] 454
+@28
+tb_mul_one_decoder.mul_inst.clk
+@22
+tb_mul_one_decoder.mul_inst.encode_in[27:0]
+tb_mul_one_decoder.mul_inst.p1[15:0]
+tb_mul_one_decoder.mul_inst.p1_d1[30:0]
+tb_mul_one_decoder.mul_inst.p1_decode_out[28:0]
+tb_mul_one_decoder.mul_inst.p1_demux_out[30:0]
+@28
+tb_mul_one_decoder.mul_inst.p1_is_special[1:0]
+@22
+tb_mul_one_decoder.mul_inst.p2[15:0]
+tb_mul_one_decoder.mul_inst.p2_d1[15:0]
+tb_mul_one_decoder.mul_inst.p2_decode_out[28:0]
+tb_mul_one_decoder.mul_inst.p2_demux_out[30:0]
+@28
+tb_mul_one_decoder.mul_inst.p2_is_special[1:0]
+@22
+tb_mul_one_decoder.mul_inst.p_dec_in[15:0]
+tb_mul_one_decoder.mul_inst.p_dec_out[30:0]
+tb_mul_one_decoder.mul_inst.pa[30:0]
+tb_mul_one_decoder.mul_inst.pout[15:0]
+@28
+tb_mul_one_decoder.mul_inst.pout_is_nar
+tb_mul_one_decoder.mul_inst.pout_is_zero
+tb_mul_one_decoder.clk
+tb_mul_one_decoder.diff_pout
+@22
+tb_mul_one_decoder.p1[15:0]
+tb_mul_one_decoder.p2[15:0]
+tb_mul_one_decoder.pout[15:0]
+tb_mul_one_decoder.pout_expected[15:0]
+tb_mul_one_decoder.test_no[16:0]
+[pattern_trace] 1
+[pattern_trace] 0

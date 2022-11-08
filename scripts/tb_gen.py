@@ -113,6 +113,8 @@ def single_arg_func(c, op):
             bits = int(random.random() * (1 << (N - 1)))
             p = from_bits(bits, N, ES)
 
+            if type(p.eval()) != float or type(p.eval()) != int:
+                continue
             f64_obj = F64(x_f64=p.eval())
 
             c += f"in2 = {N}'d{p.to_bits()}; "
@@ -272,7 +274,7 @@ if __name__ == "__main__":
                     c += f"{'mant_len_expected ='.ljust(LJUST)} {mant_len};\n"
                 else:
                     pass
-                c += f"{'is_special_expected ='.ljust(LJUST)} {(p.is_zero or p.is_nan).real};\n"
+                c += f"{'is_special_expected ='.ljust(LJUST)} {(p.is_zero or p.is_nar).real};\n"
             elif args.operation == Tb.ENCODE:
                 c += f"{'posit_expected ='.ljust(LJUST)} {N}'h{p.to_hex(prefix=False)};\n"
                 ### sign
@@ -287,7 +289,7 @@ if __name__ == "__main__":
                     ### mantissa
                     c += f"{'mant ='.ljust(LJUST)} {N}'b{get_bin(mant, N, prefix=False)};\n"
                 c += f"{'is_zero ='.ljust(LJUST)} {p.is_zero.real};\n"
-                c += f"{'is_nan ='.ljust(LJUST)} {p.is_nan.real};\n"
+                c += f"{'is_nar ='.ljust(LJUST)} {p.is_nar.real};\n"
             c += f"#10;\n\n"
 
     elif args.operation == Tb.MUL:
