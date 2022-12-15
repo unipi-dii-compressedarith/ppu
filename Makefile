@@ -1,6 +1,6 @@
 # export MAKEFLAGS=--no-print-directory
-# export RISCV_PPU_DIR=/path/to/RISCV-PPU
 
+RISCV_PPU_DIR=$(shell cd .. && pwd)
 
 all: \
 	gen-test-vectors \
@@ -150,7 +150,7 @@ gen-test-vectors:
 	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
 
 gen-lut-reciprocate-mant:
-	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/lut.sv 
+	python $(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/core_ops/lut.sv 
 
 ppu-core_ops:
 	cd $(SCRIPTS_DIR) && python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n $(N) -es $(ES) --no-shuffle-random
@@ -297,8 +297,9 @@ verilog-quartus:
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) > $(PPU_TOP_NAME) && \
-	iverilog $(PPU_TOP_NAME) && ./a.out
-	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME)
+	iverilog $(PPU_TOP_NAME) && ./a.out \
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME) \
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(QUARTUS_DIR)/ppu_top.v
 
 
 verilog-quartus16:
