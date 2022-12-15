@@ -12,8 +12,8 @@ for report in ${util_reports[*]}; do
 
 
     # Extract report parameters
-    word=$(echo $report_ | awk -F_ '$0=$3')
-    posit=$(echo $report_ | awk -F_ '$0=$4')
+    word=$(echo $report_ | awk -F_ '$0=$4')
+    posit=$(echo $report_ | awk -F_ '$0=$5')
 
     # Get file content
     content=$(cat $report)
@@ -39,8 +39,8 @@ for report in ${time_reports[*]}; do
     report_="${report%.*}"
 
     # Extract report parameters
-    word=$(echo $report_ | awk -F_ '$0=$3')
-    posit=$(echo $report_ | awk -F_ '$0=$4')
+    word=$(echo $report_ | awk -F_ '$0=$4')
+    posit=$(echo $report_ | awk -F_ '$0=$5')
 
     # Get file content
     content=$(cat $report)
@@ -64,8 +64,8 @@ for report in ${powr_reports[*]}; do
     report_="${report%.*}"
 
     # Extract report parameters
-    word=$(echo $report_ | awk -F_ '$0=$3')
-    posit=$(echo $report_ | awk -F_ '$0=$4')
+    word=$(echo $report_ | awk -F_ '$0=$4')
+    posit=$(echo $report_ | awk -F_ '$0=$5')
 
     # Get file content
     content=$(cat $report)
