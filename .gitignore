@@ -1,5 +1,8 @@
 .DS_Store
 
+a.*v
+s*.json
+
 # iverilog outputs
 *.out
 *.vvp

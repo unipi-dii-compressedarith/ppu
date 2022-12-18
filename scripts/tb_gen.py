@@ -319,7 +319,8 @@ if __name__ == "__main__":
         c = single_arg_func(c, Tb.FLOAT_TO_POSIT)
 
     filename = pathlib.Path(
-        f"../sim/test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv"
+        # f"../sim/test_vectors/tv_posit_{args.operation}_P{N}E{ES}.sv"
+        f"../sim/test_vectors/tv_posit_{args.operation}.sv"
     )
     with open(filename, "w") as f:
         f.write(c)

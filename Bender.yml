@@ -1,0 +1,57 @@
+package:
+  name: ppu
+  authors:
+    - "Francesco Urbani <f.urbani1@studenti.unipi.it>"
+    
+
+export_include_dirs:
+  - 
+
+sources:
+  - 
+    defines:
+      N: 8
+      ES: 0
+      WORD: 32
+      F: 0
+      NO_PIPELINE: ~
+    
+    files:
+    - src/ppu_pkg.sv
+    - src/core_ops/ppu_core_ops.sv
+    - src/format/posit_to_fir.sv
+    - src/format/fir_to_posit.sv
+    - src/input_conditioning.sv
+    - src/handle_special_or_trivial.sv
+    - src/format/total_exponent.sv
+    - src/ops.sv
+    - src/core_ops/core_op.sv
+    - src/core_ops/core_add_sub.sv
+    - src/core_ops/core_add.sv
+    - src/core_ops/core_sub.sv
+    - src/core_ops/core_mul.sv
+    - src/core_ops/core_div.sv
+    - src/core_ops/fast_reciprocal.sv
+    - src/core_ops/lut_reciprocate.sv
+    - src/core_ops/reciprocal_approx.sv
+    - src/core_ops/newton_raphson.sv
+    - src/format/pack_fields.sv
+    - src/format/unpack_exponent.sv
+    - src/format/compute_rounding.sv
+    - src/format/posit_unpack.sv
+    - src/format/posit_decoder.sv
+    - src/format/posit_encoder.sv
+    - src/format/lzc.sv
+    - src/format/round_posit.sv
+    - src/sign_decisor.sv
+    - src/format/set_sign.sv
+    - src/core_ops/pp_mul.sv
+    - src/ppu.sv
+    - src/ppu_top.sv
+    
+    - target: test
+      files:
+      - tests/tb_posit_encoder.sv
+      - tests/tb_newton_raphson.sv
+      - tests/tb_ppu.sv
+      

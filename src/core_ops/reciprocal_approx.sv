@@ -1,46 +1,35 @@
-/*
+module reciprocal_approx 
+  import ppu_pkg::*;
+  #(
+    parameter N = 10
+  )(
+    input [N-1:0]                   i_data,
+    output [(3*N-1-2)-1:0]          o_data
+  );
 
-Sat Jan 22 16:55:07 CET 2022
+  reg [(N)-1:0] a, b;
+  reg [(2*N-1)-1:0] c, d;
+  reg [(3*N-1)-1:0] e;
+  reg [(3*N-1-2)-1:0] out;
 
-cd waveforms
-iverilog -g2012 -DTB_UNSIGNED_RECIPROCAL_APPROX -o reciprocal_approx.out \
-../src/reciprocal_approx.sv \
-&& ./unsigned_reciprocal_approx.out
-
-*/
-
-
-
-module reciprocal_approx #(
-        parameter N = 10
-    )(
-        input [N-1:0]                   i_data,
-        output [(3*N-1-2)-1:0]          o_data
-    );
-
-    reg [(N)-1:0] a, b;
-    reg [(2*N-1)-1:0] c, d;
-    reg [(3*N-1)-1:0] e;
-    reg [(3*N-1-2)-1:0] out;
-
-    assign a = i_data;
+  assign a = i_data;
 
 
-    /// generated with `scripts/gen_fixed_point_values.py`
-    wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;
-    wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N;
+  /// generated with `scripts/gen_fixed_point_values.py`
+  wire [(N)-1:0] fx_1_466  = fx_1_466___N`N;
+  wire [(2*N-1)-1:0] fx_1_0012 = fx_1_0012___N`N;
 
 
-    assign b = fx_1_466 - a;
-    assign c = (($signed(a) * $signed(b)) << 1) >> 1;
-    assign d = fx_1_0012 - c;
-    assign e = $signed(d) * $signed(b);
-    assign out = e;
+  assign b = fx_1_466 - a;
+  assign c = (($signed(a) * $signed(b)) << 1) >> 1;
+  assign d = fx_1_0012 - c;
+  assign e = $signed(d) * $signed(b);
+  assign out = e;
 
-    /// full width output:
-    assign o_data = out;
+  /// full width output:
+  assign o_data = out;
 
-endmodule
+endmodule: reciprocal_approx
 
 
 
@@ -48,28 +37,29 @@ endmodule
 `ifdef TB_UNSIGNED_RECIPROCAL_APPROX
 module tb_reciprocal_approx;
 
-    parameter N = 16;
+  parameter N = 16;
 
-    reg [N-1:0] i_data;
-    wire[N-1:0] o_data;
-
-
-    reciprocal_approx reciprocal_approx_inst (
-        .i_data(i_data),
-        .o_data(o_data)
-    );
+  reg [N-1:0] i_data;
+  wire[N-1:0] o_data;
 
 
-    initial begin
-        $dumpfile("tb_reciprocal_approx.vcd");
-        $dumpvars(0, tb_reciprocal_approx);
-    end
+  reciprocal_approx reciprocal_approx_inst (
+    .i_data(i_data),
+    .o_data(o_data)
+  );
 
-    // python -c "for i in range(0, 1<<16): print(f\"#10;   i_data = 16'h{hex(i)[2:]};\")" | pbcopy
 
-    initial begin
+  initial begin
+    $dumpfile("tb_reciprocal_approx.vcd");
+    $dumpvars(0, tb_reciprocal_approx);
+  end
 
-  i_data = 16'h0;
+
+  // python -c "for i in range(0, 1<<16): print(f\"#10;   i_data = 16'h{hex(i)[2:]};\")" | pbcopy
+
+  initial begin
+
+       i_data = 16'h0;
 #10;   i_data = 16'h1;
 #10;   i_data = 16'h4e00;
 #10;   i_data = 16'h4e01;
@@ -298,5 +288,5 @@ module tb_reciprocal_approx;
 #10;
 end
 
-endmodule
+endmodule: tb_reciprocal_approx 
 `endif

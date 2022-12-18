@@ -1,11 +1,6 @@
-/*
-
-iverilog -DN=16 -o core_mul.out \
-    ../src/core_mul.sv && ./core_mul.out
-
-*/
-
-module core_mul #(
+module core_mul 
+    import ppu_pkg::*;
+#(
     parameter N = `N
 ) (
     input                             clk,
@@ -34,6 +29,8 @@ module core_mul #(
     assign frac_truncated = mant_carry && (mant_mul & 1);
 
 
+
+`ifdef PIPELINE_STAGE
     always_ff @(posedge clk) begin
         if (rst) begin
             te_sum_st1 <= 0;
@@ -42,22 +39,26 @@ module core_mul #(
         end
     end
 
-
-`define PIPELINED_MUL
-`ifdef PIPELINED_MUL
-    pp_mul #(
-        .M(MANT_SIZE),
-        .N(MANT_SIZE)
-    ) pp_mul_inst (
-        .clk(clk),
-        .rst(rst),
-        .a(mant1),
-        .b(mant2),
-        .product(mant_mul)
-    );
-`else
+    // `define PIPELINED_MUL
+    `ifdef PIPELINED_MUL
+        pp_mul #(
+            .M(MANT_SIZE),
+            .N(MANT_SIZE)
+        ) pp_mul_inst (
+            .clk(clk),
+            .rst(rst),
+            .a(mant1),
+            .b(mant2),
+            .product(mant_mul)
+        );
+    `else
+        assign mant_mul = mant1 * mant2;
+    `endif
+`elsif NO_PIPELINE
+    assign te_sum_st1 = te_sum_st0;
     assign mant_mul = mant1 * mant2;
+`else
+    initial $error("Missing define: `core_mul`");
 `endif
 
-
-endmodule
+endmodule: core_mul

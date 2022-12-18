@@ -5,7 +5,7 @@ module lzc #(
     output [$clog2(NUM_BITS)-1:0] out,
     output                        vld
 );
-
+    // initial $display("Hello lzc.");
     lzc_internal #(
         .NUM_BITS(NUM_BITS)
     ) l1 (
