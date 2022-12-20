@@ -1,4 +1,3 @@
-(* dont_touch = "1" *)  
 module ppu_ap_top #(
     parameter WORD = `WORD,
 `ifdef FLOAT_TO_POSIT
@@ -12,7 +11,8 @@ module ppu_ap_top #(
     input      [   WORD-1:0] ppu_in2,
     input      [OP_SIZE-1:0] ppu_op,
     output     [   WORD-1:0] ppu_out,
-    output                   ap_idle, ap_done, ap_ready
+    output                   ap_idle, ap_done, ap_ready,
+    output                   ppu_valid_o
 );
 
 
@@ -36,5 +36,6 @@ module ppu_ap_top #(
 
     assign ap_ready = ap_done;
     assign ap_idle = ~ap_start;
+    assign ppu_valid_o = ap_done;
 
 endmodule
