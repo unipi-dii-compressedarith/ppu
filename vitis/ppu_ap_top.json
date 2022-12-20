@@ -1,0 +1,61 @@
+{
+    "c_function_name"     : "ppu_ap_top",
+    "rtl_top_module_name" : "ppu_ap_top",
+    "c_files" : [{ 
+                  "c_file" : "ppu_ap_top_wrap.cpp",
+                  "cflag" : ""
+                }],
+    "rtl_files" : [
+                    "ppu_ap_top.v"
+                  ],
+    "c_parameters" : [{
+                       "c_name" : "ppu_in1",
+                       "c_port_direction" : "in",
+                       "rtl_ports" : {
+                                      "data_read_in" : "ppu_in1"
+                                     }
+                      },
+                      {
+                       "c_name" : "ppu_in2",
+                       "c_port_direction" : "in",
+                       "rtl_ports" : {
+                                      "data_read_in" : "ppu_in2"
+                                     }
+                      },
+                      {
+                       "c_name" : "ppu_op",
+                       "c_port_direction" : "in",
+                       "rtl_ports" : {
+                                      "data_read_in" : "ppu_op"
+                                     }
+                      },
+                      {
+                       "c_name" : "ppu_out",
+                       "c_port_direction" : "out",
+                       "rtl_ports" : {
+                                      "data_write_out"   : "ppu_out",
+                              "data_write_valid" : "ap_done"
+                                     }
+                      }],
+    "rtl_common_signal" : {
+                            "module_clock"                    : "ap_clk",
+                            "module_reset"                    : "ap_rst",
+                            "module_clock_enable"             : "ap_ce",
+                            "ap_ctrl_chain_protocol_idle"     : "ap_idle",
+                            "ap_ctrl_chain_protocol_start"    : "ap_start",
+                            "ap_ctrl_chain_protocol_ready"    : "ap_ready",
+                            "ap_ctrl_chain_protocol_done"     : "ap_done",
+                            "ap_ctrl_chain_protocol_continue" : "ap_continue"
+                          },
+    "rtl_performance" : {
+                         "latency" : "2",
+                         "II"      : "1"
+                        },
+    "rtl_resource_usage" : {
+                            "FF"   :   "0",
+                            "LUT"  :   "0",
+                            "BRAM" :   "0",
+                            "URAM" :   "0",
+                            "DSP"  :   "1"
+                           }
+    }
