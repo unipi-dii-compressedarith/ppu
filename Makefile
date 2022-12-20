@@ -29,7 +29,7 @@ TEST_DIR := $(RISCV_PPU_DIR)/ppu/tests
 BUILD_DIR := $(RISCV_PPU_DIR)/ppu/build
 
 PPU_TOP_NAME := ppu$(WORD)_P$(N)E$(ES)_top.v
-
+PPU_AP_TOP_NAME = ppu$(WORD)_P$(N)E$(ES)_ap_top.v
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
@@ -300,6 +300,21 @@ verilog-quartus:
 	iverilog $(PPU_TOP_NAME) && ./a.out \
 	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME) \
 	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(QUARTUS_DIR)/ppu_top.v
+
+ppu-ap-top:
+	cd $(QUARTUS_DIR) && \
+	sv2v \
+	$(ES_FIELD_PRESENCE_FLAG) \
+	$(DIV_WITH_LUT_FLAG) -DLUT_SIZE_IN=$(LUT_SIZE_IN) -DLUT_SIZE_OUT=$(LUT_SIZE_OUT) \
+	$(FLOAT_TO_POSIT_FLAG) \
+	-DWORD=$(WORD) -DN=$(N) -DES=$(ES) -DF=$(F) \
+	$(SRC_DIR)/ppu_ap_top.sv \
+	$(SRC_DIR)/ppu_top.sv \
+	$(SRC_DIR)/ppu.sv \
+	$(SRC_PPU_CORE_OPS) > $(PPU_AP_TOP_NAME) && \
+	iverilog $(PPU_AP_TOP_NAME) && ./a.out \
+	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(VIVADO_DIR)/$(PPU_AP_TOP_NAME) \
+	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(QUARTUS_DIR)/ppu_ap_top.v	
 
 
 verilog-quartus16:
