@@ -9,7 +9,7 @@ set_top ppu_ap_top_wrap
 
 open_solution -reset solution_ppu
 
-set_part  {xcvu9p-flga2104-2-i}
+set_part xcu280-fsvh2892-2L-e
 create_clock -period "200MHz"
 
 csynth_design

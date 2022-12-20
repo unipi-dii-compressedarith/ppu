@@ -10,7 +10,8 @@ module ppu_ap_top (
 	ppu_out,
 	ap_idle,
 	ap_done,
-	ap_ready
+	ap_ready,
+	ppu_valid_o
 );
 	parameter WORD = 64;
 	parameter FSIZE = 32;
@@ -29,6 +30,7 @@ module ppu_ap_top (
 	output wire ap_idle;
 	output wire ap_done;
 	output wire ap_ready;
+	output wire ppu_valid_o;
 	ppu_top #(
 		.WORD(WORD),
 		.FSIZE(FSIZE),
@@ -46,6 +48,7 @@ module ppu_ap_top (
 	);
 	assign ap_ready = ap_done;
 	assign ap_idle = ~ap_start;
+	assign ppu_valid_o = ap_done;
 endmodule
 module ppu_top (
 	clk,

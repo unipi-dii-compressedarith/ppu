@@ -34,7 +34,7 @@
                        "c_port_direction" : "out",
                        "rtl_ports" : {
                                       "data_write_out"   : "ppu_out",
-                              "data_write_valid" : "ap_done"
+                              "data_write_valid" : "ppu_valid_o"
                                      }
                       }],
     "rtl_common_signal" : {
