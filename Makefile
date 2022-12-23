@@ -1,9 +1,9 @@
 # export MAKEFLAGS=--no-print-directory
 
-# export RISCV_PPU_DIR=$(shell cd .. && pwd)
+# export RISCV_PPU_ROOT=$(shell cd .. && pwd)
 
-ifndef RISCV_PPU_DIR
-$(error must set RISCV_PPU_DIR to point at the root of RISCV_PPU directory.)
+ifndef RISCV_PPU_ROOT
+$(error must set RISCV_PPU_ROOT to point at the root of RISCV_PPU directory.)
 endif
 
 
@@ -17,16 +17,16 @@ all: \
 
 .PHONY : all
 
-QUARTUS_DIR := $(RISCV_PPU_DIR)/ppu/fpga/quartus
-VIVADO_DIR := $(RISCV_PPU_DIR)/ppu/fpga/vivado
+QUARTUS_DIR := $(RISCV_PPU_ROOT)/ppu/fpga/quartus
+VIVADO_DIR := $(RISCV_PPU_ROOT)/ppu/fpga/vivado
 
-SCRIPTS_DIR := $(RISCV_PPU_DIR)/ppu/scripts
-SRC_DIR := $(RISCV_PPU_DIR)/ppu/src
-SIM_DIR := $(RISCV_PPU_DIR)/ppu/sim
+SCRIPTS_DIR := $(RISCV_PPU_ROOT)/ppu/scripts
+SRC_DIR := $(RISCV_PPU_ROOT)/ppu/src
+SIM_DIR := $(RISCV_PPU_ROOT)/ppu/sim
 WAVEFORMS_DIR := $(SIM_DIR)/waveforms
-PACOGEN_DIR := $(RISCV_PPU_DIR)/PaCoGen
-TEST_DIR := $(RISCV_PPU_DIR)/ppu/tests
-BUILD_DIR := $(RISCV_PPU_DIR)/ppu/build
+PACOGEN_DIR := $(RISCV_PPU_ROOT)/PaCoGen
+TEST_DIR := $(RISCV_PPU_ROOT)/ppu/tests
+BUILD_DIR := $(RISCV_PPU_ROOT)/ppu/build
 
 
 F ?= 0
@@ -61,7 +61,7 @@ endif
 
 NR_STAGES := $(ES) 	# newton-raphson stages. actually it's 0 for N in (0..=8), 1 for N in (9..=16), 2 for N in (17..=32) i.e. clog2(N)
 
-NUM_TESTS_PPU := 10
+NUM_TESTS_PPU := 100
 NUM_TESTS_PPU_PIPELINED := 500
 
 
@@ -156,15 +156,15 @@ pickle:
 
 gen-test-vectors:
 	cd $(SCRIPTS_DIR) && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 4  -es 0 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 1 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 2 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 0 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 2 --shuffle-random && \
-	python tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 4  -es 0 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 5  -es 1 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 0 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 1 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 8  -es 2 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 0 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 1 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 16 -es 2 --shuffle-random && \
+	./tb_gen.py --num-tests $(NUM_TESTS_PPU) --operation ppu -n 32 -es 2 --shuffle-random 
 
 gen-lut-reciprocate-mant:
 	$(SCRIPTS_DIR)/mant_recip_LUT_gen.py -i $(LUT_SIZE_IN) -o $(LUT_SIZE_OUT) > $(SRC_DIR)/core_ops/lut_reciprocate.sv 

@@ -10,10 +10,10 @@ export_include_dirs:
 sources:
   - 
     defines:
-      N: 8
-      ES: 0
-      WORD: 32
-      F: 0
+    #   N: 8
+    #   ES: 0
+    #   WORD: 32
+    #   F: 0
       NO_PIPELINE: ~
     
     files:

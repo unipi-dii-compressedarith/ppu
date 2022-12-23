@@ -1,7 +1,12 @@
 .DS_Store
 
-a.*v
+
 s*.json
+a*.sv 
+a.v 
+*.log 
+docs/ppu-docs
+
 
 # iverilog outputs
 *.out
@@ -38,3 +43,5 @@ fpga/vivado/reports/*
 
 results.xml
 sim_build
+
+.pyre*

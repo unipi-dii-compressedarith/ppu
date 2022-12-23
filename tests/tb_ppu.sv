@@ -10,60 +10,62 @@ module tb_ppu;
 
   parameter ASCII_SIZE = 300;
 
-  reg                 clk;
-  reg                 rst;
-  reg                 valid_in;
-  reg  [    WORD-1:0] in1;
-  reg  [    WORD-1:0] in2;
-  reg  [ OP_SIZE-1:0] op;
-  reg  [ASCII_SIZE:0] op_ascii;
-  wire [    WORD-1:0] out;
-  wire                valid_o;
+  logic                                 clk_i;
+  logic                                 rst_i;
+  logic                                 in_valid_i;
+  logic                   [WORD-1:0]    operand1_i;
+  logic                   [WORD-1:0]    operand2_i;
+  ppu_pkg::operation_e                  op_i;
+  logic                 [ASCII_SIZE:0]  op_i_ascii;
+  wire                  [WORD-1:0]      result_o;
+  wire                                  out_valid_o;
 
 
-  reg [ASCII_SIZE:0] in1_ascii, in2_ascii, out_ascii, out_gt_ascii;
+  logic [ASCII_SIZE:0] operand1_i_ascii, operand2_i_ascii, result_o_ascii, result_gt_ascii;
 
 
-  reg [WORD-1:0] out_ground_truth;
-  reg [N-1:0] pout_hwdiv_expected;
-  reg diff_out_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
-  reg [  N:0] test_no;
+  logic [WORD-1:0] out_ground_truth;
+  logic [N-1:0] pout_hwdiv_expected;
+  logic diff_out_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
+  logic [  N:0] test_no;
 
-  reg [100:0] count_errors;
+  logic [100:0] count_errors;
+
+  
 
   ppu #(
-    .WORD(WORD),
-`ifdef FLOAT_TO_POSIT
-    .FSIZE(FSIZE),
-`endif
-    .N(N),
-    .ES(ES)
+    .WORD       (WORD),
+    `ifdef FLOAT_TO_POSIT
+      .FSIZE    (FSIZE),
+    `endif
+    .N          (N),
+    .ES         (ES)
   ) ppu_inst (
-    .clk(clk),
-    .rst(rst),
-    .valid_in(valid_in),
-    .in1(in1),
-    .in2(in2),
-    .op(op),
-    .out(out),
-    .valid_o(valid_o)
+    .clk_i      (clk_i),
+    .rst_i      (rst_i),
+    .in_valid_i (in_valid_i),
+    .operand1_i (operand1_i),
+    .operand2_i (operand2_i),
+    .op_i       (op_i),
+    .result_o   (result_o),
+    .out_valid_o(out_valid_o)
   );
 
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 
   
-  initial clk = 0;
-  initial rst = 0;
+  initial clk_i = 0;
+  initial rst_i = 0;
   
-  always begin clk = ~clk; #5; end
+  always begin clk_i = ~clk_i; #5; end
 
   always @(*) begin
-    diff_out_ground_truth = out === out_ground_truth ? 0 : 1'bx;
-    pout_off_by_1 = abs(out - out_ground_truth) == 0 ? 0 :
-                    abs(out - out_ground_truth) == 1 ? 1 : 'bx;
-    diff_pout_hwdiv_exp = (op != DIV) ? 'hz : 
-                          out === pout_hwdiv_expected ? 0 : 1'bx;
+    diff_out_ground_truth = result_o === out_ground_truth ? 0 : 1'bx;
+    pout_off_by_1 = abs(result_o - out_ground_truth) == 0 ? 0 :
+                    abs(result_o - out_ground_truth) == 1 ? 1 : 'bx;
+    diff_pout_hwdiv_exp = (op_i != DIV) ? 'hz : 
+                          result_o === pout_hwdiv_expected ? 0 : 1'bx;
   end
 
 
@@ -72,12 +74,12 @@ module tb_ppu;
   integer f;
   initial f = $fopen("ppu_output.log", "w");
 
-  always @(posedge clk) begin
-    if (valid_in) $fwrite(f, "i %h %h %h\n", in1, op, in2);
+  always @(posedge clk_i) begin
+    if (in_valid_i) $fwrite(f, "i %h %h %h\n", operand1_i, op_i, operand2_i);
   end
 
-  always @(negedge clk) begin
-    if (valid_o) $fwrite(f, "o %h\n", out);
+  always @(negedge clk_i) begin
+    if (out_valid_o) $fwrite(f, "o %h\n", result_o);
   end
   //////////////////////////////////////////////////////////////////
 
@@ -88,7 +90,7 @@ module tb_ppu;
     $dumpvars(0, tb_ppu);
     #7;
 
-    valid_in = 1;
+    in_valid_i = 1;
 
     
     

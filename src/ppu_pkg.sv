@@ -14,6 +14,17 @@ parameter N = `N;
 parameter ES = `ES;
 `endif
 
+
+
+localparam int unsigned OP_BITS = 3;
+typedef enum logic [OP_BITS-1:0] {
+  ADD, SUB,
+  MUL, DIV,
+  FMADD
+} operation_e;
+
+
+
 `ifndef OP_SIZE
 parameter OP_SIZE = 3;
 /*
@@ -87,10 +98,10 @@ parameter ZERO = {`N{1'b0}};
 parameter NAR = {1'b1, {`N - 1{1'b0}}};
 
 
-parameter ADD = 3'd0;
-parameter SUB = 3'd1;
-parameter MUL = 3'd2;
-parameter DIV = 3'd3;
+// parameter ADD = 3'd0;
+// parameter SUB = 3'd1;
+// parameter MUL = 3'd2;
+// parameter DIV = 3'd3;
 parameter FLOAT_TO_POSIT = 3'd4;
 parameter POSIT_TO_FLOAT = 3'd5;
 
