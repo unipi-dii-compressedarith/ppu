@@ -22,6 +22,8 @@ VIVADO_DIR := $(RISCV_PPU_DIR)/ppu/fpga/vivado
 
 SCRIPTS_DIR := $(RISCV_PPU_DIR)/ppu/scripts
 SRC_DIR := $(RISCV_PPU_DIR)/ppu/src
+VITIS_DIR := $(RISCV_PPU_DIR)/ppu/vitis
+
 SIM_DIR := $(RISCV_PPU_DIR)/ppu/sim
 WAVEFORMS_DIR := $(SIM_DIR)/waveforms
 PACOGEN_DIR := $(RISCV_PPU_DIR)/PaCoGen
@@ -297,9 +299,8 @@ verilog-quartus:
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) > $(PPU_TOP_NAME) && \
+	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME) && \
 	iverilog $(PPU_TOP_NAME) && ./a.out \
-	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(VIVADO_DIR)/$(PPU_TOP_NAME) \
-	cp -r $(QUARTUS_DIR)/$(PPU_TOP_NAME) $(QUARTUS_DIR)/ppu_top.v
 
 ppu-ap-top:
 	cd $(QUARTUS_DIR) && \
@@ -312,10 +313,9 @@ ppu-ap-top:
 	$(SRC_DIR)/ppu_top.sv \
 	$(SRC_DIR)/ppu.sv \
 	$(SRC_PPU_CORE_OPS) > $(PPU_AP_TOP_NAME) && \
+	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(VIVADO_DIR)/$(PPU_AP_TOP_NAME) && \
+	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(VITIS_DIR)/ppu_ap_top_gen.v && \
 	iverilog $(PPU_AP_TOP_NAME) && ./a.out \
-	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(VIVADO_DIR)/$(PPU_AP_TOP_NAME) \
-	cp -r $(QUARTUS_DIR)/$(PPU_AP_TOP_NAME) $(QUARTUS_DIR)/ppu_ap_top.v	
-
 
 verilog-quartus16:
 	make verilog-quartus N=16 ES=1 F=0
