@@ -8,7 +8,7 @@ module comparison_against_pacogen #(
 ) (
     input  [      N-1:0] p1,
     input  [      N-1:0] p2,
-    input  [OP_SIZE-1:0] op,
+    input  [OP_BITS-1:0] op,
     output [      N-1:0] pout_ppu_core_ops,
     output [      N-1:0] pout_pacogen
 );
@@ -50,7 +50,7 @@ module tb_comparison_against_pacogen;
     reg [N-1:0] in1, in2;
 
     reg [N-1:0] p1, p2;
-    reg [OP_SIZE-1:0] op;
+    reg [OP_BITS-1:0] op;
     reg [(ASCII_SIZE)-1:0] in1_ascii, in2_ascii, out_gt_ascii;
     reg [(ASCII_SIZE)-1:0] op_ascii;
     wire [N-1:0] pout_pacogen, pout_ppu_core_ops;

@@ -4,11 +4,11 @@ module total_exponent
   parameter N  = 4,
   parameter ES = 1
 ) (
-  input  [ K_SIZE-1:0] k,
+  input  [ K_BITS-1:0] k,
 `ifndef NO_ES_FIELD
   input  [     ES-1:0] exp,
 `endif
-  output [TE_SIZE-1:0] total_exp
+  output [TE_BITS-1:0] total_exp
 );
 
 

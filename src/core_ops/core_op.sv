@@ -5,14 +5,14 @@ module core_op
 ) (
   input                         clk,
   input                         rst,
-  input  [         OP_SIZE-1:0] op,
+  input ppu_pkg::operation_e    op_i,
   input                         sign1,
   input                         sign2,
-  input  [         TE_SIZE-1:0] te1,
-  input  [         TE_SIZE-1:0] te2,
+  input  [         TE_BITS-1:0] te1,
+  input  [         TE_BITS-1:0] te2,
   input  [       MANT_SIZE-1:0] mant1,
   input  [       MANT_SIZE-1:0] mant2,
-  output [         TE_SIZE-1:0] te_out_core_op,
+  output [         TE_BITS-1:0] te_out_core_op,
   output [(FRAC_FULL_SIZE)-1:0] frac_out_core_op,
   output                        frac_truncated
 );
@@ -22,7 +22,7 @@ module core_op
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_out_div;
 
 
-  wire [TE_SIZE-1:0] te_out_add_sub, te_out_mul, te_out_div;
+  wire [TE_BITS-1:0] te_out_add_sub, te_out_mul, te_out_div;
   wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
   core_add_sub #(
@@ -70,26 +70,26 @@ module core_op
 
 
   wire [(FRAC_FULL_SIZE)-1:0] mant_out_core_op;
-  assign mant_out_core_op = (op == ADD || op == SUB)
-    ? mant_out_add_sub << (FRAC_FULL_SIZE - MANT_ADD_RESULT_SIZE) : op == MUL
-    ? mant_out_mul << (FRAC_FULL_SIZE - MANT_MUL_RESULT_SIZE) : /* op == DIV */
+  assign mant_out_core_op = (op_i == ADD || op_i == SUB)
+    ? mant_out_add_sub << (FRAC_FULL_SIZE - MANT_ADD_RESULT_SIZE) : op_i == MUL
+    ? mant_out_mul << (FRAC_FULL_SIZE - MANT_MUL_RESULT_SIZE) : /* op_i == DIV */
       mant_out_div;
 
 
   // chopping off the two MSB representing the
   // non-fractional components i.e. ones and tens.
-  assign frac_out_core_op = op == DIV
+  assign frac_out_core_op = op_i == DIV
     ? mant_out_core_op : /* ADD, SUB, and MUL */
       mant_out_core_op << 2;
 
-  assign te_out_core_op = (op == ADD || op == SUB)
-    ? te_out_add_sub : op == MUL
-    ? te_out_mul : /* op == DIV */
+  assign te_out_core_op = (op_i == ADD || op_i == SUB)
+    ? te_out_add_sub : op_i == MUL
+    ? te_out_mul : /* op_i == DIV */
       te_out_div;
 
-  assign frac_truncated = op == MUL
-    ? frac_truncated_mul : op == DIV
-    ? frac_truncated_div : /* op == ADD || op == SUB */
+  assign frac_truncated = op_i == MUL
+    ? frac_truncated_mul : op_i == DIV
+    ? frac_truncated_div : /* op_i == ADD || op_i == SUB */
       frac_truncated_add_sub;
 
 endmodule: core_op

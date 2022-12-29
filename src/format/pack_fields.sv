@@ -9,10 +9,10 @@ module pack_fields
   parameter ES = 0
 ) (
   input [FRAC_FULL_SIZE-1:0] frac_full,
-  input [       TE_SIZE-1:0] total_exp,
+  input [       TE_BITS-1:0] total_exp,
   input                      frac_truncated, // new flag
 
-  output [   K_SIZE-1:0] k,
+  output [   K_BITS-1:0] k,
 `ifndef NO_ES_FIELD
   output [       ES-1:0] next_exp,
 `endif
@@ -25,7 +25,7 @@ module pack_fields
   output non_zero_frac_field_size
 );
 
-  wire [K_SIZE-1:0] k_unpacked;
+  wire [K_BITS-1:0] k_unpacked;
 
 `ifndef NO_ES_FIELD
   wire [ES-1:0] exp_unpacked;
@@ -43,7 +43,7 @@ module pack_fields
   );
 
 
-  wire [K_SIZE-1:0] regime_k;
+  wire [K_BITS-1:0] regime_k;
   assign regime_k = ($signed(
       k_unpacked
   ) <= (N - 2) && $signed(
@@ -56,11 +56,11 @@ module pack_fields
 
   assign k_is_oob = k_unpacked != regime_k;
 
-  wire [REG_LEN_SIZE-1:0] reg_len;
+  wire [REG_LEN_BITS-1:0] reg_len;
   assign reg_len = $signed(regime_k) >= 0 ? regime_k + 2 : -$signed(regime_k) + 1;
 
 
-  wire [MANT_LEN_SIZE-1:0] frac_len;  // fix size
+  wire [MANT_LEN_BITS-1:0] frac_len;  // fix size
   assign frac_len = N - 1 - ES - reg_len;
 
 `ifndef NO_ES_FIELD

@@ -1,8 +1,7 @@
-/*
-a wrapper around the actual ppu.
-*/
-
-module ppu_top #(
+/// A wrapper around the actual ppu.
+module ppu_top 
+  import ppu_pkg::*;
+#(
   parameter WORD = `WORD,
 `ifdef FLOAT_TO_POSIT
   parameter FSIZE = `F,
@@ -15,14 +14,14 @@ module ppu_top #(
   input                    ppu_valid_in,
   input      [   WORD-1:0] ppu_in1,
   input      [   WORD-1:0] ppu_in2,
-  input      [OP_SIZE-1:0] ppu_op,
+  input      [OP_BITS-1:0] ppu_op,
   output reg [   WORD-1:0] ppu_out,
   output reg               ppu_valid_o
 );
 
 
   logic [WORD-1:0] in1_reg, in2_reg, out_reg;
-  logic [OP_SIZE-1:0] op_reg;
+  logic [OP_BITS-1:0] op_reg;
   logic ppu_valid_in_reg;
 
 
@@ -34,14 +33,14 @@ module ppu_top #(
     .N(N),
     .ES(ES)
   ) ppu_inst (
-    .clk(clk),
-    .rst(rst),
-    .valid_in(ppu_valid_in_reg),
-    .in1(in1_reg),
-    .in2(in2_reg),
-    .op(op_reg),
-    .out(ppu_out),  //.out(out_reg),
-    .valid_o(ppu_valid_o)
+    .clk_i(clk),
+    .rst_i(rst),
+    .in_valid_i(ppu_valid_in_reg),
+    .operand1_i(in1_reg),
+    .operand2_i(in2_reg),
+    .op_i(operation_e'(op_reg)),
+    .result_o(ppu_out),  //.out(out_reg),
+    .out_valid_o(ppu_valid_o)
 );
 
 

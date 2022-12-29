@@ -5,7 +5,7 @@ module input_conditioning
 ) (
   input  [      N-1:0] p1_in,
   input  [      N-1:0] p2_in,
-  input  [OP_SIZE-1:0] op,
+  input  [OP_BITS-1:0] op,
   output [      N-1:0] p1_out,
   output [      N-1:0] p2_out,
 

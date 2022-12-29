@@ -7,14 +7,14 @@ module posit_decoder
   input  [        N-1:0] bits,
   /////////////
   output                 sign,
-  output [  TE_SIZE-1:0] te,
+  output [  TE_BITS-1:0] te,
   output [MANT_SIZE-1:0] mant
 );
 
   wire                    _reg_s;  // unused, only to satisfy the linter
-  wire [REG_LEN_SIZE-1:0] _reg_len;  // unused, only to satisfy the linter
+  wire [REG_LEN_BITS-1:0] _reg_len;  // unused, only to satisfy the linter
 
-  wire [K_SIZE-1:0] k;
+  wire [K_BITS-1:0] k;
 `ifndef NO_ES_FIELD
   wire [ES-1:0] exp;
 `endif

@@ -4,8 +4,8 @@ module unpack_exponent
   parameter N  = 4,
   parameter ES = 1
 ) (
-  input  [TE_SIZE-1:0] total_exp,
-  output [ K_SIZE-1:0] k
+  input  [TE_BITS-1:0] total_exp,
+  output [ K_BITS-1:0] k
 `ifndef NO_ES_FIELD
 , output [     ES-1:0] exp
 `endif

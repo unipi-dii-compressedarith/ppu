@@ -11,28 +11,28 @@ module ppu_core_ops
   input                                           rst,
   input           [N-1:0]                         p1,
   input           [N-1:0]                         p2,
-  input       [OP_SIZE-1:0]                       op,
-  output reg  [OP_SIZE-1:0]                       op_st2,
+  input ppu_pkg::operation_e                      op_i,
+  output reg  [OP_BITS-1:0]                       op_st2,
   input                                           stall,
 `ifdef FLOAT_TO_POSIT
-  input       [(1+TE_SIZE+FRAC_FULL_SIZE)-1:0]    float_fir,
+  input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]    float_fir,
   output      [(FIR_SIZE)-1:0]                    posit_fir,
 `endif
   output      [N-1:0]                             pout
 );
     
-  logic [OP_SIZE-1:0] op_st0, op_st1;
-  assign op_st0 = op; // alias
+  ppu_pkg::operation_e op_st0, op_st1;
+  assign op_st0 = op_i; // alias
 
 
-  wire [K_SIZE-1:0] k1, k2;
+  wire [K_BITS-1:0] k1, k2;
 `ifndef NO_ES_FIELD
   wire [ES-1:0] exp1, exp2;
 `endif
 
   wire [MANT_SIZE-1:0] mant1, mant2;
   wire [(3*MANT_SIZE)-1:0] mant_out_ops;
-  wire [TE_SIZE-1:0] te1, te2, te_out_ops;
+  wire [TE_BITS-1:0] te1, te2, te_out_ops;
 
   wire sign1, sign2;
 
@@ -89,21 +89,21 @@ module ppu_core_ops
   assign posit_fir = fir2_st1;
 `endif
 
-  wire [TE_SIZE-1:0] ops_te_out;
+  wire [TE_BITS-1:0] ops_te_out;
   wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
 
   wire sign_out_ops;
-  wire [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_out;
+  wire [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_result;
   ops #(
-    .N(N)
+    .N              (N)
   ) ops_inst (
-    .clk(clk),
-    .rst(rst),
-    .op(op_st1),
-    .fir1(fir1_st1),
-    .fir2(fir2_st1),
-    .ops_out(ops_out)
+    .clk_i          (clk),
+    .rst_i          (rst),
+    .op_i           (op_st1),
+    .fir1           (fir1_st1),
+    .fir2           (fir2_st1),
+    .ops_result_o   (ops_result)
   );
 
 
@@ -112,19 +112,19 @@ module ppu_core_ops
   wire [N-1:0] pout_non_special;
 
 
-  reg [((1 + TE_SIZE + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
+  reg [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
 
   assign ops_wire_st0 =
 `ifdef FLOAT_TO_POSIT
     (op_st1 === FLOAT_TO_POSIT) ? {float_fir, 1'b0} :
 `endif
-    ops_out;
+    ops_result;
 
   
   fir_to_posit #(
     .N(N),
     .ES(ES),
-    .FIR_TOTAL_SIZE(1 + TE_SIZE + FRAC_FULL_SIZE)
+    .FIR_TOTAL_SIZE(1 + TE_BITS + FRAC_FULL_SIZE)
   ) fir_to_posit_inst (
     .ops_in(ops_wire_st1),
     .posit(pout_non_special)

@@ -1,6 +1,6 @@
 /// Posit Processing Unit (PPU)
 module ppu
-  import ppu_pkg::OP_SIZE;
+  import ppu_pkg::OP_BITS;
   import ppu_pkg::FIR_SIZE;
 #(
   parameter WORD = `WORD,
@@ -36,7 +36,7 @@ module ppu
     .rst          (rst_i),
     .p1           (p1),
     .p2           (p2),
-    .op           (op_i),
+    .op_i         (op_i),
     .op_st2       (),
     .stall        (stall),
     `ifdef FLOAT_TO_POSIT

@@ -10,7 +10,7 @@ module posit_to_fir
 
 
   wire                 sign;
-  wire [  TE_SIZE-1:0] te;
+  wire [  TE_BITS-1:0] te;
   wire [MANT_SIZE-1:0] mant;
 
   posit_decoder #(

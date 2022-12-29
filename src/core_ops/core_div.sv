@@ -5,19 +5,19 @@ module core_div
 ) (
   input                               clk,
   input                               rst,
-  input  [               TE_SIZE-1:0] te1,
-  input  [               TE_SIZE-1:0] te2,
+  input  [               TE_BITS-1:0] te1,
+  input  [               TE_BITS-1:0] te2,
   input  [             MANT_SIZE-1:0] mant1,
   input  [             MANT_SIZE-1:0] mant2,
   output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
-  output [               TE_SIZE-1:0] te_out,
+  output [               TE_BITS-1:0] te_out,
   output                              frac_truncated
 );
 
   logic [MANT_SIZE-1:0] mant1_st0, mant1_st1;
   assign mant1_st0 = mant1;
 
-  logic [TE_SIZE-1:0] te_diff_st0, te_diff_st1;
+  logic [TE_BITS-1:0] te_diff_st0, te_diff_st1;
   assign te_diff_st0 = te1 - te2;
 
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;

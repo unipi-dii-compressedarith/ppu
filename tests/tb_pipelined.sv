@@ -13,7 +13,7 @@ module tb_pipelined;
     reg                 ppu_valid_in;
     reg  [    WORD-1:0] ppu_in1;
     reg  [    WORD-1:0] ppu_in2;
-    reg  [ OP_SIZE-1:0] ppu_op;
+    reg  [ OP_BITS-1:0] ppu_op;
     reg  [ASCII_SIZE:0] op_ascii;
     wire [    WORD-1:0] ppu_out;
     wire                ppu_valid_o;

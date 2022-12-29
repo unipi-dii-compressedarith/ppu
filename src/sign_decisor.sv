@@ -5,7 +5,7 @@ module sign_decisor
   input                rst,
   input                sign1,
   input                sign2,
-  input  [OP_SIZE-1:0] op,
+  input  [OP_BITS-1:0] op,
   output               sign
 );
 

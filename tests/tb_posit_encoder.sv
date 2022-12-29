@@ -7,8 +7,8 @@ module tb_posit_encoder;
     reg            is_nar;
 
     reg sign;
-    reg [REG_LEN_SIZE-1:0] reg_len;
-    reg [K_SIZE-1:0] k;
+    reg [REG_LEN_BITS-1:0] reg_len;
+    reg [K_BITS-1:0] k;
 `ifndef NO_ES_FIELD
     reg [ES-1:0] exp;
 `endif

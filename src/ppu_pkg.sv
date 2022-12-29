@@ -16,56 +16,39 @@ parameter ES = `ES;
 
 
 
-localparam int unsigned OP_BITS = 3;
+localparam OP_BITS = 3;
 typedef enum logic [OP_BITS-1:0] {
   ADD, SUB,
   MUL, DIV,
-  FMADD
+  FMADD //,
+  // FLOAT2POSIT,
+  // POSIT2FLOAT
 } operation_e;
 
 
 
-`ifndef OP_SIZE
-parameter OP_SIZE = 3;
-/*
-ADD,
-SUB,
-MUL,
-DIV,
-FLOAT2POSIT
-POSIT2FLOAT
-*/
-`endif
-
-
-`ifndef S
+/// S := ceil(log2(N))
 parameter S = $clog2(N);
-`endif
 
-`ifndef TE_SIZE
-parameter TE_SIZE = (ES + 1) + (S + 1);
-`endif
+/// Total exponent bits
+parameter TE_BITS = (ES + 1) + (S + 1);
 
-`ifndef REG_LEN_SIZE
-parameter REG_LEN_SIZE = S + 1;
-`endif
+/// Regime length bits
+parameter REG_LEN_BITS = S + 1;
 
-`ifndef MANT_LEN_SIZE
-parameter MANT_LEN_SIZE = S + 1;
-`endif
+/// Mantissa length bits
+parameter MANT_LEN_BITS = S + 1;
 
-`ifndef K_SIZE
-parameter K_SIZE = S + 2;  // prev. S + 1 (leads to bug when te too large)
-`endif
+/// K, no of bits
+parameter K_BITS = S + 2; // prev. S + 1 (leads to bug when `te` too large)
 
-`ifndef FRAC_SIZE
 parameter FRAC_SIZE = N - 1;
-`endif
 
-`ifndef MANT_SIZE
-parameter MANT_SIZE = N - 2;  // mant (mantissa) and frac (fraction) are
-                              // not the same thing. mant is a Fx<1,MANT_SIZE>.
-                              // frac is a Fx<0, MANT_SIZE-1>
+// mant (mantissa) and frac (fraction) are
+// not the same thing. mant is a Fx<1,MANT_SIZE>.
+// frac is a Fx<0, MANT_SIZE-1>
+parameter MANT_SIZE = N - 2;  
+
 parameter MS = MANT_SIZE;  // alias
 
 parameter MAX_TE_DIFF = MS;  // not really, but it works anyway.
@@ -82,13 +65,12 @@ parameter MANT_SUB_RESULT_SIZE = MS + MTD;
 parameter MANT_DIV_RESULT_SIZE = MS + RMS;
 /****************************************/
 parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest among all the operation, most likely.
-`endif
+
 
 
 // fir is posit intermediate format
-`ifndef FIR_SIZE
-parameter FIR_SIZE = 1 + TE_SIZE + MANT_SIZE;  // sign size + total exponent size + mantissa size
-`endif
+parameter FIR_SIZE = 1 + TE_BITS + MANT_SIZE;  // sign size + total exponent size + mantissa size
+
 
 
 
@@ -96,6 +78,8 @@ parameter FIR_SIZE = 1 + TE_SIZE + MANT_SIZE;  // sign size + total exponent siz
 parameter ZERO = {`N{1'b0}};
 /// Not A Real
 parameter NAR = {1'b1, {`N - 1{1'b0}}};
+
+
 
 
 // parameter ADD = 3'd0;
@@ -106,8 +90,6 @@ parameter FLOAT_TO_POSIT = 3'd4;
 parameter POSIT_TO_FLOAT = 3'd5;
 
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
-
-
 
 
 
@@ -240,6 +222,10 @@ endfunction
 // function automatic c2(a);
 //   return unsigned'(-a);
 // endfunction
+
+
+
+
 
 /// Absolute value
 function [N-1:0] abs(input [N-1:0] in);

@@ -3,7 +3,7 @@ module handle_special_or_trivial
 #(
   parameter N = 10
 ) (
-  input  [OP_SIZE-1:0] op,
+  input  [OP_BITS-1:0] op,
   input  [      N-1:0] p1_in,
   input  [      N-1:0] p2_in,
   output [      N-1:0] pout

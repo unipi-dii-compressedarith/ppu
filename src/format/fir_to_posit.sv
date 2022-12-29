@@ -17,13 +17,13 @@ module fir_to_posit
   assign {fir, frac_truncated} = ops_in;
 
   wire sign;
-  wire [TE_SIZE-1:0] te;
+  wire [TE_BITS-1:0] te;
   wire [FRAC_FULL_SIZE-1:0] frac_full;
   assign {sign, te, frac_full} = fir;
 
 
   wire [MANT_SIZE-1:0] frac;
-  wire [K_SIZE-1:0] k;
+  wire [K_BITS-1:0] k;
 `ifndef NO_ES_FIELD
   wire [ES-1:0] next_exp;
 `endif

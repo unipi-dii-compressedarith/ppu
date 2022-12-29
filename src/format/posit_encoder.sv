@@ -7,7 +7,7 @@ module posit_encoder
     input                           is_zero_i,
     input                           is_nar_i,
     input                           sign,
-    input [K_SIZE-1:0]              k,
+    input [K_BITS-1:0]              k,
 `ifndef NO_ES_FIELD
     input [ES-1:0]                  exp,
 `endif
@@ -15,7 +15,7 @@ module posit_encoder
     output [N-1:0]                  posit
   );
 
-  wire [REG_LEN_SIZE-1:0] reg_len;
+  wire [REG_LEN_BITS-1:0] reg_len;
   assign reg_len = $signed(k) >= 0 ? k + 2 : -$signed(k) + 1;
 
   wire [N-1:0] bits_assembled;

@@ -4,9 +4,9 @@ module core_add
   parameter N = 16
 ) (
   input  [(MANT_ADD_RESULT_SIZE)-1:0] mant,
-  input  [               TE_SIZE-1:0] te_diff,
+  input  [               TE_BITS-1:0] te_diff,
   output [(MANT_ADD_RESULT_SIZE)-1:0] new_mant,
-  output [               TE_SIZE-1:0] new_te_diff,
+  output [               TE_BITS-1:0] new_te_diff,
   output                              frac_truncated
 );
 

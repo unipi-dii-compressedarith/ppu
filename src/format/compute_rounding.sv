@@ -4,10 +4,10 @@ module compute_rouding
   parameter N  = 5,
   parameter ES = 0
 ) (
-  input  [ MANT_LEN_SIZE-1:0] frac_len,
+  input  [ MANT_LEN_BITS-1:0] frac_len,
   input  [FRAC_FULL_SIZE-1:0] frac_full,
   input  [         (S+2)-1:0] frac_len_diff,
-  input  [        K_SIZE-1:0] k,
+  input  [        K_BITS-1:0] k,
 `ifndef NO_ES_FIELD
   input  [            ES-1:0] exp,
 `endif

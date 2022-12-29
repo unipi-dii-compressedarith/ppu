@@ -3,7 +3,7 @@ module handle_special #(
 ) (
     input        [      N-1:0] p1,
     input        [      N-1:0] p2,
-    input        [OP_SIZE-1:0] op,
+    input        [OP_BITS-1:0] op,
     input                      p1_is_zero,
     input                      p2_is_zero,
     input                      p1_is_nar,

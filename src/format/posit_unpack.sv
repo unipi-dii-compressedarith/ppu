@@ -7,8 +7,8 @@ module posit_unpack
   input [N-1:0]           bits,
   output                  sign,
   output                      reg_s,
-  output [REG_LEN_SIZE-1:0]   reg_len,
-  output [K_SIZE-1:0]         k,
+  output [REG_LEN_BITS-1:0]   reg_len,
+  output [K_BITS-1:0]         k,
 `ifndef NO_ES_FIELD
   output [ES-1:0]             exp,
 `endif
@@ -115,8 +115,8 @@ module tb_posit_unpack;
 
   reg sign;
   reg reg_s;
-  reg [REG_LEN_SIZE-1:0] reg_len;
-  reg [K_SIZE-1:0] k;
+  reg [REG_LEN_BITS-1:0] reg_len;
+  reg [K_BITS-1:0] k;
 `ifndef NO_ES_FIELD
   reg [ES-1:0] exp;
 `endif
@@ -124,8 +124,8 @@ module tb_posit_unpack;
 
   reg             sign_expected;
   reg             reg_s_expected;
-  reg [REG_LEN_SIZE-1:0] reg_len_expected;
-  reg [K_SIZE-1:0] k_expected;
+  reg [REG_LEN_BITS-1:0] reg_len_expected;
+  reg [K_BITS-1:0] k_expected;
 `ifndef NO_ES_FIELD
   reg [ES-1:0]    exp_expected;
 `endif
