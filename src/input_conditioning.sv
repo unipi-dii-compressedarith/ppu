@@ -1,7 +1,7 @@
 module input_conditioning 
   import ppu_pkg::*;
 #(
-  parameter N = 4
+  parameter N = -1
 ) (
   input  [      N-1:0] p1_in,
   input  [      N-1:0] p2_in,

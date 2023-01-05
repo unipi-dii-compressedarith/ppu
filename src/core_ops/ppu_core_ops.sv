@@ -1,10 +1,10 @@
 module ppu_core_ops 
   import ppu_pkg::*;
 #(
-  parameter N = `N,
-  parameter ES = `ES
+  parameter N = -1,
+  parameter ES = -1
 `ifdef FLOAT_TO_POSIT
-  ,parameter FSIZE = `F
+  ,parameter FSIZE = -1
 `endif
 )(
   input                                           clk,

@@ -1,7 +1,9 @@
 module core_div
   import ppu_pkg::*;
 #(
-  parameter N = 16
+  parameter TE_BITS = -1,
+  parameter MANT_SIZE = -1,
+  parameter MANT_DIV_RESULT_SIZE = -1
 ) (
   input                               clk,
   input                               rst,
@@ -50,11 +52,11 @@ module core_div
 
       // e.g P8 mant_size = 6, lut_width_in = 8
       lut_reciprocate #(
-          .LUT_WIDTH_IN (LUT_WIDTH_IN),
-          .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
+          .LUT_WIDTH_IN   (LUT_WIDTH_IN),
+          .LUT_WIDTH_OUT  (LUT_WIDTH_OUT)
       ) lut_inst (
-          .addr_i(addr),
-          .out_o (_mant_out)
+          .addr_i         (addr),
+          .out_o          (_mant_out)
       );
 
 
@@ -74,11 +76,11 @@ module core_div
       assign mant_is_one = addr == 0;
 
       lut_reciprocate #(
-        .LUT_WIDTH_IN (LUT_WIDTH_IN),
-        .LUT_WIDTH_OUT(LUT_WIDTH_OUT)
+        .LUT_WIDTH_IN   (LUT_WIDTH_IN),
+        .LUT_WIDTH_OUT  (LUT_WIDTH_OUT)
       ) lut_reciprocate_inst (
-        .addr_i(addr),
-        .out_o (_mant_out)
+        .addr_i         (addr),
+        .out_o          (_mant_out)
       );
 
       assign mant2_reciprocal =
@@ -98,10 +100,10 @@ module core_div
   initial $display("***** NOT using DIV with LUT *****");
 
   fast_reciprocal #(
-    .SIZE(MANT_SIZE)
+    .SIZE               (MANT_SIZE)
   ) fast_reciprocal_inst (
-    .fraction(mant2),
-    .one_over_fraction(mant2_reciprocal)
+    .fraction           (mant2),
+    .one_over_fraction  (mant2_reciprocal)
   );
 `endif
 
@@ -112,13 +114,13 @@ module core_div
   initial $display("***** Using NR *****");
   
   newton_raphson #(
-    .N(N)
+    .NR_SIZE (N)
   ) newton_raphson_inst (
-    .clk_i(clk),
-    .rst_i(rst),
-    .num_i(mant2),
-    .x0_i (mant2_reciprocal),
-    .x1_o (x1)
+    .clk_i  (clk),
+    .rst_i  (rst),
+    .num_i  (mant2),
+    .x0_i   (mant2_reciprocal),
+    .x1_o   (x1)
   );
 `else
   initial $display("***** NOT using NR *****");

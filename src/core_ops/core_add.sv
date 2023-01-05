@@ -1,7 +1,8 @@
 module core_add 
   import ppu_pkg::*;
 #(
-  parameter N = 16
+  parameter TE_BITS = -1,
+  parameter MANT_ADD_RESULT_SIZE = -1
 ) (
   input  [(MANT_ADD_RESULT_SIZE)-1:0] mant,
   input  [               TE_BITS-1:0] te_diff,

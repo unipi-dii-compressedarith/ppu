@@ -5,8 +5,6 @@ package ppu_pkg;
 `ifdef N
 /// Posit size 
 parameter N = `N;
-// `else
-// parameter N = 16;
 `endif
 
 `ifdef ES

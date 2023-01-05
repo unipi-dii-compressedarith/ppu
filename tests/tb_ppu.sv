@@ -8,7 +8,7 @@ module tb_ppu;
   parameter ES = `ES;
   parameter FSIZE = `F;
 
-  parameter ASCII_SIZE = 300;
+  localparam ASCII_SIZE = 300;
 
   logic                                 clk_i;
   logic                                 rst_i;
@@ -21,7 +21,10 @@ module tb_ppu;
   wire                                  out_valid_o;
 
 
-  logic [ASCII_SIZE:0] operand1_i_ascii, operand2_i_ascii, result_o_ascii, result_gt_ascii;
+  logic [ASCII_SIZE-1:0]  operand1_i_ascii,   // operand1_i
+                          operand2_i_ascii,   // operand2_i
+                          result_o_ascii,     // result_o ascii
+                          result_gt_ascii;    // result ground truth ascii
 
 
   logic [WORD-1:0] out_ground_truth;
@@ -53,12 +56,13 @@ module tb_ppu;
 
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
-
   
   initial clk_i = 0;
   initial rst_i = 0;
   
-  always begin clk_i = ~clk_i; #5; end
+  always begin
+    clk_i = ~clk_i; #5; 
+  end
 
   always @(*) begin
     diff_out_ground_truth = result_o === out_ground_truth ? 0 : 1'bx;
@@ -83,62 +87,18 @@ module tb_ppu;
   end
   //////////////////////////////////////////////////////////////////
 
-  initial begin
-
+  initial begin: vcd_file
     // $dumpfile({"tb_ppu_P", `STRINGIFY(`N), "E", `STRINGIFY(`ES), ".vcd"});
     $dumpfile({"tb_ppu.vcd"});
     $dumpvars(0, tb_ppu);
-    #7;
+  end
 
+  initial begin: sequences
+    #7;
     in_valid_i = 1;
 
-    
-    
     `include "sim/test_vectors/tv_posit_ppu.sv"
-
     
-    
-    
-    
-    
-    /*
-    if (N == 4 && ES == 0) begin
-        `include "../test_vectors/tv_posit_ppu_P4E0.sv"
-    end
-
-    if (N == 5 && ES == 1) begin
-        `include "../test_vectors/tv_posit_ppu_P5E1.sv"
-    end
-
-    if (N == 8 && ES == 0) begin
-        `include "../test_vectors/tv_posit_ppu_P8E0.sv"
-    end
-
-    if (N == 8 && ES == 1) begin
-        `include "../test_vectors/tv_posit_ppu_P8E1.sv"
-    end
-
-    if (N == 8 && ES == 2) begin
-        `include "../test_vectors/tv_posit_ppu_P8E2.sv"
-    end
-
-    if (N == 16 && ES == 0) begin
-        `include "../test_vectors/tv_posit_ppu_P16E0.sv"
-    end
-
-    if (N == 16 && ES == 1) begin
-        `include "../test_vectors/tv_posit_ppu_P16E1.sv"
-    end
-
-    if (N == 16 && ES == 2) begin
-        `include "../test_vectors/tv_posit_ppu_P16E2.sv"
-    end
-
-    if (N == 32 && ES == 2) begin
-        `include "../test_vectors/tv_posit_ppu_P32E2.sv"
-    end
-    */
-
     #10;
     $finish;
   end

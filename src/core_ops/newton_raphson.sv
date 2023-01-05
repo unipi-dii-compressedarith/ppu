@@ -1,7 +1,7 @@
 module newton_raphson 
   import ppu_pkg::MS;
 #(
-  parameter N = `N
+  parameter NR_SIZE = -1
 )(
   input                   clk_i,
   input                   rst_i,

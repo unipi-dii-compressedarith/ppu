@@ -1,7 +1,9 @@
 module core_add_sub 
     import ppu_pkg::*;
 #(
-  parameter N = 16
+  parameter TE_BITS = -1,
+  parameter MANT_SIZE = -1,
+  parameter MANT_ADD_RESULT_SIZE = -1
 ) (
   input                               clk,
   input                               rst,
@@ -45,25 +47,27 @@ module core_add_sub
   wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_core_add;
   wire [TE_BITS-1:0] te_diff_out_core_add;
   core_add #(
-    .N(N)
+    .TE_BITS              (TE_BITS),
+    .MANT_ADD_RESULT_SIZE (MANT_ADD_RESULT_SIZE)
   ) core_add_inst (
-    .mant(mant_sum_st1),
-    .te_diff(te_diff_st1),
-    .new_mant(mant_out_core_add),
-    .new_te_diff(te_diff_out_core_add),
-    .frac_truncated(frac_truncated)
+    .mant                 (mant_sum_st1),
+    .te_diff              (te_diff_st1),
+    .new_mant             (mant_out_core_add),
+    .new_te_diff          (te_diff_out_core_add),
+    .frac_truncated       (frac_truncated)
   );
 
 
   wire [(MANT_SUB_RESULT_SIZE)-1:0] mant_out_core_sub;
   wire [TE_BITS-1:0] te_diff_out_core_sub;
   core_sub #(
-    .N(N)
+    .TE_BITS              (TE_BITS),
+    .MANT_SUB_RESULT_SIZE (MANT_SUB_RESULT_SIZE)
   ) core_sub_inst (
-    .mant(mant_sum_st1[MANT_SUB_RESULT_SIZE-1:0]),
-    .te_diff(te_diff_st1),
-    .new_mant(mant_out_core_sub),
-    .new_te_diff(te_diff_out_core_sub)
+    .mant                 (mant_sum_st1[MANT_SUB_RESULT_SIZE-1:0]),
+    .te_diff              (te_diff_st1),
+    .new_mant             (mant_out_core_sub),
+    .new_te_diff          (te_diff_out_core_sub)
   );
 
   wire [TE_BITS-1:0] te_diff_updated;

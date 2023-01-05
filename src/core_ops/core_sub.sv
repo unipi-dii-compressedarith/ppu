@@ -1,7 +1,8 @@
 module core_sub 
   import ppu_pkg::*;
 #(
-  parameter N = 4
+  parameter TE_BITS = -1,
+  parameter MANT_SUB_RESULT_SIZE = -1
 ) (
   input  [(MANT_SUB_RESULT_SIZE)-1:0] mant,
   input  [               TE_BITS-1:0] te_diff,

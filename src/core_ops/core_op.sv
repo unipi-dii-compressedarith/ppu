@@ -5,7 +5,7 @@ module core_op
 ) (
   input                         clk,
   input                         rst,
-  input ppu_pkg::operation_e    op_i,
+  input operation_e             op_i,
   input                         sign1,
   input                         sign2,
   input  [         TE_BITS-1:0] te1,
@@ -26,46 +26,52 @@ module core_op
   wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
   core_add_sub #(
-    .N(N)
+    .TE_BITS                (TE_BITS),
+    .MANT_SIZE              (MANT_SIZE),
+    .MANT_ADD_RESULT_SIZE   (MANT_ADD_RESULT_SIZE)
   ) core_add_sub_inst (
-    .clk(clk),
-    .rst(rst),
-    .te1_in(te1),
-    .te2_in(te2),
-    .mant1_in(mant1),
-    .mant2_in(mant2),
-    .have_opposite_sign(sign1 ^ sign2),
-    .mant_out(mant_out_add_sub),
-    .te_out(te_out_add_sub),
-    .frac_truncated(frac_truncated_add_sub)
+    .clk                    (clk),
+    .rst                    (rst),
+    .te1_in                 (te1),
+    .te2_in                 (te2),
+    .mant1_in               (mant1),
+    .mant2_in               (mant2),
+    .have_opposite_sign     (sign1 ^ sign2),
+    .mant_out               (mant_out_add_sub),
+    .te_out                 (te_out_add_sub),
+    .frac_truncated         (frac_truncated_add_sub)
   );
 
   core_mul #(
-    .N(N)
+    .TE_BITS                (TE_BITS),
+    .MANT_SIZE              (MANT_SIZE),
+    .MANT_MUL_RESULT_SIZE   (MANT_MUL_RESULT_SIZE)
   ) core_mul_inst (
-    .clk(clk),
-    .rst(rst),
-    .te1(te1),
-    .te2(te2),
-    .mant1(mant1),
-    .mant2(mant2),
-    .mant_out(mant_out_mul),
-    .te_out(te_out_mul),
-    .frac_truncated(frac_truncated_mul)
+    .clk                    (clk),
+    .rst                    (rst),
+    .te1                    (te1),
+    .te2                    (te2),
+    .mant1                  (mant1),
+    .mant2                  (mant2),
+    .mant_out               (mant_out_mul),
+    .te_out                 (te_out_mul),
+    .frac_truncated         (frac_truncated_mul)
   );
 
   core_div #(
-    .N(N)
+    .TE_BITS                (TE_BITS),
+    .MANT_SIZE              (MANT_SIZE),
+    .MANT_DIV_RESULT_SIZE   (MANT_DIV_RESULT_SIZE)
   ) core_div_inst (
-    .clk(clk),
-    .rst(rst),
-    .te1(te1),
-    .te2(te2),
-    .mant1(mant1),
-    .mant2(mant2),
-    .mant_out(mant_out_div),
-    .te_out(te_out_div),
-    .frac_truncated(frac_truncated_div)
+    .clk                    (clk),
+    .rst                    (rst),
+    .te1                    (te1),
+    .te2                    (te2),
+    .mant1                  (mant1),
+    .mant2                  (mant2),
+    .mant_out               (mant_out_div),
+    .te_out                 (te_out_div),
+    .frac_truncated         (frac_truncated_div)
   );
 
 

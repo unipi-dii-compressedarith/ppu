@@ -1,7 +1,7 @@
 module fast_reciprocal 
   import ppu_pkg::*;
 #(
-  parameter SIZE = 4
+  parameter SIZE = -1
 ) (
   input  [    (SIZE)-1:0] fraction,
   output [(3*SIZE-4)-1:0] one_over_fraction
@@ -13,10 +13,10 @@ module fast_reciprocal
   assign i_data = fraction >> 1;
 
   reciprocal_approx #(
-    .N(SIZE)
+    .SIZE     (SIZE)
   ) reciprocal_approx_inst (
-    .i_data(i_data),
-    .o_data(o_data)
+    .i_data   (i_data),
+    .o_data   (o_data)
   );
 
   assign one_over_fraction = o_data >> 1;
