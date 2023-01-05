@@ -4,11 +4,11 @@ module ops
 #(
   parameter N = -1
 ) (
-  input                           clk_i,
-  input                           rst_i,
-  input ppu_pkg::operation_e      op_i,
-  input [FIR_SIZE-1:0]            fir1,
-  input [FIR_SIZE-1:0]            fir2,
+  input                    clk_i,
+  input                    rst_i,
+  input operation_e        op_i,
+  input [FIR_SIZE-1:0]     fir1,
+  input [FIR_SIZE-1:0]     fir2,
 
   output [(
               (1 + TE_BITS + FRAC_FULL_SIZE)  // fir_ops_out
@@ -33,29 +33,31 @@ module ops
   assign {sign2, te2, mant2} = fir2;
 
   core_op #(
-    .N(N)
+    .TE_BITS          (TE_BITS),
+    .MANT_SIZE        (MANT_SIZE),
+    .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
   ) core_op_inst (
-    .clk(clk),
-    .rst(rst),
-    .op_i(op_i),
-    .sign1(sign1),
-    .sign2(sign2),
-    .te1(te1),
-    .te2(te2),
-    .mant1(mant1),
-    .mant2(mant2),
-    .te_out_core_op(te_out),
-    .frac_out_core_op(frac_out),
-    .frac_truncated(frac_truncated)
+    .clk              (clk),
+    .rst              (rst),
+    .op_i             (op_i),
+    .sign1            (sign1),
+    .sign2            (sign2),
+    .te1              (te1),
+    .te2              (te2),
+    .mant1            (mant1),
+    .mant2            (mant2),
+    .te_out_core_op   (te_out),
+    .frac_out_core_op (frac_out),
+    .frac_truncated   (frac_truncated)
   );
 
-  sign_decisor #() sign_decisor (
-    .clk(clk),
-    .rst(rst),
-    .sign1(sign1),
-    .sign2(sign2),
-    .op(op_i),
-    .sign(sign_out)
+  sign_decisor sign_decisor (
+    .clk_i            (clk),
+    .rst_i            (rst),
+    .sign1_i          (sign1),
+    .sign2_i          (sign2),
+    .op_i             (op_i),
+    .sign_o           (sign_out)
   );
 
   assign fir_ops_out = {sign_out, te_out, frac_out};

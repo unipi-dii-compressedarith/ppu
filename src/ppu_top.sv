@@ -9,14 +9,14 @@ module ppu_top
   parameter N = `N,
   parameter ES = `ES
 ) (
-  input                    clk,
-  input                    rst,
-  input                    ppu_valid_in,
-  input      [   WORD-1:0] ppu_in1,
-  input      [   WORD-1:0] ppu_in2,
-  input      [OP_BITS-1:0] ppu_op,
-  output reg [   WORD-1:0] ppu_out,
-  output reg               ppu_valid_o
+  input                           clk,
+  input                           rst,
+  input                           ppu_valid_in,
+  input               [WORD-1:0]  ppu_in1,
+  input               [WORD-1:0]  ppu_in2,
+  input  operation_e              ppu_op,
+  output logic        [WORD-1:0]  ppu_out,
+  output logic                    ppu_valid_o
 );
 
 
@@ -26,21 +26,21 @@ module ppu_top
 
 
   ppu #(
-    .WORD(WORD),
-`ifdef FLOAT_TO_POSIT
-    .FSIZE(FSIZE),
-`endif
-    .N(N),
-    .ES(ES)
+    .WORD           (WORD),
+    `ifdef FLOAT_TO_POSIT
+      .FSIZE        (FSIZE),
+    `endif
+    .N              (N),
+    .ES             (ES)
   ) ppu_inst (
-    .clk_i(clk),
-    .rst_i(rst),
-    .in_valid_i(ppu_valid_in_reg),
-    .operand1_i(in1_reg),
-    .operand2_i(in2_reg),
-    .op_i(operation_e'(op_reg)),
-    .result_o(ppu_out),  //.out(out_reg),
-    .out_valid_o(ppu_valid_o)
+    .clk_i          (clk),
+    .rst_i          (rst),
+    .in_valid_i     (ppu_valid_in_reg),
+    .operand1_i     (in1_reg),
+    .operand2_i     (in2_reg),
+    .op_i           (operation_e'(op_reg)),
+    .result_o       (ppu_out),  //.out(out_reg),
+    .out_valid_o    (ppu_valid_o)
 );
 
 

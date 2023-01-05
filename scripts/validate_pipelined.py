@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(description="Generate test benches")
 parser.add_argument("--num-bits", "-n", type=int, required=True, help="Num posit bits")
 parser.add_argument("--es-size", "-es", type=int, required=True, help="Exponent size")
 parser.add_argument("--float-size", "-f", type=int, required=True, help="Float size")
+parser.add_argument("--input-file", "-i", type=str, required=True, help="Input file to read")
 parser.add_argument("--output-file", "-o", type=str, required=True, help="Dump output to file")
 args = parser.parse_args()
 
@@ -17,8 +18,9 @@ N = args.num_bits
 ES = args.es_size
 F = args.float_size
 
-OUTPUT_LOG_FILE = "ppu_output.log"
-VALIDATE_PIPELINE_OUTPUT_LOG = "validate_pipelined.log"
+OUTPUT_LOG_FILE = args.input_file
+VALIDATE_PIPELINE_OUTPUT_LOG = args.output_file
+
 
 path_in = Path(f"{OUTPUT_LOG_FILE}").resolve()
 path_out = Path(f"{VALIDATE_PIPELINE_OUTPUT_LOG}").resolve()

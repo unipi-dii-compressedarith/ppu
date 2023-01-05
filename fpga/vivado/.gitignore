@@ -2,3 +2,9 @@
 *.hw
 *.ip_user_files
 *.jou
+
+.Xil
+*.runs
+*.sim
+*.srcs
+*.str

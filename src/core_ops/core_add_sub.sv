@@ -5,16 +5,16 @@ module core_add_sub
   parameter MANT_SIZE = -1,
   parameter MANT_ADD_RESULT_SIZE = -1
 ) (
-  input                               clk,
-  input                               rst,
-  input  [               TE_BITS-1:0] te1_in,
-  input  [               TE_BITS-1:0] te2_in,
-  input  [             MANT_SIZE-1:0] mant1_in,
-  input  [             MANT_SIZE-1:0] mant2_in,
-  input                               have_opposite_sign,
-  output [(MANT_ADD_RESULT_SIZE)-1:0] mant_out,
-  output [               TE_BITS-1:0] te_out,
-  output                              frac_truncated
+  input                               clk_i,
+  input                               rst_i,
+  input  [               TE_BITS-1:0] te1_i,
+  input  [               TE_BITS-1:0] te2_i,
+  input  [             MANT_SIZE-1:0] mant1_i,
+  input  [             MANT_SIZE-1:0] mant2_i,
+  input                               have_opposite_sign_i,
+  output [(MANT_ADD_RESULT_SIZE)-1:0] mant_o,
+  output [               TE_BITS-1:0] te_o,
+  output                              frac_truncated_o
 );
 
   function [(MANT_SIZE+MAX_TE_DIFF)-1:0] _c2(input [(MANT_SIZE+MAX_TE_DIFF)-1:0] a);
@@ -23,12 +23,12 @@ module core_add_sub
 
 
   logic have_opposite_sign_st0, have_opposite_sign_st1;
-  assign have_opposite_sign_st0 = have_opposite_sign;
+  assign have_opposite_sign_st0 = have_opposite_sign_i;
 
   logic [TE_BITS-1:0] te1, te2_st0, te2_st1;
   wire [MANT_SIZE-1:0] mant1, mant2;
-  assign {te1, te2_st0} = {te1_in, te2_in};
-  assign {mant1, mant2} = {mant1_in, mant2_in};
+  assign {te1, te2_st0} = {te1_i, te2_i};
+  assign {mant1, mant2} = {mant1_i, mant2_i};
 
 
   logic [TE_BITS-1:0] te_diff_st0, te_diff_st1;
@@ -39,7 +39,7 @@ module core_add_sub
   assign mant2_upshifted = (mant2 << MAX_TE_DIFF) >> max(0, te_diff_st0);
 
   logic [(MANT_ADD_RESULT_SIZE)-1:0] mant_sum_st0, mant_sum_st1;
-  assign mant_sum_st0 = mant1_upshifted + (have_opposite_sign ? _c2(
+  assign mant_sum_st0 = mant1_upshifted + (have_opposite_sign_i ? _c2(
       mant2_upshifted
   ) : mant2_upshifted);
 
@@ -50,11 +50,11 @@ module core_add_sub
     .TE_BITS              (TE_BITS),
     .MANT_ADD_RESULT_SIZE (MANT_ADD_RESULT_SIZE)
   ) core_add_inst (
-    .mant                 (mant_sum_st1),
-    .te_diff              (te_diff_st1),
-    .new_mant             (mant_out_core_add),
-    .new_te_diff          (te_diff_out_core_add),
-    .frac_truncated       (frac_truncated)
+    .mant_i               (mant_sum_st1),
+    .te_diff_i            (te_diff_st1),
+    .new_mant_o           (mant_out_core_add),
+    .new_te_diff_o        (te_diff_out_core_add),
+    .frac_truncated_o     (frac_truncated_o)
   );
 
 
@@ -73,14 +73,14 @@ module core_add_sub
   wire [TE_BITS-1:0] te_diff_updated;
   assign te_diff_updated = have_opposite_sign_st1 ? te_diff_out_core_sub : te_diff_out_core_add;
 
-  assign mant_out = have_opposite_sign_st1 ? {mant_out_core_sub  /*, 1'b0*/} : mant_out_core_add;
+  assign mant_o = have_opposite_sign_st1 ? {mant_out_core_sub  /*, 1'b0*/} : mant_out_core_add;
 
-  assign te_out = te2_st1 + te_diff_updated;
+  assign te_o = te2_st1 + te_diff_updated;
 
 
 `ifdef PIPELINE_STAGE
-  always_ff @(posedge clk) begin
-    if (rst) begin
+  always_ff @(posedge clk_i) begin
+    if (rst_i) begin
       te_diff_st1 <= 0;
       mant_sum_st1 <= 0;
       have_opposite_sign_st1 <= 0;
