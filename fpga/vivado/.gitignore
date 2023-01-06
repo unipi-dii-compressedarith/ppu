@@ -8,3 +8,5 @@
 *.sim
 *.srcs
 *.str
+
+ppu_top.sv

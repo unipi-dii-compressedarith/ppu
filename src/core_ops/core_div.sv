@@ -5,26 +5,26 @@ module core_div
   parameter MANT_SIZE = -1,
   parameter MANT_DIV_RESULT_SIZE = -1
 ) (
-  input                               clk,
-  input                               rst,
-  input  [               TE_BITS-1:0] te1,
-  input  [               TE_BITS-1:0] te2,
-  input  [             MANT_SIZE-1:0] mant1,
-  input  [             MANT_SIZE-1:0] mant2,
-  output [(MANT_DIV_RESULT_SIZE)-1:0] mant_out,
-  output [               TE_BITS-1:0] te_out,
-  output                              frac_truncated
+  input                               clk_i,
+  input                               rst_i,
+  input  [               TE_BITS-1:0] te1_i,
+  input  [               TE_BITS-1:0] te2_i,
+  input  [             MANT_SIZE-1:0] mant1_i,
+  input  [             MANT_SIZE-1:0] mant2_i,
+  output [(MANT_DIV_RESULT_SIZE)-1:0] mant_o,
+  output [               TE_BITS-1:0] te_o,
+  output                              frac_truncated_o
 );
 
   logic [MANT_SIZE-1:0] mant1_st0, mant1_st1;
-  assign mant1_st0 = mant1;
+  assign mant1_st0 = mant1_i;
 
   logic [TE_BITS-1:0] te_diff_st0, te_diff_st1;
-  assign te_diff_st0 = te1 - te2;
+  assign te_diff_st0 = te1_i - te2_i;
 
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;
 
-  //// assign mant_div = (mant1 << (2 * size - 1)) / mant2;
+  //// assign mant_div = (mant1_i << (2 * size - 1)) / mant2_i;
 
 
   wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
@@ -44,8 +44,8 @@ module core_div
     if (MANT_SIZE < LUT_WIDTH_IN) begin
 
       wire [(LUT_WIDTH_IN)-1:0] addr;
-      assign addr = {mant2[MANT_SIZE-2:0], {1'b0}, {LUT_WIDTH_IN - MANT_SIZE{1'b0}}};
-      //                                      ^- one more zero due to lack to unit digit in mant2
+      assign addr = {mant2_i[MANT_SIZE-2:0], {1'b0}, {LUT_WIDTH_IN - MANT_SIZE{1'b0}}};
+      //                                      ^- one more zero due to lack to unit digit in mant2_i
 
       wire mant_is_one;
       assign mant_is_one = addr == 0;
@@ -70,7 +70,7 @@ module core_div
     end else begin
       // e.g. P16 upwards
       wire [(LUT_WIDTH_IN)-1:0] addr;
-      assign addr = mant2[MANT_SIZE-2-:LUT_WIDTH_IN];
+      assign addr = mant2_i[MANT_SIZE-2-:LUT_WIDTH_IN];
 
       wire mant_is_one;
       assign mant_is_one = addr == 0;
@@ -92,7 +92,7 @@ module core_div
   // fast_reciprocal #(
   //     .SIZE(MANT_SIZE)
   // ) fast_reciprocal_inst_dummy (
-  //     .fraction(mant2),
+  //     .fraction(mant2_i),
   //     .one_over_fraction(mant2_reciprocal_fast_reciprocal)
   // );
 
@@ -102,7 +102,7 @@ module core_div
   fast_reciprocal #(
     .SIZE               (MANT_SIZE)
   ) fast_reciprocal_inst (
-    .fraction           (mant2),
+    .fraction           (mant2_i),
     .one_over_fraction  (mant2_reciprocal)
   );
 `endif
@@ -116,9 +116,9 @@ module core_div
   newton_raphson #(
     .NR_SIZE (N)
   ) newton_raphson_inst (
-    .clk_i  (clk),
-    .rst_i  (rst),
-    .num_i  (mant2),
+    .clk_i  (clk_i),
+    .rst_i  (rst_i),
+    .num_i  (mant2_i),
     .x0_i   (mant2_reciprocal),
     .x1_o   (x1)
   );
@@ -133,14 +133,14 @@ module core_div
   wire mant_div_less_than_one;
   assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
 
-  assign mant_out = mant_div_less_than_one ? mant_div << 1 : mant_div;
-  assign te_out = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
+  assign mant_o = mant_div_less_than_one ? mant_div << 1 : mant_div;
+  assign te_o = mant_div_less_than_one ? te_diff_st1 - 1 : te_diff_st1;
 
-  assign frac_truncated = 1'b0;
+  assign frac_truncated_o = 1'b0;
 
 
 `ifdef PIPELINE_STAGE
-  always_ff @(posedge clk) begin
+  always_ff @(posedge clk_i) begin
     if (rst) begin
       te_diff_st1 <= 0;
       mant1_st1   <= 0;

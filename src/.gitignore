@@ -12,4 +12,4 @@ out.v
 _p161_p160.v
 
 # script-generated
-lut_reciprocate.sv
+# lut_reciprocate.sv ###

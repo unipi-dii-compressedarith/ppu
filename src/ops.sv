@@ -7,8 +7,8 @@ module ops
   input                    clk_i,
   input                    rst_i,
   input operation_e        op_i,
-  input [FIR_SIZE-1:0]     fir1,
-  input [FIR_SIZE-1:0]     fir2,
+  input [FIR_SIZE-1:0]     fir1_i,
+  input [FIR_SIZE-1:0]     fir2_i,
 
   output [(
               (1 + TE_BITS + FRAC_FULL_SIZE)  // fir_ops_out
@@ -29,31 +29,31 @@ module ops
   wire [(1 + TE_BITS + FRAC_FULL_SIZE)-1:0] fir_ops_out;
   wire frac_truncated;
 
-  assign {sign1, te1, mant1} = fir1;
-  assign {sign2, te2, mant2} = fir2;
+  assign {sign1, te1, mant1} = fir1_i;
+  assign {sign2, te2, mant2} = fir2_i;
 
   core_op #(
     .TE_BITS          (TE_BITS),
     .MANT_SIZE        (MANT_SIZE),
     .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
   ) core_op_inst (
-    .clk              (clk),
-    .rst              (rst),
+    .clk_i            (clk_i),
+    .rst_i            (rst_i),
     .op_i             (op_i),
-    .sign1            (sign1),
-    .sign2            (sign2),
-    .te1              (te1),
-    .te2              (te2),
-    .mant1            (mant1),
-    .mant2            (mant2),
-    .te_out_core_op   (te_out),
-    .frac_out_core_op (frac_out),
-    .frac_truncated   (frac_truncated)
+    .sign1_i          (sign1),
+    .sign2_i          (sign2),
+    .te1_i            (te1),
+    .te2_i            (te2),
+    .mant1_i          (mant1),
+    .mant2_i          (mant2),
+    .te_o             (te_out),
+    .frac_o           (frac_out),
+    .frac_truncated_o (frac_truncated)
   );
 
   sign_decisor sign_decisor (
-    .clk_i            (clk),
-    .rst_i            (rst),
+    .clk_i            (clk_i),
+    .rst_i            (rst_i),
     .sign1_i          (sign1),
     .sign2_i          (sign2),
     .op_i             (op_i),

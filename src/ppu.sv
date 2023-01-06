@@ -32,18 +32,18 @@ module ppu
     .N            (N),
     .ES           (ES)
   ) ppu_core_ops_inst (
-    .clk          (clk_i),
-    .rst          (rst_i),
-    .p1           (p1),
-    .p2           (p2),
+    .clk_i        (clk_i),
+    .rst_i        (rst_i),
+    .p1_i         (p1),
+    .p2_i         (p2),
     .op_i         (op_i),
-    .op_st2       (),
-    .stall        (stall),
-    `ifdef FLOAT_TO_POSIT
-      .float_fir  (float_fir_in),
-      .posit_fir  (posit_fir),
-    `endif
-    .pout         (posit)
+    .op_o         (),
+    .stall_i      (stall),
+  `ifdef FLOAT_TO_POSIT
+    .float_fir_i  (float_fir_in),
+    .posit_fir_o  (posit_fir),
+  `endif
+    .pout_o       (posit)
   );
 
   assign result_o = posit;
