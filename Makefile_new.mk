@@ -33,10 +33,8 @@ sv2v: lint
 	sv2v a.sv --dump-prefix a -w /tmp/a.v && cp amain_1.sv a.v
 	make -f Makefile_quartus.mk
 
-# icarus: sv2v
-# 	iverilog a.v
-
 icarus: sv2v
+	# iverilog a.v
 	iverilog -g2012 a.sv
 
 run: icarus
@@ -62,3 +60,6 @@ questa: morty
 	vlib work && \
 	vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv && \
 	vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
+
+rtl_schematic:
+	scp $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/fpga/vivado/schematic.pdf schematic.pdf

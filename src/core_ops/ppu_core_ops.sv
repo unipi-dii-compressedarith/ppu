@@ -9,8 +9,8 @@ module ppu_core_ops
 )(
   input                                           clk_i,
   input                                           rst_i,
-  input           [N-1:0]                         p1_i,
-  input           [N-1:0]                         p2_i,
+  input                         [N-1:0]           p1_i,
+  input                         [N-1:0]           p2_i,
   input ppu_pkg::operation_e                      op_i,
   output ppu_pkg::operation_e                     op_o, // op_st2
   input                                           stall_i,
@@ -18,7 +18,7 @@ module ppu_core_ops
   input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]    float_fir_i,
   output      [(FIR_SIZE)-1:0]                    posit_fir_o,
 `endif
-  output      [N-1:0]                             pout_o
+  output                        [N-1:0]           pout_o
 );
     
   ppu_pkg::operation_e op_st0, op_st1;
