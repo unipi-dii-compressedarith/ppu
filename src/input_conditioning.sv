@@ -3,19 +3,15 @@ module input_conditioning
 #(
   parameter N = -1
 ) (
-  input               [N-1:0] p1_i,
-  input               [N-1:0] p2_i,
+  input               posit_t p1_i,
+  input               posit_t p2_i,
   input  operation_e          op_i,
-  output              [N-1:0] p1_o,
-  output              [N-1:0] p2_o,
-
-  output [(
-          N               // pout_special_or_trivial
-          + 1             // is_special_or_trivial
-      )-1:0] special_o
+  output              posit_t p1_o,
+  output              posit_t p2_o,
+  output posit_special_t         special_o // `pout_special_or_trivial` + `is_special_or_trivial` tag
 );
 
-  wire [N-1:0] _p1, _p2;
+  wire posit_t _p1, _p2;
   assign _p1 = p1_i;
   assign _p2 = op_i == SUB ? c2(p2_i) : p2_i;
 
@@ -25,7 +21,7 @@ module input_conditioning
   assign {p1_o, p2_o} = (op_is_add_or_sub && abs(_p2) > abs(_p1)) ? {_p2, _p1} : {_p1, _p2};
 
   wire is_special_or_trivial;
-  wire [N-1:0] pout_special_or_trivial;
+  posit_t pout_special_or_trivial;
 
 
   handle_special_or_trivial #(
@@ -50,6 +46,7 @@ module input_conditioning
     ));
 
 
-  assign special_o = {pout_special_or_trivial, is_special_or_trivial};
+  assign special_o.posit.bits = pout_special_or_trivial;
+  assign special_o.special_tag = is_special_or_trivial;
 
 endmodule: input_conditioning

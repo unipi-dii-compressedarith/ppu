@@ -97,6 +97,9 @@ module tb_ppu;
     #7;
     in_valid_i = 1;
 
+    // test vector posit ppu must be generated any time 
+    // any of the parameter changes.
+    // run `make -f Makefile_new.mk gen-test-vectors`
     `include "sim/test_vectors/tv_posit_ppu.sv"
     
     #10;

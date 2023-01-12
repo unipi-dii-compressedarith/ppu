@@ -23,6 +23,14 @@ typedef enum logic [OP_BITS-1:0] {
   // POSIT2FLOAT
 } operation_e;
 
+typedef struct packed {
+  logic [N-1:0] bits;
+} posit_t;
+
+typedef struct packed {
+  posit_t posit;
+  logic   special_tag;
+} posit_special_t;
 
 
 /// S := ceil(log2(N))
