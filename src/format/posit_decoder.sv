@@ -1,14 +1,11 @@
 module posit_decoder 
   import ppu_pkg::*;
 #(
-  parameter N  = 4,  // dummy
-  parameter ES = 0   // dummy
+  parameter N  = -1,  // dummy
+  parameter ES = -1   // dummy
 ) (
-  input  [        N-1:0] bits,
-  /////////////
-  output                 sign,
-  output [  TE_BITS-1:0] te,
-  output [MANT_SIZE-1:0] mant
+  input posit_t   bits_i,
+  output fir_t    fir_o
 );
 
   wire                    _reg_s;  // unused, only to satisfy the linter
@@ -19,31 +16,38 @@ module posit_decoder
   wire [ES-1:0] exp;
 `endif
 
+  wire sign;
+  wire [TE_BITS-1:0] total_exponent;
+  wire [MANT_SIZE-1:0] mant;
+
   posit_unpack #(
-    .N (N),
-    .ES(ES)
+    .N          (N),
+    .ES         (ES)
   ) posit_unpack_inst (
-    .bits(bits),
-    .sign   (sign),
-    .reg_s  (_reg_s),
-    .reg_len(_reg_len),
-    .k      (k),
+    .bits_i     (bits_i),
+    .sign_o     (sign),
+    .reg_s_o    (_reg_s),
+    .reg_len_o  (_reg_len),
+    .k_o        (k),
 `ifndef NO_ES_FIELD
-    .exp    (exp),
+    .exp_o      (exp),
 `endif
-    .mant   (mant)
+    .mant_o     (mant)
   );
 
   total_exponent #(
-    .N (N),
-    .ES(ES)
-) total_exponent_inst (
-    .k(k),
+    .N          (N),
+    .ES         (ES)
+  ) total_exponent_inst (
+    .k_i        (k),
 `ifndef NO_ES_FIELD
-    .exp(exp),
+    .exp_i      (exp),
 `endif
-    .total_exp(te)
+    .total_exp_o(total_exponent)
   );
 
+  assign fir_o.sign = sign;
+  assign fir_o.total_exponent = total_exponent;
+  assign fir_o.mant = mant;
 
 endmodule: posit_decoder

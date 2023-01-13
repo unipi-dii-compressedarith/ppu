@@ -15,18 +15,17 @@ module newton_raphson
   num_i                     :   Fx<1, MS>
   x0_i                      :   Fx<1, 3MS - 4>
 
-  num_i * x0_i              :   Fx<2, 4MS - 4>      -> Fx<2, 2MS> (downshifted by ((4MS-4) - (2MS) = 2MS - 4)
+  num_i * x0_i              :   Fx<2, 4MS - 4>   -> Fx<2, 2MS> (downshifted by ((4MS-4) - (2MS) = 2MS - 4)
 
   2                         :   Fx<2, 2MS>
 
   2 - num_i * x0_i          :   Fx<2, 2MS>
 
-  x0_2n                     :   Fx<1, 2MS>          -> x0_i downshifted by ((3MS - 3) - (2MS) = MS - 3)
+  x0_2n                     :   Fx<1, 2MS>       -> x0_i downshifted by ((3MS - 3) - (2MS) = MS - 3)
 
-  x0_2n * (2 - num_i * x0_i):   Fx<3, 4MS>          -> downshifted by ((4MS) - (2MS) - 2 = 2MS).
-                                                                                      └── due to being:   000.101000111011101001110 vs      (what you have)
-                                                                                                            0.10100011110                   (what you want)
-
+  x0_2n * (2 - num_i * x0_i):   Fx<3, 4MS>       -> downshifted by ((4MS) - (2MS) - 2 = 2MS).
+                                                                                  └── due to being:   000.101000111011101001110 vs      (what you have)
+                                                                                                        0.10100011110                   (what you want)
   */
 
 

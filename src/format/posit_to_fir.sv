@@ -1,28 +1,19 @@
 module posit_to_fir 
   import ppu_pkg::*;
 #(
-  parameter N  = 4,
-  parameter ES = 0
+  parameter N  = -1,
+  parameter ES = -1
 ) (
-  input  [       N-1:0] p_cond,
-  output [FIR_SIZE-1:0] fir
+  input posit_t p_cond_i,
+  output fir_t fir_o
 );
 
-
-  wire                 sign;
-  wire [  TE_BITS-1:0] te;
-  wire [MANT_SIZE-1:0] mant;
-
   posit_decoder #(
-    .N      (N),
-    .ES     (ES)
+    .N        (N),
+    .ES       (ES)
   ) posit_decoder_inst (
-    .bits   (p_cond),
-    .sign   (sign),
-    .te     (te),
-    .mant   (mant)
+    .bits_i   (p_cond_i),
+    .fir_o    (fir_o)
   );
-
-  assign fir = {sign, te, mant};
 
 endmodule: posit_to_fir

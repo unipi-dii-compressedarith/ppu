@@ -7,7 +7,7 @@ endif
 
 TOP := tb_ppu
 N := 8
-ES := 0
+ES := 2
 WORD := 32
 F := 0
 

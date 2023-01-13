@@ -7,18 +7,18 @@ module ppu_core_ops
   ,parameter FSIZE = -1
 `endif
 )(
-  input                                           clk_i,
-  input                                           rst_i,
-  input                         [N-1:0]           p1_i,
-  input                         [N-1:0]           p2_i,
-  input ppu_pkg::operation_e                      op_i,
-  output ppu_pkg::operation_e                     op_o, // op_st2
-  input                                           stall_i,
+  input                                         clk_i,
+  input                                         rst_i,
+  input   ppu_pkg::posit_t                      p1_i,
+  input   ppu_pkg::posit_t                      p2_i,
+  input   ppu_pkg::operation_e                  op_i,
+  output  ppu_pkg::operation_e                  op_o, // op_st2
+  input                                         stall_i,
 `ifdef FLOAT_TO_POSIT
-  input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]    float_fir_i,
-  output      [(FIR_SIZE)-1:0]                    posit_fir_o,
+  input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]  float_fir_i,
+  output      [(FIR_SIZE)-1:0]                  posit_fir_o,
 `endif
-  output                        [N-1:0]           pout_o
+  output  ppu_pkg::posit_t                      pout_o
 );
     
   ppu_pkg::operation_e op_st0, op_st1;
@@ -63,11 +63,11 @@ module ppu_core_ops
   assign op_st1 = op_st0;
 
   posit_to_fir #(
-    .N(N),
-    .ES(ES)
+    .N          (N),
+    .ES         (ES)
   ) posit_to_fir1 (
-    .p_cond(p1_cond),
-    .fir(fir1_st0)
+    .p_cond_i   (p1_cond),
+    .fir_o      (fir1_st0)
   );
 
   wire [N-1:0] posit_in_posit_to_fir2;
@@ -78,11 +78,11 @@ module ppu_core_ops
     p2_cond;
 
   posit_to_fir #(
-    .N(N),
-    .ES(ES)
+    .N          (N),
+    .ES         (ES)
   ) posit_to_fir2 (
-    .p_cond(posit_in_posit_to_fir2),
-    .fir(fir2_st0)
+    .p_cond_i   (posit_in_posit_to_fir2),
+    .fir_o      (fir2_st0)
   );
 
 `ifdef FLOAT_TO_POSIT
@@ -112,7 +112,7 @@ module ppu_core_ops
   wire [N-1:0] pout_non_special;
 
 
-  reg [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
+  logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
 
   assign ops_wire_st0 =
 `ifdef FLOAT_TO_POSIT
@@ -122,12 +122,12 @@ module ppu_core_ops
 
   
   fir_to_posit #(
-    .N(N),
-    .ES(ES),
-    .FIR_TOTAL_SIZE(1 + TE_BITS + FRAC_FULL_SIZE)
+    .N                (N),
+    .ES               (ES),
+    .FIR_TOTAL_SIZE   (1 + TE_BITS + FRAC_FULL_SIZE)
   ) fir_to_posit_inst (
-    .ops_in(ops_wire_st1),
-    .posit(pout_non_special)
+    .ops_in           (ops_wire_st1),
+    .posit            (pout_non_special)
   );
 
   assign pout_o = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;

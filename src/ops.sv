@@ -7,8 +7,8 @@ module ops
   input                    clk_i,
   input                    rst_i,
   input operation_e        op_i,
-  input [FIR_SIZE-1:0]     fir1_i,
-  input [FIR_SIZE-1:0]     fir2_i,
+  input fir_t             fir1_i,
+  input fir_t             fir2_i,
 
   output [(
               (1 + TE_BITS + FRAC_FULL_SIZE)  // fir_ops_out
@@ -40,12 +40,15 @@ module ops
     .clk_i            (clk_i),
     .rst_i            (rst_i),
     .op_i             (op_i),
-    .sign1_i          (sign1),
-    .sign2_i          (sign2),
-    .te1_i            (te1),
-    .te2_i            (te2),
-    .mant1_i          (mant1),
-    .mant2_i          (mant2),
+    // .sign1_i          (sign1),
+    // .sign2_i          (sign2),
+    // .te1_i            (te1),
+    // .te2_i            (te2),
+    // .mant1_i          (mant1),
+    // .mant2_i          (mant2),
+    .fir1_i           (fir1_i),
+    .fir2_i           (fir2_i),
+
     .te_o             (te_out),
     .frac_o           (frac_out),
     .frac_truncated_o (frac_truncated)
@@ -54,8 +57,8 @@ module ops
   sign_decisor sign_decisor (
     .clk_i            (clk_i),
     .rst_i            (rst_i),
-    .sign1_i          (sign1),
-    .sign2_i          (sign2),
+    .sign1_i          (fir1_i.sign),
+    .sign2_i          (fir2_i.sign),
     .op_i             (op_i),
     .sign_o           (sign_out)
   );

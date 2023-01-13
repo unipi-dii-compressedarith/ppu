@@ -23,6 +23,7 @@ typedef enum logic [OP_BITS-1:0] {
   // POSIT2FLOAT
 } operation_e;
 
+
 typedef struct packed {
   logic [N-1:0] bits;
 } posit_t;
@@ -53,7 +54,14 @@ parameter FRAC_SIZE = N - 1;
 // mant (mantissa) and frac (fraction) are
 // not the same thing. mant is a Fx<1,MANT_SIZE>.
 // frac is a Fx<0, MANT_SIZE-1>
-parameter MANT_SIZE = N - 2;  
+parameter MANT_SIZE = N - 2;
+
+typedef struct packed {
+  logic                 sign;
+  logic [TE_BITS-1:0]   total_exponent;
+  logic [MANT_SIZE-1:0] mant;
+} fir_t;
+
 
 parameter MS = MANT_SIZE;  // alias
 
