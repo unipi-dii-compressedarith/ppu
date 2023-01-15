@@ -1,20 +1,20 @@
 module reg_banks (
-  input                clk,
-  input                rst,
-  input                stall_i,
-  input                delay_op,   // for division
-  input [FIR_SIZE-1:0] fir1_in,
-  input [FIR_SIZE-1:0] fir2_in,
-  input [ OP_BITS-1:0] op_in,
-  input [   (N+1)-1:0] special_in,
+  input                       clk,
+  input                       rst,
+  input                       stall_i,
+  input                       delay_op,   // for division
+  input ppu_pkg::fir_t        fir1_in,
+  input ppu_pkg::fir_t        fir2_in,
+  input ppu_pkg::operation_e  op_in,
+  input ppu_pkg::posit_t      special_in,
 
-  output logic [FIR_SIZE-1:0] fir1_out,
-  output logic [FIR_SIZE-1:0] fir2_out,
-  output logic [ OP_BITS-1:0] op_out,
-  output logic [   (N+1)-1:0] special_out
+  output ppu_pkg::fir_t       fir1_out,
+  output ppu_pkg::fir_t       fir2_out,
+  output ppu_pkg::operation_e op_out,
+  output ppu_pkg::posit_t     special_out
 );
 
-  logic [OP_BITS-1:0] op_intermediate;
+  ppu_pkg::operation_e op_intermediate;
 
 `ifdef PIPELINE_STAGE
   always_ff @(posedge clk) begin

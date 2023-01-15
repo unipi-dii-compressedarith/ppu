@@ -10,7 +10,7 @@ module posit_to_float #(
   parameter FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
   parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
-  wire [FIR_SIZE-1:0] fir;
+  ppu_pkg::fir_t fir;
 
   posit_to_fir #(
     .N(N),

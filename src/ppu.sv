@@ -1,7 +1,6 @@
 /// Posit Processing Unit (PPU)
 module ppu
   import ppu_pkg::OP_BITS;
-  import ppu_pkg::FIR_SIZE;
 #(
   parameter WORD = `WORD,
   `ifdef FLOAT_TO_POSIT
@@ -21,7 +20,7 @@ module ppu
 );
 
   wire stall;
-  wire [FIR_SIZE-1:0] posit_fir;
+  wire ppu_pkg::fir_t posit_fir;
   wire [N-1:0] p1, p2, posit;
 
   assign p1 = operand1_i[N-1:0];

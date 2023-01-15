@@ -16,7 +16,7 @@ module ppu_core_ops
   input                                         stall_i,
 `ifdef FLOAT_TO_POSIT
   input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]  float_fir_i,
-  output      [(FIR_SIZE)-1:0]                  posit_fir_o,
+  output     ppu_pkg::fir_t                     posit_fir_o,
 `endif
   output  ppu_pkg::posit_t                      pout_o
 );
@@ -55,8 +55,8 @@ module ppu_core_ops
   assign is_special_or_trivial = special_st3[0];
   assign pout_special_or_trivial = special_st3 >> 1;
 
-  logic [FIR_SIZE-1:0] fir1_st0, fir1_st1;
-  logic [FIR_SIZE-1:0] fir2_st0, fir2_st1;
+  ppu_pkg::fir_t fir1_st0, fir1_st1;
+  ppu_pkg::fir_t fir2_st0, fir2_st1;
 
   assign fir1_st1 = fir1_st0;
   assign fir2_st1 = fir2_st0;

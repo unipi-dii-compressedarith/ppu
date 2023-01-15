@@ -14,13 +14,12 @@ parameter ES = `ES;
 
 
 
-localparam OP_BITS = 3;
+localparam OP_BITS = $clog2(5);
 typedef enum logic [OP_BITS-1:0] {
   ADD, SUB,
   MUL, DIV,
-  FMADD //,
-  // FLOAT2POSIT,
-  // POSIT2FLOAT
+  FMADD,
+  F2P, P2F
 } operation_e;
 
 
@@ -56,6 +55,8 @@ parameter FRAC_SIZE = N - 1;
 // frac is a Fx<0, MANT_SIZE-1>
 parameter MANT_SIZE = N - 2;
 
+
+// Operation input FIR type.
 typedef struct packed {
   logic                 sign;
   logic [TE_BITS-1:0]   total_exponent;
@@ -81,27 +82,12 @@ parameter MANT_DIV_RESULT_SIZE = MS + RMS;
 parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest among all the operation, most likely.
 
 
-
-// fir is posit intermediate format
-parameter FIR_SIZE = 1 + TE_BITS + MANT_SIZE;  // sign size + total exponent size + mantissa size
-
-
-
-
 /// Zero
 parameter ZERO = {`N{1'b0}};
 /// Not A Real
 parameter NAR = {1'b1, {`N - 1{1'b0}}};
 
 
-
-
-// parameter ADD = 3'd0;
-// parameter SUB = 3'd1;
-// parameter MUL = 3'd2;
-// parameter DIV = 3'd3;
-parameter FLOAT_TO_POSIT = 3'd4;
-parameter POSIT_TO_FLOAT = 3'd5;
 
 `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 

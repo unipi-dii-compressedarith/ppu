@@ -6,14 +6,14 @@ module fir_to_float #(
 )(
   input                   clk,
   input                   rst,
-  input  [FIR_SIZE-1:0]   fir,
+  input ppu_pkg::fir_t    fir,
   output [FSIZE-1:0]      float
 );
 
   parameter FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
   parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
-  logic [FIR_SIZE-1:0] fir_st0, fir_st1;
+  ppu_pkg::fir_t fir_st0, fir_st1;
   assign fir_st0 = fir;
 
 

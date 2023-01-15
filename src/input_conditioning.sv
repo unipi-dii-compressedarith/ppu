@@ -34,7 +34,7 @@ module input_conditioning
   );
 
   assign is_special_or_trivial =
-        op_i === FLOAT_TO_POSIT  /* check required to activate the rightmost mux */
+        op_i === F2P  /* check required to activate the rightmost mux */
     ? 0 :
         p1_i == ZERO
     || p1_i == NAR
