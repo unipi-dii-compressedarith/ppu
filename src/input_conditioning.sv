@@ -5,6 +5,7 @@ module input_conditioning
 ) (
   input               posit_t p1_i,
   input               posit_t p2_i,
+  input               posit_t p3_i,
   input  operation_e          op_i,
   output              posit_t p1_o,
   output              posit_t p2_o,
@@ -30,6 +31,7 @@ module input_conditioning
     .op_i   (op_i),
     .p1_i   (p1_i),
     .p2_i   (p2_i),
+    .p3_i   (p3_i),
     .pout_o (pout_special_or_trivial)
   );
 

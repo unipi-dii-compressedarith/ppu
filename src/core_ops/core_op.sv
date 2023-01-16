@@ -10,6 +10,7 @@ module core_op
   input operation_e             op_i,
   input fir_t                   fir1_i,
   input fir_t                   fir2_i,
+  input fir_t                   fir3_i,
   // input                         sign1_i,
   // input                         sign2_i,
   // input  [         TE_BITS-1:0] te1_i,

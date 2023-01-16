@@ -3,13 +3,14 @@ module handle_special_or_trivial
 #(
   parameter N = -1
 ) (
-  input  operation_e            op_i,
-  input               [N-1:0]   p1_i,
-  input               [N-1:0]   p2_i,
-  output              [N-1:0]   pout_o
+  input   operation_e   op_i,
+  input   posit_t       p1_i,
+  input   posit_t       p2_i,
+  input   posit_t       p3_i,
+  output  posit_t       pout_o
 );
 
-  wire [N-1:0] p_out_lut_mul, p_out_lut_add, p_out_lut_sub, p_out_lut_div;
+  posit_t p_out_lut_mul, p_out_lut_add, p_out_lut_sub, p_out_lut_div;
 
   lut_mul #(
     .N          (N)
@@ -57,9 +58,9 @@ module lut_mul
 #(
   parameter N = -1
 ) (
-  input         [N-1:0] p1,
-  input         [N-1:0] p2,
-  output logic  [N-1:0] p_out
+  input   posit_t p1,
+  input   posit_t p2,
+  output  posit_t p_out
 );
 
   wire [(2*N)-1:0] addr;
@@ -79,9 +80,9 @@ module lut_add
 #(
   parameter N = -1
 ) (
-  input         [N-1:0] p1,
-  input         [N-1:0] p2,
-  output logic  [N-1:0] p_out
+  input   posit_t p1,
+  input   posit_t p2,
+  output  posit_t p_out
 );
 
   always_comb begin
@@ -98,9 +99,9 @@ module lut_sub
 #(
   parameter N = -1
 ) (
-  input         [N-1:0] p1,
-  input         [N-1:0] p2,
-  output logic  [N-1:0] p_out
+  input   posit_t p1,
+  input   posit_t p2,
+  output  posit_t p_out
 );
 
   always_comb begin
@@ -117,9 +118,9 @@ module lut_div
 #(
   parameter N = -1
 ) (
-  input         [N-1:0] p1,
-  input         [N-1:0] p2,
-  output logic  [N-1:0] p_out
+  input   posit_t p1,
+  input   posit_t p2,
+  output  posit_t p_out
 );
 
   always_comb begin

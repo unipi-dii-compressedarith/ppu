@@ -14,17 +14,19 @@ module ppu
   input logic                           in_valid_i,
   input logic                [WORD-1:0] operand1_i,
   input logic                [WORD-1:0] operand2_i,
+  input logic                [WORD-1:0] operand3_i,
   input ppu_pkg::operation_e            op_i,
   output                     [WORD-1:0] result_o,
   output                                out_valid_o
 );
 
   wire stall;
-  wire ppu_pkg::fir_t posit_fir;
-  wire [N-1:0] p1, p2, posit;
+  ppu_pkg::fir_t posit_fir;
+  ppu_pkg::posit_t p1, p2, p3, posit;
 
   assign p1 = operand1_i[N-1:0];
   assign p2 = operand2_i[N-1:0];
+  assign p3 = operand3_i[N-1:0];
 
 
   ppu_core_ops #(
@@ -35,6 +37,7 @@ module ppu
     .rst_i        (rst_i),
     .p1_i         (p1),
     .p2_i         (p2),
+    .p3_i         (p3),
     .op_i         (op_i),
     .op_o         (),
     .stall_i      (stall),

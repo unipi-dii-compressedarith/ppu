@@ -15,6 +15,7 @@ module tb_ppu;
   logic                                 in_valid_i;
   logic                   [WORD-1:0]    operand1_i;
   logic                   [WORD-1:0]    operand2_i;
+  logic                   [WORD-1:0]    operand3_i;
   ppu_pkg::operation_e                  op_i;
   logic                 [ASCII_SIZE:0]  op_i_ascii;
   wire                  [WORD-1:0]      result_o;
@@ -23,6 +24,7 @@ module tb_ppu;
 
   logic [ASCII_SIZE-1:0]  operand1_i_ascii,   // operand1_i
                           operand2_i_ascii,   // operand2_i
+                          operand3_i_ascii,   // operand3_i
                           result_o_ascii,     // result_o ascii
                           result_gt_ascii;    // result ground truth ascii
 
@@ -49,6 +51,7 @@ module tb_ppu;
     .in_valid_i (in_valid_i),
     .operand1_i (operand1_i),
     .operand2_i (operand2_i),
+    .operand3_i (operand3_i),
     .op_i       (op_i),
     .result_o   (result_o),
     .out_valid_o(out_valid_o)

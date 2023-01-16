@@ -4,11 +4,12 @@ module ops
 #(
   parameter N = -1
 ) (
-  input                    clk_i,
-  input                    rst_i,
-  input operation_e        op_i,
+  input                   clk_i,
+  input                   rst_i,
+  input operation_e       op_i,
   input fir_t             fir1_i,
   input fir_t             fir2_i,
+  input fir_t             fir3_i,
 
   output ops_out_meta_t   ops_result_o
 
@@ -50,6 +51,7 @@ module ops
     // .mant2_i          (mant2),
     .fir1_i           (fir1_i),
     .fir2_i           (fir2_i),
+    .fir3_i           (fir3_i),
 
     .te_o             (te_out),
     .frac_o           (frac_out),

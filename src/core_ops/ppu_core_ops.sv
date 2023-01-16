@@ -11,6 +11,7 @@ module ppu_core_ops
   input                                         rst_i,
   input   ppu_pkg::posit_t                      p1_i,
   input   ppu_pkg::posit_t                      p2_i,
+  input   ppu_pkg::posit_t                      p3_i,
   input   ppu_pkg::operation_e                  op_i,
   output  ppu_pkg::operation_e                  op_o, // op_st2
   input                                         stall_i,
@@ -46,6 +47,7 @@ module ppu_core_ops
   ) input_conditioning (
     .p1_i       (p1_i),
     .p2_i       (p2_i),
+    .p3_i       (p3_i),
     .op_i       (op_st0),
     .p1_o       (p1_cond),
     .p2_o       (p2_cond),
@@ -57,9 +59,11 @@ module ppu_core_ops
 
   ppu_pkg::fir_t fir1_st0, fir1_st1;
   ppu_pkg::fir_t fir2_st0, fir2_st1;
+  ppu_pkg::fir_t fir3_st0, fir3_st1;
 
   assign fir1_st1 = fir1_st0;
   assign fir2_st1 = fir2_st0;
+  assign fir3_st1 = fir3_st0;
   assign op_st1 = op_st0;
 
   posit_to_fir #(
@@ -103,6 +107,7 @@ module ppu_core_ops
     .op_i           (op_st1),
     .fir1_i         (fir1_st1),
     .fir2_i         (fir2_st1),
+    .fir3_i         (fir3_st1),
     .ops_result_o   (ops_result)
   );
 
