@@ -81,6 +81,20 @@ parameter MANT_DIV_RESULT_SIZE = MS + RMS;
 /****************************************/
 parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest among all the operation, most likely.
 
+/// Fir type (output of `ops` stage. Fraction is unrounded.)
+typedef struct packed {
+  logic                       sign;
+  logic [TE_BITS-1:0]         total_exponent;
+  logic [FRAC_FULL_SIZE-1:0]  frac;
+} long_fir_t; // prev. FIR_TOTAL_SIZE
+
+/// Ops (posit operations) output "metadata" type (?)
+typedef struct packed {
+  long_fir_t  long_fir;
+  logic       frac_truncated;
+} ops_out_meta_t;
+
+
 
 /// Zero
 parameter ZERO = {`N{1'b0}};

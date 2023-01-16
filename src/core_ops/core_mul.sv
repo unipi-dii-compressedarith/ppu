@@ -11,7 +11,7 @@ module core_mul
   input  [             TE_BITS-1:0] te2_i,
   input  [           MANT_SIZE-1:0] mant1_i,
   input  [           MANT_SIZE-1:0] mant2_i,
-  output [MANT_MUL_RESULT_SIZE-1:0] mant_o,
+  output [MANT_MUL_RESULT_SIZE-1:0] mant_o, // full output mantissa (no rounding)
   output [             TE_BITS-1:0] te_o,
   output                            frac_truncated_o
 );

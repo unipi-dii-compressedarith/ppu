@@ -126,8 +126,8 @@ module ppu_core_ops
     .ES               (ES),
     .FIR_TOTAL_SIZE   (1 + TE_BITS + FRAC_FULL_SIZE)
   ) fir_to_posit_inst (
-    .ops_in           (ops_wire_st1),
-    .posit            (pout_non_special)
+    .ops_result_i     (ops_wire_st1),
+    .posit_o          (pout_non_special)
   );
 
   assign pout_o = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;

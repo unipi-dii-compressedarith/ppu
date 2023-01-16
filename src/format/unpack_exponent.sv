@@ -1,20 +1,20 @@
 module unpack_exponent 
   import ppu_pkg::*;
 #(
-  parameter N  = 4,
-  parameter ES = 1
+  parameter N  = -1,
+  parameter ES = -1
 ) (
-  input  [TE_BITS-1:0] total_exp,
-  output [ K_BITS-1:0] k
+  input  [TE_BITS-1:0] total_exp_i,
+  output [ K_BITS-1:0] k_o
 `ifndef NO_ES_FIELD
-, output [     ES-1:0] exp
+, output [     ES-1:0] exp_o
 `endif
 );
 
-  assign k = total_exp >> ES;
+  assign k_o = total_exp_i >> ES;
 
 `ifndef NO_ES_FIELD
-  assign exp = total_exp - ((1 << ES) * k);
+  assign exp_o = total_exp_i - ((1 << ES) * k_o);
 `endif
 
 endmodule: unpack_exponent

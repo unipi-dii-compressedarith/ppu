@@ -10,10 +10,12 @@ module ops
   input fir_t             fir1_i,
   input fir_t             fir2_i,
 
-  output [(
-              (1 + TE_BITS + FRAC_FULL_SIZE)  // fir_ops_out
-              + 1                             // frac_truncated
-          )-1:0]                ops_result_o
+  output ops_out_meta_t   ops_result_o
+
+  // output [(
+  //             (1 + TE_BITS + FRAC_FULL_SIZE)  // fir_ops_out
+  //             + 1                             // frac_truncated
+  //         )-1:0]                ops_result_o
 );
 
   wire sign1, sign2;
@@ -65,6 +67,8 @@ module ops
 
   assign fir_ops_out = {sign_out, te_out, frac_out};
 
-  assign ops_result_o = {fir_ops_out, frac_truncated};
+  
+  assign ops_result_o.long_fir = fir_ops_out;
+  assign ops_result_o.frac_truncated = frac_truncated;
 
 endmodule: ops

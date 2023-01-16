@@ -1,22 +1,18 @@
-/*
-
-
-*/
 module pack_fields 
   import ppu_pkg::*;
 #(
-  parameter N  = 4,
-  parameter ES = 0
+  parameter N  = -1,
+  parameter ES = -1
 ) (
-  input [FRAC_FULL_SIZE-1:0] frac_full,
-  input [       TE_BITS-1:0] total_exp,
-  input                      frac_truncated, // new flag
+  input [FRAC_FULL_SIZE-1:0] frac_full_i,
+  input [       TE_BITS-1:0] total_exp_i,
+  input                      frac_truncated_i, // new flag
 
-  output [   K_BITS-1:0] k,
+  output [   K_BITS-1:0] k_o,
 `ifndef NO_ES_FIELD
-  output [       ES-1:0] next_exp,
+  output [       ES-1:0] next_exp_o,
 `endif
-  output [MANT_SIZE-1:0] frac,
+  output [MANT_SIZE-1:0] frac_o,
 
   // flags
   output round_bit,
@@ -32,13 +28,13 @@ module pack_fields
 `endif
 
   unpack_exponent #(
-    .N (N),
-    .ES(ES)
+    .N          (N),
+    .ES         (ES)
   ) unpack_exponent_inst (
-    .total_exp(total_exp),
-    .k(k_unpacked)
+    .total_exp_i(total_exp_i),
+    .k_o        (k_unpacked)
 `ifndef NO_ES_FIELD,
-    .exp(exp_unpacked)
+    .exp_o      (exp_unpacked)
 `endif
   );
 
@@ -78,35 +74,34 @@ module pack_fields
 
 
   compute_rouding #(
-    .N (N),
-    .ES(ES)
+    .N                (N),
+    .ES               (ES)
   ) compute_rouding_inst (
-    .frac_len(frac_len),
-    .frac_full(frac_full),
-    .frac_len_diff(frac_len_diff),
-    .k(regime_k),
+    .frac_len_i       (frac_len),
+    .frac_full_i      (frac_full_i),
+    .frac_len_diff_i  (frac_len_diff),
+    .k_i              (regime_k),
 `ifndef NO_ES_FIELD
-    .exp(exp_unpacked),
+    .exp_i            (exp_unpacked),
 `endif
-    .frac_truncated(frac_truncated),
-
-    .round_bit (round_bit),
-    .sticky_bit(sticky_bit)
+    .frac_truncated_i (frac_truncated_i),
+    .round_bit_o      (round_bit),
+    .sticky_bit_o     (sticky_bit)
   );
 
-  assign k = regime_k;  // prev. k_unpacked which is wrong;
+  assign k_o = regime_k;  // prev. k_unpacked which is wrong;
 
 `ifndef NO_ES_FIELD
   wire [ES-1:0] exp2;
   assign exp2 = exp1 << (ES - es_actual_len);
 `endif
 
-  assign frac = frac_full >> frac_len_diff;
+  assign frac_o = frac_full_i >> frac_len_diff;
 
   assign non_zero_frac_field_size = $signed(frac_len) >= 0;
 
 `ifndef NO_ES_FIELD
-  assign next_exp = exp2;
+  assign next_exp_o = exp2;
 `endif
 
 endmodule: pack_fields
