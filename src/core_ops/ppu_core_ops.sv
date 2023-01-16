@@ -35,13 +35,13 @@ module ppu_core_ops
   wire [(3*MANT_SIZE)-1:0] mant_out_ops;
   wire [TE_BITS-1:0] te1, te2, te_out_ops;
 
-  wire sign1, sign2;
+  logic sign1, sign2;
 
-  wire [N-1:0]      p1_cond, p2_cond;
-  wire              is_special_or_trivial;
-  wire [N-1:0]      pout_special_or_trivial;
+  posit_t      p1_cond, p2_cond, p3_cond;
+  logic              is_special_or_trivial;
+  posit_t      pout_special_or_trivial;
   
-  logic [(N+1)-1:0] special_st0, special_st1, special_st2, special_st3;
+  logic [(N+1)-1:0] p_special_st0, p_special_st1, p_special_st2, p_special_st3;
   input_conditioning #(
     .N          (N)
   ) input_conditioning (
@@ -51,11 +51,12 @@ module ppu_core_ops
     .op_i       (op_st0),
     .p1_o       (p1_cond),
     .p2_o       (p2_cond),
-    .special_o  (special_st0)
+    .p3_o       (p3_cond),
+    .p_special_o(p_special_st0)
   );
 
-  assign is_special_or_trivial = special_st3[0];
-  assign pout_special_or_trivial = special_st3 >> 1;
+  assign is_special_or_trivial = p_special_st3[0];
+  assign pout_special_or_trivial = p_special_st3 >> 1;
 
   ppu_pkg::fir_t fir1_st0, fir1_st1;
   ppu_pkg::fir_t fir2_st0, fir2_st1;
@@ -141,22 +142,22 @@ module ppu_core_ops
   always @(posedge clk_i) begin
     if (rst == 1'b1) begin_i
       ops_wire_st1 <= 'b0;
-      special_st2 <= 'b0;
-      special_st3 <= 'b0;
+      p_special_st2 <= 'b0;
+      p_special_st3 <= 'b0;
       op_o <= 'b0;
     end else begin
       ops_wire_st1 <= ops_wire_st0;
-      special_st1 <= special_st0; // <- new 20221214
-      special_st2 <= special_st1;
-      special_st3 <= special_st2; // special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
+      p_special_st1 <= p_special_st0; // <- new 20221214
+      p_special_st2 <= p_special_st1;
+      p_special_st3 <= p_special_st2; // p_special_st3 <= (op_st1 === DIV) ? p_special_st2 : p_special_st1;
       op_o <= op_st1;
     end
   end
 `else
   assign ops_wire_st1 = ops_wire_st0;
-  assign special_st1 = special_st0; // <- new 20221214
-  assign special_st2 = special_st1;
-  assign special_st3 = special_st2; // special_st3 <= (op_st1 === DIV) ? special_st2 : special_st1;
+  assign p_special_st1 = p_special_st0; // <- new 20221214
+  assign p_special_st2 = p_special_st1;
+  assign p_special_st3 = p_special_st2; // p_special_st3 <= (op_st1 === DIV) ? p_special_st2 : p_special_st1;
   assign op_o = op_st1;
 `endif
 endmodule: ppu_core_ops

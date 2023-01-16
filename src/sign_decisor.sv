@@ -4,6 +4,7 @@ module sign_decisor
   input                       rst_i,
   input                       sign1_i,
   input                       sign2_i,
+  input                       sign3_i,
   input ppu_pkg::operation_e  op_i,
   output                      sign_o
 );
