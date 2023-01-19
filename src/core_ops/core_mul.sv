@@ -7,16 +7,16 @@ module core_mul
 ) (
   input                             clk_i,
   input                             rst_i,
-  input  [             TE_BITS-1:0] te1_i,
-  input  [             TE_BITS-1:0] te2_i,
+  input  exponent_t                 te1_i,
+  input  exponent_t                 te2_i,
   input  [           MANT_SIZE-1:0] mant1_i,
   input  [           MANT_SIZE-1:0] mant2_i,
   output [MANT_MUL_RESULT_SIZE-1:0] mant_o, // full output mantissa (no rounding)
-  output [             TE_BITS-1:0] te_o,
+  output exponent_t                 te_o,
   output                            frac_truncated_o
 );
 
-  logic [TE_BITS-1:0] te_sum_st0, te_sum_st1;
+  exponent_t te_sum_st0, te_sum_st1;
   assign te_sum_st0 = te1_i + te2_i;
 
   wire [MANT_SUB_RESULT_SIZE-1:0] mant_mul;

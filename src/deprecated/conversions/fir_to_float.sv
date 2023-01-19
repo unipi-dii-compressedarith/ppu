@@ -30,7 +30,7 @@ module fir_to_float #(
   `endif
 
   wire posit_sign;
-  wire signed [TE_BITS-1:0] posit_te;
+  exponent_t posit_te; // wire signed [TE_BITS-1:0] posit_te;
   wire [MANT_SIZE-1:0] posit_frac;
 
   assign {posit_sign, posit_te, posit_frac} = fir_st1;

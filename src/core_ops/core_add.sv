@@ -5,9 +5,9 @@ module core_add
   parameter MANT_ADD_RESULT_SIZE = -1
 ) (
   input  [(MANT_ADD_RESULT_SIZE)-1:0] mant_i,
-  input  [               TE_BITS-1:0] te_diff_i,
+  input  exponent_t                   te_diff_i,
   output [(MANT_ADD_RESULT_SIZE)-1:0] new_mant_o,
-  output [               TE_BITS-1:0] new_te_diff_o,
+  output exponent_t                   new_te_diff_o,
   output                              frac_truncated_o
 );
 

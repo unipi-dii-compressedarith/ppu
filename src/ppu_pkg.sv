@@ -55,11 +55,12 @@ parameter FRAC_SIZE = N - 1;
 // frac is a Fx<0, MANT_SIZE-1>
 parameter MANT_SIZE = N - 2;
 
+typedef logic [TE_BITS-1:0] exponent_t;
 
 // Operation input FIR type.
 typedef struct packed {
   logic                 sign;
-  logic [TE_BITS-1:0]   total_exponent;
+  exponent_t            total_exponent;
   logic [MANT_SIZE-1:0] mant;
 } fir_t;
 
@@ -84,7 +85,7 @@ parameter FRAC_FULL_SIZE = MANT_DIV_RESULT_SIZE - 2; // this is the largest amon
 /// Fir type (output of `ops` stage. Fraction is unrounded.)
 typedef struct packed {
   logic                       sign;
-  logic [TE_BITS-1:0]         total_exponent;
+  exponent_t                  total_exponent;
   logic [FRAC_FULL_SIZE-1:0]  frac;
 } long_fir_t; // prev. FIR_TOTAL_SIZE
 

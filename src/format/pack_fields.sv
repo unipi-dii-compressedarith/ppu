@@ -4,9 +4,9 @@ module pack_fields
   parameter N  = -1,
   parameter ES = -1
 ) (
-  input [FRAC_FULL_SIZE-1:0] frac_full_i,
-  input [       TE_BITS-1:0] total_exp_i,
-  input                      frac_truncated_i, // new flag
+  input [FRAC_FULL_SIZE-1:0]  frac_full_i,
+  input exponent_t            total_exp_i,
+  input                       frac_truncated_i, // new flag
 
   output [   K_BITS-1:0] k_o,
 `ifndef NO_ES_FIELD

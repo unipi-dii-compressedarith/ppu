@@ -8,7 +8,7 @@ module float_to_posit #(
 );
 
   wire sign;
-  wire [TE_BITS-1:0] exp;
+  exponent_t exp;
   wire [FLOAT_MANT_SIZE-1:0] frac;
 
   wire [(1 + FLOAT_EXP_SIZE_F`F + FLOAT_MANT_SIZE_F`F)-1:0] fir_out;

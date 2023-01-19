@@ -4,11 +4,11 @@ module total_exponent
   parameter N  = -1,
   parameter ES = -1
 ) (
-  input  [ K_BITS-1:0] k_i,
+  input  [ K_BITS-1:0]  k_i,
 `ifndef NO_ES_FIELD
-  input  [     ES-1:0] exp_i,
+  input  [     ES-1:0]  exp_i,
 `endif
-  output [TE_BITS-1:0] total_exp_o
+  output exponent_t     total_exp_o
 );
 
 

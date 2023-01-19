@@ -46,7 +46,7 @@ module ppu_top
 );
 
 
-always @(posedge clk) begin
+always_ff @(posedge clk) begin
   ppu_valid_in_reg <= ppu_valid_in;
   in1_reg <= ppu_in1;
   in2_reg <= ppu_in2;

@@ -33,7 +33,7 @@ module ppu_core_ops
 
   wire [MANT_SIZE-1:0] mant1, mant2;
   wire [(3*MANT_SIZE)-1:0] mant_out_ops;
-  wire [TE_BITS-1:0] te1, te2, te_out_ops;
+  exponent_t te1, te2, te_out_ops;
 
   logic sign1, sign2;
 
@@ -94,7 +94,7 @@ module ppu_core_ops
   assign posit_fir_o = fir2_st1;
 `endif
 
-  wire [TE_BITS-1:0] ops_te_out;
+  exponent_t ops_te_out;
   wire [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
 

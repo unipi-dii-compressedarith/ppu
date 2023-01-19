@@ -15,7 +15,7 @@ module fir_to_posit
   assign frac_truncated = ops_result_i.frac_truncated;
 
   logic sign;
-  logic [TE_BITS-1:0] te;
+  exponent_t te;
   wire [FRAC_FULL_SIZE-1:0] frac_full;
   assign {sign, te, frac_full} = fir;
 

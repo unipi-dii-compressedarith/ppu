@@ -5,9 +5,9 @@ module core_sub
   parameter MANT_SUB_RESULT_SIZE = -1
 ) (
   input  [(MANT_SUB_RESULT_SIZE)-1:0] mant,
-  input  [               TE_BITS-1:0] te_diff,
+  input   exponent_t                  te_diff,
   output [(MANT_SUB_RESULT_SIZE)-1:0] new_mant,
-  output [               TE_BITS-1:0] new_te_diff
+  output  exponent_t                  new_te_diff
 );
 
   wire [($clog2(MANT_SUB_RESULT_SIZE))-1:0] leading_zeros;

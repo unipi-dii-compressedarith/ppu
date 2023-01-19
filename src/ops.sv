@@ -17,7 +17,7 @@ module ops
   wire [FRAC_FULL_SIZE-1:0] frac_out;
 
   wire sign_out;
-  wire [TE_BITS-1:0] te_out;
+  exponent_t te_out;
   wire [FRAC_FULL_SIZE-1:0] frac_full;
 
   wire frac_truncated;
@@ -30,16 +30,9 @@ module ops
     .clk_i            (clk_i),
     .rst_i            (rst_i),
     .op_i             (op_i),
-    // .sign1_i          (sign1),
-    // .sign2_i          (sign2),
-    // .te1_i            (te1),
-    // .te2_i            (te2),
-    // .mant1_i          (mant1),
-    // .mant2_i          (mant2),
     .fir1_i           (fir1_i),
     .fir2_i           (fir2_i),
     .fir3_i           (fir3_i),
-
     .te_o             (te_out),
     .frac_o           (frac_out),
     .frac_truncated_o (frac_truncated)
@@ -54,7 +47,6 @@ module ops
     .op_i             (op_i),
     .sign_o           (sign_out)
   );
-
   
   assign ops_result_o.long_fir = {sign_out, te_out, frac_out};
   assign ops_result_o.frac_truncated = frac_truncated;

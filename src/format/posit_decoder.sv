@@ -17,7 +17,7 @@ module posit_decoder
 `endif
 
   logic sign;
-  wire [TE_BITS-1:0] total_exponent;
+  exponent_t total_exponent;
   wire [MANT_SIZE-1:0] mant;
 
   posit_unpack #(

@@ -4,10 +4,10 @@ module unpack_exponent
   parameter N  = -1,
   parameter ES = -1
 ) (
-  input  [TE_BITS-1:0] total_exp_i,
-  output [ K_BITS-1:0] k_o
+  input  exponent_t     total_exp_i,
+  output [ K_BITS-1:0]  k_o
 `ifndef NO_ES_FIELD
-, output [     ES-1:0] exp_o
+, output [     ES-1:0]  exp_o
 `endif
 );
 

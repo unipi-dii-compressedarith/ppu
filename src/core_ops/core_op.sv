@@ -11,15 +11,9 @@ module core_op
   input fir_t                   fir1_i,
   input fir_t                   fir2_i,
   input fir_t                   fir3_i,
-  // input                         sign1_i,
-  // input                         sign2_i,
-  // input  [         TE_BITS-1:0] te1_i,
-  // input  [         TE_BITS-1:0] te2_i,
-  // input  [       MANT_SIZE-1:0] mant1_i,
-  // input  [       MANT_SIZE-1:0] mant2_i,
   
   // output fir_t                  fir_o,
-  output [         TE_BITS-1:0] te_o,
+  output exponent_t             te_o,
   output [(FRAC_FULL_SIZE)-1:0] frac_o,
   output                        frac_truncated_o
 );
@@ -29,7 +23,7 @@ module core_op
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_out_div;
 
 
-  wire [TE_BITS-1:0] te_out_add_sub, te_out_mul, te_out_div;
+  exponent_t te_out_add_sub, te_out_mul, te_out_div;
   wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
   core_add_sub #(
