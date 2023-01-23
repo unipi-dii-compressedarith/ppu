@@ -16,8 +16,8 @@ module ppu
   input logic                [WORD-1:0] operand2_i,
   input logic                [WORD-1:0] operand3_i,
   input ppu_pkg::operation_e            op_i,
-  output                     [WORD-1:0] result_o,
-  output                                out_valid_o
+  output logic               [WORD-1:0] result_o,
+  output logic                          out_valid_o
 );
 
   wire stall;

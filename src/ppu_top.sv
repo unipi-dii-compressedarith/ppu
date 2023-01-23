@@ -9,13 +9,13 @@ module ppu_top
   parameter N = `N,
   parameter ES = `ES
 ) (
-  input                           clk,
-  input                           rst,
-  input                           ppu_valid_in,
-  input               [WORD-1:0]  ppu_in1,
-  input               [WORD-1:0]  ppu_in2,
-  input               [WORD-1:0]  ppu_in3,
-  input  operation_e              ppu_op,
+  input logic                     clk,
+  input logic                     rst,
+  input logic                     ppu_valid_in,
+  input logic         [WORD-1:0]  ppu_in1,
+  input logic         [WORD-1:0]  ppu_in2,
+  input logic         [WORD-1:0]  ppu_in3,
+  input operation_e               ppu_op,
   output logic        [WORD-1:0]  ppu_out,
   output logic                    ppu_valid_o
 );

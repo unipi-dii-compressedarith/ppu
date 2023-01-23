@@ -5,9 +5,9 @@ PPU_ROOT := $(RISCV_PPU_ROOT)/ppu
 RISCV_PPU_SCRIPTS_DIR := $(PPU_ROOT)/scripts
 endif
 
-TOP := tb_ppu
+TOP := ppu #tb_ppu
 N := 8
-ES := 2
+ES := 0
 WORD := 32
 F := 0
 
@@ -39,7 +39,13 @@ icarus: sv2v
 
 run: icarus
 	vvp a.out -l a.log
+ifeq ($(TOP),tb_ppu)
+	@echo "Validating pipeline"
 	$(RISCV_PPU_SCRIPTS_DIR)/validate_pipelined.py -n $(N) -es $(ES) -f $(F) -i ppu_output.log -o validate_pipelined.log
+else
+	@echo "Not running \`validate pipeline\`"
+endif
+
 
 clean:
 	rm -rf sources.json a*.sv a.v *.out *.log $(DOCS)

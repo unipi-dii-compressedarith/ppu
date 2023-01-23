@@ -4,8 +4,8 @@ module ops
 #(
   parameter N = -1
 ) (
-  input                   clk_i,
-  input                   rst_i,
+  input logic             clk_i,
+  input logic             rst_i,
   input operation_e       op_i,
   input fir_t             fir1_i,
   input fir_t             fir2_i,
@@ -16,7 +16,7 @@ module ops
   
   wire [FRAC_FULL_SIZE-1:0] frac_out;
 
-  wire sign_out;
+  logic sign_out;
   exponent_t te_out;
   wire [FRAC_FULL_SIZE-1:0] frac_full;
 

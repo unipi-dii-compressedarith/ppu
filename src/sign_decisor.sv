@@ -1,12 +1,12 @@
 module sign_decisor
 (
-  input                       clk_i,
-  input                       rst_i,
-  input                       sign1_i,
-  input                       sign2_i,
-  input                       sign3_i,
+  input logic                 clk_i,
+  input logic                 rst_i,
+  input logic                 sign1_i,
+  input logic                 sign2_i,
+  input logic                 sign3_i,
   input ppu_pkg::operation_e  op_i,
-  output                      sign_o
+  output logic                sign_o
 );
 
   logic sign1_st1, sign2_st1;

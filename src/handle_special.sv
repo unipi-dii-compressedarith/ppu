@@ -1,14 +1,14 @@
 module handle_special #(
     parameter N = `N
 ) (
-    input        [      N-1:0] p1,
-    input        [      N-1:0] p2,
-    input        [OP_BITS-1:0] op,
-    input                      p1_is_zero,
-    input                      p2_is_zero,
-    input                      p1_is_nar,
-    input                      p2_is_nar,
-    output logic [      N-1:0] pout
+    input posit_t               p1,
+    input posit_t               p2,
+    input        [OP_BITS-1:0]  op,
+    input                       p1_is_zero,
+    input                       p2_is_zero,
+    input                       p1_is_nar,
+    input                       p2_is_nar,
+    output posit_t              pout
 );
 
     wire [N-1:0] nan;

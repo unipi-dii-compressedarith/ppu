@@ -7,11 +7,11 @@ module lzc #(
 );
   // initial $display("Hello lzc.");
   lzc_internal #(
-    .NUM_BITS(NUM_BITS)
+    .NUM_BITS   (NUM_BITS)
   ) l1 (
-    .in (bits_i),
-    .out(lzc_o),
-    .vld(valid_o)
+    .in         (bits_i),
+    .out        (lzc_o),
+    .vld        (valid_o)
   );
 endmodule: lzc
 
@@ -22,6 +22,7 @@ module lzc_internal #(
   output [$clog2(NUM_BITS)-1:0] out,
   output                        vld
 );
+  
   localparam S = $clog2(NUM_BITS);
 
   generate

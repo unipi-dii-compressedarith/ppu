@@ -1,8 +1,8 @@
 module compute_rouding
   import ppu_pkg::*;
 #(
-  parameter N  = 5,
-  parameter ES = 0
+  parameter N  = -1,
+  parameter ES = -1
 ) (
   input  [ MANT_LEN_BITS-1:0] frac_len_i,
   input  [FRAC_FULL_SIZE-1:0] frac_full_i,

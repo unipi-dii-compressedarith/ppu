@@ -8,7 +8,7 @@ module core_add
   input  exponent_t                   te_diff_i,
   output [(MANT_ADD_RESULT_SIZE)-1:0] new_mant_o,
   output exponent_t                   new_te_diff_o,
-  output                              frac_truncated_o
+  output logic                        frac_truncated_o
 );
 
   wire mant_carry;

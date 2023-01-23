@@ -5,8 +5,8 @@ module core_add_sub
   parameter MANT_SIZE = -1,
   parameter MANT_ADD_RESULT_SIZE = -1
 ) (
-  input                               clk_i,
-  input                               rst_i,
+  input logic                         clk_i,
+  input logic                         rst_i,
   input exponent_t                    te1_i,
   input exponent_t                    te2_i,
   input  [             MANT_SIZE-1:0] mant1_i,
