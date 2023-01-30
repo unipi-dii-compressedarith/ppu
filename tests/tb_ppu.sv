@@ -38,24 +38,27 @@ module tb_ppu;
 
   
 
-  ppu #(
-    .WORD       (WORD),
+  ppu_top #(
+    .WORD         (WORD),
     `ifdef FLOAT_TO_POSIT
-      .FSIZE    (FSIZE),
+      .FSIZE        (FSIZE),
     `endif
-    .N          (N),
-    .ES         (ES)
-  ) ppu_inst (
-    .clk_i      (clk_i),
-    .rst_i      (rst_i),
-    .in_valid_i (in_valid_i),
-    .operand1_i (operand1_i),
-    .operand2_i (operand2_i),
-    .operand3_i (operand3_i),
-    .op_i       (op_i),
-    .result_o   (result_o),
-    .out_valid_o(out_valid_o)
+    .N            (N),
+    .ES           (ES)
+  ) ppu_top_inst (
+    .clk_i        (clk_i),
+    .rst_i        (rst_i),
+    .in_valid_i   (in_valid_i),
+    .operand1_i   (operand1_i),
+    .operand2_i   (operand2_i),
+    .operand3_i   (operand3_i),
+    .op_i         (op_i),
+    .result_o     (result_o),
+    .out_valid_o  (out_valid_o)
   );
+
+
+
 
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
@@ -82,11 +85,11 @@ module tb_ppu;
   initial f = $fopen("ppu_output.log", "w");
 
   always @(posedge clk_i) begin
-    if (in_valid_i) $fwrite(f, "i %h %h %h\n", operand1_i, op_i, operand2_i);
+    if (in_valid_i) $fwrite(f, "i %h %h %h %t\n", operand1_i, op_i, operand2_i, $time);
   end
 
-  always @(negedge clk_i) begin
-    if (out_valid_o) $fwrite(f, "o %h\n", result_o);
+  always @(posedge clk_i) begin
+    if (out_valid_o) $fwrite(f, "o %h %t\n", result_o, $time);
   end
   //////////////////////////////////////////////////////////////////
 
@@ -97,16 +100,24 @@ module tb_ppu;
   end
 
   initial begin: sequences
-    #7;
-    in_valid_i = 1;
+    in_valid_i = 1'b0;
+    @(posedge clk_i);
+  
 
     // test vector posit ppu must be generated any time 
     // any of the parameter changes.
     // run `make -f Makefile_new.mk gen-test-vectors`
     `include "sim/test_vectors/tv_posit_ppu.sv"
     
-    #10;
+
+    @(negedge clk_i);
+    in_valid_i = 1'b0;
+    for (int i=0; i<4; i++) begin
+      @(negedge clk_i);
+    end
+    
     $finish;
   end
 
 endmodule: tb_ppu
+

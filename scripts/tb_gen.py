@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 pip install hardposit
 
@@ -42,33 +42,33 @@ class Tb(enum.Enum):
 
 
 operations = {
-    Tb.MUL: "*",
-    Tb.ADD: "+",
-    Tb.SUB: "-",
-    Tb.DIV: "/",
-    Tb.PACOGEN: "/"
+  Tb.MUL: "*",
+  Tb.ADD: "+",
+  Tb.SUB: "-",
+  Tb.DIV: "/",
+  Tb.PACOGEN: "/"
 }
 
 parser = argparse.ArgumentParser(description="Generate test benches")
 parser.add_argument(
-    "--operation",
-    type=Tb,
-    choices=list(Tb),
-    required=True,
-    help="Type of test bench: adder/multiplier/etc",
+  "--operation",
+  type=Tb,
+  choices=list(Tb),
+  required=True,
+  help="Type of test bench: adder/multiplier/etc",
 )
 
 parser.add_argument(
-    "--shuffle-random",
-    dest="shuffle_random",
-    action="store_true",
-    help="Shuffle random",
+  "--shuffle-random",
+  dest="shuffle_random",
+  action="store_true",
+  help="Shuffle random",
 )
 parser.add_argument(
-    "--no-shuffle-random",
-    dest="shuffle_random",
-    action="store_false",
-    help="Shuffle random",
+  "--no-shuffle-random",
+  dest="shuffle_random",
+  action="store_false",
+  help="Shuffle random",
 )
 parser.set_defaults(shuffle_random=False)
 
@@ -176,7 +176,9 @@ def func(c, op_i, list_a, list_b):
     else:
       raise Exception("wrong op_i?")
 
+    c += "@(negedge clk_i);\n"
     c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
+    c += f"in_valid_i = 1'b{int(random.random() > 0.08)};\n\t" # x > 0.2 i.e. 80% of the time is true
     c += f"{'operand1_i ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
     c += f"""{'operand1_i_ascii ='.ljust(LJUST)} "{p1.eval()}";\n\t"""
     c += f"{'operand2_i ='.ljust(LJUST)} {N}'h{p2.to_hex(prefix=False)};\n\t"
@@ -203,13 +205,13 @@ def func(c, op_i, list_a, list_b):
         c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'h{(p1.__hwdiv__(p2)).to_hex(prefix=False)};\n\t"
       else:
         c += f"{'pout_hwdiv_expected ='.ljust(LJUST)} {N}'hz;\n\t"
-    c += f"#10;\n\t"
+    # c += f"#10;\n\t"
 
     if op_i == Tb.PACOGEN:
       c += f'assert (pout_pacogen === out_ground_truth) else $display("PACOGEN_ERROR: {p1.to_hex(prefix=True)} {operations[op_i]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_pacogen);\n\n'
       c += f'assert (pout_ppu_core_ops === out_ground_truth) else $display("ppu_core_ops_ERROR: {p1.to_hex(prefix=True)} {operations[op_i]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", pout_ppu_core_ops);\n\n'
     else:
-      c += f'assert (result_o === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op_i]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", result_o);\n\n'
+      c += f'// assert (result_o === out_ground_truth) else $display("ERROR: {p1.to_hex(prefix=True)} {operations[op_i]} {p2.to_hex(prefix=True)} = 0x%h != {pout.to_hex(prefix=True)}", result_o);\n\n'
 
   c += f'$display("Total tests cases: {len(list_a)}");\n'
   # c += "end\n"

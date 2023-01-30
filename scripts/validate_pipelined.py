@@ -38,8 +38,9 @@ ops = {
   1: "-",
   2: "*",
   3: "/",
-  4: "f2p",
-  5: "p2f",
+  4: "fmadd",
+  5: "f2p",
+  6: "p2f",
 }
 
 REGEX_INPUT = r"i (\w+) (\d) (\w+)"
@@ -57,7 +58,10 @@ for match in re.compile(REGEX_OUTPUT).finditer(content):
 err_log = ""
 err = 0
 
-for i in range(len(inputs)):
+
+NUM_TESTS = len(inputs)
+
+for i in range(NUM_TESTS):
   op = ops[int(inputs[i][1])]
 
   if 0 <= int(inputs[i][1]) < 4:
@@ -92,6 +96,13 @@ for i in range(len(inputs)):
           )
         err += (not is_same).real
       case "/":
+        is_same = (pa / pb) == pc
+        if not is_same:
+          err_log += (
+            f"{a} {op} {b}       ({(pa / pb).to_bits()}, {pc.to_bits()}) \n"
+          )
+        err += (not is_same).real
+      case "fmadd":
         is_same = (pa / pb) == pc
         if not is_same:
           err_log += (
@@ -151,7 +162,7 @@ with open(path_out, "w") as f:
 
 
 print(
-  "[ OK ]"
+  f"[ OK ] {NUM_TESTS} tests processed."
   if err == 0
-  else f"[ FAILING ] ({err}/{len(inputs)} = {100*err/len(inputs):.4g}%)"
+  else f"[ FAILING ] ({err}/{NUM_TESTS} = {100*err/NUM_TESTS:.4g}%)"
 )
