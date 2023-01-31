@@ -47,6 +47,7 @@ sources:
     - src/format/set_sign.sv
     - src/core_ops/pp_mul.sv
     - src/ppu.sv
+    - src/pipeline.sv
     - src/ppu_top.sv
     
     - target: test

@@ -29,13 +29,13 @@ lint: morty
 	slang a.sv
 
 sv2v: lint
-	# sv2v a.sv -w a.v
-	sv2v a.sv --dump-prefix a -w /tmp/a.v && cp amain_1.sv a.v
+	sv2v a.sv -w a.v
+# 	sv2v a.sv --dump-prefix a -w /tmp/a.v && cp amain_1.sv a.v
 	make -f Makefile_quartus.mk
 
 icarus: sv2v
-	# iverilog a.v
-	iverilog -g2012 a.sv
+	iverilog a.v
+# 	iverilog -g2012 a.sv
 
 run: icarus
 	vvp a.out -l a.log

@@ -5,6 +5,23 @@
 
 Check out [BUILD.md](./docs/BUILD.md)
 
+---
+(new)
+
+
+    export RISCV_PPU_ROOT=$(cd .. && pwd)
+
+edit the `Makefile_new.mk` `TOP`, `N`, `ES`, `WORD`, `F` fields and then generate the test vector file `sim/test_vectors/tv_posit_ppu.sv` by invoking
+
+    make -f Makefile_new.mk gen-test-vectors
+
+then run the makefile
+
+    make -f Makefile_new.mk
+
+the generated core will sit in the `a.sv` SystemVerilog file.
+
+---
 
 
 The design is customizable in terms of Posit format (P<any, any>), operations supported (e.g. including/leaving out conversions) and internal implementations details (e.g. using LUT for division or adding newton-raphson steps) via macros and preprocessor `ifdef`s, 
