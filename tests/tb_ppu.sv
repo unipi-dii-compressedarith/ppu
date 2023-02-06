@@ -1,6 +1,8 @@
 /// PPU test bench
-module tb_ppu;
-  
+module tb_ppu #(
+  parameter CLK_FREQ = `CLK_FREQ
+);
+ 
   import ppu_pkg::*;
 
   parameter WORD = `WORD;
@@ -38,7 +40,7 @@ module tb_ppu;
 
 
   clk_gen #(
-    .CLK_FREQ     (100)
+    .CLK_FREQ     (CLK_FREQ)
   ) clk_gen_i (
     .clk_o        (clk_i)
   );  

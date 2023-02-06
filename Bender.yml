@@ -15,6 +15,7 @@ sources:
     #   WORD: 32
     #   F: 0
       NO_PIPELINE: ~
+      CLK_FREQ: ~
     
     files:
     - src/ppu_pkg.sv

@@ -7,9 +7,10 @@ endif
 
 TOP := tb_ppu
 N := 8
-ES := 0
+ES := 2
 WORD := 32
 F := 0
+CLK_FREQ := 100
 
 
 DOCS := $(PPU_ROOT)/docs/ppu-docs
@@ -23,7 +24,7 @@ bender:
 	bender sources --flatten --target test > sources.json
 
 morty: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) --strip-comments -o a.sv --top $(TOP)
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top $(TOP)
 
 lint: morty
 	slang a.sv
@@ -67,9 +68,15 @@ questa: morty
 	vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv && \
 	vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
 
+########
+
+
 rtl_schematic:
 	scp $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/fpga/vivado/schematic.pdf schematic.pdf
 
 synplify:
 	scp a.sv $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/
 		
+load_vivado:
+	scp a.sv $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/
+

@@ -177,6 +177,7 @@ def func(c, op_i, list_a, list_b):
       raise Exception("wrong op_i?")
 
     c += "@(negedge clk_i);\n"
+    c += "#1.5541;\n"
     c += f"{'test_no ='.ljust(LJUST)} {counter+1};\n\t"
     c += f"in_valid_i = 1'b{int(random.random() > 0.08)};\n\t" # x > 0.2 i.e. 80% of the time is true
     c += f"{'operand1_i ='.ljust(LJUST)} {N}'h{p1.to_hex(prefix=False)};\n\t"
