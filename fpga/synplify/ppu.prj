@@ -1,10 +1,12 @@
 #--  Synopsys, Inc.
 #--  Version N-2018.03-SP1-1
 #--  Project file /home/urbani/Desktop/ppu/fpga/synplify/ppu.prj
-#--  Written on Sun Feb  5 19:43:13 2023
+#--  Written on Mon Feb  6 12:29:55 2023
 
 
 #project files
+add_file -verilog -vlog_std sysv "../../a.sv"
+add_file -constraint "clk.sdc"
 
 
 
@@ -18,13 +20,15 @@ set_option -vlog_std sysv
 set_option -project_relative_includes 1
 
 #device options
-set_option -technology ACHRONIXSPEEDSTER22IHD
-set_option -part AC22iHD1000
-set_option -package F53
-set_option -speed_grade C1
+set_option -technology KINTEX7
+set_option -part XC7K325T
+set_option -package FFG900
+set_option -speed_grade -1
 set_option -part_companion ""
 
 #compilation/mapping options
+set_option -use_fsm_explorer 0
+set_option -top_module "ppu_top"
 
 # hdl_compiler_options
 set_option -distributed_compile 0
@@ -34,22 +38,27 @@ set_option -frequency auto
 set_option -srs_instrumentation 1
 
 # mapper_options
-set_option -write_verilog 0
+set_option -write_verilog 1
 set_option -write_vhdl 0
 
-# Achronix Speedster22iHD
-set_option -maxfan 10000
-set_option -rw_check_on_ram 0
-set_option -disable_io_insertion 0
-set_option -retime_registers_forward 0
-set_option -pipe 1
-set_option -retiming 1
-set_option -update_models_cp 0
+# xilinx_options
+set_option -rw_check_on_ram 1
+set_option -continue_on_error 0
+set_option -optimize_ngc 1
+
+# Xilinx Virtex2
 set_option -run_prop_extract 1
+set_option -maxfan 10000
+set_option -disable_io_insertion 1
+set_option -pipe 1
+set_option -update_models_cp 0
+set_option -retiming 1
+set_option -no_sequential_opt 0
 set_option -fix_gated_and_generated_clocks 1
 
-# NFilter
-set_option -no_sequential_opt 0
+# Xilinx Kintex7
+set_option -use_vivado 1
+set_option -enable_prepacking 1
 
 # sequential_optimization_options
 set_option -symbolic_fsm_compiler 1
@@ -66,5 +75,5 @@ set_option -auto_infer_blackbox 0
 set_option -write_apr_constraint 1
 
 #set result format/file last
-project -result_file "rev_1/ppu.vm"
+project -result_file "rev_1/ppu.edf"
 impl -active "rev_1"
