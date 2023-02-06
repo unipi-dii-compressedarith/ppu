@@ -1,0 +1,20 @@
+{
+  signal: [
+  {name: 'clk',            wave: 'p....'},
+    ['in',
+      {name: 'op',         wave: 'x3x..', data:["op"] },
+      {name: "in1",        wave: 'x4x..', data:["p1"]},
+      {name: "in2",        wave: "x5x..", data:["p2"]},
+      {name: 'valid_in',   wave: '010..', 
+                           node: '.a...'},
+    ],
+    ['out',
+      {name: 'out',        wave: 'x..7x', data:["po"]},
+      {name: 'valid_out',  wave: '0..10', 
+                           node: '...b.'},
+    ]
+  ],
+  edge: [
+    'a~>b',
+  ]
+}
