@@ -54,5 +54,6 @@ sources:
       files:
       - tests/tb_posit_encoder.sv
       - tests/tb_newton_raphson.sv
+      - tests/clk_gen.sv
       - tests/tb_ppu.sv
       

@@ -36,7 +36,13 @@ module tb_ppu;
 
   logic [100:0] count_errors;
 
-  
+
+  clk_gen #(
+    .CLK_FREQ     (100)
+  ) clk_gen_i (
+    .clk_o        (clk_i)
+  );  
+
 
   ppu_top #(
     .WORD         (WORD),
@@ -63,13 +69,9 @@ module tb_ppu;
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
   
-  initial clk_i = 0;
   initial rst_i = 0;
   
-  always begin
-    clk_i = ~clk_i; #5; 
-  end
-
+  
   always @(*) begin
     diff_out_ground_truth = result_o === out_ground_truth ? 0 : 1'bx;
     pout_off_by_1 = abs(result_o - out_ground_truth) == 0 ? 0 :

@@ -34,7 +34,7 @@ sv2v: lint
 	make -f Makefile_quartus.mk
 
 icarus: sv2v
-	iverilog a.v
+	iverilog -c .iverilog_cf a.v
 # 	iverilog -g2012 a.sv
 
 run: icarus
@@ -69,3 +69,7 @@ questa: morty
 
 rtl_schematic:
 	scp $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/fpga/vivado/schematic.pdf schematic.pdf
+
+synplify:
+	scp a.sv $(UNIPI_SERVER_USER)@$(UNIPI_SERVER):~/Desktop/ppu/
+		
