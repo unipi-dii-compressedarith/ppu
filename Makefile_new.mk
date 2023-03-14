@@ -6,8 +6,8 @@ RISCV_PPU_SCRIPTS_DIR := $(PPU_ROOT)/scripts
 endif
 
 TOP := tb_ppu
-N := 8
-ES := 2
+N := 16
+ES := 1
 WORD := 32
 F := 0
 CLK_FREQ := 100
@@ -25,6 +25,10 @@ bender:
 
 morty: bender
 	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top $(TOP)
+
+morty-vivado:
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top ppu
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top tb_fma
 
 lint: morty
 	slang a.sv
@@ -64,8 +68,8 @@ gen-test-vectors:
 
 
 questa: morty
-	vlib work && \
-	vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv && \
+	vlib work
+	vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv
 	vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
 
 ########

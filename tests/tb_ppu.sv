@@ -2,7 +2,7 @@
 module tb_ppu #(
   parameter CLK_FREQ = `CLK_FREQ
 );
- 
+
   import ppu_pkg::*;
 
   parameter WORD = `WORD;
@@ -66,7 +66,11 @@ module tb_ppu #(
   );
 
 
-
+  initial $display("N = %d", N);
+  initial $display("ES = %d", ES);
+  initial $display("F = %d", FSIZE);
+  initial $display("WORD = %d", WORD);
+  initial $display("CLK_FREQ = %d MHz", CLK_FREQ);
 
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")

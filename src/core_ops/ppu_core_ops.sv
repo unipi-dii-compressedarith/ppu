@@ -38,7 +38,7 @@ module ppu_core_ops
   logic sign1, sign2;
 
   posit_t      p1_cond, p2_cond, p3_cond;
-  logic              is_special_or_trivial;
+  logic        is_special_or_trivial;
   posit_t      pout_special_or_trivial;
   
   logic [(N+1)-1:0] p_special_st0, p_special_st1, p_special_st2, p_special_st3;
@@ -88,6 +88,15 @@ module ppu_core_ops
   ) posit_to_fir2 (
     .p_cond_i   (posit_in_posit_to_fir2),
     .fir_o      (fir2_st0)
+  );
+
+
+  posit_to_fir #(
+    .N          (N),
+    .ES         (ES)
+  ) posit_to_fir3 (
+    .p_cond_i   (p3_cond),
+    .fir_o      (fir3_st0)
   );
 
 `ifdef FLOAT_TO_POSIT

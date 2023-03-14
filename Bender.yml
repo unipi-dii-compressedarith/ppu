@@ -5,7 +5,7 @@ package:
     
 
 export_include_dirs:
-  - 
+  - src/include
 
 sources:
   - 
@@ -19,6 +19,7 @@ sources:
     
     files:
     - src/ppu_pkg.sv
+    - src/fma.sv
     - src/core_ops/ppu_core_ops.sv
     - src/format/posit_to_fir.sv
     - src/format/fir_to_posit.sv
