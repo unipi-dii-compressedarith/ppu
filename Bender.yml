@@ -1,7 +1,7 @@
 package:
   name: ppu
   authors:
-    - "Francesco Urbani <f.urbani1@studenti.unipi.it>"
+    - "Francesco Urbani <francesco.urbani@ing.unipi.it>"
     
 
 export_include_dirs:

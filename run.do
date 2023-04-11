@@ -3,7 +3,7 @@ vlib work
 
 vlog a.sv
 
-vsim tb_fma -voptargs=+acc=npr
+vsim tb_ppu -voptargs=+acc=npr
 
 run -all
 exit

@@ -1,4 +1,4 @@
-//`define A // remove this
+`define A // remove this
 `ifdef A
 module input_conditioning 
   import ppu_pkg::*;
@@ -55,7 +55,12 @@ module input_conditioning
   assign p_special_o.special_tag = is_special_or_trivial;
 
 endmodule: input_conditioning
+
+
+
 `else
+
+
 
 module input_conditioning 
   import ppu_pkg::*;

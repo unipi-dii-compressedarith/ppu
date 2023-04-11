@@ -68,9 +68,11 @@ gen-test-vectors:
 
 
 questa: morty
-	vlib work
-	vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv
-	vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
+	# vlib work
+	# vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv
+	# vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
+	vsim -c -do run.do
+
 
 ########
 

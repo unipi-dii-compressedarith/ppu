@@ -149,7 +149,7 @@ module ppu_top
   // initial $display($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i));
 
   pipeline #(
-    .PIPE_DEPTH   (0),
+    .PIPE_DEPTH   (1),
     .DATA_WIDTH   ($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i))
   ) pipeline_in (
     .clk_i        (clk_i),
@@ -159,7 +159,7 @@ module ppu_top
   );
 
   pipeline #(
-    .PIPE_DEPTH   (0),
+    .PIPE_DEPTH   (1),
     .DATA_WIDTH   ($bits(result_st0) + $bits(out_valid_st0))
   ) pipeline_out (
     .clk_i        (clk_i),

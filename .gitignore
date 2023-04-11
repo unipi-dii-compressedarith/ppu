@@ -46,4 +46,7 @@ fpga/vivado/reports/*
 results.xml
 sim_build
 
+# questasim work dir
+work
+
 .pyre*

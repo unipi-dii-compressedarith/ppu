@@ -1,5 +1,8 @@
 `include "src/include/registers.svh"
 
+
+`timescale 1ns / 1ps
+
 module fma 
     import ppu_pkg::*;
 #(
@@ -29,14 +32,14 @@ module fma
   exponent_t                    te_mul_st0, te_mul_st1;
   exponent_t                    te3_st1;
 
-  logic  [             MANT_SIZE-1:0] mant3_st1;
+  logic  [             28-1:0] mant3_st0, mant3_st1;
+  assign mant3_st0 = mant3_i << (28 - 14);
 
 
   `FF(te_mul_st1, te_mul_st0);
   `FF(mant_mul_st1, mant_mul_st0);
-  `FF(mant3_st1, mant3_i);
+  `FF(mant3_st1, mant3_st0);
   `FF(te3_st1, te3_i);
-
 
   localparam  TE_BITS_MUL = 7,
               MANT_SIZE_MUL = 14,
@@ -75,7 +78,7 @@ module fma
     .te2_i                  (te3_st1),
     .mant1_i                (mant_mul_st1),
     .mant2_i                (mant3_st1),
-    .have_opposite_sign_i   (),
+    .have_opposite_sign_i   (1'b0), // change
     .mant_o                 (mant_o),
     .te_o                   (te_o),
     .frac_truncated_o       (frac_truncated_o)
@@ -83,7 +86,6 @@ module fma
 
   
 endmodule: fma
-
 
 module tb_fma;
   import ppu_pkg::*;
@@ -93,7 +95,7 @@ module tb_fma;
             MANT_ADD_RESULT_SIZE = 30;
 
 
-  typedef struct packed {
+  typedef struct {
     logic                               clk;
     logic                               rst;
     exponent_t                          te1;
@@ -132,25 +134,48 @@ module tb_fma;
 
   initial begin
     dut.clk = 0;
+    dut.rst = 1;
+    #23;
     dut.rst = 0;
+  end
+
+  initial begin 
     $dumpfile("tb_fma.vcd");
     $dumpvars(0, tb_fma);  
-    #3000;
-    $finish;
   end
 
   always begin
     dut.clk = !dut.clk; #5;
   end
 
-  // initial begin
-  //   for (int i = 0; i < 10; i++) begin
-  //     for (int j = 0; j < 10; j++) begin
-  //       dut.mant1 = i;
-  //       dut.mant2 = j;
-  //       #10;
-  //     end
-  //   end
-  // end 
+  localparam N = 10, M = 4;
+  initial begin
+    for (int i = M; i < N; i++) begin
+      for (int j = M; j < N; j++) begin
+        for (int k = M; k < N; k++) begin
+          @(posedge dut.clk);
+          #1;
+          dut.mant1 = i;
+          dut.mant2 = j;
+          dut.mant3 = k;
+        end
+      end
+    end
 
+    $finish;
+  end 
+
+  initial begin
+    for (int i = M; i < N; i++) begin
+      for (int j = M; j < N; j++) begin
+        for (int k = M; k < N; k++) begin
+          @(posedge dut.clk);
+          #1;
+          dut.te1 = i;
+          dut.te2 = j;
+          dut.te3 = k;
+        end
+      end
+    end
+  end
 endmodule: tb_fma

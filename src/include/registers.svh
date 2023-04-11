@@ -1,5 +1,3 @@
-
-
 // Flip-Flop with asynchronous active-low reset
 // __q: Q output of FF
 // __d: D input of FF
@@ -14,4 +12,3 @@
       __q <= (__d);                                     \
     end                                                 \
   end
-
