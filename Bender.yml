@@ -29,6 +29,8 @@ sources:
     - src/ops.sv
     - src/core_ops/core_op.sv
     - src/core_ops/core_add_sub.sv
+    - src/core_ops/add_sub.sv
+    - src/core_ops/router_core_add_sub.sv
     - src/core_ops/core_add.sv
     - src/core_ops/core_sub.sv
     - src/core_ops/core_mul.sv

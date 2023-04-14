@@ -5,6 +5,7 @@ PPU_ROOT := $(RISCV_PPU_ROOT)/ppu
 RISCV_PPU_SCRIPTS_DIR := $(PPU_ROOT)/scripts
 endif
 
+#TOP := ops #tb_ppu
 TOP := tb_ppu
 N := 16
 ES := 1

@@ -1,3 +1,6 @@
+/// Deprecated after e423290.
+/// The sign is decided in each "sub core", e.g. core_mul, core_div, add_sub.
+
 module sign_decisor
 (
   input logic                 clk_i,

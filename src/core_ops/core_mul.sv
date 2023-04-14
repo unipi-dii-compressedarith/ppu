@@ -7,12 +7,17 @@ module core_mul
 ) (
   input                             clk_i,
   input                             rst_i,
+  input logic                       sign1_i,
+  input logic                       sign2_i,
   input  exponent_t                 te1_i,
   input  exponent_t                 te2_i,
   input  [           MANT_SIZE-1:0] mant1_i,
   input  [           MANT_SIZE-1:0] mant2_i,
-  output [MANT_MUL_RESULT_SIZE-1:0] mant_o, // full output mantissa (no rounding)
+  
+  output logic                      sign_o,
   output exponent_t                 te_o,
+  output [MANT_MUL_RESULT_SIZE-1:0] mant_o, // full output mantissa (no rounding)
+
   output                            frac_truncated_o
 );
 
@@ -31,6 +36,7 @@ module core_mul
   assign frac_truncated_o = mant_carry && (mant_mul & 1);
 
 
+  assign sign_o = sign1_i ^ sign2_i;
 
 `ifdef PIPELINE_STAGE
   always_ff @(posedge clk_i) begin

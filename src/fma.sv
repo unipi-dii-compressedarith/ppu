@@ -4,10 +4,10 @@
 `timescale 1ns / 1ps
 
 module fma 
-    import ppu_pkg::*;
+  import ppu_pkg::*;
 #(
-  parameter TE_BITS = 7,       // <16,1> -> 7
-  parameter MANT_SIZE = 14,          //  -> 14
+  parameter TE_BITS = 7,              // <16,1> -> 7
+  parameter MANT_SIZE = 14,           //  -> 14
   parameter MANT_ADD_RESULT_SIZE = 30 
 ) (
   input logic                         clk_i,

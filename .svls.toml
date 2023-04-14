@@ -1,8 +1,0 @@
-[rules]
-prefix_inout = false
-prefix_input = false
-prefix_instance = false
-prefix_interface = false
-prefix_module = false
-prefix_output = false
-prefix_package = false

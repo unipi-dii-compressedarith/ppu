@@ -7,12 +7,17 @@ module core_div
 ) (
   input                               clk_i,
   input                               rst_i,
+  input logic                         sign1_i,
+  input logic                         sign2_i,
   input  exponent_t                   te1_i,
   input  exponent_t                   te2_i,
   input  [             MANT_SIZE-1:0] mant1_i,
   input  [             MANT_SIZE-1:0] mant2_i,
-  output [(MANT_DIV_RESULT_SIZE)-1:0] mant_o,
+  
+  output logic                        sign_o,
   output exponent_t                   te_o,
+  output [(MANT_DIV_RESULT_SIZE)-1:0] mant_o,
+  
   output                              frac_truncated_o
 );
 
@@ -28,6 +33,8 @@ module core_div
 
 
   wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
+
+  assign sign_o = sign1_i ^ sign2_i;
 
 
 `ifdef DIV_WITH_LUT
@@ -97,7 +104,7 @@ module core_div
   // );
 
 `else
-  initial $display("***** NOT using DIV with LUT *****");
+  initial $display("***** Using DIV with Fast reciprocate algorithm, no LUT *****");
 
   fast_reciprocal #(
     .SIZE               (MANT_SIZE)

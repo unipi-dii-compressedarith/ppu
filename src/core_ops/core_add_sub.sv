@@ -1,5 +1,9 @@
+/// This module assumes that 
+/// the input "1" is larger than "2".
+/// 
+
 module core_add_sub 
-    import ppu_pkg::*;
+  import ppu_pkg::*;
 #(
   parameter TE_BITS = -1,
   parameter MANT_SIZE = -1,
@@ -7,15 +11,21 @@ module core_add_sub
 ) (
   input logic                         clk_i,
   input logic                         rst_i,
+  input logic                         sign1_i,
+  input logic                         sign2_i,
   input exponent_t                    te1_i,
   input exponent_t                    te2_i,
   input  [             MANT_SIZE-1:0] mant1_i,
   input  [             MANT_SIZE-1:0] mant2_i,
   input                               have_opposite_sign_i,
-  output [(MANT_ADD_RESULT_SIZE)-1:0] mant_o,
+  
+  output logic                        sign_o,
   output exponent_t                   te_o,
+  output [(MANT_ADD_RESULT_SIZE)-1:0] mant_o,
+  
   output                              frac_truncated_o
 );
+
 
   function [(MANT_SIZE+MAX_TE_DIFF)-1:0] _c2(input [(MANT_SIZE+MAX_TE_DIFF)-1:0] a);
     _c2 = ~a + 1'b1;
@@ -27,6 +37,7 @@ module core_add_sub
 
   exponent_t te1, te2_st0, te2_st1;
   wire [MANT_SIZE-1:0] mant1, mant2;
+
   assign {te1, te2_st0} = {te1_i, te2_i};
   assign {mant1, mant2} = {mant1_i, mant2_i};
 
@@ -100,5 +111,9 @@ module core_add_sub
 `else
   initial $error("Missing define: `core_add_sub`");
 `endif
+
+
+  assign sign_o = sign1_i;
+
 
 endmodule: core_add_sub
