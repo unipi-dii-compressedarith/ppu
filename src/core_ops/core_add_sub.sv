@@ -17,7 +17,6 @@ module core_add_sub
   input exponent_t                    te2_i,
   input  [             MANT_SIZE-1:0] mant1_i,
   input  [             MANT_SIZE-1:0] mant2_i,
-  input                               have_opposite_sign_i,
   
   output logic                        sign_o,
   output exponent_t                   te_o,
@@ -31,9 +30,11 @@ module core_add_sub
     _c2 = ~a + 1'b1;
   endfunction
 
+  logic have_opposite_sign;
+  assign have_opposite_sign = sign1_i ^ sign2_i;
 
   logic have_opposite_sign_st0, have_opposite_sign_st1;
-  assign have_opposite_sign_st0 = have_opposite_sign_i;
+  assign have_opposite_sign_st0 = have_opposite_sign;
 
   exponent_t te1, te2_st0, te2_st1;
   wire [MANT_SIZE-1:0] mant1, mant2;
@@ -50,7 +51,7 @@ module core_add_sub
   assign mant2_upshifted = (mant2 << MAX_TE_DIFF) >> max(0, te_diff_st0);
 
   logic [(MANT_ADD_RESULT_SIZE)-1:0] mant_sum_st0, mant_sum_st1;
-  assign mant_sum_st0 = mant1_upshifted + (have_opposite_sign_i ? _c2(
+  assign mant_sum_st0 = mant1_upshifted + (have_opposite_sign ? _c2(
       mant2_upshifted
   ) : mant2_upshifted);
 

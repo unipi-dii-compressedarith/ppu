@@ -27,30 +27,14 @@ module add_sub
   exponent_t            te1, te2;
   logic [MANT_SIZE-1:0] mant1, mant2;
 
-  logic have_opposite_sign;
-  
-
   
   router_core_add_sub #(
-    .TE_BITS              (TE_BITS),
-    .MANT_SIZE            (MANT_SIZE),
-    .MANT_ADD_RESULT_SIZE (MANT_ADD_RESULT_SIZE)
+    .SIZE       (1+TE_BITS+MANT_SIZE)
 ) router_core_add_sub_i (
-    .sign1_i              (sign1_i),
-    .sign2_i              (sign2_i),
-    .te1_i                (te1_i),
-    .te2_i                (te2_i),
-    .mant1_i              (mant1_i),
-    .mant2_i              (mant2_i),
-  
-    .sign1_o              (sign1),
-    .sign2_o              (sign2),
-    .te1_o                (te1),
-    .te2_o                (te2),
-    .mant1_o              (mant1),
-    .mant2_o              (mant2),
-
-    .have_opposite_sign_o (have_opposite_sign)
+    .port1_i    ({sign1_i, te1_i, mant1_i}),
+    .port2_i    ({sign2_i, te2_i, mant2_i}),
+    .port1_o    ({sign1, te1, mant1}),
+    .port2_o    ({sign2, te2, mant2})
 );
 
 
@@ -69,8 +53,6 @@ module add_sub
     .te2_i                (te2),
     .mant1_i              (mant1),
     .mant2_i              (mant2),
-    
-    .have_opposite_sign_i (have_opposite_sign),
   
     .sign_o               (sign_o),
     .te_o                 (te_o),
