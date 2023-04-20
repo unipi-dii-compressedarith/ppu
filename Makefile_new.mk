@@ -15,7 +15,7 @@ CLK_FREQ := 100
 
 
 DOCS := $(PPU_ROOT)/docs/ppu-docs
-NUM_TESTS_PPU := 50
+NUM_TESTS_PPU := 100
 
 
 
@@ -59,7 +59,7 @@ clean:
 	make -C scripts clean
 
 docs: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) --doc $(DOCS)
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) --top $(TOP) --doc $(DOCS)
 	open $(DOCS)/index.html
 	
 

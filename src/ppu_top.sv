@@ -108,7 +108,7 @@ module ppu_top
   input  logic        [WORD-1:0]  operand1_i,
   input  logic        [WORD-1:0]  operand2_i,
   input  logic        [WORD-1:0]  operand3_i,
-  input  operation_e              op_i,
+  input  logic             [2:0]  op_i,
   output logic        [WORD-1:0]  result_o,
   output logic                    out_valid_o
 );

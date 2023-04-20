@@ -57,7 +57,7 @@ module core_op
     .TE_BITS                (TE_BITS),
     .MANT_SIZE              (MANT_SIZE),
     .MANT_ADD_RESULT_SIZE   (MANT_ADD_RESULT_SIZE)
-  ) core_add_sub_inst (
+  ) add_sub_inst (
     .clk_i                  (clk_i),
     .rst_i                  (rst_i),
     

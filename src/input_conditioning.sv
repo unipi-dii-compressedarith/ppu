@@ -9,12 +9,14 @@ module input_conditioning
   input  posit_t            p2_i,
   input  posit_t            p3_i,
   input  operation_e        op_i,
+
   output posit_t            p1_o,
   output posit_t            p2_o,
   output posit_t            p3_o,
   output posit_special_t    p_special_o // `pout_special_or_trivial` + `is_special_or_trivial` tag
 );
 
+  /*
   posit_t _p1, _p2;
   assign _p1 = p1_i;
   assign _p2 = (op_i == SUB) ? c2(p2_i) : p2_i;
@@ -26,6 +28,21 @@ module input_conditioning
 
   logic is_special_or_trivial;
   posit_t pout_special_or_trivial;
+
+  */
+
+
+  posit_t _p1, _p2;
+  assign _p1 = p1_i;
+  assign _p2 = (op_i == SUB) ? c2(p2_i) : p2_i;
+  
+  assign {p1_o, p2_o} = {_p1, _p2};
+
+  logic is_special_or_trivial;
+  posit_t pout_special_or_trivial;
+  
+
+
 
 
   handle_special_or_trivial #(
