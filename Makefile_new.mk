@@ -12,6 +12,7 @@ ES := 1
 WORD := 32
 F := 0
 CLK_FREQ := 100
+PIPE_DEPTH := 0
 
 
 DOCS := $(PPU_ROOT)/docs/ppu-docs
@@ -25,11 +26,11 @@ bender:
 	bender sources --flatten --target test > sources.json
 
 morty: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top $(TOP)
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top $(TOP)
 
 morty-vivado:
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top ppu
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) --strip-comments -o a.sv --top tb_fma
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top ppu
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top tb_fma
 
 lint: morty
 	slang a.sv

@@ -95,12 +95,13 @@
 module ppu_top 
   import ppu_pkg::*;
 #(
-  parameter WORD = `WORD,
+  parameter PIPE_DEPTH  = `PIPE_DEPTH,
+  parameter WORD        = `WORD,
 `ifdef FLOAT_TO_POSIT
-  parameter FSIZE = `F,
+  parameter FSIZE       = `F,
 `endif
-  parameter N = `N,
-  parameter ES = `ES
+  parameter N           = `N,
+  parameter ES          = `ES
 ) (
   input  logic                    clk_i,
   input  logic                    rst_i,
@@ -108,7 +109,7 @@ module ppu_top
   input  logic        [WORD-1:0]  operand1_i,
   input  logic        [WORD-1:0]  operand2_i,
   input  logic        [WORD-1:0]  operand3_i,
-  input  logic             [2:0]  op_i,
+  input  logic     [OP_BITS-1:0]  op_i,
   output logic        [WORD-1:0]  result_o,
   output logic                    out_valid_o
 );
@@ -148,8 +149,14 @@ module ppu_top
 
   // initial $display($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i));
 
+  localparam PIPE_DEPTH_FRONT = PIPE_DEPTH >= 1 ? 1 : 0;
+  localparam PIPE_DEPTH_BACK  = PIPE_DEPTH >= 1 ? (PIPE_DEPTH - PIPE_DEPTH_FRONT) : 0;
+
+  initial $display("PIPE_DEPTH_FRONT = %d", PIPE_DEPTH_FRONT);
+  initial $display("PIPE_DEPTH_BACK = %d", PIPE_DEPTH_BACK);
+
   pipeline #(
-    .PIPE_DEPTH   (0),
+    .PIPE_DEPTH   (PIPE_DEPTH_FRONT),
     .DATA_WIDTH   ($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i))
   ) pipeline_in (
     .clk_i        (clk_i),
