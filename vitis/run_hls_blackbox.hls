@@ -1,0 +1,16 @@
+open_project -reset ppu_blackbox
+
+add_files -tb main.cpp
+add_files ppu_ap_top_wrap.cpp
+
+add_files -blackbox ppu_ap_top.json
+
+set_top ppu_ap_top_wrap
+
+open_solution -reset solution_ppu
+
+set_part xcu280-fsvh2892-2L-e
+create_clock -period "200MHz"
+
+csynth_design
+export_design -rtl verilog -flow impl
