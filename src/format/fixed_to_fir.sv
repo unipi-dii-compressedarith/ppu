@@ -1,4 +1,4 @@
-module fir_to_fixed
+module fixed_to_fir
 #(
   /// Posit 
   /// In the future remove dependency from Posit size.
@@ -12,54 +12,47 @@ module fir_to_fixed
   parameter FX_M = -1,
   parameter FX_N = -1
 )(
-  input   logic[(1+FIR_TE_SIZE+FIR_FRAC_SIZE)-1:0]    fir_i,
-  output  logic[(1+FX_N)-1:0]                         fixed_o
+  input  logic[(1+FX_N)-1:0]                         fixed_i,
+  output logic[(1+FIR_TE_SIZE+FIR_FRAC_SIZE)-1:0]    fir_o
 );
 
   logic                           fir_sign;
   logic signed [FIR_TE_SIZE-1:0]  fir_te;
   logic [FIR_FRAC_SIZE-1:0]       fir_frac;
-  assign {fir_sign, fir_te, fir_frac} = fir_i;
 
 
-  logic[(1+FX_N)-1:0] fixed_tmp;
-  
-/*
-  logic                   fixed_sign;
-  logic [FX_M-1:0]        fixed_integer;
-  logic [(FX_N-FX_M)-1:0] fixed_fraction;
-  
-  
-  assign fixed_integer = fixed_tmp >> fir_te;
-  assign fixed_fraction = fixed_tmp[(FX_N-FX_M)-1:0];
-  assign fixed_sign = fir_sign;
+  logic [$clog2(1+FX_N)-1:0] lzc_fixed;
+  logic lzc_valid;
 
-  assign fixed_o = {fixed_sign, fixed_integer, fixed_fraction};
-*/
+  lzc #(
+    .NUM_BITS   (1+FX_N)
+  ) lzc_inst (
+    .bits_i     (fixed_i),
+    .lzc_o      (lzc_fixed),
+    .valid_o    (lzc_valid)
+  );
+
+  assign fir_sign = fixed_i[(1+FX_N)-1];
+  assign fir_te = FX_M - lzc_fixed - 1;
 
   localparam MANT_MAX_LEN = N - 1 - 2; // -1: sign lenght, -2: regime min length
 
-  assign fixed_tmp = fir_frac << (FX_N - (FX_M-1) - (MANT_MAX_LEN+1));
+  assign fir_frac = {1'b1,                                                              // integer part
+                    ((fixed_i >> fir_te) >> (FX_N - FX_M - (MANT_MAX_LEN + 1))) >> 1    // fractional part. ">> 1" is needed to make space for the integer part.
+  };
 
-  logic fir_te_sign;
-  assign fir_te_sign = fir_te >= 0;
+  assign fir_o = {fir_sign, fir_te, fir_frac};
 
-  assign fixed_o = (fir_te >= 0) ? (fixed_tmp << fir_te) : (fixed_tmp >> (-fir_te));
-
-
-  /// Adding sign
-
-
-endmodule: fir_to_fixed
+endmodule: fixed_to_fir
 
 
 
 
 
 /*
-make -f Makefile_new.mk TOP=tb_fir_to_fixed
+make -f Makefile_new.mk TOP=tb_fixed_to_fir
 */
-module tb_fir_to_fixed #(
+module tb_fixed_to_fir #(
   parameter CLK_FREQ = `CLK_FREQ
 );
 
@@ -124,15 +117,10 @@ module tb_fir_to_fixed #(
     .out_valid_o  (out_valid_o)
   );
 
-  ////// log to file //////
-  integer f2;
-  initial f2 = $fopen("tb_fir_to_fixed.log", "w");
-
-
 
   initial begin
-    $dumpfile("tb_fir_to_fixed");
-    $dumpvars(0, tb_fir_to_fixed);
+    $dumpfile("tb_fixed_to_fir.vcd");
+    $dumpvars(0, tb_fixed_to_fir);
   end
 
   logic [128:0] fixed_o;
@@ -144,11 +132,12 @@ module tb_fir_to_fixed #(
       operand2_i = $urandom%(1 << 16);
 
       @(posedge clk_i);
-      fixed_o = ppu_inst.ppu_core_ops_inst.fir_to_fixed_inst.fixed_o;
+      
+      if (!(ppu_inst.ppu_core_ops_inst.fir2_st0 == ppu_inst.ppu_core_ops_inst.fixed_to_fir_inst.fir_o)) begin
+        $display("Error: %d", ppu_inst.ppu_core_ops_inst.fir2_st0);
+      end
 
-      $display("%d, %d", operand2_i, fixed_o);
-
-      $fwrite(f2, "%d %d %t\n", operand2_i, fixed_o, $time);
+      // $display("%d, %d", operand2_i, fixed_o);
 
     end
 
@@ -157,4 +146,4 @@ module tb_fir_to_fixed #(
   end
 
   
-endmodule: tb_fir_to_fixed
+endmodule: tb_fixed_to_fir
