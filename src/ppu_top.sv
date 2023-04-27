@@ -125,7 +125,15 @@ module ppu_top
   logic out_valid_st0,
         out_valid_st1;
 
-  
+
+`ifdef COCOTB_TEST
+  initial begin
+    $dumpfile ("ppu_top.vcd");
+    $dumpvars (0, ppu_top);
+    #1;
+  end
+`endif
+
 
   ppu #(
     .WORD           (WORD),
@@ -166,7 +174,7 @@ module ppu_top
   );
 
   pipeline #(
-    .PIPE_DEPTH   (0),
+    .PIPE_DEPTH   (PIPE_DEPTH_BACK),
     .DATA_WIDTH   ($bits(result_st0) + $bits(out_valid_st0))
   ) pipeline_out (
     .clk_i        (clk_i),

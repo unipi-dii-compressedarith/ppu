@@ -16,6 +16,7 @@ sources:
     #   F: 0
       NO_PIPELINE: ~
       CLK_FREQ: ~
+      COCOTB : ~
     
     files:
     - src/ppu_pkg.sv
@@ -23,6 +24,7 @@ sources:
     - src/core_ops/ppu_core_ops.sv
     - src/format/posit_to_fir.sv
     - src/format/fir_to_posit.sv
+    - src/format/fir_to_fixed.sv
     - src/input_conditioning.sv
     - src/handle_special_or_trivial.sv
     - src/format/total_exponent.sv

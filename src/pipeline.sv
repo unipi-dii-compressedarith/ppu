@@ -13,6 +13,7 @@ module pipeline #(
     if (PIPE_DEPTH == 0) begin
       assign data_out = data_in;
     end else begin
+      
       // (*retiming_backward = 1 *) 
       logic [DATA_WIDTH-1:0] pipeline_reg [PIPE_DEPTH-1:0] /*synthesis preserve*/;
 

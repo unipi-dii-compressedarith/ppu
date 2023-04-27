@@ -99,6 +99,18 @@ module ppu_core_ops
     .fir_o      (fir3_st0)
   );
 
+  fir_to_fixed #(
+    .N              (N),
+    .FIR_TE_SIZE    ($bits(fir2_st0.total_exponent)),
+    .FIR_FRAC_SIZE  ($bits(fir2_st0.mant)),
+    .FX_M           (32),
+    .FX_N           (128)
+  ) fir_to_fixed_p3(
+    .fir_i          (fir2_st0),
+    .fixed_o        ()
+  );
+
+
 `ifdef FLOAT_TO_POSIT
   assign posit_fir_o = fir2_st1;
 `endif
@@ -149,7 +161,7 @@ module ppu_core_ops
 
 `ifdef PIPELINE_STAGE
   always @(posedge clk_i) begin
-    if (rst == 1'b1) begin_i
+    if (rst == 1'b1) begin
       ops_wire_st1 <= 'b0;
       p_special_st2 <= 'b0;
       p_special_st3 <= 'b0;

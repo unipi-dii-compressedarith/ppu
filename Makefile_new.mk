@@ -6,13 +6,13 @@ RISCV_PPU_SCRIPTS_DIR := $(PPU_ROOT)/scripts
 endif
 
 #TOP := ops #tb_ppu
-TOP := tb_ppu
-N := 16
-ES := 1
-WORD := 32
-F := 0
-CLK_FREQ := 100
-PIPE_DEPTH := 0
+TOP ?= tb_ppu
+N ?= 16
+ES ?= 1
+WORD ?= 32
+F ?= 0
+CLK_FREQ ?= 100
+PIPE_DEPTH ?= 3
 
 
 DOCS := $(PPU_ROOT)/docs/ppu-docs
@@ -26,7 +26,7 @@ bender:
 	bender sources --flatten --target test > sources.json
 
 morty: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top $(TOP)
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top $(TOP) #-DCOCOTB_TEST
 
 morty-vivado:
 	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top ppu
@@ -41,7 +41,7 @@ sv2v: lint
 	make -f Makefile_quartus.mk
 
 icarus: sv2v
-	iverilog -c .iverilog_cf a.v
+	iverilog -c .iverilog_cf -s $(TOP) a.v
 # 	iverilog -g2012 a.sv
 
 run: icarus

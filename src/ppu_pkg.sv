@@ -14,12 +14,15 @@ parameter ES = `ES;
 
 
 
-localparam OP_BITS = $clog2(5);
+localparam OP_BITS = $clog2(7);
 typedef enum logic [OP_BITS-1:0] {
-  ADD, SUB,
-  MUL, DIV,
+  ADD, 
+  SUB,
+  MUL, 
+  DIV,
   FMADD,
-  F2P, P2F
+  F2P, 
+  P2F
 } operation_e;
 
 
