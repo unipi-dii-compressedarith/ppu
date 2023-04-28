@@ -13,7 +13,7 @@ module core_op
   input fir_t                   fir2_i,
   input fir_t                   fir3_i,
   
-  // output fir_t                  fir_o,
+
   output logic                  sign_o,
   output exponent_t             te_o,
   output [(FRAC_FULL_SIZE)-1:0] frac_o,
@@ -30,6 +30,25 @@ module core_op
   exponent_t te_out_add_sub, te_out_mul, te_out_div;
   wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
+  
+  core_mul #(
+    .TE_BITS                (TE_BITS),
+    .MANT_SIZE              (MANT_SIZE),
+    .MANT_MUL_RESULT_SIZE   (MANT_MUL_RESULT_SIZE)
+  ) core_mul_inst (
+    .clk_i                  (clk_i),
+    .rst_i                  (rst_i),
+    .sign1_i                (fir1_i.sign),
+    .sign2_i                (fir2_i.sign),
+    .te1_i                  (fir1_i.total_exponent),
+    .te2_i                  (fir2_i.total_exponent),
+    .mant1_i                (fir1_i.mant),
+    .mant2_i                (fir2_i.mant),
+    .sign_o                 (sign_out_mul),
+    .te_o                   (te_out_mul),
+    .mant_o                 (mant_out_mul),
+    .frac_truncated_o       (frac_truncated_mul)
+  );
 
 
   add_sub #(
@@ -53,26 +72,7 @@ module core_op
     .frac_truncated_o       (frac_truncated_add_sub)
   );
 
-  
 
-  core_mul #(
-    .TE_BITS                (TE_BITS),
-    .MANT_SIZE              (MANT_SIZE),
-    .MANT_MUL_RESULT_SIZE   (MANT_MUL_RESULT_SIZE)
-  ) core_mul_inst (
-    .clk_i                  (clk_i),
-    .rst_i                  (rst_i),
-    .sign1_i                (fir1_i.sign),
-    .sign2_i                (fir2_i.sign),
-    .te1_i                  (fir1_i.total_exponent),
-    .te2_i                  (fir2_i.total_exponent),
-    .mant1_i                (fir1_i.mant),
-    .mant2_i                (fir2_i.mant),
-    .sign_o                 (sign_out_mul),
-    .te_o                   (te_out_mul),
-    .mant_o                 (mant_out_mul),
-    .frac_truncated_o       (frac_truncated_mul)
-  );
 
   core_div #(
     .TE_BITS                (TE_BITS),

@@ -1,0 +1,20 @@
+{signal:
+  [
+    {name: 'clk_i',     wave: 'p......'},
+    ['in',
+      {name: "fma_i",   wave: "01...0."},
+      {name: "fir1_i",  wave: 'x4444x.', data:["a1", "a2", "a3", "a4"]},
+      {name: "fir2_i",  wave: "x5555x.", data:["b1", "b2", "b3", "b4"]},
+      {name: "fir3_i",  wave: "x6x....", data:["c"]},
+    ],
+    [
+//       "internal",
+      {name: "acc",     wave: "x77777x", data:["acc0", "acc1", "acc2", "acc3", "acc4"]},
+    ],
+    ['out',
+      {name: 'fixed_o', wave: 'x....7x', data:["fixed"]},
+      {name: 'valid_o', wave: '0....10'},
+    ]
+  ],
+}
+

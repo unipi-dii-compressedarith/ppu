@@ -16,6 +16,12 @@ module input_conditioning
   output posit_special_t    p_special_o // `pout_special_or_trivial` + `is_special_or_trivial` tag
 );
 
+  // TODO: properly condition p3
+  assign p3_o = p3_i;
+
+
+
+
   /*
   posit_t _p1, _p2;
   assign _p1 = p1_i;

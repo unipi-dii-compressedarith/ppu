@@ -37,7 +37,7 @@ morty-vivado:
 	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top tb_fma
 
 lint: morty
-	slang a.sv
+	slang a.sv --top $(TOP)
 
 sv2v: lint
 	sv2v a.sv -w a.v

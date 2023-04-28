@@ -22,11 +22,33 @@ module ops
 
   wire frac_truncated;
 
+  /*
   core_op #(
     .TE_BITS          (TE_BITS),
     .MANT_SIZE        (MANT_SIZE),
     .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
   ) core_op_inst (
+    .clk_i            (clk_i),
+    .rst_i            (rst_i),
+    .op_i             (op_i),
+    
+    .fir1_i           (fir1_i),
+    .fir2_i           (fir2_i),
+    .fir3_i           (fir3_i),
+    
+    .sign_o           (sign_out),
+    .te_o             (te_out),
+    .frac_o           (frac_out),
+    .frac_truncated_o (frac_truncated)
+  );
+  */
+
+  core_op_fma #(
+    .N                (N),
+    .TE_BITS          (TE_BITS),
+    .MANT_SIZE        (MANT_SIZE),
+    .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
+  ) core_op_fma_inst (
     .clk_i            (clk_i),
     .rst_i            (rst_i),
     .op_i             (op_i),
