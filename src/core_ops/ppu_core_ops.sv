@@ -100,6 +100,7 @@ module ppu_core_ops
   );
 
 
+  /*
   logic [(1+128)-1:0] fixed;
   fir_to_fixed #(
     .N              (N),
@@ -123,6 +124,9 @@ module ppu_core_ops
     .fixed_i        (fixed),
     .fir_o          (fir_dummy_out)
   );
+
+  */
+  
 
 
 `ifdef FLOAT_TO_POSIT

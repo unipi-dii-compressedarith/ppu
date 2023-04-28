@@ -30,28 +30,7 @@ module core_op
   exponent_t te_out_add_sub, te_out_mul, te_out_div;
   wire frac_truncated_add_sub, frac_truncated_mul, frac_truncated_div;
 
-  
-  /*
-  core_add_sub #(
-    .TE_BITS                (TE_BITS),
-    .MANT_SIZE              (MANT_SIZE),
-    .MANT_ADD_RESULT_SIZE   (MANT_ADD_RESULT_SIZE)
-  ) core_add_sub_inst (
-    .clk_i                  (clk_i),
-    .rst_i                  (rst_i),
-    .sign1_i                (fir1_i.sign),
-    .sign2_i                (fir2_i.sign),
-    .te1_i                  (fir1_i.total_exponent),
-    .te2_i                  (fir2_i.total_exponent),
-    .mant1_i                (fir1_i.mant),
-    .mant2_i                (fir2_i.mant),
-    .have_opposite_sign_i   (fir1_i.sign ^ fir2_i.sign),
-    .sign_o                 (),
-    .te_o                   (te_out_add_sub),
-    .mant_o                 (mant_out_add_sub),
-    .frac_truncated_o       (frac_truncated_add_sub)
-  );
-  */
+
 
   add_sub #(
     .TE_BITS                (TE_BITS),
@@ -115,6 +94,10 @@ module core_op
   );
 
 
+
+
+
+
   wire [(FRAC_FULL_SIZE)-1:0] mant_out_core_op;
   assign mant_out_core_op = (op_i == ADD || op_i == SUB)
     ? mant_out_add_sub << (FRAC_FULL_SIZE - MANT_ADD_RESULT_SIZE) : op_i == MUL
@@ -146,8 +129,6 @@ module core_op
     ? frac_truncated_div : /* op_i == ADD || op_i == SUB */
       frac_truncated_add_sub;
 
-  
-  
-  
+
 
 endmodule: core_op

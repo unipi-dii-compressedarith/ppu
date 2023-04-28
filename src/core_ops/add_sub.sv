@@ -29,17 +29,16 @@ module add_sub
 
   
   router_core_add_sub #(
-    .SIZE       (1+TE_BITS+MANT_SIZE)
-) router_core_add_sub_i (
-    .port1_i    ({sign1_i, te1_i, mant1_i}),
-    .port2_i    ({sign2_i, te2_i, mant2_i}),
-    .port1_o    ({sign1, te1, mant1}),
-    .port2_o    ({sign2, te2, mant2})
-);
+    .SIZE                 (1+TE_BITS+MANT_SIZE)
+  ) router_core_add_sub_i (
+    .port1_i              ({sign1_i, te1_i, mant1_i}),
+    .port2_i              ({sign2_i, te2_i, mant2_i}),
+    .port1_o              ({sign1, te1, mant1}),
+    .port2_o              ({sign2, te2, mant2})
+  );
 
 
-
-  core_add_sub #(
+  core_add_sub # (
     .TE_BITS              (TE_BITS),
     .MANT_SIZE            (MANT_SIZE),
     .MANT_ADD_RESULT_SIZE (MANT_ADD_RESULT_SIZE)
@@ -60,8 +59,6 @@ module add_sub
   
     .frac_truncated_o     (frac_truncated_o)
 );
-
-
 
 
 endmodule: add_sub

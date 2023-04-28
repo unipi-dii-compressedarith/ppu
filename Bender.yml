@@ -26,6 +26,7 @@ sources:
     - src/format/fir_to_posit.sv
     - src/format/fir_to_fixed.sv
     - src/format/fixed_to_fir.sv
+    - src/accumulator.sv
     - src/input_conditioning.sv
     - src/handle_special_or_trivial.sv
     - src/format/total_exponent.sv
