@@ -24,6 +24,14 @@ module core_op_fma
   output                        frac_truncated_o
 );
 
+
+  operation_e op_st1; // = operation_e'('b0);
+  always_ff @(posedge clk_i) op_st1 <= op_i;
+
+  logic start_fma;
+  assign start_fma = (op_i === FMADD) && (op_st1 !== FMADD);
+
+
   wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_add_sub;
   wire [(MANT_MUL_RESULT_SIZE)-1:0] mant_out_mul;
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_out_div;
@@ -59,7 +67,7 @@ module core_op_fma
   logic [(1+FX_N)-1:0] mul_out_fixed, fir3_fixed;
   
   fir_to_fixed #(
-    .N              (2*N-3),
+    .N              (2*N-3),   // TODO: Change this parameter to work with other values of N as well (ok with N=16)
     .FIR_TE_SIZE    ($bits(te_out_mul)),
     .FIR_FRAC_SIZE  ($bits(mant_out_mul)),
     .FX_M           (FX_M),
@@ -95,21 +103,34 @@ module core_op_fma
   // );
 
 
-  logic start;
-
+  logic [(1+FX_N)-1:0] acc, fixed;
   accumulator #(
     .FIXED_SIZE   ($bits(mul_out_fixed))
   ) accumulator_inst (
     .clk_i        (clk_i),
     .rst_i        (rst_i),
-    .start_i      (start),
+    .start_i      (start_fma),
     .init_value_i (fir3_fixed),
     .fixed_i      (mul_out_fixed),
-    .fixed_o      ()
+    .fixed_o      (acc)
   );
 
 
+  logic [(100)-1:0] fir_fma; // TODO: fix size
+  fixed_to_fir #(
+    .N              (N),
+    .FIR_TE_SIZE    (TE_BITS),
+    .FIR_FRAC_SIZE  (FRAC_FULL_SIZE),
+    .FX_M           (FX_M),
+    .FX_N           (FX_N)
+  ) fixed_to_fir_acc (
+    .fixed_i        (acc),
+    .fir_o          (fir_fma)
+  );
 
+  logic fma_valid;
+  assign fma_valid = op_i !== FMADD && op_st1 === FMADD ? 1'b1 : 'b0;
+  assign fixed = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
 
 
   // add_sub #(
@@ -281,28 +302,46 @@ module tb_core_op_fma #(
   logic [128:0] fixed_o;
 
   initial begin
-    for (int i=0; i<5; i++) begin
-      @(posedge clk_i);
-      
-      if (i == 0) begin
-        force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start = 1;
-      end else begin
-        force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start = 0;
-      end
+    #32;
+    @(posedge clk_i);
+
+    for (int i=0; i<20; i++) begin
+
+      case (i)
+        0:      operand3_i = 27136; // 27136 == 10.0    //$urandom%(1 << 16);
+        default operand3_i = 'bX;
+      endcase
+
+      /*
+      case (i)
+        0:        force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start_fma = 1;
+        default:  force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start_fma = 0;
+      endcase
+      */
       
       op_i = FMADD;
+
       /* P<16,1>(16384) === 1.0 , for easy test */
       operand1_i = 18432; // 18432 == 1.5     //$urandom%(1 << 16);
       operand2_i = 27776; // 27776 == 12.5    //$urandom%(1 << 16);
-      operand3_i = 27136; // 27136 == 10.0    //$urandom%(1 << 16);
 
-      //@(posedge clk_i);
+      #1;
       fixed_o = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
 
-      $display("(0x%h, 0x%h, 0x%h) 0x%h", operand1_i, operand2_i, operand3_i, fixed_o);
+      if (i == 0) $display("0x%x", ppu_inst.p3);
+      $display("(0x%h, 0x%h) 0x%h", ppu_inst.p1, ppu_inst.p2, fixed_o);
 
-      $fwrite(f2, "(0x%h, 0x%h, 0x%h) 0x%h %t\n", operand1_i, operand2_i, operand3_i, fixed_o, $time);
+      if (i == 0) $fwrite(f2, "0x%x\n", ppu_inst.p3);
+      $fwrite(f2, "(0x%h, 0x%h) 0x%h\n", ppu_inst.p1, ppu_inst.p2, fixed_o);
 
+      @(posedge clk_i);
+    end
+
+    for (int i=0; i<20; i++) begin
+      op_i = MUL;
+      
+      
+      @(posedge clk_i);
     end
 
     #100;

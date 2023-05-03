@@ -26,7 +26,7 @@ sources:
     - src/format/fir_to_posit.sv
     - src/format/fir_to_fixed.sv
     - src/format/fixed_to_fir.sv
-    - src/format/fixed_to_fixed.sv
+    # - src/format/fixed_to_fixed.sv
     - src/accumulator.sv
     - src/input_conditioning.sv
     - src/handle_special_or_trivial.sv
