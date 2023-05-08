@@ -14,9 +14,15 @@ module fixed_to_fixed
   output [(1+FX_B_OUT)-1:0] fixed_o
 );
 
-  initial assert (FX_M_IN <= FX_M_OUT);
-  initial assert ((FX_B_OUT-FX_M_OUT) >= (FX_B_IN-FX_M_IN));
+  generate
+    if (FX_M_IN <= FX_M_OUT) begin
+      $error("FX_M_IN must be <= than FX_M_OUT");
+    end
 
+    if ((FX_B_OUT-FX_M_OUT) >= (FX_B_IN-FX_M_IN)) begin
+      $error("FX_B_OUT-FX_M_OUT must be >= than FX_B_IN-FX_M_IN");
+    end
+  endgenerate
 
   
   function [N-1:0] mask(unsigned NN);

@@ -8,7 +8,8 @@ Draft for myself:
 
     make -f Makefile_new.mk TOP=tb_core_op_fma
 
-![img](docs/fma_waves.png)
+![img](docs/ppu2_fma.png)
+
 
 
 ---

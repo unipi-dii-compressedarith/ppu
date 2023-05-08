@@ -16,6 +16,12 @@ module fir_to_fixed
   output  logic[(FX_B)-1:0]                           fixed_o
 );
 
+  generate
+    if ($bits(fir_i) >= $bits(fixed_o)) begin
+      $error("$bits(fir_i) must be larger than $bits(fixed_o)");
+    end
+  endgenerate
+
   logic                           fir_sign;
   logic signed [FIR_TE_SIZE-1:0]  fir_te;
   logic [FIR_FRAC_SIZE-1:0]       fir_frac;
