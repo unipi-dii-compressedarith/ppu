@@ -1,9 +1,16 @@
 ifndef RISCV_PPU_ROOT
-$(error must set RISCV_PPU_ROOT to point at the root of RISCV_PPU directory.)
+$(error must set RISCV_PPU_ROOT to point at the root of RISCV_PPU directory.\
+`export RISCV_PPU_ROOT=$$(cd .. && pwd)`)
 else
 PPU_ROOT := $(RISCV_PPU_ROOT)/ppu
 RISCV_PPU_SCRIPTS_DIR := $(PPU_ROOT)/scripts
 endif
+
+MAKEFILE_NAME := $(lastword $(MAKEFILE_LIST))
+
+
+# {iverilog, questa}
+SIM ?= iverilog
 
 #TOP := ops #tb_ppu
 TOP ?= tb_ppu
@@ -52,7 +59,18 @@ icarus: sv2v
 	iverilog -c .iverilog_cf -s $(TOP) a.v
 # 	iverilog -g2012 a.sv
 
-run: icarus
+
+run:
+ifeq ($(SIM),iverilog)
+	make -f $(MAKEFILE_NAME) run_icarus
+else ifeq ($(SIM),questa)
+	make -f $(MAKEFILE_NAME) run_questa
+else
+	@echo "Exiting... Wrong simulator."
+endif
+
+
+run_icarus: icarus
 	vvp a.out -l a.log
 ifeq ($(TOP),tb_ppu)
 	@echo "Validating pipeline"
@@ -60,7 +78,6 @@ ifeq ($(TOP),tb_ppu)
 else
 	@echo "Not running \`validate pipeline\`"
 endif
-
 
 clean:
 	rm -rf sources.json a*.sv a.v *.out *.log $(DOCS)
@@ -77,7 +94,7 @@ gen-test-vectors:
 	cp $(PPU_ROOT)/sim/test_vectors/tv_posit_ppu_P$(N)E$(ES).sv $(PPU_ROOT)/sim/test_vectors/tv_posit_ppu.sv
 
 
-questa: morty
+run_questa: morty
 	# vlib work
 	# vlog -writetoplevels questa.tops '-timescale' '1ns/1ns' a.sv
 	# vsim -f questa.tops -batch -do "vsim -voptargs=+acc=npr; run -all; exit" -voptargs=+acc=npr
