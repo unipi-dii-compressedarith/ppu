@@ -14,6 +14,10 @@ F ?= 0
 CLK_FREQ ?= 100
 PIPE_DEPTH ?= 3
 
+# Fixed point parameters: Fx<FX_M, FX_B> intended as B total bits, M integer bits, 1 sign bit.
+FX_M ?= 31
+FX_B ?= 64
+
 
 DOCS := $(PPU_ROOT)/docs/ppu-docs
 NUM_TESTS_PPU := 100
@@ -26,15 +30,15 @@ bender:
 	bender sources --flatten --target test > sources.json
 
 morty: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top $(TOP) #-DCOCOTB_TEST
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DFX_M=$(FX_M) -DFX_B=$(FX_B) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top $(TOP) #-DCOCOTB_TEST
 
 morty-ap-top: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o vitis/ppu_ap_top.sv --top ppu_ap_top
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DFX_M=$(FX_M) -DFX_B=$(FX_B) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o vitis/ppu_ap_top.sv --top ppu_ap_top
 
 
 morty-vivado:
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top ppu
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top tb_fma
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DFX_M=$(FX_M) -DFX_B=$(FX_B) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top ppu
+	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) -DFX_M=$(FX_M) -DFX_B=$(FX_B) -DCLK_FREQ=$(CLK_FREQ) -DPIPE_DEPTH=$(PIPE_DEPTH) --strip-comments -o a.sv --top tb_fma
 
 lint: morty
 	slang a.sv --top $(TOP)

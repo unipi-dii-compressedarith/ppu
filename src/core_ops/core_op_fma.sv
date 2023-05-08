@@ -2,11 +2,14 @@ module core_op_fma
   import ppu_pkg::*;
 #(
   /// Posit size. needed by `fir_to_fixed`.
-  parameter N       = -1,
+  parameter N               = -1,
 
-  parameter TE_BITS = -1,
-  parameter MANT_SIZE = -1,
-  parameter FRAC_FULL_SIZE = -1
+  parameter TE_BITS         = -1,
+  parameter MANT_SIZE       = -1,
+  parameter FRAC_FULL_SIZE  = -1,
+
+  parameter FX_M            = `FX_M,
+  parameter FX_B            = `FX_B
 ) (
   input                         clk_i,
   input                         rst_i,
@@ -62,16 +65,14 @@ module core_op_fma
   );
 
 
-  localparam FX_M = 32;
-  localparam FX_N = 128;
-  logic [(1+FX_N)-1:0] mul_out_fixed, fir3_fixed;
+  logic [(FX_B)-1:0] mul_out_fixed, fir3_fixed;
   
   fir_to_fixed #(
     .N              (2*N-3),   // TODO: Change this parameter to work with other values of N as well (ok with N=16)
     .FIR_TE_SIZE    ($bits(te_out_mul)),
     .FIR_FRAC_SIZE  ($bits(mant_out_mul)),
     .FX_M           (FX_M),
-    .FX_N           (FX_N)
+    .FX_B           (FX_B)
   ) fir_to_fixed_mul (
     .fir_i          ({sign_out_mul, te_out_mul, mant_out_mul}),
     .fixed_o        (mul_out_fixed)
@@ -83,7 +84,7 @@ module core_op_fma
     .FIR_TE_SIZE    ($bits(fir3_i.total_exponent)),
     .FIR_FRAC_SIZE  ($bits(fir3_i.mant)),
     .FX_M           (FX_M),
-    .FX_N           (FX_N)
+    .FX_B           (FX_B)
   ) fir_to_fixed_fir3 (
     .fir_i          (fir3_i),
     .fixed_o        (fir3_fixed)
@@ -103,7 +104,7 @@ module core_op_fma
   // );
 
 
-  logic [(1+FX_N)-1:0] acc, fixed;
+  logic [(FX_B)-1:0] acc, fixed;
   accumulator #(
     .FIXED_SIZE   ($bits(mul_out_fixed))
   ) accumulator_inst (
@@ -122,7 +123,7 @@ module core_op_fma
     .FIR_TE_SIZE    (TE_BITS),
     .FIR_FRAC_SIZE  (FRAC_FULL_SIZE),
     .FX_M           (FX_M),
-    .FX_N           (FX_N)
+    .FX_B           (FX_B)
   ) fixed_to_fir_acc (
     .fixed_i        (acc),
     .fir_o          (fir_fma)
@@ -235,6 +236,10 @@ module tb_core_op_fma #(
   parameter ES = `ES;
   parameter FSIZE = `F;
 
+  parameter FX_M = `FX_M;
+  parameter FX_B = `FX_B;
+
+
   localparam ASCII_SIZE = 300;
 
   logic                                 clk_i;
@@ -299,7 +304,7 @@ module tb_core_op_fma #(
     $dumpvars(0, tb_core_op_fma);
   end
 
-  logic [128:0] fixed_o;
+  logic [(FX_B)-1:0] fixed_o;
 
   initial begin
     #32;
@@ -308,7 +313,7 @@ module tb_core_op_fma #(
     for (int i=0; i<20; i++) begin
 
       case (i)
-        0:      operand3_i = 27136; // 27136 == 10.0    //$urandom%(1 << 16);
+        0:      operand3_i =  {$random}%(1 << 16); // 27136 == 10.0    //$urandom%(1 << 16);
         default operand3_i = 'bX;
       endcase
 
@@ -322,8 +327,22 @@ module tb_core_op_fma #(
       op_i = FMADD;
 
       /* P<16,1>(16384) === 1.0 , for easy test */
-      operand1_i = 18432; // 18432 == 1.5     //$urandom%(1 << 16);
-      operand2_i = 27776; // 27776 == 12.5    //$urandom%(1 << 16);
+      
+      
+      
+      // operand1_i = 21504; // 21504 == 2.5  //$urandom%(1 << 16);
+      // operand2_i = 20480; // 20480 == 2    //$urandom%(1 << 16);
+
+      // operand1_i = 18063; // 18063 == 1.41  
+      // operand2_i = 25754; // 25754 == 6.3   
+
+      
+      // operand1_i = $urandom%(1 << 16) & 16'b01111111_11111111; // only positive
+      // operand2_i = $urandom%(1 << 16) & 16'b01111111_11111111; // only positive
+    
+      
+      operand1_i = $urandom;
+      operand2_i = {$random}%(1 << 16);
 
       #1;
       fixed_o = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;

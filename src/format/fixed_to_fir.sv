@@ -10,9 +10,9 @@ module fixed_to_fir
   
   /// Fixed point parameters (Fx<M,N>) without sign
   parameter FX_M = -1,
-  parameter FX_N = -1
+  parameter FX_B = -1
 )(
-  input  logic[(1+FX_N)-1:0]                         fixed_i,
+  input  logic[(FX_B)-1:0]                         fixed_i,
   output logic[(1+FIR_TE_SIZE+FIR_FRAC_SIZE)-1:0]    fir_o
 );
 
@@ -21,24 +21,24 @@ module fixed_to_fir
   logic [FIR_FRAC_SIZE-1:0]       fir_frac;
 
 
-  logic [$clog2(1+FX_N)-1:0] lzc_fixed;
+  logic [$clog2(FX_B)-1:0] lzc_fixed;
   logic lzc_valid;
 
   lzc #(
-    .NUM_BITS   (1+FX_N)
+    .NUM_BITS   (FX_B)
   ) lzc_inst (
     .bits_i     (fixed_i),
     .lzc_o      (lzc_fixed),
     .valid_o    (lzc_valid)
   );
 
-  assign fir_sign = fixed_i[(1+FX_N)-1];
+  assign fir_sign = fixed_i[(FX_B)-1];
   assign fir_te = FX_M - lzc_fixed - 1;
 
   localparam MANT_MAX_LEN = N - 1 - 2; // -1: sign lenght, -2: regime min length
 
   assign fir_frac = {1'b1,                                                              // integer part
-                    ((fixed_i >> fir_te) >> (FX_N - FX_M - (MANT_MAX_LEN + 1))) >> 1    // fractional part. ">> 1" is needed to make space for the integer part.
+                    ((fixed_i >> fir_te) >> (FX_B - FX_M - (MANT_MAX_LEN + 1))) >> 1    // fractional part. ">> 1" is needed to make space for the integer part.
   };
 
   assign fir_o = {fir_sign, fir_te, fir_frac};

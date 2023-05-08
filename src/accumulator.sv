@@ -13,17 +13,18 @@ module accumulator #(
   output logic signed [FIXED_SIZE-1:0]  fixed_o
 );
 
-  logic signed [FIXED_SIZE-1:0] fixed_val = 0;
+  logic signed [FIXED_SIZE-1:0] fixed_o_st1;
 
   always_ff @(posedge clk_i) begin
     if (rst_i) begin
-      fixed_val <= init_value_i;
+      fixed_o_st1 <= 'b0;
     end else begin
-      fixed_val <= fixed_o + fixed_i;
+      fixed_o_st1 <= fixed_o;
     end
   end
 
-  assign fixed_o = (start_i == 1'b1) ? init_value_i : fixed_val;
+  assign fixed_o = (start_i == 1'b1) ? fixed_i + init_value_i :
+                                       fixed_i + fixed_o_st1;
 
 endmodule: accumulator
 

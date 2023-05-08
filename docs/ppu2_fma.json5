@@ -2,7 +2,7 @@
   [
     {name: 'clk_i',      wave: 'p.......'},
     ['in',
-     {name: "op_i",      wave: "x9...9..", data:["FMADD","FMADD"]},
+     {name: "op_i",      wave: "x99..99.", data:["FMADD_s", "FMADD_c", "FMADD_s", "FMADD_c"]},
       {name: "fma_start",wave: "010..10."},
       {name: "fir1_i",   wave: 'x4444x..', data:["a0", "a1", "a2", "a3"]},
       {name: "fir2_i",   wave: "x5555x..", data:["b0", "b1", "b2", "b3"]},
@@ -13,8 +13,10 @@
       {name: "acc",      wave: "x7777x..", data:["acc0", "acc1", "acc2", "acc3"]},
     ],
     ['out',
-      {name: 'fixed_o',  wave: 'x...7x..', data:["fixed"]},
-      {name: 'valid_o',  wave: '0...10..'},
+//    {name: 'fixed_o',  wave: 'x...7x..', data:["fixed"]},
+      {name: "posit_o",  wave: "x8888x..",   data:["p0", "p1", "p2", "p3"]},
+//    {name: 'valid_o',  wave: '0...10..'},
     ]
   ],
+      config: { hscale: 2 }
 }
