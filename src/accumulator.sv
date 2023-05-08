@@ -23,8 +23,8 @@ module accumulator #(
     end
   end
 
-  assign fixed_o = (start_i == 1'b1) ? fixed_i + init_value_i :
-                                       fixed_i + fixed_o_st1;
+  assign fixed_o = fixed_i + 
+                   ((start_i == 1'b1) ? init_value_i : fixed_o_st1);
 
 endmodule: accumulator
 

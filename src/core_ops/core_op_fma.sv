@@ -1,3 +1,9 @@
+/*
+make -f Makefile_new.mk TOP=tb_core_op_fma
+cd scripts
+./validate_fma_fixedpoint.py
+*/
+
 module core_op_fma 
   import ppu_pkg::*;
 #(
@@ -188,6 +194,9 @@ module core_op_fma
   //     mant_out_div;
 
 
+
+  assign {sign_o, te_o, frac_o} = fir_fma;
+
   // assign sign_o = (op_i == ADD || op_i == SUB)
   //   ? sign_out_add_sub : op_i == MUL
   //   ? sign_out_mul : /* op_i == DIV */
@@ -214,6 +223,7 @@ module core_op_fma
 
 
 
+
 endmodule: core_op_fma
 
 
@@ -222,9 +232,6 @@ endmodule: core_op_fma
 
 
 
-/*
-make -f Makefile_new.mk TOP=tb_core_op_fma
-*/
 module tb_core_op_fma #(
   parameter CLK_FREQ = `CLK_FREQ
 );
@@ -305,12 +312,20 @@ module tb_core_op_fma #(
   end
 
   logic [(FX_B)-1:0] fixed_o;
+  
+  
+  logic[(48)-1:0]       fir_o;
+  // ->
+  logic                 fir_sign;
+  logic signed [7-1:0]  fir_te;
+  logic [40-1:0]        fir_frac;
+
 
   initial begin
     #32;
     @(posedge clk_i);
 
-    for (int i=0; i<20; i++) begin
+    for (int i=0; i<100; i++) begin
 
       case (i)
         0:      operand3_i =  {$random}%(1 << 16); // 27136 == 10.0    //$urandom%(1 << 16);
@@ -347,11 +362,19 @@ module tb_core_op_fma #(
       #1;
       fixed_o = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
 
+    
+      fir_sign = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_sign;
+      fir_te = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_te;
+      fir_frac = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_frac;
+
+
       if (i == 0) $display("0x%x", ppu_inst.p3);
-      $display("(0x%h, 0x%h) 0x%h", ppu_inst.p1, ppu_inst.p2, fixed_o);
+      $display("(0x%h, 0x%h) 0x%h, 0x%h", ppu_inst.p1, ppu_inst.p2, fixed_o, result_o);
+
+      $display("fir = [0x%h, 0x%h, 0x%h]", fir_sign, fir_te, fir_frac);
 
       if (i == 0) $fwrite(f2, "0x%x\n", ppu_inst.p3);
-      $fwrite(f2, "(0x%h, 0x%h) 0x%h\n", ppu_inst.p1, ppu_inst.p2, fixed_o);
+      $fwrite(f2, "(0x%h, 0x%h) 0x%h, 0x%h\n", ppu_inst.p1, ppu_inst.p2, fixed_o, result_o);
 
       @(posedge clk_i);
     end
