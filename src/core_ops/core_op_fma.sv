@@ -327,6 +327,11 @@ module tb_core_op_fma #(
 
     for (int i=0; i<100; i++) begin
 
+      if (i == 0) begin
+        $fwrite(f2, "(%0d, %0d)\n", FX_M, FX_B);
+        $display("(%0d, %0d)", FX_M, FX_B);
+      end
+    
       case (i)
         0:      operand3_i =  {$random}%(1 << 16); // 27136 == 10.0    //$urandom%(1 << 16);
         default operand3_i = 'bX;

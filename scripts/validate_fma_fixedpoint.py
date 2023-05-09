@@ -9,23 +9,23 @@ import hardposit as hp
 import fixed2float as fi
 from pathlib import Path
 import re
+import ast
 
 
-# In[20]:
+# In[2]:
 
 
 import fixed2float
 fixed2float.__version__
 
 
-# In[21]:
+# In[3]:
 
 
 N, ES = 16, 1
-M, B = 31, 64
 
 
-# In[22]:
+# In[4]:
 
 
 with open(Path("../tb_core_op_fma.log"), 'r') as f:
@@ -33,14 +33,28 @@ with open(Path("../tb_core_op_fma.log"), 'r') as f:
 print(log)
 
 
-# In[23]:
+# In[5]:
 
 
 logs = log.splitlines()
-print(logs)
+# print(logs)
 
 
-# In[24]:
+# In[6]:
+
+
+logs[0]
+
+
+# In[7]:
+
+
+# Fixed point params : Fx<M, B> := 1 sign bit, M int bits, B total bits    (B-M-1 fractional bits)
+M, B = ast.literal_eval(logs[0])
+M, B
+
+
+# In[8]:
 
 
 pattern = r"0x[0-9a-z]+"
@@ -49,7 +63,7 @@ diff_fma = [0] * len(logs)
 diff_normal_mul = [0] * len(logs)
 
 acc = 0
-for (i, item) in enumerate(logs):
+for (i, item) in enumerate(logs[1:]):
   results = re.findall(pattern, item)
   if len(results) == 1:
     p3 = hp.from_bits(int(results[0], 16), N, ES)
@@ -58,7 +72,8 @@ for (i, item) in enumerate(logs):
   else:
     p1 = hp.from_bits(int(results[0], 16), N, ES)
     p2 = hp.from_bits(int(results[1], 16), N, ES)
-    print(p1.eval(), p2.eval(), (p1*p2).eval())
+    print(f"i = {i}")
+    print(f"{p1.eval()} * {p2.eval()} = {(p1*p2).eval()}")
 
     fixed = fi.from_bits(int(results[2], 16), M, B)
     print(f"fixed={fixed}")
@@ -69,16 +84,9 @@ for (i, item) in enumerate(logs):
     print(f"po_std_mul = {po_std_mul}")
     
     acc += p1.eval() * p2.eval()
-    print(f"acc={acc}")
+    print(f"acc={acc}\n")
     
-    diff_normal_mul[i] = abs(po_std_mul.eval() - acc)
-    diff_fma[i] = abs(po_fma.eval() - acc)
+    diff_normal_mul[i] = 100*abs((po_std_mul.eval() - acc) / acc)
+    diff_fma[i] = 100*abs((po_fma.eval() - acc) / acc)
     
-    print()
-    assert acc == fixed.eval(), f"acc = {acc}, fixed = {fixed.eval()}"
-
-
-# In[32]:
-
-
-hp.from_double(acc, N, ES)
+    assert acc == fixed.eval(), f"iter = {i} => acc = {acc}, fixed = {fixed.eval()}"
