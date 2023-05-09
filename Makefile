@@ -274,10 +274,9 @@ ppu_P32E2:
 	
 
 yosys:
-	cd $(SRC_DIR) && \
-	yosys -p "synth_xilinx -edif example.edif -top ppu_top" $(QUARTUS_DIR)/$(PPU_TOP_NAME).sv > yosys_ppu_top.out
+	yosys -p "synth_xilinx -edif example.edif -top ppu_top" a.v > yosys_ppu_top.out
 	# yosys -p "synth_intel -family max10 -top ppu -vqm ppu.vqm" \
-	# $(QUARTUS_DIR)/$(PPU_TOP_NAME).sv > yosys_ppu.out
+	# a.v > yosys_ppu.out
 
 
 verilog-quartus: pickle

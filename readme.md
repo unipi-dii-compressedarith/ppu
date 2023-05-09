@@ -1,12 +1,26 @@
 # PPU
 
 
+### FMA
+
+
+Draft for myself:
+
+    make -f Makefile_new.mk TOP=tb_core_op_fma
+
+![img](docs/ppu2_fma.png)
+
+
+
+---
+
+
 ## Build instructions
 
 Check out [BUILD.md](./docs/BUILD.md)
 
----
-(new)
+
+(new Dec 2022)
 
 
     export RISCV_PPU_ROOT=$(cd .. && pwd)

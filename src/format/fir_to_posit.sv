@@ -5,13 +5,14 @@ module fir_to_posit
   parameter ES = -1,
   parameter FIR_TOTAL_SIZE = -1
 ) (
-  input ops_out_meta_t  ops_result_i,
+  input ops_out_meta_t  ops_result_i, // TODO: fix frac_full. from `1.fff` to `.fff`.   `1.` must be appended here.
   output posit_t        posit_o
 );
 
   long_fir_t fir;
-  logic frac_truncated;  // flag
   assign fir = ops_result_i.long_fir;
+  
+  logic frac_truncated;  // flag
   assign frac_truncated = ops_result_i.frac_truncated;
 
   logic sign;
