@@ -160,8 +160,8 @@ module ppu_top
   localparam PIPE_DEPTH_FRONT = PIPE_DEPTH >= 1 ? 1 : 0;
   localparam PIPE_DEPTH_BACK  = PIPE_DEPTH >= 1 ? (PIPE_DEPTH - PIPE_DEPTH_FRONT) : 0;
 
-  initial $display("PIPE_DEPTH_FRONT = %d", PIPE_DEPTH_FRONT);
-  initial $display("PIPE_DEPTH_BACK = %d", PIPE_DEPTH_BACK);
+  initial $display("PIPE_DEPTH_FRONT = %0d", PIPE_DEPTH_FRONT);
+  initial $display("PIPE_DEPTH_BACK = %0d", PIPE_DEPTH_BACK);
 
   pipeline #(
     .PIPE_DEPTH   (PIPE_DEPTH_FRONT),
