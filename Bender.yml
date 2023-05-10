@@ -10,14 +10,11 @@ export_include_dirs:
 sources:
   - 
     defines:
-    #   N: 8
-    #   ES: 0
-    #   WORD: 32
-    #   F: 0
+      # {N, ES, WORD, F} are defined in the makefile
       NO_PIPELINE: ~
       CLK_FREQ: ~
       COCOTB : ~
-      FMA_ONLY : ~
+      #FMA_ONLY : ~
     
     files:
     - src/ppu_pkg.sv

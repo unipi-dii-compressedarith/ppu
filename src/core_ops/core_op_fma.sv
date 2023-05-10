@@ -231,7 +231,6 @@ endmodule: core_op_fma
 
 
 
-
 module tb_core_op_fma #(
   parameter CLK_FREQ = `CLK_FREQ
 );

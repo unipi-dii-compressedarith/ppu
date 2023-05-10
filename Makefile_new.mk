@@ -21,6 +21,14 @@ F ?= 0
 CLK_FREQ ?= 100
 PIPE_DEPTH ?= 3
 
+
+
+# FMA-only operation inside the PPU disabled by default (set to 0). Override to 1 to turn on this option.
+#FMA_ONLY ?= 0
+
+
+
+
 # Fixed point parameters: Fx<FX_M, FX_B> intended as B total bits, M integer bits, 1 sign bit.
 FX_M ?= 31
 FX_B ?= 64
