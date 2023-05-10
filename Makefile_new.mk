@@ -30,19 +30,19 @@ DOCS := $(PPU_ROOT)/docs/ppu-docs
 NUM_TESTS_PPU := 100
 
 
-MORTY_ARGS :=                   \
-  -DN           = $(N)          \
-  -DES          = $(ES)         \
-  -DWORD        = $(WORD)       \
-                                \
-  -DF           = $(F)          \
-                                \
-  -DFX_M        = $(FX_M)       \
-  -DFX_B        = $(FX_B)       \
-                                \
-  -DCLK_FREQ    = $(CLK_FREQ)   \
-  -DPIPE_DEPTH  = $(PIPE_DEPTH) \
-
+MORTY_ARGS :=                 \
+  -DN=$(N)                    \
+  -DES=$(ES)                  \
+  -DWORD=$(WORD)              \
+                              \
+  -DF=$(F)                    \
+                              \
+  -DFX_M=$(FX_M)              \
+  -DFX_B=$(FX_B)              \
+                              \
+  -DCLK_FREQ=$(CLK_FREQ)      \
+  -DPIPE_DEPTH=$(PIPE_DEPTH)  \
+  
 
 
 all: run

@@ -1,5 +1,5 @@
 /// Posit processing unit operations
-module ops 
+module fir_ops 
   import ppu_pkg::*;
 #(
   parameter N = -1
@@ -43,25 +43,29 @@ module ops
   );
   */
 
-  core_op_fma #(
-    .N                (N),
-    .TE_BITS          (TE_BITS),
-    .MANT_SIZE        (MANT_SIZE),
-    .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
-  ) core_op_fma_inst (
-    .clk_i            (clk_i),
-    .rst_i            (rst_i),
-    .op_i             (op_i),
-    
-    .fir1_i           (fir1_i),
-    .fir2_i           (fir2_i),
-    .fir3_i           (fir3_i),
-    
-    .sign_o           (sign_out),
-    .te_o             (te_out),
-    .frac_o           (frac_out),
-    .frac_truncated_o (frac_truncated)
-  );
+
+  `ifdef FMA_ONLY
+    core_op_fma #(
+      .N                (N),
+      .TE_BITS          (TE_BITS),
+      .MANT_SIZE        (MANT_SIZE),
+      .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
+    ) core_op_fma_inst (
+      .clk_i            (clk_i),
+      .rst_i            (rst_i),
+      .op_i             (op_i),
+      
+      .fir1_i           (fir1_i),
+      .fir2_i           (fir2_i),
+      .fir3_i           (fir3_i),
+      
+      .sign_o           (sign_out),
+      .te_o             (te_out),
+      .frac_o           (frac_out),
+      .frac_truncated_o (frac_truncated)
+    );
+  `endif
+
 
 
 
@@ -81,4 +85,4 @@ module ops
   assign ops_result_o.long_fir = {sign_out, te_out, frac_out};
   assign ops_result_o.frac_truncated = frac_truncated;
 
-endmodule: ops
+endmodule: fir_ops

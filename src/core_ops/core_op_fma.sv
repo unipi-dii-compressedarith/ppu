@@ -339,8 +339,8 @@ module tb_core_op_fma #(
 
       /*
       case (i)
-        0:        force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start_fma = 1;
-        default:  force ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.start_fma = 0;
+        0:        force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.start_fma = 1;
+        default:  force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.start_fma = 0;
       endcase
       */
       
@@ -365,12 +365,12 @@ module tb_core_op_fma #(
       operand2_i = {$random}%(1 << 16);
 
       #1;
-      fixed_o = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
+      fixed_o = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
 
     
-      fir_sign = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_sign;
-      fir_te = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_te;
-      fir_frac = ppu_inst.ppu_core_ops_inst.ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_frac;
+      fir_sign = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_sign;
+      fir_te = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_te;
+      fir_frac = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_frac;
 
 
       if (i == 0) $display("0x%x", ppu_inst.p3);

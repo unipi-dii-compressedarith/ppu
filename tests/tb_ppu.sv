@@ -65,12 +65,14 @@ module tb_ppu #(
     .out_valid_o  (out_valid_o)
   );
 
-
-  initial $display("N = %d", N);
-  initial $display("ES = %d", ES);
-  initial $display("F = %d", FSIZE);
-  initial $display("WORD = %d", WORD);
-  initial $display("CLK_FREQ = %d MHz", CLK_FREQ);
+  
+  initial begin
+    $display("Posit format: P<%0d,%0d>", N, ES);
+    $display("Float support: F<%0d>", FSIZE);
+    $display("F = %0d", FSIZE);
+    $display("WORD = %0d", WORD);
+    $display("CLK_FREQ = %0d MHz", CLK_FREQ);
+  end
 
 
   // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")

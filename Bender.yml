@@ -17,6 +17,7 @@ sources:
       NO_PIPELINE: ~
       CLK_FREQ: ~
       COCOTB : ~
+      FMA_ONLY : ~
     
     files:
     - src/ppu_pkg.sv
@@ -31,7 +32,7 @@ sources:
     - src/input_conditioning.sv
     - src/handle_special_or_trivial.sv
     - src/format/total_exponent.sv
-    - src/ops.sv
+    - src/fir_ops.sv
     - src/core_ops/core_op.sv
     - src/core_ops/core_op_fma.sv
     - src/core_ops/core_add_sub.sv

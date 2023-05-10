@@ -139,9 +139,9 @@ module ppu_core_ops
 
   wire sign_out_ops;
   wire [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_result;
-  ops #(
+  fir_ops #(
     .N              (N)
-  ) ops_inst (
+  ) fir_ops_inst (
     .clk_i          (clk_i),
     .rst_i          (rst_i),
     .op_i           (op_st1),
