@@ -51,6 +51,16 @@ module core_op
   );
 
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   add_sub #(
     .TE_BITS                (TE_BITS),
     .MANT_SIZE              (MANT_SIZE),

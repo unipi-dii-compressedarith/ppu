@@ -152,7 +152,7 @@ module tb_ppu #(
 
       #1;
 
-      fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
+      fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.accumulator_inst.fixed_o;
 
       $display("(0x%h, 0x%h, 0x%h, 0x%h)", operand1_i, operand2_i, fixed_o, result_o);
       $fwrite(f2, "(0x%h, 0x%h, 0x%h, 0x%h)\n", operand1_i, operand2_i, fixed_o, result_o);

@@ -38,6 +38,7 @@ sources:
     - src/core_ops/core_add.sv
     - src/core_ops/core_sub.sv
     - src/core_ops/core_mul.sv
+    - src/core_ops/core_fma_accumulator.sv
     - src/core_ops/core_div.sv
     - src/core_ops/fast_reciprocal.sv
     - src/core_ops/lut_reciprocate.sv

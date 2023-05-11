@@ -1,5 +1,5 @@
 /*
-make -f Makefile_new.mk TOP=tb_core_op_fma
+make -f Makefile_new.mk TOP=tb_core_op_fma [FMA_ONLY=1]
 cd scripts
 ./validate_fma_fixedpoint.py
 */
@@ -34,12 +34,6 @@ module core_op_fma
 );
 
 
-  operation_e op_st1; // = operation_e'('b0);
-  always_ff @(posedge clk_i) op_st1 <= op_i;
-
-  logic start_fma;
-  assign start_fma = (op_i === FMADD) && (op_st1 !== FMADD);
-
 
   wire [(MANT_ADD_RESULT_SIZE)-1:0] mant_out_add_sub;
   wire [(MANT_MUL_RESULT_SIZE)-1:0] mant_out_mul;
@@ -71,73 +65,33 @@ module core_op_fma
   );
 
 
-  logic [(FX_B)-1:0] mul_out_fixed, fir3_fixed;
   
-  fir_to_fixed #(
-    .N              (2*N-3),   // TODO: Change this parameter to work with other values of N as well (ok with N=16)
-    .FIR_TE_SIZE    ($bits(te_out_mul)),
-    .FIR_FRAC_SIZE  ($bits(mant_out_mul)),
-    .FX_M           (FX_M),
-    .FX_B           (FX_B)
-  ) fir_to_fixed_mul (
-    .fir_i          ({sign_out_mul, te_out_mul, mant_out_mul}),
-    .fixed_o        (mul_out_fixed)
-  );
-
-
-  fir_to_fixed #(
-    .N              (N),
-    .FIR_TE_SIZE    ($bits(fir3_i.total_exponent)),
-    .FIR_FRAC_SIZE  ($bits(fir3_i.mant)),
-    .FX_M           (FX_M),
-    .FX_B           (FX_B)
-  ) fir_to_fixed_fir3 (
-    .fir_i          (fir3_i),
-    .fixed_o        (fir3_fixed)
-  );
-  
-
-  // fixed_to_fixed #(
-  //   /// 
-  //   .FX_M_IN (FX_M_IN),
-  //   .FX_N_IN (FX_N_IN),
-  //   ///
-  //   .FX_M_OUT (FX_M_OUT),
-  //   .FX_N_OUT (FX_N_OUT)
-  // )(
-  //   .fixed_i (fir3_fixed),
-  //   .fixed_o (fir3_fixed_aligned)
-  // );
-
-
-  logic [(FX_B)-1:0] acc, fixed;
-  accumulator #(
-    .FIXED_SIZE   ($bits(mul_out_fixed))
-  ) accumulator_inst (
-    .clk_i        (clk_i),
-    .rst_i        (rst_i),
-    .start_i      (start_fma),
-    .init_value_i (fir3_fixed),
-    .fixed_i      (mul_out_fixed),
-    .fixed_o      (acc)
-  );
-
-
+  logic [(FX_B)-1:0] fixed;
   logic [(100)-1:0] fir_fma; // TODO: fix size
-  fixed_to_fir #(
-    .N              (N),
-    .FIR_TE_SIZE    (TE_BITS),
-    .FIR_FRAC_SIZE  (FRAC_FULL_SIZE),
-    .FX_M           (FX_M),
-    .FX_B           (FX_B)
-  ) fixed_to_fir_acc (
-    .fixed_i        (acc),
-    .fir_o          (fir_fma)
+  core_fma_accumulator #(
+    .N                      (N),
+    .TE_BITS                (TE_BITS),
+    .MANT_SIZE              (MANT_SIZE),
+    .FRAC_FULL_SIZE         (FRAC_FULL_SIZE),
+    .FX_M                   (FX_M),
+    .FX_B                   (FX_B)
+  ) core_fma_accumulator_inst (
+    .clk_i                  (clk_i),
+    .rst_i                  (rst_i),
+    .op_i                   (op_i),
+  
+    .fir1_i                 ({sign_out_mul, te_out_mul, mant_out_mul}),
+    .fir2_i                 (fir3_i),
+
+    .fir_fma                (fir_fma),
+    .fixed_o                (fixed)
+    // .frac_truncated_o       ()
   );
 
-  logic fma_valid;
-  assign fma_valid = op_i !== FMADD && op_st1 === FMADD ? 1'b1 : 'b0;
-  assign fixed = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
+
+
+
+  
 
 
   // add_sub #(
@@ -310,7 +264,7 @@ module tb_core_op_fma #(
     $dumpvars(0, tb_core_op_fma);
   end
 
-  logic [(FX_B)-1:0] fixed_o;
+  logic [(FX_B)-1:0] fixed;
   
   
   logic[(48)-1:0]       fir_o;
@@ -338,8 +292,8 @@ module tb_core_op_fma #(
 
       /*
       case (i)
-        0:        force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.start_fma = 1;
-        default:  force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.start_fma = 0;
+        0:        force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.start_fma = 1;
+        default:  force ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.start_fma = 0;
       endcase
       */
       
@@ -364,21 +318,21 @@ module tb_core_op_fma #(
       operand2_i = {$random}%(1 << 16);
 
       #1;
-      fixed_o = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
+      fixed = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.accumulator_inst.fixed_o;
 
     
-      fir_sign = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_sign;
-      fir_te = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_te;
-      fir_frac = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.fixed_to_fir_acc.fir_frac;
+      fir_sign = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.fixed_to_fir_acc.fir_sign;
+      fir_te = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.fixed_to_fir_acc.fir_te;
+      fir_frac = ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.fixed_to_fir_acc.fir_frac;
 
 
       if (i == 0) $display("0x%x", ppu_inst.p3);
-      $display("(0x%h, 0x%h) 0x%h, 0x%h", ppu_inst.p1, ppu_inst.p2, fixed_o, result_o);
+      $display("(0x%h, 0x%h) 0x%h, 0x%h", ppu_inst.p1, ppu_inst.p2, fixed, result_o);
 
       $display("fir = [0x%h, 0x%h, 0x%h]", fir_sign, fir_te, fir_frac);
 
       if (i == 0) $fwrite(f2, "0x%x\n", ppu_inst.p3);
-      $fwrite(f2, "(0x%h, 0x%h) 0x%h, 0x%h\n", ppu_inst.p1, ppu_inst.p2, fixed_o, result_o);
+      $fwrite(f2, "(0x%h, 0x%h) 0x%h, 0x%h\n", ppu_inst.p1, ppu_inst.p2, fixed, result_o);
 
       @(posedge clk_i);
     end
