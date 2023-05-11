@@ -128,6 +128,8 @@ module ppu_top
 
 `ifdef COCOTB_TEST
   initial begin
+    $display("`COCOTB_TEST defined");
+
     $dumpfile ("ppu_top.vcd");
     $dumpvars (0, ppu_top);
     #1;

@@ -19,12 +19,12 @@ ES ?= 1
 WORD ?= 32
 F ?= 0
 CLK_FREQ ?= 100
-PIPE_DEPTH ?= 3
+PIPE_DEPTH ?= 0
 
 
 
 # FMA-only operation inside the PPU disabled by default (set to 0). Override to 1 to turn on this option.
-#FMA_ONLY ?= 0
+FMA_ONLY ?= 0
 
 
 
@@ -50,6 +50,7 @@ MORTY_ARGS :=                 \
                               \
   -DCLK_FREQ=$(CLK_FREQ)      \
   -DPIPE_DEPTH=$(PIPE_DEPTH)  \
+  -DFMA_ONLY                  \
   
 
 

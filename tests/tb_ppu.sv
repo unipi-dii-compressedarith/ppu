@@ -104,11 +104,14 @@ module tb_ppu #(
   //////////////////////////////////////////////////////////////////
 
   initial begin: vcd_file
-    // $dumpfile({"tb_ppu_P", `STRINGIFY(`N), "E", `STRINGIFY(`ES), ".vcd"});
     $dumpfile({"tb_ppu.vcd"});
     $dumpvars(0, tb_ppu);
   end
 
+
+
+
+  /*
   initial begin: sequences
     in_valid_i = 1'b0;
     @(posedge clk_i);
@@ -128,6 +131,39 @@ module tb_ppu #(
     
     $finish;
   end
+  */
+
+  logic [(`FX_B)-1:0] fixed_o;
+
+
+  ////// log to file //////
+  integer f2;
+  initial f2 = $fopen("tb_ppu.log", "w");
+
+  initial begin: sequences
+
+    $display("%0t", $time);
+
+    op_i = FMADD;
+    for (int i=0; i<10; i++) begin
+      operand1_i = {$random}%(1 << 16); 
+      operand2_i = {$random}%(1 << 16);
+      operand3_i = 0;//{$random}%(1 << 16);
+
+      #1;
+
+      fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.accumulator_inst.fixed_o;
+
+      $display("(0x%h, 0x%h, 0x%h, 0x%h)", operand1_i, operand2_i, fixed_o, result_o);
+      $fwrite(f2, "(0x%h, 0x%h, 0x%h, 0x%h)\n", operand1_i, operand2_i, fixed_o, result_o);
+
+      @(posedge clk_i);
+    end
+
+    #100;
+    $finish;
+  end
+
 
 endmodule: tb_ppu
 
