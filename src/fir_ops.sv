@@ -10,7 +10,9 @@ module fir_ops
   input fir_t             fir1_i,
   input fir_t             fir2_i,
   input fir_t             fir3_i,
-  output ops_out_meta_t   ops_result_o
+  
+  output ops_out_meta_t   ops_result_o,
+  output [`FX_B-1:0]      fixed_o
 );
 
   
@@ -60,6 +62,7 @@ module fir_ops
     .sign_o           (sign_out),
     .te_o             (te_out),
     .frac_o           (frac_out),
+    .fixed_o          (fixed_o),
     .frac_truncated_o (frac_truncated)
   );
 // `endif // FMA_ONLY

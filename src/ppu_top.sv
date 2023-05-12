@@ -111,7 +111,9 @@ module ppu_top
   input  logic        [WORD-1:0]  operand3_i,
   input  logic     [OP_BITS-1:0]  op_i,
   output logic        [WORD-1:0]  result_o,
-  output logic                    out_valid_o
+  output logic                    out_valid_o,
+
+  output logic      [`FX_B-1:0]   fixed_o
 );
 
   logic [WORD-1:0] operand1_st0, operand2_st0, operand3_st0;
@@ -153,7 +155,8 @@ module ppu_top
     .operand3_i     (operand3_st0),
     .op_i           (operation_e'(op_st0)),
     .result_o       (result_st0),
-    .out_valid_o    (out_valid_st0)
+    .out_valid_o    (out_valid_st0),
+    .fixed_o        (fixed_o)
 );
 
 

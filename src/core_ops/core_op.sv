@@ -20,6 +20,9 @@ module core_op
   output exponent_t             te_o,
   output [(FRAC_FULL_SIZE)-1:0] frac_o,
   
+  // accumulator value exported
+  output [(FX_B)-1:0]           fixed_o,
+
   output                        frac_truncated_o
 );
 
@@ -60,13 +63,15 @@ module core_op
   fir_t fir2_core_fma_accumulator;
   assign fir2_core_fma_accumulator = (op_i == FMADD) ? fir3_i : 'b0;
   
-  logic [(`FX_B)-1:0] fixed;
   
-  logic [(100)-1:0] fir_fma; // TODO: fix size
-  logic                 sign_out_fma;
-  logic [TE_BITS-1:0]a, te_out_fma;
-  
-  logic [(FRAC_FULL_SIZE)-1:0] mant_out_fma;
+  localparam FIR_TE_SIZE = TE_BITS;
+  localparam FIR_FRAC_SIZE = FRAC_FULL_SIZE;
+
+  logic [(1+FIR_TE_SIZE+
+          FIR_FRAC_SIZE)-1:0]   fir_fma;
+  logic                         sign_out_fma;
+  logic [TE_BITS-1:0]           te_out_fma;
+  logic [(FRAC_FULL_SIZE)-1:0]  mant_out_fma;
   
   core_fma_accumulator #(
     .N                      (N),
@@ -75,8 +80,8 @@ module core_op
     .FRAC_FULL_SIZE         (FRAC_FULL_SIZE),
     .FX_M                   (FX_M),
     .FX_B                   (FX_B),
-    .FIR_TE_SIZE            (TE_BITS),
-    .FIR_FRAC_SIZE          (FRAC_FULL_SIZE)
+    .FIR_TE_SIZE            (FIR_TE_SIZE),
+    .FIR_FRAC_SIZE          (FIR_FRAC_SIZE)
   ) core_fma_accumulator_inst (
     .clk_i                  (clk_i),
     .rst_i                  (rst_i),
@@ -86,7 +91,7 @@ module core_op
     .fir2_i                 (fir2_core_fma_accumulator),
 
     .fir_fma                (fir_fma),
-    .fixed_o                (fixed)
+    .fixed_o                (fixed_o)
     // .frac_truncated_o       ()
   );
 

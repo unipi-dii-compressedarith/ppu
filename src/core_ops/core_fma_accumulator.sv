@@ -87,6 +87,9 @@ module core_fma_accumulator
     .fir_o          (fir_fma)
   );
 
-  assign fixed_o = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
+  
+  
+  //assign fixed_o = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
+  assign fixed_o = acc;
 
 endmodule: core_fma_accumulator

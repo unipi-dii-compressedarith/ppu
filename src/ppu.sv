@@ -17,7 +17,8 @@ module ppu
   input logic                [WORD-1:0] operand3_i,
   input ppu_pkg::operation_e            op_i,
   output logic               [WORD-1:0] result_o,
-  output logic                          out_valid_o
+  output logic                          out_valid_o,
+  output logic [`FX_B-1:0]              fixed_o
 );
 
   wire stall;
@@ -45,7 +46,8 @@ module ppu
     .float_fir_i  (float_fir_in),
     .posit_fir_o  (posit_fir),
   `endif
-    .pout_o       (posit)
+    .pout_o       (posit),
+    .fixed_o      (fixed_o)
   );
 
   assign result_o = posit;

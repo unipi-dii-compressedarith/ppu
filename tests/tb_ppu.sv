@@ -22,6 +22,7 @@ module tb_ppu #(
   logic                 [ASCII_SIZE:0]  op_i_ascii;
   wire                  [WORD-1:0]      result_o;
   wire                                  out_valid_o;
+  wire [`FX_B-1:0]                      fixed_o;
 
 
   logic [ASCII_SIZE-1:0]  operand1_i_ascii,   // operand1_i
@@ -62,7 +63,8 @@ module tb_ppu #(
     .operand3_i   (operand3_i),
     .op_i         (op_i),
     .result_o     (result_o),
-    .out_valid_o  (out_valid_o)
+    .out_valid_o  (out_valid_o),
+    .fixed_o      (fixed_o)
   );
 
   
@@ -133,7 +135,9 @@ module tb_ppu #(
   end
   */
 
-  logic [(`FX_B)-1:0] fixed_o;
+
+
+  logic [(`FX_B)-1:0] fixed;
 
 
   ////// log to file //////
@@ -143,11 +147,17 @@ module tb_ppu #(
   initial begin: sequences
 
 
-//`define TEST_FMA_ONLY
+`define TEST_FMA_ONLY
 `ifdef TEST_FMA_ONLY
+    op_i = SUB; 
+    #34;
+    @(posedge clk_i);
+
+
+
     op_i = FMADD;
     $display("FMADD");
-    for (int i=0; i<10; i++) begin
+    for (int i=0; i<40; i++) begin
       operand1_i = {$random}%(1 << 16); 
       operand2_i = {$random}%(1 << 16);
       operand3_i = 0;//{$random}%(1 << 16);
@@ -155,13 +165,8 @@ module tb_ppu #(
       #1;
 
       
-      `ifdef FMA_ONLY
-        fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.
-      `else
-        fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.
-      `endif
-
-      accumulator_inst.fixed_o;
+      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.fixed_o;
+    
 
       $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
         ppu_top_inst.ppu_inst.p1, 

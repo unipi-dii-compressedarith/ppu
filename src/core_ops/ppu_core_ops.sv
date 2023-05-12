@@ -19,7 +19,9 @@ module ppu_core_ops
   input       [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]  float_fir_i,
   output     ppu_pkg::fir_t                     posit_fir_o,
 `endif
-  output  ppu_pkg::posit_t                      pout_o
+  output  ppu_pkg::posit_t                      pout_o,
+  ///
+  output [`FX_B-1:0]                            fixed_o
 );
     
   ppu_pkg::operation_e op_st0, op_st1;
@@ -148,7 +150,8 @@ module ppu_core_ops
     .fir1_i         (fir1_st1),
     .fir2_i         (fir2_st1),
     .fir3_i         (fir3_st1),
-    .ops_result_o   (ops_result)
+    .ops_result_o   (ops_result),
+    .fixed_o        (fixed_o)
   );
 
 

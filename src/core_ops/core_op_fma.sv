@@ -197,7 +197,7 @@ module tb_core_op_fma #(
     #32;
     @(posedge clk_i);
 
-    for (int i=0; i<100; i++) begin
+    for (int i=0; i<300; i++) begin
 
       if (i == 0) begin
         $fwrite(f2, "(%0d, %0d)\n", FX_M, FX_B);
