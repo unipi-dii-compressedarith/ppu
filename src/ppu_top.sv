@@ -126,6 +126,8 @@ module ppu_top
         
   logic out_valid_st0,
         out_valid_st1;
+  
+  logic [`FX_B-1:0] fixed_st0;
 
 
 `ifdef COCOTB_TEST
@@ -156,7 +158,7 @@ module ppu_top
     .op_i           (operation_e'(op_st0)),
     .result_o       (result_st0),
     .out_valid_o    (out_valid_st0),
-    .fixed_o        (fixed_o)
+    .fixed_o        (fixed_st0)
 );
 
 
@@ -180,12 +182,12 @@ module ppu_top
 
   pipeline #(
     .PIPELINE_DEPTH   (PIPELINE_DEPTH_BACK),
-    .DATA_WIDTH   ($bits(result_st0) + $bits(out_valid_st0))
+    .DATA_WIDTH   ($bits({result_st0, out_valid_st0, fixed_st0}))
   ) pipeline_back (
     .clk_i        (clk_i),
     .rst_i        (rst_i),
-    .data_in      ({result_st0, out_valid_st0}),
-    .data_out     ({result_o,   out_valid_o})
+    .data_in      ({result_st0, out_valid_st0, fixed_st0}),
+    .data_out     ({result_o,   out_valid_o,   fixed_o})
   );
 
 endmodule: ppu_top
