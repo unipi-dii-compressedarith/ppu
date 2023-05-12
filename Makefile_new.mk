@@ -24,7 +24,7 @@ PIPE_DEPTH ?= 0
 
 
 # FMA-only operation inside the PPU disabled by default (set to 0). Override to 1 to turn on this option.
-FMA_ONLY ?= 0
+#FMA_ONLY ?= 0
 
 
 
@@ -50,7 +50,6 @@ MORTY_ARGS :=                 \
                               \
   -DCLK_FREQ=$(CLK_FREQ)      \
   -DPIPE_DEPTH=$(PIPE_DEPTH)  \
-  -DFMA_ONLY                  \
   
 
 
@@ -78,8 +77,8 @@ sv2v: lint
 	make -f Makefile_quartus.mk
 
 icarus: sv2v
-	iverilog -c .iverilog_cf -s $(TOP) a.v
-# 	iverilog -g2012 a.sv
+	iverilog -g2012 -c .iverilog_cf -s $(TOP) a.v
+# 	iverilog -g2012 a.sv # -g2012 enables printing enumerate types.
 
 
 run:

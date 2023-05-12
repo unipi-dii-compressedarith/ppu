@@ -142,9 +142,11 @@ module tb_ppu #(
 
   initial begin: sequences
 
-    $display("%0t", $time);
 
+//`define TEST_FMA_ONLY
+`ifdef TEST_FMA_ONLY
     op_i = FMADD;
+    $display("FMADD");
     for (int i=0; i<10; i++) begin
       operand1_i = {$random}%(1 << 16); 
       operand2_i = {$random}%(1 << 16);
@@ -152,13 +154,61 @@ module tb_ppu #(
 
       #1;
 
-      fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.accumulator_inst.fixed_o;
+      
+      `ifdef FMA_ONLY
+        fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_fma_inst.core_fma_accumulator_inst.
+      `else
+        fixed_o = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.
+      `endif
 
-      $display("(0x%h, 0x%h, 0x%h, 0x%h)", operand1_i, operand2_i, fixed_o, result_o);
-      $fwrite(f2, "(0x%h, 0x%h, 0x%h, 0x%h)\n", operand1_i, operand2_i, fixed_o, result_o);
+      accumulator_inst.fixed_o;
+
+      $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
+        ppu_top_inst.ppu_inst.p1, 
+        ppu_top_inst.ppu_inst.p2, 
+        fixed_o, 
+        ppu_top_inst.ppu_inst.posit
+      );
+      $fwrite(f2, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
+        ppu_top_inst.ppu_inst.p1,
+        ppu_top_inst.ppu_inst.p2,
+        fixed_o,
+        ppu_top_inst.ppu_inst.posit
+      );
 
       @(posedge clk_i);
     end
+    $display("");
+
+
+`else
+
+
+    $display("MUL");
+    op_i = SUB;
+    //$display("op_i: %s", op_i.name());
+    for (int i=0; i<10; i++) begin
+      operand1_i = {$random}%(1 << 16); 
+      operand2_i = {$random}%(1 << 16);
+      operand3_i = 'bX;
+
+      #1;
+
+      $display("(0x%h, 0x%h, 0x%h)", 
+        ppu_top_inst.ppu_inst.p1, 
+        ppu_top_inst.ppu_inst.p2, 
+        ppu_top_inst.ppu_inst.posit
+      );
+      $fwrite(f2, "(0x%h, 0x%h, 0x%h)\n", 
+        ppu_top_inst.ppu_inst.p1,
+        ppu_top_inst.ppu_inst.p2,
+        ppu_top_inst.ppu_inst.posit
+      );
+
+      @(posedge clk_i);
+    end
+    $display("");
+`endif
 
     #100;
     $finish;

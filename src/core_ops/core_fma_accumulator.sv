@@ -1,14 +1,18 @@
 module core_fma_accumulator
   import ppu_pkg::*;
 #(
+  /// Posit size
   parameter N                                 = -1,
-
+  /// Input FIR sizes
   parameter TE_BITS                           = -1,
   parameter MANT_SIZE                         = -1,
   parameter FRAC_FULL_SIZE                    = -1,
-
+  /// Fixed point format
   parameter FX_M                              = `FX_M,
-  parameter FX_B                              = `FX_B
+  parameter FX_B                              = `FX_B,
+  /// output FIR sizes
+  parameter FIR_TE_SIZE                       = -1,
+  parameter FIR_FRAC_SIZE                     = -1
 )(
   input logic                                   clk_i,
   input logic                                   rst_i,
@@ -17,7 +21,8 @@ module core_fma_accumulator
   input [(1+TE_BITS+MANT_MUL_RESULT_SIZE)-1:0]  fir1_i,
   input fir_t                                   fir2_i,
 
-  output logic [(100)-1:0]                      fir_fma, // TODO: FIx size (also in core_op_fma)
+  output logic [(1+FIR_TE_SIZE+
+                FIR_FRAC_SIZE)-1:0]             fir_fma,
   output logic [(FX_B)-1:0]                     fixed_o
   // output logic                               frac_truncated_o
 );
