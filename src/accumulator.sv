@@ -29,6 +29,8 @@ module accumulator #(
 endmodule: accumulator
 
 
+
+
 module tb_accumulator #(
   parameter CLK_FREQ = `CLK_FREQ
 );

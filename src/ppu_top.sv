@@ -95,13 +95,13 @@
 module ppu_top 
   import ppu_pkg::*;
 #(
-  parameter PIPE_DEPTH  = `PIPE_DEPTH,
-  parameter WORD        = `WORD,
+  parameter PIPELINE_DEPTH  = `PIPELINE_DEPTH,
+  parameter WORD            = `WORD,
 `ifdef FLOAT_TO_POSIT
-  parameter FSIZE       = `F,
+  parameter FSIZE           = `F,
 `endif
-  parameter N           = `N,
-  parameter ES          = `ES
+  parameter N               = `N,
+  parameter ES              = `ES
 ) (
   input  logic                    clk_i,
   input  logic                    rst_i,
@@ -162,16 +162,16 @@ module ppu_top
 
   // initial $display($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i));
 
-  localparam PIPE_DEPTH_FRONT = PIPE_DEPTH >= 1 ? 1 : 0;
-  localparam PIPE_DEPTH_BACK  = PIPE_DEPTH >= 1 ? (PIPE_DEPTH - PIPE_DEPTH_FRONT) : 0;
+  localparam PIPELINE_DEPTH_FRONT = PIPELINE_DEPTH >= 1 ? 1 : 0;
+  localparam PIPELINE_DEPTH_BACK  = PIPELINE_DEPTH >= 1 ? (PIPELINE_DEPTH - PIPELINE_DEPTH_FRONT) : 0;
 
-  initial $display("PIPE_DEPTH_FRONT = %0d", PIPE_DEPTH_FRONT);
-  initial $display("PIPE_DEPTH_BACK = %0d", PIPE_DEPTH_BACK);
+  initial $display("PIPELINE_DEPTH_FRONT = %0d", PIPELINE_DEPTH_FRONT);
+  initial $display("PIPELINE_DEPTH_BACK = %0d", PIPELINE_DEPTH_BACK);
 
   pipeline #(
-    .PIPE_DEPTH   (PIPE_DEPTH_FRONT),
+    .PIPELINE_DEPTH   (PIPELINE_DEPTH_FRONT),
     .DATA_WIDTH   ($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i))
-  ) pipeline_in (
+  ) pipeline_front (
     .clk_i        (clk_i),
     .rst_i        (rst_i),
     .data_in      ({in_valid_i,   op_i,   operand1_i,   operand2_i,   operand3_i}),
@@ -179,17 +179,13 @@ module ppu_top
   );
 
   pipeline #(
-    .PIPE_DEPTH   (PIPE_DEPTH_BACK),
+    .PIPELINE_DEPTH   (PIPELINE_DEPTH_BACK),
     .DATA_WIDTH   ($bits(result_st0) + $bits(out_valid_st0))
-  ) pipeline_out (
+  ) pipeline_back (
     .clk_i        (clk_i),
     .rst_i        (rst_i),
     .data_in      ({result_st0, out_valid_st0}),
     .data_out     ({result_o,   out_valid_o})
   );
 
-  
-
 endmodule: ppu_top
-
-

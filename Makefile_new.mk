@@ -19,7 +19,7 @@ ES ?= 1
 WORD ?= 32
 F ?= 0
 CLK_FREQ ?= 100
-PIPE_DEPTH ?= 0
+PIPELINE_DEPTH ?= 0
 
 
 
@@ -49,7 +49,7 @@ MORTY_ARGS :=                 \
   -DFX_B=$(FX_B)              \
                               \
   -DCLK_FREQ=$(CLK_FREQ)      \
-  -DPIPE_DEPTH=$(PIPE_DEPTH)  \
+  -DPIPELINE_DEPTH=$(PIPELINE_DEPTH)  \
   
 
 
@@ -73,12 +73,10 @@ lint: morty
 
 sv2v: lint
 	sv2v a.sv -w a.v
-# 	sv2v a.sv --dump-prefix a -w /tmp/a.v && cp amain_1.sv a.v
 	make -f Makefile_quartus.mk
 
 icarus: sv2v
 	iverilog -g2012 -c .iverilog_cf -s $(TOP) a.v
-# 	iverilog -g2012 a.sv # -g2012 enables printing enumerate types.
 
 
 run:

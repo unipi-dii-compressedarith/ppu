@@ -1669,7 +1669,7 @@ module ppu
 
 endmodule: ppu
 module pipeline #(
-  parameter PIPE_DEPTH = 2,
+  parameter PIPELINE_DEPTH = 2,
   parameter DATA_WIDTH = 32 
 )(
   input logic                     clk_i,
@@ -1680,25 +1680,25 @@ module pipeline #(
 
   
   generate
-    if (PIPE_DEPTH == 0) begin
+    if (PIPELINE_DEPTH == 0) begin
       assign data_out = data_in;
     end else begin
-            logic [DATA_WIDTH-1:0] pipeline_reg [PIPE_DEPTH-1:0] ;
+            logic [DATA_WIDTH-1:0] pipeline_reg [PIPELINE_DEPTH-1:0] ;
 
       always_ff @(posedge clk_i) begin
         if (rst_i) begin
-          for (int i = 0; i < PIPE_DEPTH; i++) begin
+          for (int i = 0; i < PIPELINE_DEPTH; i++) begin
             pipeline_reg[i] <= 'b0;
           end
         end else begin
           pipeline_reg[0] <= data_in; 
-          for (int i = 1; i < PIPE_DEPTH; i++) begin
+          for (int i = 1; i < PIPELINE_DEPTH; i++) begin
             pipeline_reg[i] <= pipeline_reg[i-1];
           end
         end
       end
 
-      assign data_out = pipeline_reg[PIPE_DEPTH-1];
+      assign data_out = pipeline_reg[PIPELINE_DEPTH-1];
 
     end
   endgenerate
@@ -1723,7 +1723,7 @@ endmodule: pipeline
 module ppu_top 
   import ppu_pkg::*;
 #(
-  parameter PIPE_DEPTH  = 0,
+  parameter PIPELINE_DEPTH  = 0,
   parameter WORD        = 32,
 parameter N           = 16,
   parameter ES          = 1
@@ -1770,14 +1770,14 @@ parameter N           = 16,
 
 
   
-  localparam PIPE_DEPTH_FRONT = PIPE_DEPTH >= 1 ? 1 : 0;
-  localparam PIPE_DEPTH_BACK  = PIPE_DEPTH >= 1 ? (PIPE_DEPTH - PIPE_DEPTH_FRONT) : 0;
+  localparam PIPELINE_DEPTH_FRONT = PIPELINE_DEPTH >= 1 ? 1 : 0;
+  localparam PIPELINE_DEPTH_BACK  = PIPELINE_DEPTH >= 1 ? (PIPELINE_DEPTH - PIPELINE_DEPTH_FRONT) : 0;
 
-  initial $display("PIPE_DEPTH_FRONT = %d", PIPE_DEPTH_FRONT);
-  initial $display("PIPE_DEPTH_BACK = %d", PIPE_DEPTH_BACK);
+  initial $display("PIPELINE_DEPTH_FRONT = %d", PIPELINE_DEPTH_FRONT);
+  initial $display("PIPELINE_DEPTH_BACK = %d", PIPELINE_DEPTH_BACK);
 
   pipeline #(
-    .PIPE_DEPTH   (PIPE_DEPTH_FRONT),
+    .PIPELINE_DEPTH   (PIPELINE_DEPTH_FRONT),
     .DATA_WIDTH   ($bits(in_valid_i) + $bits(op_i) + 3*$bits(operand1_i))
   ) pipeline_in (
     .clk_i        (clk_i),
@@ -1787,7 +1787,7 @@ parameter N           = 16,
   );
 
   pipeline #(
-    .PIPE_DEPTH   (0),
+    .PIPELINE_DEPTH   (0),
     .DATA_WIDTH   ($bits(result_st0) + $bits(out_valid_st0))
   ) pipeline_out (
     .clk_i        (clk_i),

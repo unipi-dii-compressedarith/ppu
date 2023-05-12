@@ -25,27 +25,6 @@ module fir_ops
   wire frac_truncated;
   
 
-// `ifdef FMA_ONLY
-//   core_op_fma #(
-//     .N                (N),
-//     .TE_BITS          (TE_BITS),
-//     .MANT_SIZE        (MANT_SIZE),
-//     .FRAC_FULL_SIZE   (FRAC_FULL_SIZE)
-//   ) core_op_fma_inst (
-//     .clk_i            (clk_i),
-//     .rst_i            (rst_i),
-//     .op_i             (op_i),
-    
-//     .fir1_i           (fir1_i),
-//     .fir2_i           (fir2_i),
-//     .fir3_i           (fir3_i),
-    
-//     .sign_o           (sign_out),
-//     .te_o             (te_out),
-//     .frac_o           (frac_out),
-//     .frac_truncated_o (frac_truncated)
-//   );
-// `else
   core_op #(
     .TE_BITS          (TE_BITS),
     .MANT_SIZE        (MANT_SIZE),
@@ -65,22 +44,8 @@ module fir_ops
     .fixed_o          (fixed_o),
     .frac_truncated_o (frac_truncated)
   );
-// `endif // FMA_ONLY
 
 
-
-
-  /*
-  sign_decisor sign_decisor (
-    .clk_i            (clk_i),
-    .rst_i            (rst_i),
-    .sign1_i          (fir1_i.sign),
-    .sign2_i          (fir2_i.sign),
-    .sign3_i          (fir3_i.sign),
-    .op_i             (op_i),
-    .sign_o           (sign_out)
-  );
-  */
   
   assign ops_result_o.long_fir = {sign_out, te_out, frac_out};
   assign ops_result_o.frac_truncated = frac_truncated;

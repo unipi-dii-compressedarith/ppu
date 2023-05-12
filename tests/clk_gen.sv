@@ -10,9 +10,4 @@ module clk_gen #(
     forever #((1000.0/CLK_FREQ) / 2.0)  clk_o = !clk_o;
   end
 
-  // always begin
-  //   #((1000.0/CLK_FREQ) / 2.0); // ns
-  //   clk_o = !clk_o; 
-  // end
-
 endmodule: clk_gen

@@ -102,33 +102,7 @@ module ppu_core_ops
   );
 
 
-  /*
-  logic [(1+128)-1:0] fixed;
-  fir_to_fixed #(
-    .N              (N),
-    .FIR_TE_SIZE    ($bits(fir2_st0.total_exponent)),
-    .FIR_FRAC_SIZE  ($bits(fir2_st0.mant)),
-    .FX_M           (32),
-    .FX_N           (128)
-  ) fir_to_fixed_inst (
-    .fir_i          (fir2_st0),
-    .fixed_o        (fixed)
-  );
 
-  ppu_pkg::fir_t fir_dummy_out;
-  fixed_to_fir #(
-    .N              (N),
-    .FIR_TE_SIZE    ($bits(fir2_st0.total_exponent)),
-    .FIR_FRAC_SIZE  ($bits(fir2_st0.mant)),
-    .FX_M           (32),
-    .FX_N           (128)
-  ) fixed_to_fir_inst (
-    .fixed_i        (fixed),
-    .fir_o          (fir_dummy_out)
-  );
-
-  */
-  
 
 
 `ifdef FLOAT_TO_POSIT
