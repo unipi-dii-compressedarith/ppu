@@ -88,14 +88,14 @@ module tb_ppu #(
 
 
   ////// log to file //////
-  integer f2;
-  initial f2 = $fopen("tb_ppu.log", "w");
+  integer f1;
+  initial f1 = $fopen("tb_ppu.log", "w");
 
   initial begin: sequences
 
-
-//`define TEST_FMA_ONLY
+`define TEST_FMA_ONLY
 `ifdef TEST_FMA_ONLY
+
     op_i = SUB; 
     #34;
     @(posedge clk_i);
@@ -121,7 +121,7 @@ module tb_ppu #(
         fixed_o, 
         ppu_top_inst.ppu_inst.posit
       );
-      $fwrite(f2, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
+      $fwrite(f1, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
         ppu_top_inst.ppu_inst.p1,
         ppu_top_inst.ppu_inst.p2,
         fixed_o,
@@ -137,9 +137,9 @@ module tb_ppu #(
 
 
     $display("MUL");
-    op_i = SUB;
+    op_i = ADD;
     //$display("op_i: %s", op_i.name());
-    for (int i=0; i<10; i++) begin
+    for (int i=0; i<30; i++) begin
       operand1_i = {$random}%(1 << 16); 
       operand2_i = {$random}%(1 << 16);
       operand3_i = 'bX;
@@ -151,7 +151,7 @@ module tb_ppu #(
         ppu_top_inst.ppu_inst.p2, 
         ppu_top_inst.ppu_inst.posit
       );
-      $fwrite(f2, "(0x%h, 0x%h, 0x%h)\n", 
+      $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
         ppu_top_inst.ppu_inst.p1,
         ppu_top_inst.ppu_inst.p2,
         ppu_top_inst.ppu_inst.posit
