@@ -28,6 +28,34 @@ module ppu_core_ops
   assign op_st0 = op_i; // alias
 
 
+
+  fir_t fir1, fir2, fir3;
+  
+
+  posit_special_t p_special;
+  extraction #(
+    .N            (N)
+  ) extraction_i (
+    .p1_i         (p1_i),
+    .p2_i         (p2_i),
+    .p3_i         (p3_i),
+    .op_i         (op_i),
+
+    .fir1_o       (fir1),
+    .fir2_o       (fir2),
+    .fir3_o       (fir3),
+
+    .p_special_o  (p_special)
+  );
+
+  
+  logic        is_special_or_trivial;
+  posit_t      pout_special_or_trivial;
+  
+
+
+
+
   wire [K_BITS-1:0] k1, k2;
 `ifndef NO_ES_FIELD
   wire [ES-1:0] exp1, exp2;
@@ -39,71 +67,9 @@ module ppu_core_ops
 
   logic sign1, sign2;
 
-  posit_t      p1_cond, p2_cond, p3_cond;
-  logic        is_special_or_trivial;
-  posit_t      pout_special_or_trivial;
   
-  logic [(N+1)-1:0] p_special_st0, p_special_st1, p_special_st2, p_special_st3;
-  input_conditioning #(
-    .N          (N)
-  ) input_conditioning (
-    .p1_i       (p1_i),
-    .p2_i       (p2_i),
-    .p3_i       (p3_i),
-    .op_i       (op_st0),
-    .p1_o       (p1_cond),
-    .p2_o       (p2_cond),
-    .p3_o       (p3_cond),
-    .p_special_o(p_special_st0)
-  );
-
-  assign is_special_or_trivial = p_special_st3[0];
-  assign pout_special_or_trivial = p_special_st3 >> 1;
-
-  ppu_pkg::fir_t fir1_st0, fir1_st1;
-  ppu_pkg::fir_t fir2_st0, fir2_st1;
-  ppu_pkg::fir_t fir3_st0, fir3_st1;
-
-  assign fir1_st1 = fir1_st0;
-  assign fir2_st1 = fir2_st0;
-  assign fir3_st1 = fir3_st0;
-  assign op_st1 = op_st0;
-
-  posit_to_fir #(
-    .N          (N),
-    .ES         (ES)
-  ) posit_to_fir1 (
-    .p_cond_i   (p1_cond),
-    .fir_o      (fir1_st0)
-  );
-
-  wire [N-1:0] posit_in_posit_to_fir2;
-  assign posit_in_posit_to_fir2 =
-`ifdef FLOAT_TO_POSIT
-    (op_st0 == POSIT_TO_FLOAT) ? p2_i :
-`endif
-    p2_cond;
-
-  posit_to_fir #(
-    .N          (N),
-    .ES         (ES)
-  ) posit_to_fir2 (
-    .p_cond_i   (posit_in_posit_to_fir2),
-    .fir_o      (fir2_st0)
-  );
-
-
-  posit_to_fir #(
-    .N          (N),
-    .ES         (ES)
-  ) posit_to_fir3 (
-    .p_cond_i   (p3_cond),
-    .fir_o      (fir3_st0)
-  );
-
-
-
-
+  
+  
 
 `ifdef FLOAT_TO_POSIT
   assign posit_fir_o = fir2_st1;
@@ -120,18 +86,32 @@ module ppu_core_ops
   ) fir_ops_inst (
     .clk_i          (clk_i),
     .rst_i          (rst_i),
-    .op_i           (op_st1),
-    .fir1_i         (fir1_st1),
-    .fir2_i         (fir2_st1),
-    .fir3_i         (fir3_st1),
+    .op_i           (op_i),
+    .fir1_i         (fir1),
+    .fir2_i         (fir2),
+    .fir3_i         (fir3),
     .ops_result_o   (ops_result),
     .fixed_o        (fixed_o)
   );
 
 
+  normalization #(
+    .N              (N),
+    .ES             (ES),
+    .FIR_TOTAL_SIZE (1 + TE_BITS + FRAC_FULL_SIZE),
+
+    .TE_BITS        (TE_BITS),
+    .FRAC_FULL_SIZE (FRAC_FULL_SIZE)
+  ) normalization_inst (
+    .ops_result_i   (ops_result),
+    .p_special_i    (p_special),
+    .posit_o        (pout_o)
+  );
+
+
   wire frac_truncated;
 
-  wire [N-1:0] pout_non_special;
+  
 
 
   logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0, ops_wire_st1;
@@ -143,16 +123,9 @@ module ppu_core_ops
     ops_result;
 
   
-  fir_to_posit #(
-    .N                (N),
-    .ES               (ES),
-    .FIR_TOTAL_SIZE   (1 + TE_BITS + FRAC_FULL_SIZE)
-  ) fir_to_posit_inst (
-    .ops_result_i     (ops_wire_st1),
-    .posit_o          (pout_non_special)
-  );
+  
 
-  assign pout_o = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
+
 
 `ifdef PIPELINE_STAGE
   always @(posedge clk_i) begin
@@ -170,10 +143,12 @@ module ppu_core_ops
     end
   end
 `else
-  assign ops_wire_st1 = ops_wire_st0;
-  assign p_special_st1 = p_special_st0; // <- new 20221214
-  assign p_special_st2 = p_special_st1;
-  assign p_special_st3 = p_special_st2; // p_special_st3 <= (op_st1 === DIV) ? p_special_st2 : p_special_st1;
-  assign op_o = op_st1;
+  
+  
+  // assign ops_wire_st1 = ops_wire_st0;
+  // assign p_special_st1 = p_special_st0; // <- new 20221214
+  // assign p_special_st2 = p_special_st1;
+  // assign p_special_st3 = p_special_st2; // p_special_st3 <= (op_st1 === DIV) ? p_special_st2 : p_special_st1;
+  // assign op_o = op_st1;
 `endif
 endmodule: ppu_core_ops

@@ -120,6 +120,9 @@ run_questa: morty
 	vsim -c -do run.do
 
 
+synth:
+	cd ./fpga/vivado && vivado ppu.xpr -mode batch -source synth.tcl
+
 ########
 
 

@@ -72,7 +72,9 @@ module core_op
   logic                         sign_out_fma;
   logic [TE_BITS-1:0]           te_out_fma;
   logic [(FRAC_FULL_SIZE)-1:0]  mant_out_fma;
-  
+
+
+`ifdef FMA_OP
   core_fma_accumulator #(
     .N                      (N),
     .TE_BITS                (TE_BITS),
@@ -94,8 +96,11 @@ module core_op
     .fixed_o                (fixed_o)
     // .frac_truncated_o       ()
   );
+`endif
 
   assign {sign_out_fma, te_out_fma, mant_out_fma} = fir_fma;
+
+
 
   
 //`define FMA_ONLY

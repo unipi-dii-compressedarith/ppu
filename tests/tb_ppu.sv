@@ -95,7 +95,7 @@ module tb_ppu #(
 
 `define TEST_FMA_ONLY
 `ifdef TEST_FMA_ONLY
-
+`ifdef FMA_OP
     op_i = SUB; 
     #34;
     @(posedge clk_i);
@@ -131,7 +131,7 @@ module tb_ppu #(
       @(posedge clk_i);
     end
     $display("");
-
+`endif
 
 `else
 

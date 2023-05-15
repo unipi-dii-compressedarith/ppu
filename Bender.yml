@@ -15,6 +15,8 @@ sources:
       CLK_FREQ: ~
       COCOTB : ~
       #FMA_ONLY : ~
+
+      FMA_OP: ~
     
     files:
     - src/ppu_pkg.sv
@@ -25,6 +27,8 @@ sources:
     - src/format/fixed_to_fir.sv
     - src/accumulator.sv
     - src/input_conditioning.sv
+    - src/extraction.sv
+    - src/normalization.sv
     - src/handle_special_or_trivial.sv
     - src/format/total_exponent.sv
     - src/fir_ops.sv
