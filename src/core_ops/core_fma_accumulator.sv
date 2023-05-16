@@ -87,9 +87,11 @@ module core_fma_accumulator
     .fir_o          (fir_fma)
   );
 
-  
-  
+
+// `define EXPORT_ACCUMULATOR   
+`ifdef EXPORT_ACCUMULATOR
   //assign fixed_o = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
   assign fixed_o = acc;
+`endif
 
 endmodule: core_fma_accumulator

@@ -8,6 +8,8 @@ module extraction
   input  posit_t            p2_i,
   input  posit_t            p3_i,
   input  operation_e        op_i,
+
+  output  operation_e       op_o,
   /// posit to fir
   output fir_t              fir1_o,
   output fir_t              fir2_o,
@@ -65,5 +67,6 @@ module extraction
     .fir_o      (fir3_o)
   );
 
+  assign op_o = op_i;
 
 endmodule: extraction

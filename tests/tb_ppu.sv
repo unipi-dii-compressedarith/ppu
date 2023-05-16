@@ -112,19 +112,19 @@ module tb_ppu #(
       #1;
 
       
-      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.fixed_o;
+      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.acc;
     
 
       $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
         ppu_top_inst.ppu_inst.p1, 
         ppu_top_inst.ppu_inst.p2, 
-        fixed_o, 
+        fixed, 
         ppu_top_inst.ppu_inst.posit
       );
       $fwrite(f1, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
         ppu_top_inst.ppu_inst.p1,
         ppu_top_inst.ppu_inst.p2,
-        fixed_o,
+        fixed,
         ppu_top_inst.ppu_inst.posit
       );
 

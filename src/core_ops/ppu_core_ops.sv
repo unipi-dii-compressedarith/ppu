@@ -24,22 +24,40 @@ module ppu_core_ops
   output [`FX_B-1:0]                            fixed_o
 );
 
-  fir_t fir1, fir2, fir3;
-  posit_special_t p_special;
+
+  localparam STAGES = 4;
+  
+  ppu_pkg::operation_e                              op[STAGES-1:0];
+
+  ppu_pkg::posit_t                                  p1[STAGES-1:0],
+                                                    p2[STAGES-1:0],
+                                                    p3[STAGES-1:0];
+  
+  ppu_pkg::fir_t                                    fir1[STAGES-1:0],
+                                                    fir2[STAGES-1:0],
+                                                    fir3[STAGES-1:0];
+
+  ppu_pkg::posit_special_t                          p_special[STAGES-1:0];
+
+  logic [`FX_B-1:0]                                 fixed[STAGES-1:0];
+  logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0]  ops_result[STAGES-1:0];
+
+
 
   extraction #(
     .N            (N)
   ) extraction_i (
-    .p1_i         (p1_i),
-    .p2_i         (p2_i),
-    .p3_i         (p3_i),
-    .op_i         (op_i),
+    .p1_i         (p1[0]),
+    .p2_i         (p2[0]),
+    .p3_i         (p3[0]),
+    .op_i         (op[0]),
+    .op_o         (op[1]),
 
-    .fir1_o       (fir1),
-    .fir2_o       (fir2),
-    .fir3_o       (fir3),
+    .fir1_o       (fir1[1]),
+    .fir2_o       (fir2[1]),
+    .fir3_o       (fir3[1]),
 
-    .p_special_o  (p_special)
+    .p_special_o  (p_special[1])
   );
 
     
@@ -48,22 +66,20 @@ module ppu_core_ops
   assign posit_fir_o = fir2_st1;
 `endif
 
-  exponent_t ops_te_out;
-  logic [FRAC_FULL_SIZE-1:0] ops_frac_full;
 
 
-  logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_result;
+
   fir_ops #(
     .N              (N)
   ) fir_ops_inst (
     .clk_i          (clk_i),
     .rst_i          (rst_i),
-    .op_i           (op_i),
-    .fir1_i         (fir1),
-    .fir2_i         (fir2),
-    .fir3_i         (fir3),
-    .ops_result_o   (ops_result),
-    .fixed_o        (fixed_o)
+    .op_i           (op[2]),
+    .fir1_i         (fir1[2]),
+    .fir2_i         (fir2[2]),
+    .fir3_i         (fir3[2]),
+    .ops_result_o   (ops_result[2]),
+    .fixed_o        (fixed[2])
   );
 
 
@@ -75,11 +91,48 @@ module ppu_core_ops
     .TE_BITS        (TE_BITS),
     .FRAC_FULL_SIZE (FRAC_FULL_SIZE)
   ) normalization_inst (
-    .ops_result_i   (ops_result),
-    .p_special_i    (p_special),
+    .ops_result_i   (ops_result[3]),
+    .p_special_i    (p_special[3]),
     .posit_o        (pout_o)
   );
-  
+
+
+
+
+  localparam PIPELINE_DEPTH = 0;
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  pipeline #(
+    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .DATA_WIDTH     ($bits({{op_i,   p1_i,   p2_i,   p3_i}}))
+  ) pipeline_st0 (
+    .clk_i          (clk_i),
+    .rst_i          (rst_i),
+    .data_in        ({op_i,   p1_i,   p2_i,   p3_i}),
+    .data_out       ({op[0],  p1[0],  p2[0],  p3[0]})
+  );
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  pipeline #(
+    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .DATA_WIDTH     ($bits({op[1], fir1[1], fir2[1], fir3[1], p_special[1]}))
+  ) pipeline_st1 (
+    .clk_i          (clk_i),
+    .rst_i          (rst_i),
+    .data_in        ({op[1], fir1[1], fir2[1], fir3[1], p_special[1]}),
+    .data_out       ({op[2], fir1[2], fir2[2], fir3[2], p_special[2]})
+  );
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  pipeline #(
+    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .DATA_WIDTH     ($bits({{fixed[2], ops_result[2], p_special[2]}}))
+  ) pipeline_st2 (
+    .clk_i          (clk_i),
+    .rst_i          (rst_i),
+    .data_in        ({fixed[2], ops_result[2], p_special[2]}),
+    .data_out       ({fixed[3], ops_result[3], p_special[3]})
+  );
+  assign fixed_o = fixed[3];
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //   logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0] ops_wire_st0;
