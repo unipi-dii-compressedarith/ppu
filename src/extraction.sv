@@ -47,6 +47,7 @@ module extraction
 `endif
     p2_cond;
 
+
   posit_to_fir #(
     .N          (N),
     .ES         (ES)
@@ -63,12 +64,6 @@ module extraction
     .p_cond_i   (p3_cond),
     .fir_o      (fir3_o)
   );
-
-
-
-
-
-
 
 
 endmodule: extraction
