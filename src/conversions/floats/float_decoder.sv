@@ -4,7 +4,9 @@
 so far with the simplified assumption that the float fields are larger than the posit fields. also no dealing with subnormals
 */
 
-module float_decoder #(
+module float_decoder 
+  import ppu_pkg::*;
+#(
   parameter FSIZE = 64
 )(
   input [FSIZE-1:0]                       bits,
@@ -30,10 +32,12 @@ module float_decoder #(
 endmodule: float_decoder
 
 
-`ifdef TB_FLOAT_DECODE
-`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
+
+// `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 
 module tb_float_decoder;
+
+  import ppu_pkg::*;
 
   parameter FSIZE = 64;
 
@@ -53,11 +57,10 @@ module tb_float_decoder;
   );
 
   initial begin
-    $dumpfile({"tb_float_decoder_F",`STRINGIFY(`F),".vcd"});
+    // $dumpfile({"tb_float_decoder_F",`STRINGIFY(`F),".vcd"});
     $dumpvars(0, tb_float_decoder);                        
 
     bits = 64'h405ee00000000000; #10;
   end
 
 endmodule: tb_float_decoder
-`endif

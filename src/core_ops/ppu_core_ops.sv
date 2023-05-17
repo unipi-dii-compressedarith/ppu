@@ -62,12 +62,6 @@ module ppu_core_ops
 
     
 
-`ifdef FLOAT_TO_POSIT
-  assign posit_fir_o = fir2_st1;
-`endif
-
-
-
 
   fir_ops #(
     .N              (N)

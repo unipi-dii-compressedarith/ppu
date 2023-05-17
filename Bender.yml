@@ -17,6 +17,8 @@ sources:
       #FMA_ONLY : ~
 
       FMA_OP: ~
+      FLOAT_TO_POSIT : ~
+
     
     files:
     - src/ppu_pkg.sv
@@ -61,6 +63,14 @@ sources:
     - src/pipeline.sv
     - src/ppu_top.sv
     - src/ppu_ap_top.sv
+    ## Floats conversions
+    - src/conversions/floats/sign_extend.sv
+    - src/conversions/floats/posit_to_float.sv
+    - src/conversions/floats/float_to_posit.sv
+    - src/conversions/floats/float_to_fir.sv
+    - src/conversions/floats/float_encoder.sv
+    - src/conversions/floats/float_decoder.sv
+    - src/conversions/floats/fir_to_float.sv
     
     - target: test
       files:

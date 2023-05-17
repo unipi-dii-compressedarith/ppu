@@ -1,5 +1,6 @@
-`ifdef FLOAT_TO_POSIT
-module float_to_fir #(
+module float_to_fir 
+  import ppu_pkg::*;
+#(
   parameter FSIZE = 64
 )(
   input                                                       clk,
@@ -43,4 +44,4 @@ module float_to_fir #(
   `endif
   
 endmodule: float_to_fir
-`endif
+

@@ -44,9 +44,9 @@ module extraction
 
   wire [N-1:0] posit_in_posit_to_fir2;
   assign posit_in_posit_to_fir2 =
-`ifdef FLOAT_TO_POSIT
-    (op_st0 == POSIT_TO_FLOAT) ? p2_i :
-`endif
+// `ifdef FLOAT_TO_POSIT
+//     (op_st0 == P2F) ? p2_i :
+// `endif
     p2_cond;
 
 

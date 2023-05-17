@@ -1,6 +1,6 @@
 /// Posit Processing Unit (PPU)
 module ppu
-  import ppu_pkg::OP_BITS;
+  import ppu_pkg::*;
 #(
   parameter WORD = `WORD,
   `ifdef FLOAT_TO_POSIT
@@ -49,6 +49,22 @@ module ppu
     .pout_o       (posit),
     .fixed_o      (fixed_o)
   );
+
+
+
+  fir_to_float #(
+    .N            (N),
+    .ES           (ES),
+    .FSIZE        (FSIZE)
+  ) fir_to_float_inst (
+    .clk_i        (clk_i),
+    .rst_i        (rst_i),
+    .fir_i        (posit_fir),
+    .float_o      (float_out_st0)
+  );
+
+
+
 
   assign result_o = posit;
   

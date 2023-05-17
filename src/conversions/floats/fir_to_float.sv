@@ -1,20 +1,22 @@
 `ifdef FLOAT_TO_POSIT
-module fir_to_float #(
-  parameter N = 10,
-  parameter ES = 1,
-  parameter FSIZE = 54
+module fir_to_float 
+  import ppu_pkg::*;
+#(
+  parameter N = -1,
+  parameter ES = -1,
+  parameter FSIZE = -1
 )(
-  input                   clk,
-  input                   rst,
-  input ppu_pkg::fir_t    fir,
-  output [FSIZE-1:0]      float
+  input                   clk_i,
+  input                   rst_i,
+  input ppu_pkg::fir_t    fir_i,
+  output [FSIZE-1:0]      float_o
 );
 
   parameter FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
   parameter FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
 
   ppu_pkg::fir_t fir_st0, fir_st1;
-  assign fir_st0 = fir;
+  assign fir_st0 = fir_i;
 
 
   `ifdef PIPELINE_STAGE
