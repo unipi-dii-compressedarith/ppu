@@ -61,7 +61,7 @@ module fir_to_float
     .sign(float_sign),
     .exp(float_exp),
     .frac(float_frac),
-    .bits(float)
+    .bits(float_o)
   );
 
 

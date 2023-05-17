@@ -43,7 +43,7 @@ module tb_float_encoder;
   );
 
   initial begin
-    $dumpfile({"tb_float_encoder_F",`STRINGIFY(`FSIZE),".vcd"});
+    // $dumpfile({"tb_float_encoder_F",`STRINGIFY(`FSIZE),".vcd"});
     $dumpvars(0, tb_float_encoder);                        
     
     // bits = 64'h405ee00000000000; #10;

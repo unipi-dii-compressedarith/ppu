@@ -52,6 +52,7 @@ module ppu
 
 
 
+  logic [WORD-1:0] float_out;
   fir_to_float #(
     .N            (N),
     .ES           (ES),
@@ -60,13 +61,13 @@ module ppu
     .clk_i        (clk_i),
     .rst_i        (rst_i),
     .fir_i        (posit_fir),
-    .float_o      (float_out_st0)
+    .float_o      (float_out)
   );
 
 
 
 
-  assign result_o = posit;
+  assign result_o = (op_i == P2F) ? float_out : posit;
   
   // ...
   assign out_valid_o = in_valid_i;

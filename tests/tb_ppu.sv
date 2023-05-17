@@ -92,14 +92,17 @@ module tb_ppu #(
   initial f1 = $fopen("tb_ppu.log", "w");
 
   initial begin: sequences
-
-`define TEST_FMA_ONLY
-`ifdef TEST_FMA_ONLY
-`ifdef FMA_OP
-    op_i = SUB; 
+    
+    op_i = SUB;
     #34;
     @(posedge clk_i);
 
+
+
+// `define TEST_FMA_ONLY
+`ifdef TEST_FMA_ONLY
+`ifdef FMA_OP
+    
 
 
     op_i = FMADD;
@@ -136,8 +139,8 @@ module tb_ppu #(
 `else
 
 
-    $display("MUL");
-    op_i = ADD;
+    
+    op_i = P2F;
     //$display("op_i: %s", op_i.name());
     for (int i=0; i<30; i++) begin
       operand1_i = {$random}%(1 << 16); 
@@ -149,12 +152,12 @@ module tb_ppu #(
       $display("(0x%h, 0x%h, 0x%h)", 
         ppu_top_inst.ppu_inst.p1, 
         ppu_top_inst.ppu_inst.p2, 
-        ppu_top_inst.ppu_inst.posit
+        result_o
       );
       $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
         ppu_top_inst.ppu_inst.p1,
         ppu_top_inst.ppu_inst.p2,
-        ppu_top_inst.ppu_inst.posit
+        result_o
       );
 
       @(posedge clk_i);

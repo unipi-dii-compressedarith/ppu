@@ -137,5 +137,14 @@ module ppu_core_ops
 //     ops_result;
 
   
+  
+  
+  
+  
+  
+  
+  // posit to FIR
+  assign posit_fir_o = fir2[2];
+
 
 endmodule: ppu_core_ops
