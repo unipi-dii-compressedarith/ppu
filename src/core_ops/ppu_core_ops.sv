@@ -99,11 +99,11 @@ module ppu_core_ops
 
 
 
-  localparam PIPELINE_DEPTH = 0;
+  localparam _PIPE_DEPTH = 0;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   pipeline #(
-    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .PIPELINE_DEPTH (_PIPE_DEPTH),
     .DATA_WIDTH     ($bits({{op_i,   p1_i,   p2_i,   p3_i}}))
   ) pipeline_st0 (
     .clk_i          (clk_i),
@@ -113,7 +113,7 @@ module ppu_core_ops
   );
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   pipeline #(
-    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .PIPELINE_DEPTH (_PIPE_DEPTH),
     .DATA_WIDTH     ($bits({op[1], fir1[1], fir2[1], fir3[1], p_special[1]}))
   ) pipeline_st1 (
     .clk_i          (clk_i),
@@ -123,7 +123,7 @@ module ppu_core_ops
   );
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   pipeline #(
-    .PIPELINE_DEPTH (PIPELINE_DEPTH),
+    .PIPELINE_DEPTH (_PIPE_DEPTH),
     .DATA_WIDTH     ($bits({{fixed[2], ops_result[2], p_special[2]}}))
   ) pipeline_st2 (
     .clk_i          (clk_i),

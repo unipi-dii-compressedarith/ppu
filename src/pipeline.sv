@@ -14,7 +14,7 @@ module pipeline #(
       assign data_out = data_in;
     end else begin
       
-      // (*retiming_backward = 1 *) 
+      (*retiming_backward = 1 *)
       logic [DATA_WIDTH-1:0] pipeline_reg [PIPELINE_DEPTH-1:0] /*synthesis preserve*/;
 
       always_ff @(posedge clk_i) begin
