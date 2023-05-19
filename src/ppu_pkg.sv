@@ -58,7 +58,7 @@ parameter FRAC_SIZE = N - 1;
 // frac is a Fx<0, MANT_SIZE-1>
 parameter MANT_SIZE = N - 2;
 
-typedef logic [TE_BITS-1:0] exponent_t;
+typedef logic /*signed*/ [TE_BITS-1:0] exponent_t;
 
 // Operation input FIR type.
 typedef struct packed {
@@ -274,13 +274,13 @@ endfunction
 
 
 
-
+/// F64
 parameter FLOAT_EXP_SIZE_F64 = 11;
 parameter FLOAT_MANT_SIZE_F64 = 52;
-
+/// F32
 parameter FLOAT_EXP_SIZE_F32 = 8;
 parameter FLOAT_MANT_SIZE_F32 = 23;
-
+/// F16
 parameter FLOAT_EXP_SIZE_F16 = 5;
 parameter FLOAT_MANT_SIZE_F16 = 10;
 

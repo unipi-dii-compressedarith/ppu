@@ -103,20 +103,16 @@ module tb_ppu #(
 `ifdef TEST_FMA_ONLY
 `ifdef FMA_OP
     
-
-
     op_i = FMADD;
     $display("FMADD");
     for (int i=0; i<40; i++) begin
       operand1_i = {$random}%(1 << 16); 
       operand2_i = {$random}%(1 << 16);
-      operand3_i = 0;//{$random}%(1 << 16);
+      operand3_i = 0;
 
       #1;
 
-      
-      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.acc;
-    
+      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.acc;    
 
       $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
         ppu_top_inst.ppu_inst.p1, 
@@ -140,29 +136,60 @@ module tb_ppu #(
 
 
     
-    op_i = P2F;
-    //$display("op_i: %s", op_i.name());
-    for (int i=0; i<30; i++) begin
-      operand1_i = {$random}%(1 << 16); 
-      operand2_i = {$random}%(1 << 16);
-      operand3_i = 'bX;
+    op_i = F2P;
+    
+    if ((op_i == MUL) || (op_i == ADD)) begin
 
-      #1;
+      //$display("op_i: %s", op_i.name());
+      for (int i=0; i<30; i++) begin
+        operand1_i = {$random}%(1 << 16); 
+        operand2_i = {$random}%(1 << 16);
+        operand3_i = 'bX;
 
-      $display("(0x%h, 0x%h, 0x%h)", 
-        ppu_top_inst.ppu_inst.p1, 
-        ppu_top_inst.ppu_inst.p2, 
-        result_o
-      );
-      $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
-        ppu_top_inst.ppu_inst.p1,
-        ppu_top_inst.ppu_inst.p2,
-        result_o
-      );
+        #1;
 
+        $display("(0x%h, 0x%h, 0x%h)", 
+          ppu_top_inst.ppu_inst.p1, 
+          ppu_top_inst.ppu_inst.p2, 
+          result_o
+        );
+        $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
+          ppu_top_inst.ppu_inst.p1,
+          ppu_top_inst.ppu_inst.p2,
+          result_o
+        );
+      end
       @(posedge clk_i);
     end
-    $display("");
+
+    if (op_i == F2P) begin
+
+      //$display("op_i: %s", op_i.name());
+      for (int i=0; i<30; i++) begin
+        operand1_i = {$random}%(1 << 32); 
+        operand2_i = 'bX;
+        operand3_i = 'bX;
+
+        #1;
+
+        if (operand1_i == 'h24c6) begin
+          //force ppu_top_inst.ppu_inst.ppu_core_ops_inst.float_fir_i = 'b11; //'b0_11010_0011000110_00000000000000000000000000000000;
+        end
+
+        $display("(0x%h, 0x%h, 0x%h)", 
+          operand1_i,
+          ppu_top_inst.ppu_inst.p2, 
+          result_o
+        );
+        $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
+          operand1_i,
+          ppu_top_inst.ppu_inst.p2,
+          result_o
+        );
+        @(posedge clk_i);
+      end
+    end
+
 `endif
 
     #100;
@@ -171,4 +198,3 @@ module tb_ppu #(
 
 
 endmodule: tb_ppu
-

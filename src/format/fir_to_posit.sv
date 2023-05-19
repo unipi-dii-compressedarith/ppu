@@ -17,14 +17,14 @@ module fir_to_posit
 
   logic sign;
   exponent_t te;
-  wire [FRAC_FULL_SIZE-1:0] frac_full;
+  logic [FRAC_FULL_SIZE-1:0] frac_full;
   assign {sign, te, frac_full} = fir;
 
 
-  wire [MANT_SIZE-1:0] frac;
-  wire [K_BITS-1:0] k;
+  logic [MANT_SIZE-1:0] frac;
+  logic [K_BITS-1:0] k;
 `ifndef NO_ES_FIELD
-  wire [ES-1:0] next_exp;
+  logic [ES-1:0] next_exp;
 `endif
 
   pack_fields #(
@@ -48,7 +48,7 @@ module fir_to_posit
   );
 
 
-  wire [N-1:0] posit_encoded;
+  logic [N-1:0] posit_encoded;
   posit_encoder #(
     .N              (N),
     .ES             (ES)
@@ -65,7 +65,7 @@ module fir_to_posit
   );
 
 
-  wire [N-1:0] posit_pre_sign;
+  logic [N-1:0] posit_pre_sign;
 
   round_posit #(
     .N              (N)

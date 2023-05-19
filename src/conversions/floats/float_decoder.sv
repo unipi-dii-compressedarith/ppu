@@ -9,25 +9,22 @@ module float_decoder
 #(
   parameter FSIZE = 64
 )(
-  input [FSIZE-1:0]                       bits,
-  output                                  sign,
-  output signed [FLOAT_EXP_SIZE-1:0]      exp,
-  output [FLOAT_MANT_SIZE-1:0]            frac
+  input [FSIZE-1:0]                         bits,
+  output                                    sign,
+  output signed [FLOAT_EXP_SIZE_F`F-1:0]    exp,
+  output [FLOAT_MANT_SIZE_F`F-1:0]          frac
 );
 
-  localparam FLOAT_EXP_SIZE = FLOAT_EXP_SIZE_F`F;
-  localparam FLOAT_MANT_SIZE = FLOAT_MANT_SIZE_F`F;
-
-  localparam exp_bias = (1 << (FLOAT_EXP_SIZE - 1)) - 1;
+  localparam EXP_BIAS = (1 << (FLOAT_EXP_SIZE_F`F - 1)) - 1;
 
   assign sign = bits >> (FSIZE - 1) != 0;
   
-  wire [FLOAT_EXP_SIZE-1:0] biased_exp;
-  assign biased_exp = bits[(FSIZE-1)-:FLOAT_EXP_SIZE+1];    
+  wire [FLOAT_EXP_SIZE_F`F-1:0] biased_exp;
+  assign biased_exp = bits[(FSIZE-1)-:FLOAT_EXP_SIZE_F`F+1];    
       // ((bits & ((1 << (FSIZE - 1)) - 1)) >> FLOAT_MANT_SIZE) & ((1 << FLOAT_MANT_SIZE) - 1);
 
-  assign exp = biased_exp - exp_bias; // unbiased exponent
-  assign frac = bits[FLOAT_MANT_SIZE-1:0];  // bits & ((1 << FLOAT_MANT_SIZE) - 1);
+  assign exp = biased_exp - EXP_BIAS; // unbiased exponent
+  assign frac = bits[FLOAT_MANT_SIZE_F`F-1:0];  // bits & ((1 << FLOAT_MANT_SIZE) - 1);
 
 endmodule: float_decoder
 

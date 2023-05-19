@@ -17,9 +17,12 @@ sources:
       #FMA_ONLY : ~
 
       FMA_OP: ~
+      
       FLOAT_TO_POSIT : ~
+      # POSIT_TO_FLOAT : ~
 
     
+
     files:
     - src/ppu_pkg.sv
     - src/core_ops/ppu_core_ops.sv

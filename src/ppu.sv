@@ -21,13 +21,64 @@ module ppu
   output logic [`FX_B-1:0]              fixed_o
 );
 
-  wire stall;
+  logic stall;
   ppu_pkg::fir_t posit_fir;
   ppu_pkg::posit_t p1, p2, p3, posit;
 
   assign p1 = operand1_i[N-1:0];
   assign p2 = operand2_i[N-1:0];
   assign p3 = operand3_i[N-1:0];
+
+
+  ////////////////////////////////////////////////////////////
+  /// float_fir, float_to_fir's side
+  typedef struct packed {
+    logic                           sign;
+    logic [FLOAT_EXP_SIZE_F`F-1:0]  total_exponent;
+    logic [FLOAT_MANT_SIZE_F`F-1:0] frac;
+  } float_fir_float_to_fir_t;
+
+  /// float_fir, ppu_core_ops' side
+  typedef struct packed {
+    logic                           sign;
+    exponent_t                      total_exponent;
+    logic [FRAC_FULL_SIZE-1:0]      frac;
+  } float_fir_ppu_core_ops_t;
+  ////////////////////////////////////////////////////////////
+
+`ifdef FLOAT_TO_POSIT
+
+  /// definition
+  float_fir_float_to_fir_t float_fir_float_to_fir_o;
+  float_fir_ppu_core_ops_t float_fir_ppu_core_ops_i;
+
+  /// assignment
+  assign float_fir_ppu_core_ops_i.sign            = float_fir_float_to_fir_o.sign;
+  assign float_fir_ppu_core_ops_i.total_exponent  = float_fir_float_to_fir_o.total_exponent;
+  assign float_fir_ppu_core_ops_i.frac            = {>>{float_fir_float_to_fir_o.frac}};
+
+  // assign float_fir_ppu_core_ops_i = {>>{float_fir_float_to_fir_o.sign, float_fir_float_to_fir_o.total_exponent, float_fir_float_to_fir_o.frac}};
+
+
+    /*   //no 
+  //TODO fix streaming operation?
+  logic [FRAC_FULL_SIZE-1:0] float_fir_frac;
+  assign float_fir_frac = {>>{float_fir_float_to_fir_o.frac}};
+  assign float_fir_ppu_core_ops_i.frac = {1'b1, float_fir_frac >> 1};
+    */
+
+
+
+  float_to_fir #(
+    .FSIZE    (FSIZE)
+  ) float_to_fir_inst (
+    .clk_i    (clk_i),
+    .rst_i    (rst_i),
+    .bits_i   (operand1_i),
+    .fir_o    (float_fir_float_to_fir_o)
+  );
+
+`endif
 
 
   ppu_core_ops #(
@@ -43,7 +94,7 @@ module ppu
     .op_o         (),
     .stall_i      (stall),
   `ifdef FLOAT_TO_POSIT
-    .float_fir_i  (float_fir_in),
+    .float_fir_i  (float_fir_ppu_core_ops_i),
     .posit_fir_o  (posit_fir),
   `endif
     .pout_o       (posit),
@@ -52,7 +103,11 @@ module ppu
 
 
 
+  
+
+`ifdef POSIT_TO_FLOAT
   logic [WORD-1:0] float_out;
+
   fir_to_float #(
     .N            (N),
     .ES           (ES),
@@ -64,10 +119,12 @@ module ppu
     .float_o      (float_out)
   );
 
-
-
-
   assign result_o = (op_i == P2F) ? float_out : posit;
+`else
+  assign result_o = posit;
+`endif
+
+  
   
   // ...
   assign out_valid_o = in_valid_i;
