@@ -90,111 +90,162 @@ module tb_ppu #(
   ////// log to file //////
   integer f1;
   initial f1 = $fopen("tb_ppu.log", "w");
+  string out;
 
-  initial begin: sequences
-    
-    op_i = SUB;
-    #34;
+  initial begin: process1
+    rst_i = 1;
+    #12;
     @(posedge clk_i);
+    rst_i = 0;
 
+    for (int i=0; i<7; i++) begin
+      op_i = operation_e'(i);
+      
+      $display("[%s]", op_i.name());
+      $fwrite(f1, "[%s]\n", op_i.name());
 
+      for (int j=0; j<5; ++j) begin
 
-// `define TEST_FMA_ONLY
-`ifdef TEST_FMA_ONLY
-`ifdef FMA_OP
+        in_valid_i = 1'b1;
+        case (op_i)
+          F2P: begin
+            operand1_i = {longint'($random)}%((1 << 32));
+          end
+          P2F: begin
+            operand2_i = {$random}%((1 << 16));
+          end
+          FMADD: begin
+            operand1_i = {$random}%((1 << 16));
+            operand2_i = {$random}%((1 << 16));
+            operand3_i = 0;
+          end
+          ADD, SUB, MUL, DIV: begin
+            operand1_i = {$random}%((1 << 16));
+            operand2_i = {$random}%((1 << 16));
+          end
+          default: $error("default arm not allowed");
+        endcase
     
-    op_i = FMADD;
-    $display("FMADD");
-    for (int i=0; i<40; i++) begin
-      operand1_i = {$random}%(1 << 16); 
-      operand2_i = {$random}%(1 << 16);
-      operand3_i = 0;
-
-      #1;
-
-      fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.acc;    
-
-      $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
-        ppu_top_inst.ppu_inst.p1, 
-        ppu_top_inst.ppu_inst.p2, 
-        fixed, 
-        ppu_top_inst.ppu_inst.posit
-      );
-      $fwrite(f1, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
-        ppu_top_inst.ppu_inst.p1,
-        ppu_top_inst.ppu_inst.p2,
-        fixed,
-        ppu_top_inst.ppu_inst.posit
-      );
-
-      @(posedge clk_i);
-    end
-    $display("");
-`endif
-
-`else
-
-
-    
-    op_i = F2P;
-    
-    if ((op_i == MUL) || (op_i == ADD)) begin
-
-      //$display("op_i: %s", op_i.name());
-      for (int i=0; i<30; i++) begin
-        operand1_i = {$random}%(1 << 16); 
-        operand2_i = {$random}%(1 << 16);
-        operand3_i = 'bX;
-
         #1;
-
-        $display("(0x%h, 0x%h, 0x%h)", 
-          ppu_top_inst.ppu_inst.p1, 
-          ppu_top_inst.ppu_inst.p2, 
-          result_o
-        );
-        $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
-          ppu_top_inst.ppu_inst.p1,
-          ppu_top_inst.ppu_inst.p2,
-          result_o
-        );
-      end
-      @(posedge clk_i);
-    end
-
-    if (op_i == F2P) begin
-
-      //$display("op_i: %s", op_i.name());
-      for (int i=0; i<30; i++) begin
-        operand1_i = {$random}%(1 << 32); 
-        operand2_i = 'bX;
-        operand3_i = 'bX;
-
-        #1;
-
-        if (operand1_i == 'h24c6) begin
-          //force ppu_top_inst.ppu_inst.ppu_core_ops_inst.float_fir_i = 'b11; //'b0_11010_0011000110_00000000000000000000000000000000;
-        end
-
-        $display("(0x%h, 0x%h, 0x%h)", 
-          operand1_i,
-          ppu_top_inst.ppu_inst.p2, 
-          result_o
-        );
-        $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
-          operand1_i,
-          ppu_top_inst.ppu_inst.p2,
-          result_o
-        );
+        $display("\"0x%h, 0x%h, 0x%h\" = \"0x%h\"", operand1_i, operand2_i, operand3_i, result_o);
+        $fwrite(f1, "\"0x%h, 0x%h, 0x%h\" = \"0x%h\"\n", operand1_i, operand2_i, operand3_i, result_o);
         @(posedge clk_i);
       end
-    end
 
-`endif
+      in_valid_i = 1'b0;
+
+    end
 
     #100;
     $finish;
-  end
+  end: process1
+
+  
+  
+//   initial begin: sequences
+    
+//     op_i = SUB;
+//     #34;
+//     @(posedge clk_i);
+
+
+
+// // `define TEST_FMA_ONLY
+// `ifdef TEST_FMA_ONLY
+// `ifdef FMA_OP
+    
+//     op_i = FMADD;
+//     $display("FMADD");
+//     for (int i=0; i<40; i++) begin
+//       operand1_i = {$random}%(1 << 16); 
+//       operand2_i = {$random}%(1 << 16);
+//       operand3_i = 0;
+
+//       #1;
+
+//       fixed = ppu_top_inst.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_fma_accumulator_inst.acc;    
+
+//       $display("(0x%h, 0x%h, 0x%h, 0x%h)", 
+//         ppu_top_inst.ppu_inst.p1, 
+//         ppu_top_inst.ppu_inst.p2, 
+//         fixed, 
+//         ppu_top_inst.ppu_inst.posit
+//       );
+//       $fwrite(f1, "(0x%h, 0x%h, 0x%h, 0x%h)\n", 
+//         ppu_top_inst.ppu_inst.p1,
+//         ppu_top_inst.ppu_inst.p2,
+//         fixed,
+//         ppu_top_inst.ppu_inst.posit
+//       );
+
+//       @(posedge clk_i);
+//     end
+//     $display("");
+// `endif
+
+// `else
+
+
+    
+//     op_i = F2P;
+    
+//     if ((op_i == MUL) || (op_i == ADD)) begin
+
+//       //$display("op_i: %s", op_i.name());
+//       for (int i=0; i<30; i++) begin
+//         operand1_i = {$random}%(1 << 16); 
+//         operand2_i = {$random}%(1 << 16);
+//         operand3_i = 'bX;
+
+//         #1;
+
+//         $display("(0x%h, 0x%h, 0x%h)", 
+//           ppu_top_inst.ppu_inst.p1, 
+//           ppu_top_inst.ppu_inst.p2, 
+//           result_o
+//         );
+//         $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
+//           ppu_top_inst.ppu_inst.p1,
+//           ppu_top_inst.ppu_inst.p2,
+//           result_o
+//         );
+//       end
+//       @(posedge clk_i);
+//     end
+
+//     if (op_i == F2P) begin
+
+//       //$display("op_i: %s", op_i.name());
+//       for (int i=0; i<30; i++) begin
+//         operand1_i = {$random}%(1 << 31); 
+//         operand2_i = 'bX;
+//         operand3_i = 'bX;
+
+//         #1;
+
+//         if (operand1_i == 'h24c6) begin
+//           //force ppu_top_inst.ppu_inst.ppu_core_ops_inst.float_fir_i = 'b11; //'b0_11010_0011000110_00000000000000000000000000000000;
+//         end
+
+//         $display("(0x%h, 0x%h, 0x%h)", 
+//           operand1_i,
+//           ppu_top_inst.ppu_inst.p2, 
+//           result_o
+//         );
+//         $fwrite(f1, "(0x%h, 0x%h, 0x%h)\n", 
+//           operand1_i,
+//           ppu_top_inst.ppu_inst.p2,
+//           result_o
+//         );
+//         @(posedge clk_i);
+//       end
+//     end
+
+// `endif
+
+//     #100;
+//     $finish;
+//   end: sequences
 
 
 endmodule: tb_ppu

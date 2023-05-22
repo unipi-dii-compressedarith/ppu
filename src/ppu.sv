@@ -22,6 +22,7 @@ module ppu
 );
 
   logic stall;
+  
   ppu_pkg::fir_t posit_fir;
   ppu_pkg::posit_t p1, p2, p3, posit;
 
@@ -126,7 +127,16 @@ module ppu
 
   
   
-  // ...
-  assign out_valid_o = in_valid_i;
+  
+  ppu_control_unit #(
+  ) ppu_control_unit_inst (
+    .clk        (clk_i),
+    .rst        (rst_i),
+    .valid_i    (in_valid_i),
+    .op         (op_i),
+    .valid_o    (out_valid_o),
+    .stall_o    (stall)
+  );
+
 
 endmodule: ppu
