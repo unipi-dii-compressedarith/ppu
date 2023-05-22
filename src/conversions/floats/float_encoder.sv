@@ -1,5 +1,6 @@
-`ifdef FLOAT_TO_POSIT
-module float_encoder #(
+module float_encoder 
+  import ppu_pkg::*;
+#(
   parameter FSIZE = `F
 )(
   input                                       sign,
@@ -15,18 +16,21 @@ module float_encoder #(
   assign bits = {sign, exp_biased, frac};
 
 endmodule: float_encoder
-`endif
 
 
 
-`ifdef TB_FLOAT_DECODE
-`define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
+
+
+// `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
 module tb_float_encoder;
-  parameter FSIZE = `F
+  
+  import ppu_pkg::*;
+
+  parameter FSIZE = `F;
   
   reg sign;
-  reg [FLOAT_EXP_SIZE-1:0] exp;
-  reg [FLOAT_MANT_SIZE-1:0] frac;
+  reg [FLOAT_EXP_SIZE_F`F-1:0] exp;
+  reg [FLOAT_MANT_SIZE_F`F-1:0] frac;
   wire [FSIZE-1:0] bits;
 
   float_encoder #(
@@ -39,10 +43,11 @@ module tb_float_encoder;
   );
 
   initial begin
-    $dumpfile({"tb_float_encoder_F",`STRINGIFY(`FSIZE),".vcd"});
+    // $dumpfile({"tb_float_encoder_F",`STRINGIFY(`FSIZE),".vcd"});
     $dumpvars(0, tb_float_encoder);                        
-    bits = 64'h405ee00000000000; #10;
+    
+    // bits = 64'h405ee00000000000; #10;
+
   end
 
 endmodule: tb_float_encoder
-`endif

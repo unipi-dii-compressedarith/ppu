@@ -17,7 +17,7 @@ TOP ?= tb_ppu
 N ?= 16
 ES ?= 1
 WORD ?= 32
-F ?= 0
+F ?= 32
 CLK_FREQ ?= 100
 PIPELINE_DEPTH ?= 0
 

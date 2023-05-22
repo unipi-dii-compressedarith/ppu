@@ -1,9 +1,10 @@
-module sign_extend #(
-    parameter POSIT_TOTAL_EXPONENT_SIZE = 4,
-    parameter FLOAT_EXPONENT_SIZE = 18
+module sign_extend 
+#(
+  parameter POSIT_TOTAL_EXPONENT_SIZE = 4,
+  parameter FLOAT_EXPONENT_SIZE = 18
 )(
-    input [POSIT_TOTAL_EXPONENT_SIZE-1:0]    posit_total_exponent,
-    output [FLOAT_EXPONENT_SIZE-1:0]                float_exponent
+  input [POSIT_TOTAL_EXPONENT_SIZE-1:0]    posit_total_exponent,
+  output [FLOAT_EXPONENT_SIZE-1:0]                float_exponent
   );
 
   /*

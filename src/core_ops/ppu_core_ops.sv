@@ -62,12 +62,6 @@ module ppu_core_ops
 
     
 
-`ifdef FLOAT_TO_POSIT
-  assign posit_fir_o = fir2_st1;
-`endif
-
-
-
 
   fir_ops #(
     .N              (N)
@@ -128,8 +122,8 @@ module ppu_core_ops
   ) pipeline_st2 (
     .clk_i          (clk_i),
     .rst_i          (rst_i),
-    .data_in        ({fixed[2], ops_result[2], p_special[2]}),
-    .data_out       ({fixed[3], ops_result[3], p_special[3]})
+    .data_in        ({fixed[2], op_i == F2P ? float_fir_i : ops_result[2], p_special[2]}),
+    .data_out       ({fixed[3],                             ops_result[3], p_special[3]})
   );
   assign fixed_o = fixed[3];
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,5 +137,14 @@ module ppu_core_ops
 //     ops_result;
 
   
+  
+  
+  
+  
+  
+  
+  // posit to FIR
+  assign posit_fir_o = fir2[2];
+
 
 endmodule: ppu_core_ops
