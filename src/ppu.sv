@@ -130,10 +130,10 @@ module ppu
   
   ppu_control_unit #(
   ) ppu_control_unit_inst (
-    .clk        (clk_i),
-    .rst        (rst_i),
+    .clk_i      (clk_i),
+    .rst_i      (rst_i),
     .valid_i    (in_valid_i),
-    .op         (op_i),
+    .op_i       (op_i),
     .valid_o    (out_valid_o),
     .stall_o    (stall)
   );

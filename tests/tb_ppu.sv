@@ -92,6 +92,62 @@ module tb_ppu #(
   initial f1 = $fopen("tb_ppu.log", "w");
   string out;
 
+
+  logic [WORD-1:0] operand1_i_queue [$];
+  logic [WORD-1:0] operand2_i_queue [$];
+  logic [WORD-1:0] result_o_queue [$];
+  logic in_valid_i_queue [$];
+
+  initial begin
+    
+    repeat (5) begin
+      
+      op_i = MUL;
+
+      operand1_i_queue.push_back($random);
+      operand2_i_queue.push_back(16384); // 1.0
+      in_valid_i_queue.push_back(1'b1);
+
+      #1;
+    end
+
+    #200;
+    $finish;
+  end
+
+
+  always @(posedge clk_i) begin
+    in_valid_i = in_valid_i_queue.pop_front();
+  end 
+
+  always @(posedge clk_i) begin
+    if (in_valid_i) begin
+      operand1_i = operand1_i_queue.pop_front();
+      operand2_i = operand2_i_queue.pop_front();
+      
+      #1;
+      $display("operand1_i: %h", operand1_i);
+    end
+  end
+
+  // monitor output valid signal
+  always @(posedge clk_i) begin
+    if (out_valid_o) begin
+      result_o_queue.push_back(result_o);
+    end
+  end
+  
+  // monitor queues and print captured data
+  always @(posedge clk_i) begin
+    if (result_o_queue.size() != 0) begin
+      $display("Output %h", result_o_queue.pop_front());
+    end
+  end
+
+  
+
+
+/*
   initial begin: process1
     rst_i = 1;
     #12;
@@ -139,6 +195,8 @@ module tb_ppu #(
     #100;
     $finish;
   end: process1
+*/
+
 
   
   

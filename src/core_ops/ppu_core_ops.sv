@@ -93,7 +93,7 @@ module ppu_core_ops
 
 
 
-  localparam _PIPE_DEPTH = 0;
+  localparam _PIPE_DEPTH = `INNER_PIPELINE_DEPTH;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   pipeline #(
@@ -117,7 +117,7 @@ module ppu_core_ops
   );
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   pipeline #(
-    .PIPELINE_DEPTH (_PIPE_DEPTH),
+    .PIPELINE_DEPTH (0),
     .DATA_WIDTH     ($bits({{fixed[2], ops_result[2], p_special[2]}}))
   ) pipeline_st2 (
     .clk_i          (clk_i),

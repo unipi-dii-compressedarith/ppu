@@ -1,10 +1,10 @@
 module ppu_control_unit 
   import ppu_pkg::*;
 (
-  input                      clk,
-  input                      rst,
+  input                      clk_i,
+  input                      rst_i,
   input                      valid_i,
-  input      operation_e     op,
+  input      operation_e     op_i,
   output                     valid_o,
   output logic               stall_o
 );
@@ -89,6 +89,15 @@ module ppu_control_unit
 //   assign valid_o = valid_in_st1;
 
 
-  assign valid_o = valid_i;
+  pipeline #(
+    .PIPELINE_DEPTH (`INNER_PIPELINE_DEPTH * 2),
+    .DATA_WIDTH     ($bits(valid_i))
+  ) valid_signal_delay (
+    .clk_i          (clk_i),
+    .rst_i          (rst_i),
+    .data_in        (valid_i),
+    .data_out       (valid_o)
+  );
+
 
 endmodule: ppu_control_unit

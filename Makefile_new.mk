@@ -19,8 +19,13 @@ ES ?= 1
 WORD ?= 32
 F ?= 32
 CLK_FREQ ?= 100
-PIPELINE_DEPTH ?= 0
 
+##### pipeline ##############
+# pipeline for retiming purposes
+PIPELINE_DEPTH ?= 0
+# pipeline for inner stages separation (see ppu_core_ops). Set to 0 or 1.
+INNER_PIPELINE_DEPTH ?= 0
+#############################
 
 
 # FMA-only operation inside the PPU disabled by default (set to 0). Override to 1 to turn on this option.
@@ -38,19 +43,19 @@ DOCS := $(PPU_ROOT)/docs/ppu-docs
 NUM_TESTS_PPU := 100
 
 
-MORTY_ARGS :=                 \
-  -DN=$(N)                    \
-  -DES=$(ES)                  \
-  -DWORD=$(WORD)              \
-                              \
-  -DF=$(F)                    \
-                              \
-  -DFX_M=$(FX_M)              \
-  -DFX_B=$(FX_B)              \
-                              \
-  -DCLK_FREQ=$(CLK_FREQ)      \
-  -DPIPELINE_DEPTH=$(PIPELINE_DEPTH)  \
-  
+MORTY_ARGS :=                                     \
+  -DN=$(N)                                        \
+  -DES=$(ES)                                      \
+  -DWORD=$(WORD)                                  \
+                                                  \
+  -DF=$(F)                                        \
+                                                  \
+  -DFX_M=$(FX_M)                                  \
+  -DFX_B=$(FX_B)                                  \
+                                                  \
+  -DCLK_FREQ=$(CLK_FREQ)                          \
+  -DPIPELINE_DEPTH=$(PIPELINE_DEPTH)              \
+  -DINNER_PIPELINE_DEPTH=$(INNER_PIPELINE_DEPTH)  \
 
 
 all: run
