@@ -26,10 +26,6 @@ sources:
     files:
     - src/ppu_pkg.sv
     - src/core_ops/ppu_core_ops.sv
-    - src/format/posit_to_fir.sv
-    - src/format/fir_to_posit.sv
-    - src/format/fir_to_fixed.sv
-    - src/format/fixed_to_fir.sv
     - src/accumulator.sv
     - src/input_conditioning.sv
     - src/extraction.sv
@@ -67,14 +63,19 @@ sources:
     - src/ppu_top.sv
     - src/ppu_control_unit.sv
     - src/ppu_ap_top.sv
-    ## Floats conversions
+    ### Conversions
+    - src/conversions/posit_to_float.sv
+    - src/conversions/float_to_posit.sv
+    - src/conversions/float_to_fir.sv
+    - src/conversions/fir_to_float.sv
     - src/conversions/floats/sign_extend.sv
-    - src/conversions/floats/posit_to_float.sv
-    - src/conversions/floats/float_to_posit.sv
-    - src/conversions/floats/float_to_fir.sv
     - src/conversions/floats/float_encoder.sv
     - src/conversions/floats/float_decoder.sv
-    - src/conversions/floats/fir_to_float.sv
+    - src/conversions/posit_to_fir.sv
+    - src/conversions/fir_to_posit.sv
+    - src/conversions/fir_to_fixed.sv
+    - src/conversions/fixed_to_fir.sv
+    #- src/conversions/fixed_to_fixed.sv
     
     - target: test
       files:

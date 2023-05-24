@@ -35,7 +35,7 @@ module core_fma_accumulator
   assign start_fma = (op_i === FMADD_S);
 
   logic fma_valid;
-  assign fma_valid = op_i !== FMADD && op_st1 === FMADD ? 1'b1 : 'b0;
+  assign fma_valid = 1'b1; // ?? .... = op_i !== FMADD && op_st1 === FMADD ? 1'b1 : 'b0;
 
   
   logic [(FX_B)-1:0] fir1_fixed, fir2_fixed;
