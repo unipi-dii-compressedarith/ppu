@@ -18,8 +18,8 @@ sources:
 
       FMA_OP: ~
       
-      FLOAT_TO_POSIT : ~
-      # POSIT_TO_FLOAT : ~
+      #FLOAT_TO_POSIT : ~
+      #POSIT_TO_FLOAT : ~
 
     
 
@@ -80,4 +80,6 @@ sources:
       files:
       - tests/clk_gen.sv
       - tests/tb_ppu.sv
+      - tests/tb_ppu1.sv
+      - tests/tb_ppu2.sv
       

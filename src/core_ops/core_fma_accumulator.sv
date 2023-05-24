@@ -31,7 +31,8 @@ module core_fma_accumulator
   always_ff @(posedge clk_i) op_st1 <= op_i;
 
   logic start_fma;
-  assign start_fma = (op_i === FMADD) && (op_st1 !== FMADD);
+  //assign start_fma = (op_i === FMADD) && (op_st1 !== FMADD);
+  assign start_fma = (op_i === FMADD_S);
 
   logic fma_valid;
   assign fma_valid = op_i !== FMADD && op_st1 === FMADD ? 1'b1 : 'b0;
@@ -88,7 +89,7 @@ module core_fma_accumulator
   );
 
 
-// `define EXPORT_ACCUMULATOR   
+`define EXPORT_ACCUMULATOR   
 `ifdef EXPORT_ACCUMULATOR
   //assign fixed_o = op_i !== FMADD && op_st1 === FMADD ? acc : 'b0;
   assign fixed_o = acc;

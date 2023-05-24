@@ -20,7 +20,8 @@ typedef enum logic [OP_BITS-1:0] {
   SUB,
   MUL,
   DIV,
-  FMADD,
+  FMADD_S, // FMADD start: accumulator is initialized
+  FMADD_C, // FMADD continue: accumulator maintains its value
   F2P,
   P2F
 } operation_e;

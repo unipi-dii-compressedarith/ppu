@@ -58,10 +58,10 @@ module core_op
 
   
   logic [(1+TE_BITS+MANT_MUL_RESULT_SIZE)-1:0] fir1_core_fma_accumulator;
-  assign fir1_core_fma_accumulator = (op_i == FMADD) ? {sign_out_mul, te_out_mul, mant_out_mul} : 'b0;
+  assign fir1_core_fma_accumulator = (op_i == FMADD_S || op_i == FMADD_C) ? {sign_out_mul, te_out_mul, mant_out_mul} : 'b0;
 
   fir_t fir2_core_fma_accumulator;
-  assign fir2_core_fma_accumulator = (op_i == FMADD) ? fir3_i : 'b0;
+  assign fir2_core_fma_accumulator = (op_i == FMADD_S || op_i == FMADD_C) ? fir3_i : 'b0;
   
   
   localparam FIR_TE_SIZE = TE_BITS;
@@ -150,8 +150,6 @@ module core_op
 
 
 
-
-
   wire [(FRAC_FULL_SIZE)-1:0] mant_out_core_op;
   assign mant_out_core_op = (op_i == ADD || op_i == SUB)
     ? mant_out_add_sub << (FRAC_FULL_SIZE - MANT_ADD_RESULT_SIZE) : op_i == MUL
@@ -159,14 +157,14 @@ module core_op
       mant_out_div;
 
 
-  assign sign_o = op_i == FMADD
+  assign sign_o = (op_i == FMADD_S || op_i == FMADD_C)
     ? sign_out_fma : (op_i == ADD || op_i == SUB)
     ? sign_out_add_sub : op_i == MUL
     ? sign_out_mul : /* op_i == DIV */
       sign_out_div;
 
   
-  assign te_o = op_i == FMADD 
+  assign te_o = (op_i == FMADD_S || op_i == FMADD_C) 
     ? te_out_fma : (op_i == ADD || op_i == SUB)
     ? te_out_add_sub : op_i == MUL
     ? te_out_mul : /* op_i == DIV */
@@ -175,7 +173,7 @@ module core_op
 
   // chopping off the two MSB representing the
   // non-fractional components i.e. ones and tens.
-  assign frac_o = op_i == FMADD
+  assign frac_o = (op_i == FMADD_S || op_i == FMADD_C)
     ? mant_out_fma : op_i == DIV
     ? mant_out_core_op : /* ADD, SUB, and MUL */
       mant_out_core_op << 2;
