@@ -109,7 +109,7 @@ clean:
 	make -C scripts clean
 
 docs: bender
-	morty -f sources.json -DN=$(N) -DES=$(ES) -DWORD=$(WORD) -DF=$(F) --top $(TOP) --doc $(DOCS)
+	morty -f sources.json $(MORTY_ARGS) --top $(TOP) --doc $(DOCS)
 	open $(DOCS)/index.html
 	
 

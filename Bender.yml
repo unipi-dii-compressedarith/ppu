@@ -21,7 +21,6 @@ sources:
       #FLOAT_TO_POSIT : ~
       #POSIT_TO_FLOAT : ~
 
-    
 
     files:
     - src/ppu_pkg.sv
@@ -75,7 +74,6 @@ sources:
     - src/conversions/fir_to_posit.sv
     - src/conversions/fir_to_fixed.sv
     - src/conversions/fixed_to_fir.sv
-    #- src/conversions/fixed_to_fixed.sv
     
     - target: test
       files:
