@@ -1,15 +1,13 @@
 # PPU
 
+    export SIM=questa
 
-### FMA
+    export RISCV_PPU_ROOT=$(cd .. && pwd)
 
+    make -f Makefile_new.mk TOP=tb_ppu
 
-Draft for myself:
-
-    make -f Makefile_new.mk TOP=tb_core_op_fma
 
 ![img](docs/ppu2_fma.png)
-
 
 
 ---
@@ -22,8 +20,6 @@ Check out [BUILD.md](./docs/BUILD.md)
 
 (new Dec 2022)
 
-
-    export RISCV_PPU_ROOT=$(cd .. && pwd)
 
 edit the `Makefile_new.mk` `TOP`, `N`, `ES`, `WORD`, `F` fields and then generate the test vector file `sim/test_vectors/tv_posit_ppu.sv` by invoking
 

@@ -1,7 +1,7 @@
 #--  Synopsys, Inc.
 #--  Version N-2018.03-SP1-1
-#--  Project file /home/urbani/Desktop/ppu/fpga/synplify/ppu.prj
-#--  Written on Mon Feb  6 12:29:55 2023
+#--  Project file /home/urbani/Desktop/ppu2/fpga/synplify/ppu.prj
+#--  Written on Wed May 17 07:47:29 2023
 
 
 #project files
@@ -34,7 +34,7 @@ set_option -top_module "ppu_top"
 set_option -distributed_compile 0
 
 # mapper_without_write_options
-set_option -frequency auto
+set_option -frequency 1.000000
 set_option -srs_instrumentation 1
 
 # mapper_options
