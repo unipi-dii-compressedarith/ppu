@@ -1,14 +1,8 @@
 # PPU
 
-    export SIM=questa
-
-    export RISCV_PPU_ROOT=$(cd .. && pwd)
-
-    make -f Makefile_new.mk TOP=tb_ppu
-
+### FMADD
 
 ![img](docs/ppu2_fma.png)
-
 
 ---
 
@@ -17,25 +11,20 @@
 
 Check out [BUILD.md](./docs/BUILD.md)
 
-
-(new Dec 2022)
-
-
-edit the `Makefile_new.mk` `TOP`, `N`, `ES`, `WORD`, `F` fields and then generate the test vector file `sim/test_vectors/tv_posit_ppu.sv` by invoking
-
-    make -f Makefile_new.mk gen-test-vectors
-
-then run the makefile
-
-    make -f Makefile_new.mk
-
-the generated core will sit in the `a.sv` SystemVerilog file.
-
 ---
 
+## Arch
 
 The design is customizable in terms of Posit format (P<any, any>), operations supported (e.g. including/leaving out conversions) and internal implementations details (e.g. using LUT for division or adding newton-raphson steps) via macros and preprocessor `ifdef`s, 
 e.g.:
+
+
+
+--- 
+---
+
+
+### old stuff
 
 - bare bone PPU (+ run its testbench) with add/sub/mul/div for P<8,0> for 32 bits cpu:
 ```sh
