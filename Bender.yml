@@ -7,16 +7,31 @@ package:
 export_include_dirs:
   - src/include
 
+
+dependencies:
+
 sources:
   - 
     defines:
       # {N, ES, WORD, F} are defined in the makefile
+      N: 16
+      ES: 1
+      WORD: 32
+      F: 64
+
       NO_PIPELINE: ~
-      CLK_FREQ: ~
+      CLK_FREQ: 100
       COCOTB : ~
       #FMA_ONLY : ~
 
+      PIPELINE_DEPTH: 0
+
       FMA_OP: ~
+      INNER_PIPELINE_DEPTH: 0
+      FX_M: 31
+      FX_B: 64
+
+
       
       #FLOAT_TO_POSIT : ~
       #POSIT_TO_FLOAT : ~

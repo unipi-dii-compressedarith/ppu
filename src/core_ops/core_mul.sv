@@ -26,6 +26,12 @@ module core_mul
 
   wire [MANT_SUB_RESULT_SIZE-1:0] mant_mul;
 
+//`define DUMPSTUFF
+`ifdef DUMPSTUFF
+  initial begin
+    $display("Dump demo");
+  end
+`endif
 
   wire mant_carry;
   assign mant_carry = mant_mul[MANT_MUL_RESULT_SIZE-1];
