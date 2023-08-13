@@ -59,7 +59,15 @@ parameter FRAC_SIZE = N - 1;
 // frac is a Fx<0, MANT_SIZE-1>
 parameter MANT_SIZE = N - 2;
 
-typedef logic /*signed*/ [TE_BITS-1:0] exponent_t;
+
+/////////////////////////////////////////////////////////////////////////////
+/// Exponent
+typedef logic /*signed*/ [TE_BITS-1:0]  exponent_t;
+/// WORD
+typedef logic [`WORD-1:0]                word_t;
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 // Operation input FIR type.
 typedef struct packed {
@@ -98,8 +106,6 @@ typedef struct packed {
   long_fir_t  long_fir;
   logic       frac_truncated;
 } ops_out_meta_t;
-
-
 
 /// Zero
 parameter ZERO = {`N{1'b0}};

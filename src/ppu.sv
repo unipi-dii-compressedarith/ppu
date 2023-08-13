@@ -12,11 +12,11 @@ module ppu
   input logic                           clk_i,
   input logic                           rst_i,
   input logic                           in_valid_i,
-  input logic                [WORD-1:0] operand1_i,
-  input logic                [WORD-1:0] operand2_i,
-  input logic                [WORD-1:0] operand3_i,
+  input ppu_pkg::word_t                 operand1_i,
+  input ppu_pkg::word_t                 operand2_i,
+  input ppu_pkg::word_t                 operand3_i,
   input ppu_pkg::operation_e            op_i,
-  output logic               [WORD-1:0] result_o,
+  output ppu_pkg::word_t result_o,
   output logic                          out_valid_o,
   output logic [`FX_B-1:0]              fixed_o
 );
@@ -107,7 +107,7 @@ module ppu
   
 
 `ifdef POSIT_TO_FLOAT
-  logic [WORD-1:0] float_out;
+  word_t float_out;
 
   fir_to_float #(
     .N            (N),

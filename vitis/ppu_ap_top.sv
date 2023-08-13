@@ -1739,9 +1739,9 @@ parameter N           = 16,
   output logic                    out_valid_o
 );
 
-  logic [WORD-1:0] operand1_st0, operand2_st0, operand3_st0;
+  word_t operand1_st0, operand2_st0, operand3_st0;
 
-  logic [WORD-1:0] result_st0,
+  word_t result_st0,
                    result_st1;
   logic [OP_BITS-1:0] op_st0;
 

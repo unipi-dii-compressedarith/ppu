@@ -21,9 +21,9 @@
 // );
 
 
-//   logic [WORD-1:0] operand1_st0_reg, operand2_st0_reg, operand3_st0_reg;
+//   word_t operand1_st0_reg, operand2_st0_reg, operand3_st0_reg;
 //                    // operand1_st1_reg, operand2_st1_reg, operand3_st1_reg;
-//   logic [WORD-1:0] result_st0_reg,
+//   word_t result_st0_reg,
 //                    result_st1_reg;
 //   logic [OP_BITS-1:0] op_st0_reg;
 //                       // op_st1_reg;
@@ -106,19 +106,24 @@ module ppu_top
   input  logic                    clk_i,
   input  logic                    rst_i,
   input  logic                    in_valid_i,
+  /* dont change explicit type */
   input  logic        [WORD-1:0]  operand1_i,
+  /* dont change explicit type */
   input  logic        [WORD-1:0]  operand2_i,
+  /* dont change explicit type */
   input  logic        [WORD-1:0]  operand3_i,
+  /* dont change explicit type */
   input  logic     [OP_BITS-1:0]  op_i,
+  /* dont change explicit type */
   output logic        [WORD-1:0]  result_o,
   output logic                    out_valid_o,
 
   output logic      [`FX_B-1:0]   fixed_o
 );
 
-  logic [WORD-1:0] operand1_st0, operand2_st0, operand3_st0;
+  word_t operand1_st0, operand2_st0, operand3_st0;
 
-  logic [WORD-1:0] result_st0,
+  word_t result_st0,
                    result_st1;
   logic [OP_BITS-1:0] op_st0;
 
@@ -143,9 +148,9 @@ module ppu_top
 
   ppu #(
     .WORD           (WORD),
-    `ifdef FLOAT_TO_POSIT
-      .FSIZE        (FSIZE),
-    `endif
+`ifdef FLOAT_TO_POSIT
+    .FSIZE        (FSIZE),
+`endif
     .N              (N),
     .ES             (ES)
   ) ppu_inst (
