@@ -18,7 +18,7 @@ module ppu
   input ppu_pkg::operation_e            op_i,
   output ppu_pkg::word_t result_o,
   output logic                          out_valid_o,
-  output logic [`FX_B-1:0]              fixed_o
+  output ppu_pkg::accumulator_t         fixed_o
 );
 
   logic stall;

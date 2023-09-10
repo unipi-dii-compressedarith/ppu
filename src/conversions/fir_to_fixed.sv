@@ -50,7 +50,7 @@ module fir_to_fixed
   logic fir_te_sign;
   assign fir_te_sign = fir_te >= 0;
 
-  logic [(FX_B-1)-1:0] fixed_signless;
+  ppu_pkg::accumulator_t fixed_signless;
   assign fixed_signless = (fir_te >= 0) ? (fixed_tmp << fir_te) : (fixed_tmp >> (-fir_te));
 
   /// With correct sign

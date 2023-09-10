@@ -12,7 +12,7 @@ module fir_ops
   input fir_t             fir3_i,
   
   output ops_out_meta_t   ops_result_o,
-  output [`FX_B-1:0]      fixed_o
+  output accumulator_t    fixed_o
 );
 
   

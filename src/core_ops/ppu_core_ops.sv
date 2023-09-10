@@ -21,7 +21,7 @@ module ppu_core_ops
 `endif
   output  ppu_pkg::posit_t                      pout_o,
   ///
-  output [`FX_B-1:0]                            fixed_o
+  output ppu_pkg::accumulator_t                 fixed_o
 );
 
 
@@ -39,7 +39,7 @@ module ppu_core_ops
 
   ppu_pkg::posit_special_t                          p_special[STAGES-1:0];
 
-  logic [`FX_B-1:0]                                 fixed[STAGES-1:0];
+  ppu_pkg::accumulator_t                            fixed[STAGES-1:0];
   logic [((1 + TE_BITS + FRAC_FULL_SIZE) + 1)-1:0]  ops_result[STAGES-1:0];
 
 

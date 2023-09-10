@@ -68,6 +68,10 @@ typedef logic [`WORD-1:0]                word_t;
 /////////////////////////////////////////////////////////////////////////////
 
 
+/// FMA accumulator
+typedef logic [`FX_B-1:0] accumulator_t;
+
+
 
 // Operation input FIR type.
 typedef struct packed {
