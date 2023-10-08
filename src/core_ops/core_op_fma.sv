@@ -140,7 +140,7 @@ module tb_core_op_fma #(
                           result_gt_ascii;    // result ground truth ascii
 
 
-  logic [WORD-1:0] out_ground_truth;
+  word_t out_ground_truth;
   logic [N-1:0] pout_hwdiv_expected;
   logic diff_out_ground_truth, diff_pout_hwdiv_exp, pout_off_by_1;
   logic [  N:0] test_no;
