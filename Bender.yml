@@ -92,7 +92,3 @@ sources:
     
     - target: test
       files:
-      # - tests/clk_gen.sv
-      # - tests/tb_ppu.sv
-      # - tests/tb_ppu1.sv
-      # - tests/tb_ppu2.sv

@@ -16,16 +16,16 @@ MORTY_ARGS :=                                     \
                                                   \
   -DF=$(F)                                        \
                                                   \
-  -DFX_M=$(31)                                  \
-  -DFX_B=$(64)                                  \
+  -DFX_M=$(31)                                    \
+  -DFX_B=$(64)                                    \
                                                   \
   -DCLK_FREQ=$(CLK_FREQ)                          \
-  -DPIPELINE_DEPTH=$(0)              \
-  -DINNER_PIPELINE_DEPTH=$(0)  \
+  -DPIPELINE_DEPTH=$(0)                           \
+  -DINNER_PIPELINE_DEPTH=$(0)                     \
+
 
 TOP ?= ppu_top
 DOCS ?= ./docs/ppu-docs
-
 
 bender:
 	bender sources --flatten --target test > sources.json
