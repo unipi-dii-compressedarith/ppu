@@ -1,5 +1,8 @@
 /// Contains all the parameters and functions used in the core
 
+/* verilator lint_off DECLFILENAME */
+/* verilator lint_off UNUSEDPARAM */
+/* verilator lint_off VARHIDDEN */
 package ppu_pkg;
 
 `ifdef N
@@ -298,3 +301,6 @@ parameter FLOAT_MANT_SIZE_F16 = 10;
 
 
 endpackage: ppu_pkg
+/* verilator lint_on DECLFILENAME */
+/* verilator lint_on UNUSEDPARAM */
+/* verilator lint_on VARHIDDEN */

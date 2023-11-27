@@ -25,6 +25,14 @@ module ppu_core_ops
 );
 
 
+`ifndef FLOAT_TO_POSIT
+  // fixes bug related to missing definition of `float_fir_i` when FLOAT_TO_POSIT is not defined.
+  logic [(1+TE_BITS+FRAC_FULL_SIZE)-1:0]  float_fir_i;
+  ppu_pkg::fir_t                     posit_fir_o;
+`endif
+
+
+
   localparam STAGES = 4;
   
   ppu_pkg::operation_e                              op[STAGES-1:0];

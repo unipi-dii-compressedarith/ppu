@@ -27,8 +27,12 @@ module normalization
   );
 
 
+  logic is_special_or_trivial;
+  logic pout_special_or_trivial;
+
   assign is_special_or_trivial = p_special_i.special_tag;
   assign pout_special_or_trivial = p_special_i.posit;
+
 
   assign posit_o = is_special_or_trivial ? pout_special_or_trivial : pout_non_special;
 

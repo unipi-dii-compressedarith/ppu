@@ -27,6 +27,12 @@ module fir_to_posit
   logic [ES-1:0] next_exp;
 `endif
 
+  logic round_bit;
+  logic sticky_bit;
+  logic k_is_oob;
+  logic non_zero_frac_field_size;
+  
+
   pack_fields #(
     .N                (N),
     .ES               (ES)
