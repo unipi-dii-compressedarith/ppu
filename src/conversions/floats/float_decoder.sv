@@ -30,8 +30,8 @@ endmodule: float_decoder
 
 
 
-// `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
-
+// `define tb_float_decoder 
+`ifdef tb_float_decoder
 module tb_float_decoder;
 
   import ppu_pkg::*;
@@ -54,10 +54,13 @@ module tb_float_decoder;
   );
 
   initial begin
-    // $dumpfile({"tb_float_decoder_F",`STRINGIFY(`F),".vcd"});
+    $dumpfile("tb_float_decoder_F.vcd");
     $dumpvars(0, tb_float_decoder);                        
 
-    bits = 64'h405ee00000000000; #10;
+    bits = 64'h405ee00000000000; 
+    #10;
+    $display("%d %d %d", sign, exp, frac);
   end
 
 endmodule: tb_float_decoder
+`endif

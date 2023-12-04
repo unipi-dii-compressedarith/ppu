@@ -29,7 +29,7 @@ module lzc_internal #(
     if (NUM_BITS == 2) begin : gen_blk1
       assign vld = |in;
       assign out = ~in[1] & in[0];
-    end else if (NUM_BITS & (NUM_BITS - 1)) begin : gen_blk2
+    end else if ((NUM_BITS & (NUM_BITS - 1))) begin : gen_blk2
       lzc_internal #(
         .NUM_BITS     (1 << S)
       ) lzc_internal (

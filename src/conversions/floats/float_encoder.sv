@@ -22,8 +22,9 @@ endmodule: float_encoder
 
 
 // `define STRINGIFY(DEFINE) $sformatf("%0s", `"DEFINE`")
+`ifdef tb_float_encoder
 module tb_float_encoder;
-  
+
   import ppu_pkg::*;
 
   parameter FSIZE = `F;
@@ -51,3 +52,4 @@ module tb_float_encoder;
   end
 
 endmodule: tb_float_encoder
+`endif

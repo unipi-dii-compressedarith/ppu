@@ -31,10 +31,10 @@ sources:
       FX_M: 31
       FX_B: 64
 
-
       
-      #FLOAT_TO_POSIT : ~
-      #POSIT_TO_FLOAT : ~
+      # Enable Float to Posit and Posit to Float conversions. Comment to disasble.
+      FLOAT_TO_POSIT : ~
+      POSIT_TO_FLOAT : ~
 
 
     files:
