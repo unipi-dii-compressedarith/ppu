@@ -28,9 +28,12 @@ module core_div
   assign te_diff_st0 = te1_i - te2_i;
 
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;
+ 
+`ifdef EXACT_DIV
 
-  //// assign mant_div = (mant1_i << (2 * size - 1)) / mant2_i;
-
+  assign mant_div = (mant1_i << (2 * size - 1)) / mant2_i;
+ 
+`else
 
   wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
 
@@ -95,14 +98,6 @@ module core_div
     end
   endgenerate
 
-  // wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal_fast_reciprocal;
-  // fast_reciprocal #(
-  //     .SIZE(MANT_SIZE)
-  // ) fast_reciprocal_inst_dummy (
-  //     .fraction(mant2_i),
-  //     .one_over_fraction(mant2_reciprocal_fast_reciprocal)
-  // );
-
 `else
   initial $display("***** Using DIV with Fast reciprocate algorithm, no LUT *****");
 
@@ -135,7 +130,7 @@ module core_div
 `endif
 
   assign mant_div = mant1_st1 * x1;
-
+`endif
 
   wire mant_div_less_than_one;
   assign mant_div_less_than_one = (mant_div & (1 << (3 * MANT_SIZE - 2))) == 0;
