@@ -25,7 +25,7 @@ INNER_PIPELINE_DEPTH ?= 0
 # FMA-only operation inside the PPU disabled by default (set to 0). Override to 1 to turn on this option.
 #FMA_ONLY ?= 0
 FMA_OP ?=0
-EXACT_DIV ?=1
+EXACT_DIV ?=0
 
 OUTPUT_NAME := $(TOP)_p$(N)_e$(ES)_w$(WORD)_f$(F)
 
@@ -53,7 +53,6 @@ MORTY_ARGS :=                                     \
   -DCLK_FREQ=$(CLK_FREQ)                          \
   -DPIPELINE_DEPTH=$(PIPELINE_DEPTH)              \
   -DINNER_PIPELINE_DEPTH=$(INNER_PIPELINE_DEPTH)  \
-  -DEXACT_DIV=$(EXACT_DIV)				
 
 
 top_sv: morty
@@ -64,7 +63,7 @@ bender:
 	#bender sources --flatten --target rtl > sources.json
 
 morty: bender
-	morty -f sources.json $(MORTY_ARGS) -o $(OUTPUT_NAME).sv --top $(TOP) #-DCOCOTB_TEST
+	morty -f sources.json $(MORTY_ARGS) -o $(OUTPUT_NAME).sv --top $(TOP) 
 
 morty-ap-top: bender
 	morty -f sources.json $(MORTY_ARGS) -o vitis/ppu_ap_top.sv --top ppu_ap_top
