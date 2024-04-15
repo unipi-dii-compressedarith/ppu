@@ -32,7 +32,7 @@ module core_div
 
 `ifdef EXACT_DIV
 
-	assign mant_div = ((mant1_i << ((2 * MANT_SIZE) - 1)) / mant2_i)<<(MANT_SIZE);
+	assign mant_div = ((mant1_i << ((2 * MANT_SIZE) - 1)) / mant2_i) << (MANT_SIZE-1);
  
 `else
 
