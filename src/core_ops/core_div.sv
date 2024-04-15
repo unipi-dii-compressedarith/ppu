@@ -26,18 +26,18 @@ module core_div
 
   exponent_t te_diff_st0, te_diff_st1;
   assign te_diff_st0 = te1_i - te2_i;
+  assign sign_o = sign1_i ^ sign2_i;
 
   wire [(MANT_DIV_RESULT_SIZE)-1:0] mant_div;
- 
+
 `ifdef EXACT_DIV
 
-  assign mant_div = (mant1_i << (2 * MANT_SIZE - 1)) / mant2_i;
+	assign mant_div = ((mant1_i << ((2 * MANT_SIZE) - 1)) / mant2_i)<<(MANT_SIZE);
  
 `else
 
   wire [(3*MANT_SIZE-4)-1:0] mant2_reciprocal;
 
-  assign sign_o = sign1_i ^ sign2_i;
 
 
 `ifdef DIV_WITH_LUT

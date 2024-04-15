@@ -34,9 +34,10 @@ def log_posit(varn, res, n, es, dut):
 
 def log_div_unit(dut):
     #dut._log.info("%s", dut.ppu.core_ops.core_div.mant_o.value)    
-    divm = dut.ppu_inst.ppu_core_ops_inst
+    divm = dut.ppu_inst.ppu_core_ops_inst.fir_ops_inst.core_op_inst.core_div_inst
     print(dir(divm))
-    dut._log.info("%s", divm.ops_result[3] )
+    dut._log.info("lto: %s", divm.mant_div_less_than_one )
+    dut._log.info("manto: %s", divm.mant_o )
 
 
 @cocotb.test()
